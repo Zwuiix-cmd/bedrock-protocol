@@ -1,0 +1,4 @@
+[submodule "upstream/BedrockProtocol"]
+	path = upstream/BedrockProtocol
+	url = https://github.com/axolotl-pm/BedrockProtocol.git
+	branch = master

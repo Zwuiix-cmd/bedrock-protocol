@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -38,13 +37,10 @@ public:
 		settings->read(stream);
 		auto attributes = std::vector<std::shared_ptr<AttributeEnvironment>>();
 		auto attributesCount = stream.readUnsignedVarInt().value_or(0);
-		if (attributesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < attributesCount; ++i) {
 		    attributes.push_back(stream.readObject<AttributeEnvironment>());
 		}
-		return std::make_shared<AttributeLayer>(name, dimension, settings, attributes);
+		return std::make_shared<AttributeLayer>(name, static_cast<int32_t>(dimension), settings, attributes);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

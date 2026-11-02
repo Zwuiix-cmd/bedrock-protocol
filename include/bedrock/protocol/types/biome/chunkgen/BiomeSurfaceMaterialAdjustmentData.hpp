@@ -4,7 +4,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeElementData.hpp>
@@ -19,9 +18,6 @@ public:
     static std::shared_ptr<BiomeSurfaceMaterialAdjustmentData> create(ReadOnlyBinaryStream& stream) {
 		auto adjustments = std::vector<std::shared_ptr<BiomeElementData>>();
 		auto adjustmentsCount = stream.readUnsignedVarInt().value_or(0);
-		if (adjustmentsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < adjustmentsCount; ++i) {
 		    adjustments.push_back(stream.readObject<BiomeElementData>());
 		}

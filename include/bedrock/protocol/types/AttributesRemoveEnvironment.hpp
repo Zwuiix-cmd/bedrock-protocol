@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -35,13 +34,10 @@ public:
 		auto dimension = stream.readUnsignedVarInt().value_or(0);
 		auto attributes = std::vector<std::string>();
 		auto attributesCount = stream.readUnsignedVarInt().value_or(0);
-		if (attributesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < attributesCount; ++i) {
 		    attributes.push_back(stream.readString().value_or(""));
 		}
-		return std::make_shared<AttributesRemoveEnvironment>(name, dimension, attributes);
+		return std::make_shared<AttributesRemoveEnvironment>(name, static_cast<int32_t>(dimension), attributes);
     }
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }

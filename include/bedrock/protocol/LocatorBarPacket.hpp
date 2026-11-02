@@ -107,9 +107,6 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto waypointsCount = stream.readUnsignedVarInt().value_or(0);
-		if (waypointsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < waypointsCount; ++i) {
 		    waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
 		}

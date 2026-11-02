@@ -40,7 +40,7 @@ public:
 		}
 		auto amount = stream.readFloat().value_or(0.0f);
 		auto replacementIndex = stream.readUnsignedInt().value_or(0);
-		return std::make_shared<BiomeReplacementData>(biome, dimension, targetBiomes, amount, replacementIndex);
+		return std::make_shared<BiomeReplacementData>(static_cast<int32_t>(biome), dimension, targetBiomes, amount, static_cast<int32_t>(replacementIndex));
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

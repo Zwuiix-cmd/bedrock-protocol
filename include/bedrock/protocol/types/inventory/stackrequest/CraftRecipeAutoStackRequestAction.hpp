@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
@@ -39,13 +38,10 @@ public:
 		auto repetitions2 = stream.readUnsignedByte().value_or(0);
 		auto ingredients = std::vector<std::shared_ptr<RecipeIngredient>>();
 		auto ingredientsCount = stream.readUnsignedByte().value_or(0);
-		if (ingredientsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < ingredientsCount; ++i) {
 		    ingredients.push_back(stream.readObject<RecipeIngredient>());
 		}
-		return std::make_shared<CraftRecipeAutoStackRequestAction>(recipeId, repetitions, repetitions2, ingredients);
+		return std::make_shared<CraftRecipeAutoStackRequestAction>(static_cast<int32_t>(recipeId), static_cast<int32_t>(repetitions), static_cast<int32_t>(repetitions2), ingredients);
     }
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }

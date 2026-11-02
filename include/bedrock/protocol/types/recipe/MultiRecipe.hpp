@@ -36,7 +36,7 @@ public:
     static std::shared_ptr<MultiRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
 		auto uuid = stream.readUUID().value_or("");
 		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
-		return std::make_shared<MultiRecipe>(typeId, uuid, recipeNetId);
+		return std::make_shared<MultiRecipe>(typeId, uuid, static_cast<int32_t>(recipeNetId));
     }
 
     void read(ReadOnlyBinaryStream& stream) override {

@@ -110,16 +110,10 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		baseBlockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		auto layer0UpdatesCount = stream.readUnsignedVarInt().value_or(0);
-		if (layer0UpdatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < layer0UpdatesCount; ++i) {
 		    layer0Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		}
 		auto layer1UpdatesCount = stream.readUnsignedVarInt().value_or(0);
-		if (layer1UpdatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < layer1UpdatesCount; ++i) {
 		    layer1Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		}

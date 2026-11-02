@@ -107,9 +107,6 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto valuesCount = stream.readUnsignedVarInt().value_or(0);
-		if (valuesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < valuesCount; ++i) {
 		    auto matchValue = stream.readUnsignedVarInt().value_or(0);
 		    if (matchValue == magic_enum::enum_integer(DataStoreType::Update)) {

@@ -4,7 +4,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
@@ -28,9 +27,6 @@ public:
 		containerName->read(stream);
 		auto slots = std::vector<std::shared_ptr<ItemStackResponseSlotInfo>>();
 		auto slotsCount = stream.readUnsignedVarInt().value_or(0);
-		if (slotsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < slotsCount; ++i) {
 		    slots.push_back(stream.readObject<ItemStackResponseSlotInfo>());
 		}

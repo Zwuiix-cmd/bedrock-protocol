@@ -499,7 +499,21 @@ private function statement(Node $statement, array $declaration, array $method, i
             return $value;
         }
         $enumType = $this->propertyEnumType($property, $declaration);
-        return $enumType === null ? $value : $this->enumReadValue($enumType, $value, $declaration);
+        if ($enumType !== null) {
+            return $this->enumReadValue($enumType, $value, $declaration);
+        }
+        $targetType = $this->cppType(
+            (string) ($property['type'] ?? 'mixed'),
+            false,
+            $property['doc'] ?? null,
+        );
+        $sourceType = $this->inferredCPPType($argument->value, $declaration);
+        if ($sourceType !== null
+            && $sourceType !== $targetType
+            && in_array($targetType, ['int8_t', 'uint8_t', 'int16_t', 'uint16_t', 'int32_t', 'uint32_t', 'int64_t', 'uint64_t', 'float', 'double'], true)) {
+            return 'static_cast<' . $targetType . '>(' . $value . ')';
+        }
+        return $value;
     }
 
 private function optionalTernaryAssignment(

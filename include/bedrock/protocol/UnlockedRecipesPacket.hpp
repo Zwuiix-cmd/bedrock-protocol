@@ -117,9 +117,6 @@ public:
 			stream.readUnsignedInt().value_or(0)
 		).value_or(Type::Empty);
 		auto recipesCount = stream.readUnsignedVarInt().value_or(0);
-		if (recipesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < recipesCount; i++) {
 		    recipes.push_back(stream.readString().value_or(""));
 		}

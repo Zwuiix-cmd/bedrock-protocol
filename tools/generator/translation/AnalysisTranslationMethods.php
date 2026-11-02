@@ -127,7 +127,14 @@ private function isOptionalContainer(Node $node, array $declaration): bool
             return true;
         }
         if ($node instanceof Node\Expr\Variable) {
-            return $this->expressionOptionals[(string) $node->name] ?? false;
+            $name = (string) $node->name;
+            if (!(($this->expressionOptionals[$name] ?? false))) {
+                return false;
+            }
+            $type = $this->expressionTypes[$name] ?? null;
+            return $type === null
+                || $this->nullableType($type)
+                || preg_match('/^std::optional(?:<|$)/', $type) === 1;
         }
         if ($node instanceof Node\Expr\ArrayDimFetch) {
             return $this->isOptionalContainer($node->var, $declaration);

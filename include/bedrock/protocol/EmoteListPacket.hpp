@@ -107,9 +107,6 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		playerActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		auto emoteIdsCount = stream.readUnsignedVarInt().value_or(0);
-		if (emoteIdsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < emoteIdsCount; ++i) {
 		    emoteIds.push_back(stream.readUUID().value_or(""));
 		}

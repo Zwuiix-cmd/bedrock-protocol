@@ -38,12 +38,12 @@ public:
         isTeacher = stream.readBool().value_or(false);
         isHost = stream.readBool().value_or(false);
         isSubClient = stream.readBool().value_or(false);
-        uuid = stream.readUUID().value_or("");
-        skinData = std::make_shared<SkinData>();
-        skinData->read(stream);
         color = stream.readOptional([&]() {
             return stream.readUnsignedInt().value_or(0);
         });
+        uuid = stream.readUUID().value_or("");
+        skinData = std::make_shared<SkinData>();
+        skinData->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -55,10 +55,10 @@ public:
         stream.writeBool(isTeacher);
         stream.writeBool(isHost);
         stream.writeBool(isSubClient);
-        stream.writeUUID(uuid);
-        skinData->write(stream);
         stream.writeOptional(color, [&](const auto& optionalValue) {
             stream.writeUnsignedInt(optionalValue);
         });
+        stream.writeUUID(uuid);
+        skinData->write(stream);
     }
 };

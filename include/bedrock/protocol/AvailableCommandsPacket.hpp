@@ -148,58 +148,34 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto enumValuesCount = stream.readUnsignedVarInt().value_or(0);
-		if (enumValuesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < enumValuesCount; i++) {
 		    enumValues.push_back(stream.readString().value_or(""));
 		}
 		auto chainedSubCommandValuesCount = stream.readUnsignedVarInt().value_or(0);
-		if (chainedSubCommandValuesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < chainedSubCommandValuesCount; i++) {
 		    chainedSubCommandValues.push_back(stream.readString().value_or(""));
 		}
 		auto postfixesCount = stream.readUnsignedVarInt().value_or(0);
-		if (postfixesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < postfixesCount; i++) {
 		    postfixes.push_back(stream.readString().value_or(""));
 		}
 		auto enumsCount = stream.readUnsignedVarInt().value_or(0);
-		if (enumsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < enumsCount; i++) {
 		    enums.push_back(stream.readObject<CommandEnumRawData>());
 		}
 		auto chainedSubCommandDataCount = stream.readUnsignedVarInt().value_or(0);
-		if (chainedSubCommandDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < chainedSubCommandDataCount; i++) {
 		    chainedSubCommandData.push_back(stream.readObject<ChainedSubCommandRawData>());
 		}
 		auto commandDataCount = stream.readUnsignedVarInt().value_or(0);
-		if (commandDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < commandDataCount; i++) {
 		    commandData.push_back(stream.readObject<CommandRawData>());
 		}
 		auto softEnumsCount = stream.readUnsignedVarInt().value_or(0);
-		if (softEnumsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < softEnumsCount; i++) {
 		    softEnums.push_back(stream.readObject<CommandSoftEnum>());
 		}
 		auto enumConstraintsCount = stream.readUnsignedVarInt().value_or(0);
-		if (enumConstraintsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < enumConstraintsCount; i++) {
 		    enumConstraints.push_back(stream.readObject<CommandEnumConstraintRawData>());
 		}

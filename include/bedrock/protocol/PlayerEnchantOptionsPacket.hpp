@@ -107,9 +107,6 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto optionsCount = stream.readUnsignedVarInt().value_or(0);
-		if (optionsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < optionsCount; ++i) {
 		    options.push_back(stream.readObject<EnchantOption>());
 		}

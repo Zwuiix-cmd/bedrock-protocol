@@ -119,6 +119,6 @@ public:
 
     void write(BinaryStream& stream) override {
         stream.writeUnsignedVarLong(actorUniqueId);
-        stream.writeInt(magic_enum::enum_integer(updateType));
+        stream.writeUnsignedVarLong(magic_enum::enum_integer(updateType));
     }
 };

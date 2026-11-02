@@ -151,8 +151,8 @@ public:
         });
         controlScheme = stream.readOptional([&]() {
             return magic_enum::enum_cast<ControlScheme>(
-                stream.readVarInt().value_or(0)
-            ).value_or(ControlScheme::LockedPlayerRelativeStrafe);
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(ControlScheme::LockedPlayerRelativeStrafe);
         });
     }
 

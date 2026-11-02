@@ -44,7 +44,7 @@ public:
         stream.writeVarLong(scoreboardId);
         stream.writeString(objectiveName);
         stream.writeInt(score);
-        stream.writeInt(magic_enum::enum_integer(type));
+        stream.writeUnsignedByte(magic_enum::enum_integer(type));
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
             stream.writeActorUniqueID(optionalValue);
         });

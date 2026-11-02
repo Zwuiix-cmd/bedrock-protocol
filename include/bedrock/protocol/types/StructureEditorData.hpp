@@ -51,7 +51,7 @@ public:
         stream.writeString(structureDataField);
         stream.writeBool(includePlayers);
         stream.writeBool(showBoundingBox);
-        stream.writeInt(magic_enum::enum_integer(structureBlockType));
+        stream.writeVarInt(magic_enum::enum_integer(structureBlockType));
         stream.writeVarInt(structureRedstoneSaveMode);
         structureSettings->write(stream);
     }

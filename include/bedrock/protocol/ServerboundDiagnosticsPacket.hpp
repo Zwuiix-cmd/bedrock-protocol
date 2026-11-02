@@ -125,9 +125,6 @@ public:
 		avgRemainderTimePercent = stream.readFloat().value_or(0.0f);
 		avgUnaccountedTimePercent = stream.readFloat().value_or(0.0f);
 		auto memoryCategoryValuesCount = stream.readUnsignedVarInt().value_or(0);
-		if (memoryCategoryValuesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < memoryCategoryValuesCount; i++) {
 		    memoryCategoryValues.push_back(stream.readObject<MemoryCategoryCounter>());
 		}

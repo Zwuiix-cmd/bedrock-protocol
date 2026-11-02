@@ -223,11 +223,15 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 }
                 $isStringEnum = $this->stringEnumName($property, $declaration) !== null
                     || $this->stringEnumCases($property, $declaration) !== [];
+                $nullableProperty = $this->nullableType((string) ($property['type'] ?? ''));
                 $inferredValue = $isStringEnum
                     ? 'magic_enum::enum_name(' . $field . ')'
                     : $field;
+                if ($enumType !== null && !$isStringEnum && !$nullableProperty) {
+                    $inferredValue = 'magic_enum::enum_integer(' . $inferredValue . ')';
+                }
                 $inferredWrite = $this->inferredPropertyWriteValue($declaration, $property, $inferredValue);
-                if ($inferredWrite !== null && $enumType === null) {
+                if ($inferredWrite !== null && ($enumType === null || !$nullableProperty)) {
                     $inferredWrite = preg_replace(
                         '/magic_enum::enum_integer\(magic_enum::enum_integer\(([^()]*)\)\)/',
                         'magic_enum::enum_integer($1)',

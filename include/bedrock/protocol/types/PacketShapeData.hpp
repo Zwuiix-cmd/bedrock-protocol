@@ -25,7 +25,7 @@ public:
     std::optional<float> arrowHeadRadius;
     std::optional<uint8_t> segments;
     std::optional<int32_t> dimensionId;
-    std::optional<int32_t> attachedToEntityId;
+    std::optional<uint64_t> attachedToEntityId;
 
     PacketShapeData() = default;
     explicit PacketShapeData(
@@ -43,7 +43,7 @@ public:
         const std::optional<float>& arrowHeadRadiusValue,
         const std::optional<uint8_t>& segmentsValue,
         const std::optional<int32_t>& dimensionIdValue,
-        const std::optional<int32_t>& attachedToEntityIdValue
+        const std::optional<uint64_t>& attachedToEntityIdValue
     ) :
         networkId(networkIdValue),
         type(typeValue),
@@ -65,8 +65,8 @@ public:
         networkId = stream.readUnsignedVarLong().value_or(0);
         type = stream.readOptional([&]() {
             return magic_enum::enum_cast<ScriptDebugShapeType>(
-                stream.readVarInt().value_or(0)
-            ).value_or(ScriptDebugShapeType::Line);
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(ScriptDebugShapeType::Line);
         });
         location = stream.readOptional([&]() {
             return stream.readVec3().value_or(glm::vec3(0.0f));
@@ -102,10 +102,10 @@ public:
             return stream.readUnsignedByte().value_or(0);
         });
         dimensionId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readVarInt().value_or(0);
         });
         attachedToEntityId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readActorRuntimeID().value_or(0);
         });
     }
 
@@ -148,10 +148,10 @@ public:
             stream.writeUnsignedByte(optionalValue);
         });
         stream.writeOptional(dimensionId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
+            stream.writeVarInt(optionalValue);
         });
         stream.writeOptional(attachedToEntityId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
+            stream.writeActorRuntimeID(optionalValue);
         });
     }
 };

@@ -44,7 +44,7 @@ public:
 		auto addition = stream.readObject<RecipeIngredient>();
 		auto blockName = stream.readString().value_or("");
 		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
-		return std::make_shared<SmithingTrimRecipe>(typeId, recipeId, template_, input, addition, blockName, recipeNetId);
+		return std::make_shared<SmithingTrimRecipe>(typeId, recipeId, template_, input, addition, blockName, static_cast<int32_t>(recipeNetId));
     }
 
     void read(ReadOnlyBinaryStream& stream) override {

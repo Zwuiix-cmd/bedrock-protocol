@@ -4,7 +4,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeatureData.hpp>
@@ -19,9 +18,6 @@ public:
     static std::shared_ptr<BiomeConsolidatedFeaturesData> create(ReadOnlyBinaryStream& stream) {
 		auto features = std::vector<std::shared_ptr<BiomeConsolidatedFeatureData>>();
 		auto featuresCount = stream.readUnsignedVarInt().value_or(0);
-		if (featuresCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < featuresCount; ++i) {
 		    features.push_back(stream.readObject<BiomeConsolidatedFeatureData>());
 		}

@@ -36,7 +36,7 @@ public:
     std::optional<std::shared_ptr<BiomeMultinoiseGenRulesData>> multinoiseGenRules;
     std::optional<std::shared_ptr<BiomeLegacyWorldGenRulesData>> legacyWorldGenRules;
     std::optional<std::vector<std::shared_ptr<BiomeReplacementData>>> replacementsData;
-    std::optional<int32_t> villageType;
+    std::optional<uint8_t> villageType;
 
     BiomeDefinitionChunkGenData() = default;
     explicit BiomeDefinitionChunkGenData(
@@ -55,7 +55,7 @@ public:
         const std::optional<std::shared_ptr<BiomeMultinoiseGenRulesData>>& multinoiseGenRulesValue,
         const std::optional<std::shared_ptr<BiomeLegacyWorldGenRulesData>>& legacyWorldGenRulesValue,
         const std::optional<std::vector<std::shared_ptr<BiomeReplacementData>>>& replacementsDataValue,
-        const std::optional<int32_t>& villageTypeValue
+        const std::optional<uint8_t>& villageTypeValue
     ) :
         climate(climateValue),
         consolidatedFeatures(consolidatedFeaturesValue),
@@ -111,7 +111,7 @@ public:
         });
         replacementsData = stream.readObjectList<BiomeReplacementData>();
         villageType = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedByte().value_or(0);
         });
     }
 

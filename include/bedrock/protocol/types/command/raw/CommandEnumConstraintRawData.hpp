@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 
@@ -30,13 +29,10 @@ public:
 		auto enumIndex = stream.readUnsignedInt().value_or(0);
 		auto constraints = std::vector<uint8_t>();
 		auto constraintsCount = stream.readUnsignedVarInt().value_or(0);
-		if (constraintsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < constraintsCount; i++) {
 		    constraints.push_back(stream.readUnsignedByte().value_or(0));
 		}
-		return std::make_shared<CommandEnumConstraintRawData>(affectedValueIndex, enumIndex, constraints);
+		return std::make_shared<CommandEnumConstraintRawData>(static_cast<int32_t>(affectedValueIndex), static_cast<int32_t>(enumIndex), constraints);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

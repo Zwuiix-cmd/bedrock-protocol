@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp>
@@ -44,9 +43,6 @@ public:
     static std::shared_ptr<BiomeScatterParamData> create(ReadOnlyBinaryStream& stream) {
 		auto coordinates = std::vector<std::shared_ptr<BiomeCoordinateData>>();
 		auto coordinatesCount = stream.readUnsignedVarInt().value_or(0);
-		if (coordinatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < coordinatesCount; ++i) {
 		    coordinates.push_back(stream.readObject<BiomeCoordinateData>());
 		}
@@ -57,7 +53,7 @@ public:
 		auto chanceDenominator = stream.readInt().value_or(0);
 		auto iterationsType = stream.readVarInt().value_or(0);
 		auto iterations = stream.readShort().value_or(0);
-		return std::make_shared<BiomeScatterParamData>(coordinates, evalOrder, chancePercentType, chancePercent, chanceNumerator, chanceDenominator, iterationsType, iterations);
+		return std::make_shared<BiomeScatterParamData>(coordinates, evalOrder, chancePercentType, static_cast<int32_t>(chancePercent), chanceNumerator, chanceDenominator, iterationsType, static_cast<int32_t>(iterations));
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

@@ -111,16 +111,10 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto categoriesCount = stream.readUnsignedVarInt().value_or(0);
-		if (categoriesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < categoriesCount; ++i) {
 		    categories.push_back(stream.readObject<CameraAimAssistCategory>());
 		}
 		auto presetsCount = stream.readUnsignedVarInt().value_or(0);
-		if (presetsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < presetsCount; ++i) {
 		    presets.push_back(stream.readObject<CameraAimAssistPreset>());
 		}

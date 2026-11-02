@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
@@ -29,15 +28,12 @@ public:
     static std::shared_ptr<BiomeConditionalTransformationData> create(ReadOnlyBinaryStream& stream) {
 		auto weightedBiomes = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto weightedBiomesCount = stream.readUnsignedVarInt().value_or(0);
-		if (weightedBiomesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < weightedBiomesCount; ++i) {
 		    weightedBiomes.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto conditionJSON = stream.readShort().value_or(0);
 		auto minPassingNeighbors = stream.readUnsignedInt().value_or(0);
-		return std::make_shared<BiomeConditionalTransformationData>(weightedBiomes, conditionJSON, minPassingNeighbors);
+		return std::make_shared<BiomeConditionalTransformationData>(weightedBiomes, static_cast<int32_t>(conditionJSON), static_cast<int32_t>(minPassingNeighbors));
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

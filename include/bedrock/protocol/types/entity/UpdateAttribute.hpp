@@ -4,7 +4,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -51,9 +50,6 @@ public:
 		auto id = stream.readString().value_or("");
 		auto modifiers = std::vector<std::shared_ptr<AttributeModifier>>();
 		auto modifiersCount = stream.readUnsignedVarInt().value_or(0);
-		if (modifiersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t j = 0; j < modifiersCount; j++) {
 		    modifiers.push_back(stream.readObject<AttributeModifier>());
 		}

@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClockStateData.hpp>
@@ -24,9 +23,6 @@ public:
     static std::shared_ptr<SyncWorldClocksSyncState> create(ReadOnlyBinaryStream& stream) {
 		auto clockData = std::vector<std::shared_ptr<SyncWorldClockStateData>>();
 		auto clockDataCount = stream.readUnsignedVarInt().value_or(0);
-		if (clockDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < clockDataCount; ++i) {
 		    clockData.push_back(stream.readObject<SyncWorldClockStateData>());
 		}

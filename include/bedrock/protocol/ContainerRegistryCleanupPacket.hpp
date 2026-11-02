@@ -107,9 +107,6 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto removedContainersCount = stream.readUnsignedVarInt().value_or(0);
-		if (removedContainersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < removedContainersCount; ++i) {
 		    removedContainers.push_back(stream.readObject<FullContainerName>());
 		}

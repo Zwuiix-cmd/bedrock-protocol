@@ -119,7 +119,13 @@ public function cppPropertyType(array $property, array $declaration): string
             $doc = (string) ($property['doc'] ?? '');
             $arrayParts = $this->arrayTypeParts($sourceType, $doc);
             if ($arrayParts !== null && $arrayParts['key'] === null) {
-                $result = 'std::vector<' . $inferredType . '>';
+                $elementType = (string) $arrayParts['value'];
+                $elementDeclaration = $this->findDeclaration(CPPName::type($elementType));
+                $semanticElementType = $elementDeclaration !== null
+                    && in_array($elementDeclaration['kind'] ?? null, ['class', 'enum', 'interface'], true)
+                    ? $this->cppType($elementType)
+                    : $inferredType;
+                $result = 'std::vector<' . $semanticElementType . '>';
                 return $this->nullableType($sourceType) ? 'std::optional<' . $result . '>' : $result;
             }
             if (in_array(strtolower($baseType), ['int', 'float', 'bool', 'string'], true)) {

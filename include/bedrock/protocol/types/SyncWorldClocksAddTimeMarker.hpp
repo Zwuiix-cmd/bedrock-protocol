@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
@@ -31,13 +30,10 @@ public:
 		auto clockId = stream.readUnsignedVarLong().value_or(0);
 		auto markers = std::vector<std::shared_ptr<SyncWorldClockMarkerData>>();
 		auto markersCount = stream.readUnsignedVarInt().value_or(0);
-		if (markersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < markersCount; ++i) {
 		    markers.push_back(stream.readObject<SyncWorldClockMarkerData>());
 		}
-		return std::make_shared<SyncWorldClocksAddTimeMarker>(clockId, markers);
+		return std::make_shared<SyncWorldClocksAddTimeMarker>(static_cast<int32_t>(clockId), markers);
     }
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }

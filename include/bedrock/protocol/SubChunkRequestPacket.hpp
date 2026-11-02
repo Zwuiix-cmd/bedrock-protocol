@@ -114,9 +114,6 @@ public:
 		basePosition = std::make_shared<SubChunkPosition>();
 		basePosition->read(stream);
 		auto entriesCount = stream.readUnsignedInt().value_or(0);
-		if (entriesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < entriesCount; i++) {
 		    entries.push_back(stream.readObject<SubChunkPositionOffset>());
 		}

@@ -133,9 +133,6 @@ public:
 				message->messageId = stream.readString().value_or("");
 				message->isInternal = stream.readBool().value_or(false);
 				auto parametersCount = stream.readUnsignedVarInt().value_or(0);
-				if (parametersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-				    throw std::runtime_error("protocol collection is too large");
-				}
 				for (std::size_t i = 0; i < parametersCount; ++i) {
 				    message->parameters.push_back(stream.readString().value_or(""));
 				}

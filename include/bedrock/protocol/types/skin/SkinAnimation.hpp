@@ -52,8 +52,8 @@ public:
 
     virtual void write(BinaryStream& stream) const {
         image->write(stream);
-        stream.writeInt(magic_enum::enum_integer(type));
+        stream.writeUnsignedInt(magic_enum::enum_integer(type));
         stream.writeFloat(frames);
-        stream.writeInt(magic_enum::enum_integer(expressionType));
+        stream.writeUnsignedInt(magic_enum::enum_integer(expressionType));
     }
 };

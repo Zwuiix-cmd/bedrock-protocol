@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 
@@ -21,13 +20,10 @@ public:
 		auto containerId = stream.readUnsignedByte().value_or(0);
 		auto changedSlots = std::vector<uint8_t>();
 		auto changedSlotsCount = stream.readUnsignedVarInt().value_or(0);
-		if (changedSlotsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < changedSlotsCount; ++i) {
 		    changedSlots.push_back(stream.readUnsignedByte().value_or(0));
 		}
-		return std::make_shared<InventoryTransactionChangedSlotsHack>(containerId, changedSlots);
+		return std::make_shared<InventoryTransactionChangedSlotsHack>(static_cast<int32_t>(containerId), changedSlots);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

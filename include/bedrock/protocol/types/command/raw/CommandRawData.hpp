@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -47,21 +46,15 @@ public:
 		auto aliasEnumIndex = stream.readInt().value_or(0);
 		auto chainedSubCommandDataIndexes = std::vector<uint32_t>();
 		auto chainedSubCommandDataIndexesCount = stream.readUnsignedVarInt().value_or(0);
-		if (chainedSubCommandDataIndexesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < chainedSubCommandDataIndexesCount; i++) {
 		    chainedSubCommandDataIndexes.push_back(stream.readUnsignedInt().value_or(0));
 		}
 		auto overloads = std::vector<std::shared_ptr<CommandOverloadRawData>>();
 		auto overloadsCount = stream.readUnsignedVarInt().value_or(0);
-		if (overloadsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < overloadsCount; i++) {
 		    overloads.push_back(stream.readObject<CommandOverloadRawData>());
 		}
-		return std::make_shared<CommandRawData>(name, description, flags, permission, aliasEnumIndex, chainedSubCommandDataIndexes, overloads);
+		return std::make_shared<CommandRawData>(name, description, static_cast<int32_t>(flags), permission, aliasEnumIndex, chainedSubCommandDataIndexes, overloads);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

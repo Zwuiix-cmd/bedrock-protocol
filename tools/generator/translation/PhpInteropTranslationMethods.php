@@ -174,8 +174,8 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
         }
         $staticAlias = $this->catalog->staticCallAlias($class, $name);
         if ($staticAlias !== null) {
-            $staticAlias = str_replace('%VALUE%', $arguments[0] ?? '0', $staticAlias);
-            foreach ($arguments as $index => $argument) {
+            $staticAlias = str_replace('%VALUE%', $rawArguments[0] ?? ($arguments[0] ?? '0'), $staticAlias);
+            foreach ($rawArguments as $index => $argument) {
                 $staticAlias = str_replace('%ARG' . $index . '%', $argument, $staticAlias);
             }
             if (count($call->args) === 1 && $this->isVariadicArgument($call->args[0])) {

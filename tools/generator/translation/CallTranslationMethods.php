@@ -76,6 +76,16 @@ private function methodCall(Node\Expr\MethodCall $call, array $declaration, ?arr
         if (in_array(strtolower($name), ['toargb', 'torgba'], true)) {
             return 'static_cast<uint32_t>(' . $object . ')';
         }
+        if ($objectType !== null && CPPName::type($objectType) === 'Color') {
+            $color = '(' . $object . ')';
+            return match (strtolower($name)) {
+                'getr' => '((' . $color . ' >> 16) & 0xffu)',
+                'getg' => '((' . $color . ' >> 8) & 0xffu)',
+                'getb' => '(' . $color . ' & 0xffu)',
+                'geta' => '((' . $color . ' >> 24) & 0xffu)',
+                default => null,
+            } ?? $this->unsupportedColorGetter($call, $declaration, $method);
+        }
         if (strtolower($name) === 'isverified') {
             return $object . $this->accessOperator($call->var, $declaration) . 'isVerified';
         }
@@ -218,6 +228,13 @@ private function methodCall(Node\Expr\MethodCall $call, array $declaration, ?arr
             return 'std::monostate{}';
         }
         return $object . $access . CPPName::identifier($name) . '(' . $this->arguments($call->args, $declaration, $method) . ')';
+    }
+
+    private function unsupportedColorGetter(Node\Expr\MethodCall $call, array $declaration, ?array $method): string
+    {
+        $name = $call->name instanceof Node\Identifier ? $call->name->toString() : 'call';
+        $this->recordUnsupported($declaration, $method ?? ['name' => 'expression', 'line' => $call->getStartLine()], 'unsupported Color getter: ' . $name);
+        return 'std::monostate{}';
     }
 
 private function encodedValueWrite(Node\Expr\MethodCall $call, array $declaration, ?array $method): ?string

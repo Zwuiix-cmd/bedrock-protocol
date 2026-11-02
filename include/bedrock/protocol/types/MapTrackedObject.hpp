@@ -28,7 +28,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeInt(magic_enum::enum_integer(type));
+        stream.writeUnsignedInt(magic_enum::enum_integer(type));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeActorUniqueID(actorUniqueId);
     }

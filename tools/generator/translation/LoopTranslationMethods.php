@@ -86,9 +86,6 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
-        $lines[] = 'if (' . $countName . ' > ReadOnlyBinaryStream::MaxCollectionSize) {';
-        $lines[] = '    throw std::runtime_error("protocol collection is too large");';
-        $lines[] = '}';
         $counterType = $countInit instanceof Node\Expr\Assign
             ? $this->inferredCPPType($countInit->expr, $declaration)
             : ($this->expressionTypes[$sourceCountName] ?? null);

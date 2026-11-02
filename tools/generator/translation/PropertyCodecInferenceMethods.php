@@ -226,6 +226,10 @@ private function codecExpression(Node $expression, array $variableCodecs, array 
             if (strtolower($name) === 'readoptional' && isset($expression->args[1])) {
                 return $this->codecExpression($expression->args[1]->value, $variableCodecs, $declaration);
             }
+            if (in_array(strtolower($name), ['frompacket', 'fromordinal', 'fromargb', 'fromrgba'], true)
+                && isset($expression->args[0])) {
+                return $this->codecExpression($expression->args[0]->value, $variableCodecs, $declaration);
+            }
             return $this->codecForCall($class, $name);
         }
         if ($expression instanceof Node\Expr\MethodCall) {
@@ -239,6 +243,20 @@ private function codecExpression(Node $expression, array $variableCodecs, array 
             return $this->codecExpression($expression->expr, $variableCodecs, $declaration);
         }
         if ($expression instanceof Node\Expr\Assign) {
+            return $this->codecExpression($expression->expr, $variableCodecs, $declaration);
+        }
+        if ($expression instanceof Node\Expr\Closure) {
+            foreach ($expression->stmts as $statement) {
+                if ($statement instanceof Node\Stmt\Return_) {
+                    $codec = $this->codecExpression($statement->expr, $variableCodecs, $declaration);
+                    if ($codec !== null) {
+                        return $codec;
+                    }
+                }
+            }
+            return null;
+        }
+        if ($expression instanceof Node\Expr\ArrowFunction) {
             return $this->codecExpression($expression->expr, $variableCodecs, $declaration);
         }
         if ($expression instanceof Node\Expr\Ternary) {

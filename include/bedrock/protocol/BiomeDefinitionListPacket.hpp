@@ -108,16 +108,10 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto definitionDataCount = stream.readUnsignedVarInt().value_or(0);
-		if (definitionDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < definitionDataCount; ++i) {
 		    definitionData.push_back(stream.readObject<BiomeDefinitionData>());
 		}
 		auto stringsCount = stream.readUnsignedVarInt().value_or(0);
-		if (stringsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < stringsCount; ++i) {
 		    strings.push_back(stream.readString().value_or(""));
 		}

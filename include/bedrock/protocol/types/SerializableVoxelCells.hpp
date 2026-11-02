@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 
@@ -34,13 +33,10 @@ public:
 		auto zSize = stream.readUnsignedByte().value_or(0);
 		auto storage = std::vector<uint8_t>();
 		auto storageCount = stream.readUnsignedVarInt().value_or(0);
-		if (storageCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < storageCount; ++i) {
 		    storage.push_back(stream.readUnsignedByte().value_or(0));
 		}
-		return std::make_shared<SerializableVoxelCells>(xSize, ySize, zSize, storage);
+		return std::make_shared<SerializableVoxelCells>(static_cast<int32_t>(xSize), static_cast<int32_t>(ySize), static_cast<int32_t>(zSize), storage);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

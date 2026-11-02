@@ -7,7 +7,6 @@
 #include <cstdint>
 #include <exception>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
@@ -43,9 +42,6 @@ public:
 		auto containerInfos = std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>();
 		if (result == magic_enum::enum_integer(Result::Ok)) {
 			auto containerInfosCount = stream.readUnsignedVarInt().value_or(0);
-			if (containerInfosCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; i < containerInfosCount; ++i) {
 			    containerInfos.push_back(stream.readObject<ItemStackResponseContainerInfo>());
 			}

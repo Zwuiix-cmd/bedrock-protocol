@@ -2,30 +2,6 @@
     "translator": "nikic/php-parser AST",
     "unsupported": [
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
-            "method": "write",
-            "line": 49,
-            "reason": "method is not part of the generated type interface: getR"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
-            "method": "write",
-            "line": 49,
-            "reason": "method is not part of the generated type interface: getG"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
-            "method": "write",
-            "line": 49,
-            "reason": "method is not part of the generated type interface: getB"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
-            "method": "write",
-            "line": 49,
-            "reason": "method is not part of the generated type interface: getA"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraFovInstruction",
             "method": "__construct",
             "line": 28,

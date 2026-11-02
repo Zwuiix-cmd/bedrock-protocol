@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -40,13 +39,10 @@ public:
 		auto paused = stream.readBool().value_or(false);
 		auto markers = std::vector<std::shared_ptr<SyncWorldClockMarkerData>>();
 		auto markersCount = stream.readUnsignedVarInt().value_or(0);
-		if (markersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; i < markersCount; ++i) {
 		    markers.push_back(stream.readObject<SyncWorldClockMarkerData>());
 		}
-		return std::make_shared<SyncWorldClockData>(id, name, time, paused, markers);
+		return std::make_shared<SyncWorldClockData>(static_cast<int32_t>(id), name, time, paused, markers);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

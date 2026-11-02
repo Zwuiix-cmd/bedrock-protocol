@@ -266,17 +266,19 @@ trait DeclarationEmissionMethods
                 continue;
             }
             $canonical = $this->canonicalMethodName((string) ($method['name'] ?? ''));
-            if ($isAbstractType
-                || !in_array($canonical, ['read', 'write'], true)
-                || !in_array(strtolower((string) ($method['returnType'] ?? '')), ['self', 'static'], true)
-                || (count($method['parameters'] ?? []) <= 1
-                    && !($canonical === 'read'
-                        && $this->hasReadControlFlow($method)
+            $hasStaticReadBody = $canonical === 'read'
+                && (($this->hasReadControlFlow($method)
                         && !$this->hasReadSwitch($method)
                         && !$this->hasReadOptional($method)
                         && !$this->hasReadNullAssignment($method)
                         && !$this->hasReadElse($method)
-                        && !$this->hasReadAssociativeAssignment($method)))) {
+                        && !$this->hasReadAssociativeAssignment($method))
+                    || $this->hasReadSafeDerivedExpression($method));
+            if ($isAbstractType
+                || !in_array($canonical, ['read', 'write'], true)
+                || !in_array(strtolower((string) ($method['returnType'] ?? '')), ['self', 'static'], true)
+                || (count($method['parameters'] ?? []) <= 1
+                    && !$hasStaticReadBody)) {
                 continue;
             }
             $staticName = 'create';
@@ -355,12 +357,13 @@ trait DeclarationEmissionMethods
                 && $this->canonicalMethodName((string) ($read['name'] ?? '')) === 'read'
                 && strtolower((string) ($read['returnType'] ?? '')) === 'self'
                 && count($read['parameters'] ?? []) <= 1
-                && $this->hasReadControlFlow($read)
-                && !$this->hasReadSwitch($read)
-                && !$this->hasReadOptional($read)
-                && !$this->hasReadNullAssignment($read)
-                && !$this->hasReadElse($read)
-                && !$this->hasReadAssociativeAssignment($read);
+                && (($this->hasReadControlFlow($read)
+                        && !$this->hasReadSwitch($read)
+                        && !$this->hasReadOptional($read)
+                        && !$this->hasReadNullAssignment($read)
+                        && !$this->hasReadElse($read)
+                        && !$this->hasReadAssociativeAssignment($read))
+                    || $this->hasReadSafeDerivedExpression($read));
             $body .= "\n    " . ($this->hasInheritedMethod($declaration, 'read', $types) ? $readSignature . ' override' : 'virtual ' . $readSignature) . " {\n";
             if ($readUsesStaticFactory) {
                 $body .= "        auto decoded = create(stream);\n"
@@ -449,6 +452,55 @@ trait DeclarationEmissionMethods
         foreach ($method['body'] ?? [] as $statement) {
             if ($this->containsReadAssociativeAssignment($statement)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadSafeDerivedExpression(array $method): bool
+    {
+        return $this->hasReadDerivedExpression($method)
+            && !$this->hasReadControlFlow($method)
+            && !$this->hasReadOptional($method)
+            && !$this->hasReadNullAssignment($method)
+            && !$this->hasReadElse($method)
+            && !$this->hasReadAssociativeAssignment($method);
+    }
+
+    private function hasReadDerivedExpression(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadDerivedExpression($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function containsReadDerivedExpression(mixed $node): bool
+    {
+        if ($node instanceof Node\Expr\BinaryOp || $node instanceof Node\Expr\FuncCall) {
+            return true;
+        }
+        if ($node instanceof Node\Expr\New_ && $node->class instanceof Node\Name) {
+            if (!in_array($node->class->getLast(), ['self', 'static'], true)) {
+                return true;
+            }
+        }
+        if (!$node instanceof Node) {
+            return false;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadDerivedExpression($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadDerivedExpression($item)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

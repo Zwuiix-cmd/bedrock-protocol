@@ -88,7 +88,10 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
+#include <bedrock/protocol/types/InputMode.hpp>
+#include <bedrock/protocol/types/InteractionMode.hpp>
 #include <bedrock/protocol/types/ItemInteractionData.hpp>
+#include <bedrock/protocol/types/PlayMode.hpp>
 #include <bedrock/protocol/types/PlayerAuthInputFlags.hpp>
 #include <bedrock/protocol/types/PlayerAuthInputVehicleInfo.hpp>
 #include <bedrock/protocol/types/PlayerBlockAction.hpp>
@@ -111,9 +114,9 @@ public:
     float moveVecX;
     float moveVecZ;
     PlayerAuthInputFlags inputFlags;
-    uint32_t inputMode;
-    uint32_t playMode;
-    uint32_t interactionMode;
+    InputMode inputMode;
+    PlayMode playMode;
+    InteractionMode interactionMode;
     glm::vec2 interactRotation;
     uint64_t tick;
     glm::vec3 delta;
@@ -139,9 +142,15 @@ public:
 		moveVecZ = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
 		inputFlags = stream.readValue<PlayerAuthInputFlags>();
-		inputMode = stream.readUnsignedVarInt().value_or(0);
-		playMode = stream.readUnsignedVarInt().value_or(0);
-		interactionMode = stream.readUnsignedVarInt().value_or(0);
+		inputMode = magic_enum::enum_cast<InputMode>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(InputMode::MouseKeyboard);
+		playMode = magic_enum::enum_cast<PlayMode>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(PlayMode::Normal);
+		interactionMode = magic_enum::enum_cast<InteractionMode>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(InteractionMode::Touch);
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
@@ -185,9 +194,9 @@ public:
 		stream.writeFloat(moveVecZ);
 		stream.writeFloat(headYaw);
 		inputFlags.write(stream);
-		stream.writeUnsignedVarInt(inputMode);
-		stream.writeUnsignedVarInt(playMode);
-		stream.writeUnsignedVarInt(interactionMode);
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(inputMode));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(playMode));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(interactionMode));
 		stream.writeVec2(interactRotation);
 		stream.writeUnsignedVarLong(tick);
 		stream.writeVec3(delta);

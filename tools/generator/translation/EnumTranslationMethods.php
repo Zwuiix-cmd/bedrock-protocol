@@ -73,6 +73,22 @@ private function propertyEnumType(array $property, array $declaration): ?string
         if ($type !== 'int') {
             return $this->stringEnumName($property, $declaration);
         }
+        $name = strtolower((string) ($property['name'] ?? ''));
+        $normalizedName = preg_replace('/[^a-z0-9]/', '', $name) ?? $name;
+        foreach ($this->declarations as $candidate) {
+            if (!$this->isEnumLikeDeclaration($candidate)) {
+                continue;
+            }
+            $candidateName = strtolower((string) ($candidate['name'] ?? ''));
+            $normalizedCandidate = preg_replace('/[^a-z0-9]/', '', $candidateName) ?? $candidateName;
+            if ($normalizedName === $normalizedCandidate) {
+                $cppType = $this->catalog->typeAlias((string) $candidate['name'])
+                    ?? CPPName::type((string) $candidate['name']);
+                return (string) ($property['name'] ?? '') === (string) ($candidate['name'] ?? '')
+                    ? '::' . ltrim($cppType, ':')
+                    : $cppType;
+            }
+        }
         $default = $property['defaultNode'] ?? null;
         if ($default instanceof Node\Expr\ClassConstFetch && $default->class instanceof Node\Name) {
             $class = $default->class->getLast();
@@ -80,8 +96,6 @@ private function propertyEnumType(array $property, array $declaration): ?string
                 return 'BuildPlatform';
             }
         }
-        $name = strtolower((string) ($property['name'] ?? ''));
-        $normalizedName = preg_replace('/[^a-z0-9]/', '', $name) ?? $name;
         $constantGroups = [];
         foreach ($declaration['constants'] ?? [] as $constant) {
             $constantName = (string) ($constant['name'] ?? '');

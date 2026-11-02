@@ -207,12 +207,19 @@ trait PacketEmissionMethods
                 }
             }
             if (preg_match('/(?:action|rotation|status|state|mode|type|result|request|event|property|reason|severity|algorithm)$/', $propertyName) === 1) {
-                $semanticProperties[] = $propertyName;
+                $semanticProperties[] = (string) ($property['name'] ?? $propertyName);
             }
         }
 
         $constantCount = count($integer) + array_sum(array_map('count', $enumGroups));
-        if ($matchingPrefixes === [] && count($semanticProperties) === 1 && $constantCount >= 2) {
+        $multiCaseGroups = array_filter(
+            $enumGroups,
+            static fn (array $cases): bool => count($cases) >= 2,
+        );
+        if ($matchingPrefixes === []
+            && count($semanticProperties) === 1
+            && $constantCount >= 2
+            && count($multiCaseGroups) !== 1) {
             $semanticProperty = $semanticProperties[0];
             $combined = [];
             foreach ($enumGroups as $prefix => $cases) {
@@ -232,7 +239,6 @@ trait PacketEmissionMethods
         }
         foreach ($enumGroups as $prefix => $cases) {
             $emit = count($cases) >= 2
-                || isset($matchingPrefixes[$prefix])
                 || in_array(strtoupper((string) $prefix), ['TYPE', 'CATEGORY'], true);
             if (!$emit) {
                 foreach ($cases as $case => $value) {
@@ -276,7 +282,8 @@ trait PacketEmissionMethods
                 [$nested] = explode('_', (string) $case, 2);
                 $nestedPrefixes[$nested] = true;
             }
-            if (count($nestedPrefixes) !== 1
+            if (count($cases) < 2
+                || count($nestedPrefixes) !== 1
                 || !$this->enumPrefixMatchesDeclarationProperty((string) $prefix, $declaration)) {
                 $normalized[$prefix] = $cases;
                 continue;
@@ -426,9 +433,8 @@ trait PacketEmissionMethods
             return '';
         }
         $owner = $this->generatedTypeName($declaration);
-        $body = '';
+        $body = "\nnamespace magic_enum::customize {\n\n";
         foreach ($definitions as $enumName => $definition) {
-            $body .= "\nnamespace magic_enum::customize {\n\n";
             $body .= 'template <> constexpr customize_t enum_name<' . $owner . '::' . $enumName . '>('
                 . $owner . '::' . $enumName . " value) noexcept {\n"
                 . "    switch (value) {\n";
@@ -437,8 +443,9 @@ trait PacketEmissionMethods
                     . ': return ' . json_encode($value, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ";\n";
             }
             $body .= "        default: return invalid_tag;\n"
-                . "    }\n}\n\n}\n";
+                . "    }\n}\n\n";
         }
+        $body .= "}\n";
         return $body;
     }
 

@@ -86,9 +86,9 @@ trait TypeDefinitionEmissionMethods
                 $arguments[] = 'isStartGame';
             }
             $cases[] = '        case ' . $id . ': return ' . $this->generatedTypeName($derivedType)
-                . '::decode(' . implode(', ', $arguments) . ");\n";
+                . '::create(' . implode(', ', $arguments) . ");\n";
         }
-        $body = "\ninline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {\n"
+        $body = "\ninline std::shared_ptr<GameRule> GameRule::create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {\n"
             . "    switch (stream.readUnsignedVarInt().value_or(0)) {\n"
             . implode('', $cases)
             . "        default: return nullptr;\n"
@@ -99,7 +99,7 @@ trait TypeDefinitionEmissionMethods
             . "    for (uint32_t index = 0; index < count; ++index) {\n"
             . "        auto name = stream.readString().value_or(\"\");\n"
             . "        const auto isPlayerModifiable = stream.readBool().value_or(false);\n"
-            . "        rules.emplace(std::move(name), decode(stream, isPlayerModifiable, isStartGame));\n"
+            . "        rules.emplace(std::move(name), GameRule::create(stream, isPlayerModifiable, isStartGame));\n"
             . "    }\n"
             . "    return rules;\n}\n"
             . "\ninline void GameRule::writeRules(BinaryStream& stream, const std::map<std::string, std::shared_ptr<GameRule>>& rules, const bool& isStartGame) {\n"

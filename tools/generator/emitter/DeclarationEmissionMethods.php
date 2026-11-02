@@ -122,8 +122,7 @@ trait DeclarationEmissionMethods
     private function writeType(string $output, array $declaration, array $types): void
     {
         $name = $this->generatedTypeName($declaration);
-        $body = "#pragma once\n\n#include <cstdint>\n#include <limits>\n#include <memory>\n#include <optional>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <utility>\n#include <vector>\n#include <bedrock/protocol/io/BinaryStream.hpp>\n#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>\n#include <bedrock/protocol/Forward.hpp>\n";
-        $body = str_replace('#include <memory>', "#include <magic_enum/magic_enum.hpp>\n#include <memory>", $body);
+        $body = "#pragma once\n\n__GENERATED_STANDARD_INCLUDES__\n";
         $propertyTypes = [];
         foreach ($declaration['properties'] as $property) {
             if (!($property['static'] ?? false)) {
@@ -167,6 +166,21 @@ trait DeclarationEmissionMethods
                     if ($part !== '') {
                         $referencedNames[] = CPPName::type($part);
                     }
+                }
+            }
+        }
+        foreach ($types as $type) {
+            $typeName = $this->generatedTypeName($type);
+            if ($typeName === $name) {
+                continue;
+            }
+            foreach ($propertyTypes as $propertyType) {
+                if (preg_match(
+                    '/(?<![A-Za-z0-9_])' . preg_quote($typeName, '/') . '(?![A-Za-z0-9_])/',
+                    $propertyType,
+                ) === 1) {
+                    $referencedNames[] = $typeName;
+                    break;
                 }
             }
         }
@@ -256,7 +270,7 @@ trait DeclarationEmissionMethods
                 || count($method['parameters'] ?? []) <= 1) {
                 continue;
             }
-            $staticName = CPPName::identifier((string) ($method['name'] ?? 'decode'));
+            $staticName = 'create';
             $body .= "\n    static std::shared_ptr<" . $name . "> " . $staticName
                 . '(' . $this->serializerParameters($method) . ") {\n";
             $body .= $this->translator->methodBody($method, $declaration, true) . "\n";
@@ -313,7 +327,7 @@ trait DeclarationEmissionMethods
             $body .= $this->polymorphicFactory($name, $derivedTypes);
         }
         if ($name === 'GameRule') {
-            $body .= "\n    static std::shared_ptr<GameRule> decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame);\n";
+            $body .= "\n    static std::shared_ptr<GameRule> create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame);\n";
             $body .= "    static std::map<std::string, std::shared_ptr<GameRule>> readRules(ReadOnlyBinaryStream& stream, const bool& isStartGame);\n";
             $body .= "    static void writeRules(BinaryStream& stream, const std::map<std::string, std::shared_ptr<GameRule>>& rules, const bool& isStartGame);\n";
         }
@@ -342,6 +356,48 @@ trait DeclarationEmissionMethods
         }
         $body .= "};\n";
         $body .= $this->stringEnumCustomizations($declaration);
+        $body = str_replace(
+            '__GENERATED_STANDARD_INCLUDES__',
+            $this->standardTypeIncludes($body),
+            $body,
+        );
         $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
+    }
+
+    private function standardTypeIncludes(string $body): string
+    {
+        $includes = [
+            '<bedrock/protocol/io/BinaryStream.hpp>',
+            '<bedrock/protocol/io/ReadOnlyBinaryStream.hpp>',
+        ];
+        $patterns = [
+            '<magic_enum/magic_enum.hpp>' => 'magic_enum::',
+            '<array>' => 'std::array<',
+            '<cstddef>' => 'std::(?:size_t|ptrdiff_t)',
+            '<cstdint>' => '\\b(?:u?int(?:8|16|32|64)_t|uint8_t|uint16_t|uint32_t|uint64_t)\\b|enum class [A-Za-z_]\\w*\\s*:',
+            '<exception>' => 'std::exception',
+            '<limits>' => 'std::numeric_limits<',
+            '<memory>' => 'std::shared_ptr<|std::make_shared<',
+            '<optional>' => 'std::optional<|std::nullopt',
+            '<stdexcept>' => 'std::runtime_error|std::logic_error|std::invalid_argument',
+            '<string>' => 'std::string(?:[>;)]|\\s)',
+            '<string_view>' => 'std::string_view',
+            '<tuple>' => 'std::tuple<',
+            '<type_traits>' => 'std::(?:is_|remove_|underlying_type)',
+            '<unordered_map>' => 'std::unordered_map<',
+            '<utility>' => 'std::(?:move|forward|swap|pair)',
+            '<variant>' => 'std::(?:variant|monostate|get<|visit\\()',
+            '<vector>' => 'std::vector<',
+            '<map>' => 'std::map<',
+        ];
+        foreach ($patterns as $include => $pattern) {
+            if (preg_match('/' . $pattern . '/', $body) === 1) {
+                $includes[] = $include;
+            }
+        }
+        return implode("\n", array_map(
+            static fn (string $include): string => '#include ' . $include,
+            $includes,
+        )) . "\n";
     }
 }

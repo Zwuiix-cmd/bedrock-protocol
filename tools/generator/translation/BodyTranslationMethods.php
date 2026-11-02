@@ -26,7 +26,8 @@ public function methodBody(array $method, array $declaration, bool $returnShared
         $lines = [];
         foreach ($this->nestedAssignmentNodes($statements) as $name => $assignment) {
             $value = $this->expression($assignment->expr, $declaration, $method);
-            $lines[] = "\t\tstd::remove_cvref_t<decltype(" . $value . ")> " . $this->variableName($name, $declaration) . "{};";
+            $type = $this->inferredCPPType($assignment->expr, $declaration) ?? 'std::remove_cvref_t<decltype(' . $value . ')>';
+            $lines[] = "\t\t" . $type . ' ' . $this->variableName($name, $declaration) . "{};";
             $this->declaredVariables[$name] = true;
         }
         foreach ($statements as $statement) {
@@ -155,6 +156,15 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     $declaration,
                 );
                 $enumType = $this->propertyEnumType($property, $declaration);
+                if ($enumType === null) {
+                    $propertyCPPType = $this->cppPropertyType($property, $declaration);
+                    if ($this->isInlineEnumType($propertyCPPType, $declaration)) {
+                        $enumType = $propertyCPPType;
+                    }
+                }
+                if ($enumType !== null && $this->catalog->typeCodec($enumType) !== null) {
+                    $enumType = null;
+                }
                 if ($enumType !== null) {
                     $stringEnum = $this->stringEnumName($property, $declaration);
                     if ($stringEnum !== null) {
@@ -175,13 +185,22 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     . $this->indentExpressionContinuation($value, '        ') . ';';
             } elseif (!$returnShared) {
                 $enumType = $this->propertyEnumType($property, $declaration);
+                if ($enumType === null) {
+                    $propertyCPPType = $this->cppPropertyType($property, $declaration);
+                    if ($this->isInlineEnumType($propertyCPPType, $declaration)) {
+                        $enumType = $propertyCPPType;
+                    }
+                }
+                if ($enumType !== null && $this->catalog->typeCodec($enumType) !== null) {
+                    $enumType = null;
+                }
                 $isStringEnum = $this->stringEnumName($property, $declaration) !== null
                     || $this->stringEnumCases($property, $declaration) !== [];
                 $inferredValue = $isStringEnum
                     ? 'magic_enum::enum_name(' . $field . ')'
                     : $field;
                 $inferredWrite = $this->inferredPropertyWriteValue($declaration, $property, $inferredValue);
-                if ($inferredWrite !== null) {
+                if ($inferredWrite !== null && $enumType === null) {
                     $inferredWrite = preg_replace(
                         '/magic_enum::enum_integer\(magic_enum::enum_integer\(([^()]*)\)\)/',
                         'magic_enum::enum_integer($1)',
@@ -192,6 +211,24 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 }
                 $value = $field;
                 if ($enumType !== null) {
+                    $isNullable = $this->nullableType((string) ($property['type'] ?? ''))
+                        || $this->nullableType($this->docType($property['doc'] ?? null) ?? '');
+                    if ($isNullable) {
+                        $baseType = $this->withoutNullType((string) ($property['type'] ?? ''));
+                        $optionalWrite = $this->fallbackWriteValue(
+                            $baseType,
+                            null,
+                            'optionalValue',
+                            $declaration,
+                        );
+                        $optionalWriteStatement = 'stream.writeOptional('
+                            . $field
+                            . ', '
+                            . $this->callback('const auto& optionalValue', $optionalWrite)
+                            . ');';
+                        $lines[] = $this->indentGeneratedStatement($optionalWriteStatement, '        ');
+                        continue;
+                    }
                     $value = $isStringEnum
                         ? $this->stringEnumToStringForProperty($property, $value, $declaration)
                         : (str_contains($value, 'magic_enum::enum_integer')
@@ -314,6 +351,19 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
 
     private function directReadAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string
     {
+        if ($assignment->var instanceof Node\Expr\ArrayDimFetch) {
+            return null;
+        }
+        if ($assignment->expr instanceof Node\Expr\MethodCall
+            && $assignment->expr->var instanceof Node\Expr\New_
+            && $assignment->expr->var->class instanceof Node\Name
+            && $assignment->expr->name instanceof Node\Identifier
+            && $this->catalog->staticCallAlias(
+                $assignment->expr->var->class->getLast(),
+                $assignment->expr->name->toString(),
+            ) !== null) {
+            return null;
+        }
         if (!$this->isDeserializerExpression($assignment->expr)
             && !($assignment->expr instanceof Node\Expr\StaticCall)
             && !($assignment->expr instanceof Node\Expr\MethodCall)) {
@@ -357,11 +407,23 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
         }
 
         $target = $this->expression($assignment->var, $declaration, $method);
+        $readTarget = $target;
+        $assignmentType = $this->assignmentCPPType($assignment->var, $declaration);
+        if ($assignmentType !== null && str_contains($assignmentType, 'std::optional<std::shared_ptr<')) {
+            $readTarget .= '.value()';
+        }
+        $optionalValue = $assignmentType !== null
+            && preg_match('/^std::optional<([^>]+)>$/', $assignmentType, $optionalType) === 1
+            && !str_starts_with($optionalType[1], 'std::shared_ptr<');
         $local = $assignment->var instanceof Node\Expr\Variable;
         if ($objectType['pointer']) {
             return ($local ? 'auto ' . $target . ' =' : $target . ' =')
                 . ' std::make_shared<' . $objectType['type'] . '>();' . "\n"
-                . $target . '->read(stream);';
+                . $readTarget . '->read(stream);';
+        }
+        if ($optionalValue) {
+            return $target . '.emplace();' . "\n"
+                . $target . '.value().read(stream);';
         }
         return ($local ? 'auto ' . $target . ' = ' . $objectType['type'] . '{};' : $target . '.read(stream);')
             . ($local ? "\n" . $target . '.read(stream);' : '');

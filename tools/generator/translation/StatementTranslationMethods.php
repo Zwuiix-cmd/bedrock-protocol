@@ -367,7 +367,9 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         if ($statement instanceof Node\Stmt\Switch_) {
             $switchValue = $this->expression($statement->cond, $declaration, $method);
-            $switchType = $this->enumPropertyType($statement->cond, $declaration) ?? $this->expressionType($statement->cond, $declaration);
+            $switchType = $this->enumPropertyType($statement->cond, $declaration)
+                ?? $this->assignmentCPPType($statement->cond, $declaration)
+                ?? $this->expressionType($statement->cond, $declaration);
             $switchCPPType = $switchType === null ? null : CPPName::type($switchType);
             $text = $prefix . 'switch (' . $switchValue . ") {\n";
             $casePrefix = str_repeat("\t", $indent + 1);
@@ -382,8 +384,21 @@ private function statement(Node $statement, array $declaration, array $method, i
                     } else {
                         $caseValue = $this->expression($case->cond, $declaration, $method);
                         $caseEnumType = $this->enumExpressionType($case->cond, $declaration);
-                        if ($caseEnumType !== null && $switchCPPType !== $caseEnumType) {
+                        if ($switchCPPType === null && $caseEnumType !== null) {
+                            $switchCPPType = $caseEnumType;
+                        }
+                        $switchParts = $switchCPPType === null ? [] : explode('::', $switchCPPType);
+                        $caseParts = $caseEnumType === null ? [] : explode('::', $caseEnumType);
+                        $switchEnumName = $switchParts === [] ? null : (string) end($switchParts);
+                        $caseEnumName = $caseParts === [] ? null : (string) end($caseParts);
+                        if ($caseEnumType !== null
+                            && $switchEnumName !== $caseEnumName) {
                             $caseValue = $this->enumStorageValue($caseValue, $caseEnumType);
+                        }
+                        if ($statement->cond instanceof Node\Expr\PropertyFetch
+                            && str_starts_with($caseValue, 'magic_enum::enum_integer(')
+                            && str_ends_with($caseValue, ')')) {
+                            $caseValue = substr($caseValue, strlen('magic_enum::enum_integer('), -1);
                         }
                         $labels[] = 'case ' . $caseValue . ':';
                     }
@@ -508,9 +523,16 @@ private function matchAssignment(
         }
 
         $match = $assignment->expr;
-        $target = $this->expression($assignment->var, $declaration, $method);
-        $targetType = $this->classConstantType($match)
-            ?? $this->assignmentCPPType($assignment->var, $declaration);
+        $append = $assignment->var instanceof Node\Expr\ArrayDimFetch
+            && $assignment->var->dim === null;
+        $container = $append ? $assignment->var->var : null;
+        $target = $this->expression($container ?? $assignment->var, $declaration, $method);
+        if ($append && $this->isOptionalContainer($container, $declaration)) {
+            $target .= '.value()';
+        }
+        $targetType = $append
+            ? $this->appendElementCPPType($container, $declaration)
+            : ($this->classConstantType($match) ?? $this->assignmentCPPType($assignment->var, $declaration));
         $localName = $assignment->var instanceof Node\Expr\Variable
             && $assignment->var->name !== 'this'
             ? (string) $assignment->var->name
@@ -610,13 +632,30 @@ private function matchAssignment(
             if (str_starts_with(ltrim($body), 'throw ')) {
                 $lines[] = "\t\t" . $body;
             } else {
-                $lines[] = "\t\t" . $target . ' = ' . $body . ';';
+                $lines[] = $append
+                    ? "\t\t" . $target . '.push_back(' . $body . ');'
+                    : "\t\t" . $target . ' = ' . $body . ';';
                 $lines[] = "\t\tbreak;";
             }
             $lines[] = "\t}";
         }
         $lines[] = '}';
         return implode("\n", $lines);
+    }
+
+private function appendElementCPPType(?Node\Expr $container, array $declaration): ?string
+    {
+        if ($container === null) {
+            return null;
+        }
+        $type = $this->emittedExpressionType($container, $declaration);
+        if ($type !== null && preg_match('/^std::optional<(.+)>$/', $type, $optional) === 1) {
+            $type = $optional[1];
+        }
+        if ($type !== null && preg_match('/^std::vector<(.+)>$/', $type, $vector) === 1) {
+            return $vector[1];
+        }
+        return null;
     }
 
 private function isTrueMatch(Node\Expr\Match_ $match): bool
@@ -720,6 +759,26 @@ private function simpleMatchSubject(Node\Expr $expression): bool
 private function conditionExpression(Node\Expr $condition, array $declaration, ?array $method): string
     {
         $value = trim($this->expression($condition, $declaration, $method));
+        $value = preg_replace_callback(
+            '/(?<![A-Za-z0-9_])((?:[A-Za-z_]\\w*::){2}[A-Za-z_]\\w*)/',
+            static function (array $matches) use ($value): string {
+                $offset = $matches[1][1];
+                $prefix = substr($value, 0, $offset);
+                return str_ends_with($prefix, 'enum_integer(')
+                    ? $matches[1][0]
+                    : 'magic_enum::enum_integer(' . $matches[1][0] . ')';
+            },
+            $value,
+            -1,
+            $count,
+            PREG_OFFSET_CAPTURE,
+        ) ?? $value;
+        $value = preg_replace(
+            '/((?:[A-Za-z_]\\w*(?:->|\\.)[A-Za-z_]\\w*))\\s*(==|!=)\\s*'
+                . '(magic_enum::enum_integer\\([^)]*\\))/',
+            'magic_enum::enum_integer($1) $2 $3',
+            $value,
+        ) ?? $value;
         while ($this->hasOuterParentheses($value)) {
             $value = trim(substr($value, 1, -1));
         }

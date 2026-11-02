@@ -124,6 +124,9 @@ private function stringEnumTypeName(array $property): string
     /** @return array<string, string> */
     private function stringEnumCases(array $property, array $declaration): array
     {
+        if (strtolower(ltrim((string) ($property['type'] ?? ''), '?')) !== 'string') {
+            return [];
+        }
         $groups = [];
         foreach ($declaration['constants'] ?? [] as $constant) {
             if (!is_string($constant['value'] ?? null)) {

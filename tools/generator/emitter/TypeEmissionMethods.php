@@ -160,7 +160,7 @@ trait TypeEmissionMethods
 
     private function polymorphicFactory(string $baseName, array $derivedTypes): string
     {
-        return "\n    static std::shared_ptr<" . $baseName . "> decode(ReadOnlyBinaryStream& stream);\n";
+        return "\n    static std::shared_ptr<" . $baseName . "> create(ReadOnlyBinaryStream& stream);\n";
     }
 
     private function polymorphicFactoryDefinition(string $baseName, array $derivedTypes): string
@@ -184,7 +184,7 @@ trait TypeEmissionMethods
         if ($cases === []) {
             return '';
         }
-        return "\ninline std::shared_ptr<" . $baseName . "> " . $baseName . "::decode(ReadOnlyBinaryStream& stream) {\n"
+        return "\ninline std::shared_ptr<" . $baseName . "> " . $baseName . "::create(ReadOnlyBinaryStream& stream) {\n"
             . "    switch (stream.readUnsignedVarInt().value_or(0)) {\n"
             . implode('', $cases)
             . "        default:\n            return nullptr;\n"

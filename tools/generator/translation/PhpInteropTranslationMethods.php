@@ -122,6 +122,11 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
                 }
                 $optionalArguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method, false), $call->args);
                 $value = $optionalArguments[1] ?? 'std::monostate{}';
+                $value = preg_replace(
+                    '/^magic_enum::enum_integer\((.*)\)$/s',
+                    '$1',
+                    $value,
+                ) ?? $value;
                 $callback = $arguments[2] ?? '[&](const auto&) {}';
                 return $stream . '.writeOptional(' . $value . ', ' . $callback . ')';
             }
@@ -199,7 +204,7 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
                 $hasContextStaticMethod = $hasContextStaticMethod || count($candidate['parameters'] ?? []) > 1;
             }
             if ($hasContextStaticMethod) {
-                return $cppClass . '::' . CPPName::identifier($name) . '(' . implode(', ', $arguments) . ')';
+                return $cppClass . '::create(' . implode(', ', $arguments) . ')';
             }
             if ($hasStaticMethod) {
                 return $this->readObject($cppClass);
@@ -293,12 +298,22 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             return CPPName::identifier($name);
         }
         $referenced = $this->findDeclaration($class);
-        if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
-            return CPPName::type($class) . '::' . CPPName::enumCase($name);
+        if ($referenced === null) {
+            foreach ($this->declarations as $candidate) {
+                if (($candidate['name'] ?? null) === $class) {
+                    $referenced = $candidate;
+                    break;
+                }
+            }
         }
         $alias = $this->catalog->constantAlias($class, $name);
         if ($alias !== null) {
             return $alias;
+        }
+        if ($referenced !== null
+            && $this->catalog->typeAlias($class) === null
+            && $this->isEnumLikeDeclaration($referenced)) {
+            return CPPName::type($class) . '::' . CPPName::enumCase($name);
         }
         if ($name === 'NETWORK_ID') {
             return 'ID';
@@ -351,8 +366,13 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             $outerPrefix = (string) $parts[0];
             $nestedPrefix = (string) $parts[1];
             $nestedCount = 0;
+            $outerCount = 0;
             foreach ($declaration['constants'] ?? [] as $constant) {
                 $constantName = (string) ($constant['name'] ?? '');
+                if (str_starts_with($constantName, $outerPrefix . '_')
+                    && (is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null))) {
+                    ++$outerCount;
+                }
                 if (str_starts_with($constantName, $outerPrefix . '_' . $nestedPrefix . '_')
                     && (is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null))) {
                     ++$nestedCount;
@@ -364,8 +384,10 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
                         continue;
                     }
                     if ($this->constantPrefixMatchesProperty($outerPrefix, strtolower((string) ($property['name'] ?? '')))) {
-                        return CPPName::enumCase($nestedPrefix) . '::'
-                            . CPPName::enumCase(implode('_', array_slice($parts, 2)));
+                        $caseName = implode('_', array_slice($parts, 2));
+                        return $nestedCount === $outerCount
+                            ? CPPName::enumCase($nestedPrefix) . '::' . CPPName::enumCase($caseName)
+                            : CPPName::enumCase($outerPrefix) . '::' . CPPName::enumCase($nestedPrefix . '_' . $caseName);
                     }
                 }
             }
@@ -383,14 +405,15 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             return CPPName::enumCase($prefix) . '::' . CPPName::enumCase($case);
         }
         foreach ($declaration['properties'] ?? [] as $property) {
-            if (($property['static'] ?? false)
-                || ltrim((string) ($property['type'] ?? ''), '?') !== 'int') {
+            if (($property['static'] ?? false)) {
                 continue;
             }
-            $propertyName = strtolower((string) ($property['name'] ?? ''));
-            if ($this->constantPrefixMatchesProperty($prefix, $propertyName)) {
-                return CPPName::enumCase($prefix) . '::' . CPPName::enumCase($case);
+            $enumType = $this->propertyEnumType($property, $declaration);
+            if ($enumType === null
+                || !str_contains(strtolower((string) ($property['name'] ?? '')), 'state')) {
+                continue;
             }
+            return $enumType . '::' . CPPName::enumCase($case);
         }
         return null;
     }

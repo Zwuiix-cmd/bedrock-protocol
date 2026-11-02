@@ -31,11 +31,44 @@ private function inferredCPPType(Node $expression, array $declaration): ?string
         if ($expression instanceof Node\Scalar\String_) {
             return 'std::string';
         }
+        if ($expression instanceof Node\Expr\BinaryOp) {
+            if ($expression instanceof Node\Expr\BinaryOp\Equal
+                || $expression instanceof Node\Expr\BinaryOp\Identical
+                || $expression instanceof Node\Expr\BinaryOp\NotEqual
+                || $expression instanceof Node\Expr\BinaryOp\NotIdentical
+                || $expression instanceof Node\Expr\BinaryOp\Greater
+                || $expression instanceof Node\Expr\BinaryOp\GreaterOrEqual
+                || $expression instanceof Node\Expr\BinaryOp\Smaller
+                || $expression instanceof Node\Expr\BinaryOp\SmallerOrEqual
+                || $expression instanceof Node\Expr\BinaryOp\BooleanAnd
+                || $expression instanceof Node\Expr\BinaryOp\BooleanOr) {
+                return 'bool';
+            }
+            $left = $this->inferredCPPType($expression->left, $declaration);
+            $right = $this->inferredCPPType($expression->right, $declaration);
+            if ($left !== null && $right !== null && $left === $right) {
+                return $left;
+            }
+            if ($left !== null && in_array($left, ['float', 'double'], true)) {
+                return $left;
+            }
+            if ($right !== null && in_array($right, ['float', 'double'], true)) {
+                return $right;
+            }
+            if ($left !== null || $right !== null) {
+                return 'int64_t';
+            }
+        }
         if ($expression instanceof Node\Expr\ConstFetch) {
             return match (strtolower($expression->name->toString())) {
                 'true', 'false' => 'bool',
                 default => null,
             };
+        }
+        if ($expression instanceof Node\Expr\FuncCall
+            && $expression->name instanceof Node\Name
+            && in_array(strtolower($expression->name->toString()), ['count', 'sizeof', 'strlen'], true)) {
+            return 'std::size_t';
         }
         if ($expression instanceof Node\Expr\ClassConstFetch) {
             $class = $expression->class instanceof Node\Name ? $expression->class->getLast() : '';
@@ -64,6 +97,11 @@ private function inferredCPPType(Node $expression, array $declaration): ?string
             $name = $expression->name instanceof Node\Identifier ? $expression->name->toString() : '';
             $codec = $this->codecForCall('stream', $name);
             return $codec['type'] ?? null;
+        }
+        if ($expression instanceof Node\Expr\MethodCall
+            && $expression->name instanceof Node\Identifier
+            && strtolower($expression->name->toString()) === 'size') {
+            return 'std::size_t';
         }
         if ($expression instanceof Node\Expr\PropertyFetch || $expression instanceof Node\Expr\ArrayDimFetch || $expression instanceof Node\Expr\MethodCall) {
             $type = $this->expressionType($expression, $declaration);

@@ -35,6 +35,7 @@ private function enumPropertyType(Node $expression, array $declaration): ?string
         if ($expression->var instanceof Node\Expr\Variable && $expression->var->name !== 'this') {
             $objectType = $this->expressionTypes[(string) $expression->var->name] ?? null;
             if ($objectType !== null) {
+                $objectType = preg_replace('/^std::shared_ptr<(.+)>$/', '$1', $objectType) ?? $objectType;
                 $referenced = $this->findDeclaration(CPPName::type($objectType));
                 foreach ($referenced['properties'] ?? [] as $property) {
                     if (($property['name'] ?? null) === $name) {
@@ -62,6 +63,9 @@ private function enumPropertyType(Node $expression, array $declaration): ?string
 private function propertyEnumType(array $property, array $declaration): ?string
     {
         $type = ltrim((string) ($property['type'] ?? ''), '?');
+        if ($type !== '' && $this->catalog->typeCodec($type) !== null) {
+            return null;
+        }
         $referenced = $this->findDeclaration(CPPName::type($type));
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
             return CPPName::type($type);
@@ -78,19 +82,6 @@ private function propertyEnumType(array $property, array $declaration): ?string
         }
         $name = strtolower((string) ($property['name'] ?? ''));
         $normalizedName = preg_replace('/[^a-z0-9]/', '', $name) ?? $name;
-        foreach ($this->declarations as $candidate) {
-            if (!$this->isEnumLikeDeclaration($candidate)) {
-                continue;
-            }
-            $candidateName = strtolower((string) ($candidate['name'] ?? ''));
-            $normalizedCandidate = preg_replace('/[^a-z0-9]/', '', $candidateName) ?? $candidateName;
-            if ($normalizedName === $normalizedCandidate) {
-                $cppType = $this->catalog->typeAlias((string) $candidate['name']) ?? CPPName::type((string) $candidate['name']);
-                return (string) ($property['name'] ?? '') === (string) ($candidate['name'] ?? '')
-                    ? '::' . ltrim($cppType, ':')
-                    : $cppType;
-            }
-        }
         $constantGroups = [];
         foreach ($declaration['constants'] ?? [] as $constant) {
             $constantName = (string) ($constant['name'] ?? '');
@@ -101,10 +92,34 @@ private function propertyEnumType(array $property, array $declaration): ?string
             [$prefix, $case] = explode('_', $constantName, 2);
             $constantGroups[$prefix][$case] = (int) $constant['value'];
         }
+        $matchingGroups = [];
         foreach ($constantGroups as $prefix => $cases) {
-            if ($this->enumPrefixMatchesProperty($prefix, $normalizedName)) {
-                return CPPName::enumCase($prefix);
+            if (count($cases) >= 2 && $this->enumPrefixMatchesProperty($prefix, $normalizedName)) {
+                $matchingGroups[$prefix] = $cases;
             }
+        }
+        if ($matchingGroups !== []) {
+            uksort(
+                $matchingGroups,
+                static fn (string $left, string $right): int => strlen($right) <=> strlen($left),
+            );
+            $prefix = (string) array_key_first($matchingGroups);
+            $cases = $matchingGroups[$prefix];
+            $nestedPrefixes = [];
+            foreach (array_keys($cases) as $case) {
+                if (str_contains((string) $case, '_')) {
+                    [$nested] = explode('_', (string) $case, 2);
+                    $nestedPrefixes[$nested] = true;
+                }
+            }
+            if (count($nestedPrefixes) === 1
+                && count(array_filter(
+                    array_keys($cases),
+                    static fn (string $case): bool => str_contains($case, '_'),
+                )) === count($cases)) {
+                return CPPName::enumCase((string) array_key_first($nestedPrefixes));
+            }
+            return CPPName::enumCase($prefix);
         }
         $matchingPrefixes = [];
         $semanticProperties = [];
@@ -127,10 +142,15 @@ private function propertyEnumType(array $property, array $declaration): ?string
             static fn (array $constant): int => is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null) ? 1 : 0,
             $declaration['constants'] ?? [],
         ));
+        $multiCaseGroups = array_filter(
+            $constantGroups,
+            static fn (array $cases): bool => count($cases) >= 2,
+        );
         if (count($semanticProperties) === 1
             && $matchingPrefixes === []
             && $semanticProperties[0] === $normalizedName
-            && $numericConstants >= 2) {
+            && $numericConstants >= 2
+            && count($multiCaseGroups) !== 1) {
             return CPPName::enumCase((string) ($property['name'] ?? 'value'));
         }
         $hasTypeConstants = false;
@@ -140,7 +160,19 @@ private function propertyEnumType(array $property, array $declaration): ?string
                 break;
             }
         }
-        return $hasTypeConstants && $name === 'type' ? 'Type' : null;
+        if ($hasTypeConstants && $name === 'type') {
+            return 'Type';
+        }
+        if ($name === 'type') {
+            $candidateGroups = array_filter(
+                $constantGroups,
+                static fn (array $cases): bool => count($cases) >= 2,
+            );
+            if (count($candidateGroups) === 1) {
+                return CPPName::enumCase((string) array_key_first($candidateGroups));
+            }
+        }
+        return null;
     }
 
     private function enumPrefixMatchesProperty(string $prefix, string $propertyName): bool
@@ -236,7 +268,11 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
             }
             $referenced = $this->findDeclaration($class);
             if ($referenced !== null) {
-                if ($this->isEnumLikeDeclaration($referenced)) {
+                $alias = $this->catalog->typeAlias($class);
+                if ($alias !== null && $this->isEnumLikeDeclaration($this->findDeclaration($alias) ?? [])) {
+                    return CPPName::type($alias);
+                }
+                if ($alias === null && $this->isEnumLikeDeclaration($referenced)) {
                     return CPPName::type($class);
                 }
                 $enumCase = $this->constantEnumCase($referenced, $name);
@@ -259,9 +295,54 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
 
 private function enumStorageValue(string $value, string $enumType): string
     {
+        if ($this->isStringEnumType($enumType)) {
+            return $value;
+        }
         return str_contains($value, 'magic_enum::enum_integer')
             ? $value
             : 'magic_enum::enum_integer(' . $value . ')';
+    }
+
+    private function isStringEnumType(string $enumType): bool
+    {
+        $parts = explode('::', ltrim($enumType, ':'));
+        $declaration = $this->findDeclaration((string) end($parts));
+        if ($declaration === null) {
+            return false;
+        }
+        if (($declaration['backingType'] ?? null) === 'string') {
+            return true;
+        }
+        if (($declaration['kind'] ?? null) !== 'class' || ($declaration['properties'] ?? []) !== []) {
+            return false;
+        }
+        $constants = array_filter(
+            $declaration['constants'] ?? [],
+            static fn (array $constant): bool => ($constant['name'] ?? null) !== 'NETWORK_ID',
+        );
+        return $constants !== []
+            && array_reduce(
+                $constants,
+                static fn (bool $valid, array $constant): bool => $valid && is_string($constant['value'] ?? null),
+                true,
+            );
+    }
+
+    private function enumComparableValue(string $value, string $enumType): string
+    {
+        if (preg_match('/^magic_enum::enum_integer\((.+)\)$/', trim($value), $matches) !== 1) {
+            return $value;
+        }
+        $inner = trim($matches[1]);
+        $normalizedType = ltrim($enumType, ':');
+        if (str_starts_with($inner, $normalizedType . '::')) {
+            return $inner;
+        }
+        $parts = explode('::', $inner);
+        if (count($parts) >= 2 && CPPName::type($parts[count($parts) - 2]) === CPPName::type($enumType)) {
+            return $inner;
+        }
+        return $value;
     }
 
     private function enumStorageClassConstant(
@@ -277,6 +358,23 @@ private function enumStorageValue(string $value, string $enumType): string
         $owner = $class === 'self' || $class === 'static'
             ? ($this->findDeclaration($declaration['name']) ?? $declaration)
             : $this->findDeclaration($class);
+        $ownerData = $owner ?? [];
+        $stringEnum = ($ownerData['backingType'] ?? null) === 'string';
+        if (!$stringEnum && ($ownerData['kind'] ?? null) === 'class' && ($ownerData['properties'] ?? []) === []) {
+            $constants = array_filter(
+                $ownerData['constants'] ?? [],
+                static fn (array $constant): bool => ($constant['name'] ?? null) !== 'NETWORK_ID',
+            );
+            $stringEnum = $constants !== []
+                && array_reduce(
+                    $constants,
+                    static fn (bool $valid, array $constant): bool => $valid && is_string($constant['value'] ?? null),
+                    true,
+                );
+        }
+        if ($stringEnum) {
+            return 'magic_enum::enum_name(' . $value . ')';
+        }
         if ($owner !== null && $this->isEnumLikeDeclaration($owner)) {
             return 'magic_enum::enum_integer(' . $value . ')';
         }
@@ -450,6 +548,17 @@ private function enumReadValue(string $enumType, string $value, ?array $declarat
 
 private function enumStorageCast(Node $argument, string $value, array $declaration): string
     {
+        $argumentType = $argument instanceof Node\Arg
+            ? $this->assignmentCPPType($argument->value, $declaration)
+            : null;
+        if (($argument instanceof Node\Arg && $this->isOptionalProperty($argument->value, $declaration))
+            || ($argumentType !== null && str_starts_with($argumentType, 'std::optional<'))) {
+            return preg_replace(
+                '/^magic_enum::enum_integer\((.*)\)$/s',
+                '$1',
+                $value,
+            ) ?? $value;
+        }
         if (str_contains($value, 'magic_enum::enum_integer')) {
             return preg_replace(
                 '/magic_enum::enum_integer\(magic_enum::enum_integer\(([^()]*)\)\)/',
@@ -470,7 +579,6 @@ private function enumStorageCast(Node $argument, string $value, array $declarati
         $isEnum = $propertyEnumType !== null
             || ($type !== null && str_contains($type, '::') && !str_starts_with($type, 'std::') && !str_starts_with($type, 'glm::'))
             || ($type !== null && $this->isEnumLikeDeclaration($this->findDeclaration(CPPName::type($type)) ?? []))
-            || ($type !== null && preg_match('/^[A-Z][A-Za-z0-9_]*$/', $type) === 1)
             || ($type !== null && $this->isInlineEnumType($type, $declaration));
         if (!$isEnum) {
             return $value;

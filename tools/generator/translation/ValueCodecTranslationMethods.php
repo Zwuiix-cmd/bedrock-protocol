@@ -112,15 +112,11 @@ private function readObject(string $type): string
         $declaration = $this->findDeclaration(CPPName::type($type));
         if ($declaration !== null
             && (($declaration['abstract'] ?? false) || ($declaration['kind'] ?? null) === 'interface')) {
-            return CPPName::type($type) . '::decode(stream)';
+            return CPPName::type($type) . '::create(stream)';
         }
         $cppType = $this->cppType($type);
         if (!str_starts_with($cppType, 'std::shared_ptr<')) {
-            return "([&]() {\n"
-                . '    ' . $cppType . " value;\n"
-                . "    value.read(stream);\n"
-                . "    return value;\n"
-                . "}())";
+            return 'stream.readValue<' . $cppType . '>()';
         }
         return 'stream.readObject<' . CPPName::type($type) . '>()';
     }
@@ -133,7 +129,7 @@ private function readObject(string $type): string
             && in_array($referenced['kind'] ?? null, ['class', 'interface'], true)
             && !$this->isEnumLikeDeclaration($referenced)) {
             if (($referenced['abstract'] ?? false) || ($referenced['kind'] ?? null) === 'interface') {
-                return $this->callback('', 'return ' . $short . '::decode(stream);');
+            return $this->callback('', 'return ' . $short . '::create(stream);');
             }
             return $this->readObjectCallbackForCppType($this->cppType($short));
         }
@@ -315,8 +311,7 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
             return $value;
         }
         $referenced = $this->findDeclaration(CPPName::type($type));
-        return ($this->isEnumLikeDeclaration($referenced ?? [])
-            || preg_match('/^[A-Z][A-Za-z0-9_]*$/', $type) === 1)
+        return $this->isEnumLikeDeclaration($referenced ?? [])
             ? 'magic_enum::enum_integer(' . $value . ')'
             : $value;
     }

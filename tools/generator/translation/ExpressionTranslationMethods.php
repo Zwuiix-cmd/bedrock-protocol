@@ -313,6 +313,33 @@ public function expression(?Node $expression, array $declaration, ?array $method
             $bitwise = $expression instanceof Node\Expr\BinaryOp\BitwiseAnd
                 || $expression instanceof Node\Expr\BinaryOp\BitwiseOr
                 || $expression instanceof Node\Expr\BinaryOp\BitwiseXor;
+            $comparison = in_array($operator, ['==', '!=', '<', '<=', '>', '>='], true);
+            if (!$comparison
+                && $leftEnum !== null
+                && $expression->left instanceof Node\Expr\ClassConstFetch) {
+                $left = $this->enumStorageValue($left, $leftEnum);
+            }
+            if (!$comparison
+                && $rightEnum !== null
+                && $expression->right instanceof Node\Expr\ClassConstFetch) {
+                $right = $this->enumStorageValue($right, $rightEnum);
+            }
+            if (!$comparison
+                && $expression->left instanceof Node\Expr\ClassConstFetch
+                && preg_match('/^[A-Za-z_]\\w*::[A-Za-z_]\\w*::[A-Za-z_]\\w*$/', $left) === 1) {
+                $left = 'magic_enum::enum_integer(' . $left . ')';
+            }
+            if (!$comparison
+                && $expression->right instanceof Node\Expr\ClassConstFetch
+                && preg_match('/^[A-Za-z_]\\w*::[A-Za-z_]\\w*::[A-Za-z_]\\w*$/', $right) === 1) {
+                $right = 'magic_enum::enum_integer(' . $right . ')';
+            }
+            if ($bitwise && $leftEnum !== null) {
+                $left = $this->enumStorageValue($left, $leftEnum);
+            }
+            if ($bitwise && $rightEnum !== null) {
+                $right = $this->enumStorageValue($right, $rightEnum);
+            }
             if ($leftEnum !== null && $rightEnum === null && $expression->right instanceof Node\Expr\ClassConstFetch) {
                 $right = $this->enumStorageValue($right, $leftEnum);
             }
@@ -338,6 +365,25 @@ public function expression(?Node $expression, array $declaration, ?array $method
                 && str_contains($right, 'magic_enum::enum_integer')
                 && !str_contains($left, 'magic_enum::enum_integer')
                 && $this->isScopedEnumConstant($left)) {
+                $left = 'magic_enum::enum_integer(' . $left . ')';
+            }
+            if ($leftEnum !== null && !$bitwise) {
+                $right = $this->enumComparableValue($right, $leftEnum);
+            }
+            if ($rightEnum !== null && !$bitwise) {
+                $left = $this->enumComparableValue($left, $rightEnum);
+            }
+            if (!$bitwise
+                && str_contains($left, 'magic_enum::enum_integer')
+                && $this->isScopedEnumConstant($right)) {
+                $right = 'magic_enum::enum_integer(' . $right . ')';
+            } elseif (!$bitwise
+                && str_contains($right, 'magic_enum::enum_integer')
+                && $this->isScopedEnumConstant($left)) {
+                $left = 'magic_enum::enum_integer(' . $left . ')';
+            } elseif (!$bitwise
+                && $expression->left instanceof Node\Expr\PropertyFetch
+                && str_contains($right, 'magic_enum::enum_integer')) {
                 $left = 'magic_enum::enum_integer(' . $left . ')';
             }
             return '(' . $left . ' ' . $operator . ' ' . $right . ')';
@@ -383,6 +429,9 @@ public function expression(?Node $expression, array $declaration, ?array $method
             $value = $this->expression($expression->expr, $declaration, $method, $this->assignmentCPPType($expression->var, $declaration));
             $propertyEnumType = $this->enumPropertyType($expression->var, $declaration);
             $enumType = $propertyEnumType ?? $this->assignmentCPPType($expression->var, $declaration);
+            if ($enumType !== null && $this->catalog->typeCodec($enumType) !== null) {
+                $enumType = null;
+            }
             $isEnumTarget = $propertyEnumType !== null
                 || ($enumType !== null
                     && str_contains($enumType, '::')
@@ -409,7 +458,21 @@ public function expression(?Node $expression, array $declaration, ?array $method
             return $this->expression($expression->var, $declaration, $method) . ' = ' . $value;
         }
         if ($expression instanceof Node\Expr\AssignOp) {
-            return $this->expression($expression->var, $declaration, $method) . ' = ' . $this->expression($expression->var, $declaration, $method) . ' ' . $this->assignOperator($expression) . ' ' . $this->expression($expression->expr, $declaration, $method);
+            $target = $this->expression($expression->var, $declaration, $method);
+            $value = $expression->expr instanceof Node\Expr\BinaryOp\BitwiseAnd
+                || $expression->expr instanceof Node\Expr\BinaryOp\BitwiseOr
+                || $expression->expr instanceof Node\Expr\BinaryOp\BitwiseXor
+                ? $this->bitwiseExpression($expression->expr, $declaration, $method)
+                : $this->expression($expression->expr, $declaration, $method);
+            if ($expression instanceof Node\Expr\AssignOp\BitwiseAnd
+                || $expression instanceof Node\Expr\AssignOp\BitwiseOr
+                || $expression instanceof Node\Expr\AssignOp\BitwiseXor) {
+                $enumType = $this->enumExpressionType($expression->expr, $declaration);
+                if ($enumType !== null) {
+                    $value = $this->enumStorageValue($value, $enumType);
+                }
+            }
+            return $target . ' = ' . $target . ' ' . $this->assignOperator($expression) . ' ' . $value;
         }
         if ($expression instanceof Node\Expr\PreInc || $expression instanceof Node\Expr\PreDec || $expression instanceof Node\Expr\PostInc || $expression instanceof Node\Expr\PostDec) {
             $operator = $expression instanceof Node\Expr\PreInc || $expression instanceof Node\Expr\PostInc ? '++' : '--';
@@ -502,26 +565,59 @@ public function expression(?Node $expression, array $declaration, ?array $method
 
         $valueNode = $bitwise->left;
         $flagNode = $bitwise->right;
-        $enumType = $this->enumExpressionType($valueNode, $declaration);
-        if ($enumType === null) {
-            $enumType = $this->enumExpressionType($flagNode, $declaration);
-            [$valueNode, $flagNode] = [$flagNode, $valueNode];
-        }
-        if ($enumType === null || !$this->isBitmaskEnum($enumType, $declaration)) {
-            return null;
+        $valueEnum = $this->enumExpressionType($valueNode, $declaration);
+        $flagEnum = $this->enumExpressionType($flagNode, $declaration);
+        if ($flagEnum === null && $flagNode instanceof Node\Expr\BinaryOp) {
+            $flagEnum = $this->enumExpressionType($flagNode->left, $declaration)
+                ?? $this->enumExpressionType($flagNode->right, $declaration);
         }
 
+        if ($valueEnum !== null && $this->isBitmaskEnum($valueEnum, $declaration)) {
+            $value = $this->expression($valueNode, $declaration, $method);
+            $flag = $this->expression($flagNode, $declaration, $method);
+            if (str_contains($flag, 'magic_enum::enum_integer')) {
+                $flag = 'static_cast<' . $valueEnum . '>(' . $flag . ')';
+            } elseif (!preg_match('/^(?:[A-Za-z_]\\w*::)+[A-Za-z_]\\w*$/', trim($flag))) {
+                return null;
+            }
+            $result = 'hasFlag(' . $value . ', ' . $flag . ')';
+            return $expression instanceof Node\Expr\BinaryOp\Equal
+                || $expression instanceof Node\Expr\BinaryOp\Identical
+                ? '!' . $result
+                : $result;
+        }
+
+        if ($flagEnum === null || !$this->isBitmaskEnum($flagEnum, $declaration)) {
+            return null;
+        }
         $value = $this->expression($valueNode, $declaration, $method);
-        $flag = $this->expression($flagNode, $declaration, $method);
-        if (!preg_match('/^(?:[A-Za-z_]\\w*::)+[A-Za-z_]\\w*$/', trim($flag))) {
-            return null;
-        }
-
-        $result = 'hasFlag(' . $value . ', ' . $flag . ')';
-        return $expression instanceof Node\Expr\BinaryOp\Equal
+        $flag = $this->enumStorageValue(
+            $this->expression($flagNode, $declaration, $method),
+            $flagEnum,
+        );
+        $comparison = $expression instanceof Node\Expr\BinaryOp\Equal
             || $expression instanceof Node\Expr\BinaryOp\Identical
-            ? '!' . $result
-            : $result;
+            ? ' == 0'
+            : ' != 0';
+        return '(' . $value . ' & ' . $flag . ')' . $comparison;
+    }
+
+    private function bitwiseExpression(
+        Node\Expr\BinaryOp $expression,
+        array $declaration,
+        ?array $method,
+    ): string {
+        $left = $this->expression($expression->left, $declaration, $method);
+        $right = $this->expression($expression->right, $declaration, $method);
+        $leftEnum = $this->enumExpressionType($expression->left, $declaration);
+        $rightEnum = $this->enumExpressionType($expression->right, $declaration);
+        if ($leftEnum !== null) {
+            $left = $this->enumStorageValue($left, $leftEnum);
+        }
+        if ($rightEnum !== null) {
+            $right = $this->enumStorageValue($right, $rightEnum);
+        }
+        return '(' . $left . ' ' . $this->binaryOperator($expression) . ' ' . $right . ')';
     }
 
     private function isScopedEnumConstant(string $value): bool

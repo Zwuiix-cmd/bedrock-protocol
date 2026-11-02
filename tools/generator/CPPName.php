@@ -27,6 +27,7 @@ final class CPPName
 
     public static function enumCase(string $name): string
     {
+        $name = preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $name) ?? $name;
         $normalized = strtolower($name);
         $normalized = str_replace('mouseover', 'mouse_over', $normalized);
         $parts = preg_split('/[^A-Za-z0-9]+/', $normalized, -1, PREG_SPLIT_NO_EMPTY) ?: [];

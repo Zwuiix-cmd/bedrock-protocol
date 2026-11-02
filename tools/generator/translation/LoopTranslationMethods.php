@@ -68,7 +68,8 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
             $count = $sourceCountName;
         }
         $target = $this->expression($body->expr->var->var, $declaration, $method);
-        $value = $this->expression($body->expr->expr, $declaration, $method);
+        $valueType = $this->appendElementCPPType($body->expr->var->var, $declaration);
+        $value = $this->expression($body->expr->expr, $declaration, $method, $valueType);
         $countName = $countInit instanceof Node\Expr\Assign
             ? $this->loopCountName($target)
             : $sourceCountName;

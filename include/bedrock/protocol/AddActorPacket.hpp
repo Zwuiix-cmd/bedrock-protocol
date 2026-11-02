@@ -132,6 +132,9 @@ public:
 		headYaw = stream.readFloat().value_or(0.0f);
 		bodyYaw = stream.readFloat().value_or(0.0f);
 		auto attrCount = stream.readUnsignedVarInt().value_or(0);
+		if (attrCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; (i < attrCount); ++i) {
 			auto id = stream.readString().value_or("");
 			auto min = stream.readFloat().value_or(0.0f);
@@ -142,6 +145,9 @@ public:
 		metadata.read(stream);
 		syncedProperties = stream.readValue<PropertySyncData>();
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
+		if (linkCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; (i < linkCount); ++i) {
 			links.push_back(stream.readObject<EntityLink>());
 		}

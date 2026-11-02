@@ -117,6 +117,9 @@ public:
 		).value_or(Type::Change);
 		{
 		    auto i2 = stream.readUnsignedVarInt().value_or(0);
+		    if (i2 > ReadOnlyBinaryStream::MaxCollectionSize) {
+		        throw std::runtime_error("protocol collection is too large");
+		    }
 		    for (std::size_t i = 0; (i < i2); ++i) {
 				auto entry = std::make_shared<ScorePacketEntry>();
 				entry->scoreboardId = stream.readVarLong().value_or(0);

@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,9 @@ public:
 		auto name = stream.readString().value_or("");
 		auto valueIndexes = std::vector<uint32_t>();
 		auto size = stream.readUnsignedVarInt().value_or(0);
+		if (size > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; (i < size); i++) {
 			valueIndexes.push_back(stream.readUnsignedInt().value_or(0));
 		}

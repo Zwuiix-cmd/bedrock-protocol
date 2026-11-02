@@ -168,6 +168,9 @@ public:
 				}
 				message = stream.readString().value_or("");
 				auto count = stream.readUnsignedVarInt().value_or(0);
+				if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
+				    throw std::runtime_error("protocol collection is too large");
+				}
 				for (std::size_t i = 0; (i < count); ++i) {
 					parameters.push_back(stream.readString().value_or(""));
 				}

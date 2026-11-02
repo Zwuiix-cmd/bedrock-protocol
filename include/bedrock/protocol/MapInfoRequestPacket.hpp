@@ -112,6 +112,9 @@ public:
 		if (count > (magic_enum::enum_integer(MapImage::Max::Height) * magic_enum::enum_integer(MapImage::Max::Width))) {
 			throw std::exception{};
 		}
+		if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; (i < count); i++) {
 			clientPixels.push_back(stream.readObject<MapInfoRequestPacketClientPixel>());
 		}

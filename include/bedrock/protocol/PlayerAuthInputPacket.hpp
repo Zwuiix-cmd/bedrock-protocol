@@ -165,6 +165,9 @@ public:
 		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
 			blockActions.emplace();
 			auto max = stream.readVarInt().value_or(0);
+			if (max > ReadOnlyBinaryStream::MaxCollectionSize) {
+			    throw std::runtime_error("protocol collection is too large");
+			}
 			for (int32_t i = 0; (i < max); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
 				if (PlayerBlockAction::isValidActionType(actionType)) {

@@ -118,6 +118,9 @@ public:
 		nameMap = {};
 		{
 		    auto namesCount = stream.readUnsignedVarInt().value_or(0);
+		    if (namesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		        throw std::runtime_error("protocol collection is too large");
+		    }
 		    for (std::size_t i = 0; (i < namesCount); ++i) {
 				auto name = stream.readString().value_or("");
 				auto id = stream.readUnsignedShort().value_or(0);

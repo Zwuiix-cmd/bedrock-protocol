@@ -343,12 +343,14 @@ private function statement(Node $statement, array $declaration, array $method, i
             [$init, $prefixLines] = $this->forInitializer($statement->init, $declaration, $method);
             $condition = implode(' && ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->cond));
             $loop = implode(', ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->loop));
+            $collectionCount = null;
             if (isset($statement->cond[0])
                 && $statement->cond[0] instanceof Node\Expr\BinaryOp\Smaller
                 && $statement->cond[0]->left instanceof Node\Expr\Variable
                 && $statement->cond[0]->right instanceof Node\Expr\Variable) {
                 $indexName = (string) $statement->cond[0]->left->name;
                 $countName = (string) $statement->cond[0]->right->name;
+                $collectionCount = $this->expression($statement->cond[0]->right, $declaration, $method);
                 $counterType = $this->inferredCPPType($statement->cond[0]->right, $declaration);
                 if ($counterType === null) {
                     foreach ($method['parameters'] ?? [] as $parameter) {
@@ -377,6 +379,12 @@ private function statement(Node $statement, array $declaration, array $method, i
             $text = $hasPrefixScope ? $prefix . "{\n" : '';
             foreach ($prefixLines as $line) {
                 $text .= $prefix . "    " . $line . "\n";
+            }
+            if ($collectionCount !== null) {
+                $guardPrefix = $prefix . ($hasPrefixScope ? '    ' : '');
+                $text .= $guardPrefix . 'if (' . $collectionCount . ' > ReadOnlyBinaryStream::MaxCollectionSize) {' . "\n";
+                $text .= $guardPrefix . '    throw std::runtime_error("protocol collection is too large");' . "\n";
+                $text .= $guardPrefix . '}' . "\n";
             }
             $text .= $prefix . ($hasPrefixScope ? '    ' : '') . 'for (' . $init . '; ' . $condition . '; ' . $loop . ") {\n";
             foreach ($statement->stmts as $child) {

@@ -1,10 +1,15 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
+#include <exception>
 #include <optional>
+#include <string>
 #include <bedrock/protocol/PacketIds.hpp>
+#include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/pool/PacketPool.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 namespace generated_packet_tests {
 
@@ -239,20 +244,35 @@ void run(Expect&& expect) {
     };
 
     for (const auto id : packetIds) {
+        const auto packetName = std::string("packet ") + std::to_string(static_cast<int>(id));
         const auto packet = PacketPool::createPacket(id);
-        expect(packet != nullptr, "generated packet was not registered");
+        expect(packet != nullptr, std::string(packetName) + ": packet was not registered");
         if (!packet) {
             continue;
         }
-        expect(packet->getId() == id, "generated packet has the wrong ID");
+        expect(packet->getId() == id, std::string(packetName) + ": packet has the wrong ID");
 
-        ReadOnlyBinaryStream input;
-        try {
-            packet->read(input);
-        } catch (const std::bad_optional_access&) {
-            expect(false, "packet read raised std::bad_optional_access");
-        } catch (...) {
+        bool roundtripSucceeded = false;
+        for (const auto fill : std::array<uint8_t, 5>{0, 1, 2, 9, 17}) {
+            const auto candidate = PacketPool::createPacket(id);
+            const std::string fixture(4096, static_cast<char>(fill));
+            ReadOnlyBinaryStream input(fixture);
+            try {
+                candidate->read(input);
+                if (input.hasOverflowed()) {
+                    continue;
+                }
+                BinaryStream output;
+                candidate->write(output);
+                roundtripSucceeded = true;
+                break;
+            } catch (const std::bad_optional_access&) {
+                expect(false, std::string(packetName) + ": read raised std::bad_optional_access");
+            } catch (const std::exception&) {
+            } catch (...) {
+            }
         }
+        expect(roundtripSucceeded, std::string(packetName) + ": no fixture could be decoded and encoded");
     }
 }
 

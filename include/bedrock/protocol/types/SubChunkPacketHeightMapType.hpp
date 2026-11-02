@@ -1,0 +1,12 @@
+#pragma once
+
+#include <cstdint>
+#include <string_view>
+
+enum class SubChunkPacketHeightMapType : uint8_t {
+    NoData = 0,
+    Data = 1,
+    AllTooHigh = 2,
+    AllTooLow = 3,
+    AllCopied = 4,
+};

@@ -1,0 +1,1720 @@
+{
+    "source": {
+        "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
+        "ref": "56.1.0+bedrock-1.26.10",
+        "revision": "d73a7ddf5bf0a6fda88afed282d7875da757cf26",
+        "commitDate": "2026-04-05T01:22:06+01:00",
+        "checkout": "fresh-git-checkout"
+    },
+    "files": 583,
+    "fileHashes": {
+        "src/ActorEventPacket.php": "b723a1fbfd800551a0ec5ba24dc225dacb3cadcdfa0dd252d0e9757e6f9503ec",
+        "src/ActorPickRequestPacket.php": "59909ca89380514cc5456069fb4276cd0b96161e9f5ea3bba5e2eb9bf919760e",
+        "src/AddActorPacket.php": "53d548571ef104fe367db8a076543068366db58499ced6482044e9e600cd3db4",
+        "src/AddBehaviorTreePacket.php": "9b4f3e717cea8fb625a1b85347ccc72cf55121354483c42d15d97d0a0ac61058",
+        "src/AddItemActorPacket.php": "33bf2b2af40af892e2574e51731b5cd032c3643eda630407e3295e02b99ab11b",
+        "src/AddPaintingPacket.php": "a9815d19c026c9eb9f9aafa55b26fc6dac7f5b5c2cc44fe4e737e5f789b1e299",
+        "src/AddPlayerPacket.php": "7f266919efa50fc0fba1d51190d60a998a4f3251fd2397c8d9a38bc6de4093cb",
+        "src/AddVolumeEntityPacket.php": "71861baf1d00d87737858d8ed3b96e3cd283a5420047440900109be41f93086d",
+        "src/AgentActionEventPacket.php": "d05fd477232d5eeeda5ca5b903ecb9b9f02fc8813f15610aa966e67638808e98",
+        "src/AgentAnimationPacket.php": "8169257da45a3916dfe1c9ddccca33751337567f69e36a521f93b2ff94f7d2e3",
+        "src/AnimateEntityPacket.php": "01e709877521703c661fdbd0cbc77f32b41d03cc034d7738c9be6714f861b666",
+        "src/AnimatePacket.php": "86583ac0bfe03f10343cceff1ae105ebe46e39255ab6594c5b3001992ed77647",
+        "src/AnvilDamagePacket.php": "7a00a433b26322d7e20e59a604c145f7357f8bc8bb8da1625623c3cbbc58abce",
+        "src/AutomationClientConnectPacket.php": "09e3021b587692944ef8051a136f639302150fedc78a2543598baea4442e1788",
+        "src/AvailableActorIdentifiersPacket.php": "a6e64a6ab1e98860e5afa22c4ba83ee82de5a853eb914e6a20a1220d5310b72b",
+        "src/AvailableCommandsPacket.php": "aabe1458a16c7d196fd6f8ad90dbef20ff2c4267d419b5ec9c918a0bf36ed8a3",
+        "src/AwardAchievementPacket.php": "fccf347b6a1b0f9f711e9fac1b7a6b7c686d8c107b8168d9f42c21c2a124fd6c",
+        "src/BiomeDefinitionListPacket.php": "f7a1d55042d9a88350665411ee2e893bda8a3c6fee1790ac54fa2cc285194432",
+        "src/BlockActorDataPacket.php": "bc5f435ecf1ba953ee21730169752f7bd69da6a7e77ad32ce481d061054f46b0",
+        "src/BlockEventPacket.php": "7e145dd9e2a85b9c9c9cb349532a01c5ea88a8d71c95e53ba966e3831b5d34f7",
+        "src/BlockPickRequestPacket.php": "0cb83b92eed9955117dbedc47ca93990fa2c2b406b8b83abde64ad265a03e1df",
+        "src/BookEditPacket.php": "047c7f65ca55cd155fadd87c31b36dd8f7b631367f8d0cf884345dfc7a9044fa",
+        "src/BossEventPacket.php": "a742c3be30930995619d01c13da6c1aa8067063c1a2a0bf08c518bf873aa1673",
+        "src/CameraAimAssistActorPriorityPacket.php": "da924009b944d55240e20133c9c21d5810eb857c9229d682fb7bb4eef446eaf8",
+        "src/CameraAimAssistPacket.php": "814594676705bc5220348afe5a4f0e178f2e267d4b6c4fcf4a47ddfcefdbc807",
+        "src/CameraAimAssistPresetsPacket.php": "ed275912d73abd7012820307716a85e913860c6694c148264d6457de0396914d",
+        "src/CameraInstructionPacket.php": "4443d58f1cdf82f77dbfda06c5ff403e889bd4ce392b696797b39491c67f6a22",
+        "src/CameraPacket.php": "9b4b4f4081c0c604695f2d9768c7ab8df374fd1226cb9306fcd54138b088db7f",
+        "src/CameraPresetsPacket.php": "4e4cffbe2d2eaec9da39c50f8c3274730637e3f09df27b40951c63dcbf669c5f",
+        "src/CameraShakePacket.php": "a58f8f5c843d82c1ee52e32e1287f1f189f158619e83d8d4886ec8b5d29cf935",
+        "src/CameraSplinePacket.php": "82f75d88b299fd59642b4537ceb06f5e542ee43255a584cafe69c2e1d033d497",
+        "src/ChangeDimensionPacket.php": "84368d0e547f93dfa7513be5f207ade16f5741f7311926f1ebd2cb32d02aa93d",
+        "src/ChangeMobPropertyPacket.php": "c687dbfc5715c565031b3179b01b209819fcae94d10441336face5ab44021a67",
+        "src/ChunkRadiusUpdatedPacket.php": "ab6b1d9bbea05d97758a0a861cc12f75b8496f7847cf217c906f8ff398685ac6",
+        "src/ClientCacheBlobStatusPacket.php": "1468eeecd839bd6e5bfcf79c42d8014a64f05c1a8882900b7923c4583937b82d",
+        "src/ClientCacheMissResponsePacket.php": "3a59b2eea716c3a7165d4ff3621decf38eea3c223c5063980ed01817f7c80bcf",
+        "src/ClientCacheStatusPacket.php": "aa47a64fcebfbfd1aed0f3c7e0dcf459c0a628868bec5135c6945ed4ccb8100f",
+        "src/ClientCameraAimAssistPacket.php": "5845ff437307a5da1105e63adf2d953074a50bfb161d9bdf889de5f4b4e9e1a3",
+        "src/ClientMovementPredictionSyncPacket.php": "d7de21ff6b65ceabaa51787a4850e151415772a8d95ea58961a41fb4cf231ffe",
+        "src/ClientToServerHandshakePacket.php": "d14830a8441bae678eb83f324913bf521eb078c78145041f13d15a3baf7e7a5c",
+        "src/ClientboundAttributeLayerSyncPacket.php": "1756446ce32f773e14ba8e561ecacdaad2a9d82f243ff8cb913204dece0fe095",
+        "src/ClientboundCloseFormPacket.php": "108a172b48e26478fc3f308deb236ebd0f8082b65a90df7f379e20908313aab4",
+        "src/ClientboundControlSchemeSetPacket.php": "18b155e905850393b54eddb8c088525002111f5a70416920c3ebd94818e7f710",
+        "src/ClientboundDataDrivenUICloseScreenPacket.php": "069278fe95104efff3d53f7737bc880b541ba7995ed2351532ece30bf04abe7e",
+        "src/ClientboundDataDrivenUIReloadPacket.php": "9f1aa1d900a6abd897c61f559e9cfc72620f906b3dab37be9e8dddfff1d6ded9",
+        "src/ClientboundDataDrivenUIShowScreenPacket.php": "ef6d29c12f88d4af96f8123697696979e9753881f2a5a826e09792af48585b4c",
+        "src/ClientboundDataStorePacket.php": "3d69a78724f4241ec39ff7d4ad2a0b69c6b8169f4e84b21b0a0dca751eb4133b",
+        "src/ClientboundDebugRendererPacket.php": "09db9ee84fde05f06f1d5158c8ca985b1e744c0549dbbc33f12424ea453b6cf8",
+        "src/ClientboundMapItemDataPacket.php": "0f31591641167111ada6f3a740a4e73d752bad8ea0f13d72f5a64126040122fb",
+        "src/ClientboundPacket.php": "6ff1153b691fcf96173fd6820f41a9bc4ed2dd61acc641e24aefa54a8bd9600b",
+        "src/ClientboundTextureShiftPacket.php": "6c3cf6f33af9e21be067078b94cb6ea80d42e7cca74d72fcd2c838e26ed69e27",
+        "src/CodeBuilderPacket.php": "1826751eb93478895fe934dc87971a91eaa8baec5b6445909b019ab78b87ed8d",
+        "src/CodeBuilderSourcePacket.php": "63c5b5d286cd6d57d830b7a301200764bef0ff361d60796b0d7e9e36855394d5",
+        "src/CommandBlockUpdatePacket.php": "1251049ca66fb7eeaebdaa0bcd296125951ec84b3065204c22b856082f8b674c",
+        "src/CommandOutputPacket.php": "0c390b698a22065275099afbea09853800a610031f4692065f676268b03fea76",
+        "src/CommandRequestPacket.php": "4cf94afc341a02cc6cce3235a66b3a4da90d168f2337dce73d2d9f054b96662e",
+        "src/CompletedUsingItemPacket.php": "a9e3b24fd3c5d62452c54c7f6d320094a994ceb423e7abfe5029e2cc8a2d6aa9",
+        "src/ContainerClosePacket.php": "18319c21740cfa1269a90ed3ea78ec37392543ef4f932c5fa8dfbe9472de515f",
+        "src/ContainerOpenPacket.php": "92bb313c5c236fc2728bb57fb53e3e237121720532caef08f42d74e13c73d73f",
+        "src/ContainerRegistryCleanupPacket.php": "771488e088f7e528703ff4cdc86d60c70bbce1525b68c4ec2a70dda5ebe63010",
+        "src/ContainerSetDataPacket.php": "dc1e3db1cbfebfaf0c3ffbda363261c6415c078815371dfd4a80016c21e58f5e",
+        "src/CorrectPlayerMovePredictionPacket.php": "a703dbadad970cdf2b55356cebd42e4f0ab5e83d4b64cfdab57c8837a0f6c0e4",
+        "src/CraftingDataPacket.php": "2e7317224f2a41d56ee4b0ce28e55089ebbd350a50b61a65a50f4b9acae3d26b",
+        "src/CreatePhotoPacket.php": "50b9e06543769b331594cc1d22987d54b049487faad314154039a02e470f5c72",
+        "src/CreativeContentPacket.php": "171cf0edb511320631d5d2f757716b02c12bb6a92ad42cc6bc9d8ba209861984",
+        "src/CurrentStructureFeaturePacket.php": "88db1f77e5de2b2ee17be0a29ab36cef992c8b8f19caf75c98b7d1b58fd7d9bb",
+        "src/DataPacket.php": "0c67b68608d653b80e9f4d28fcf5a1bdd91176671ba0074ed10d3e11195b6b80",
+        "src/DeathInfoPacket.php": "3ad20104dfdfc135e6b5d2e7625d7413a629be4a9d46e9f8dcfcbbc12fd8e4f2",
+        "src/DebugDrawerPacket.php": "5f5748e035917da49da7b3a5b131023aeef988a284ac65af0901e3b3a2ef607b",
+        "src/DebugInfoPacket.php": "2c2aabdb9666b83f507713c0ff55a2f1dc5010fad87df8ae2f2ed219e2f6e7b2",
+        "src/DimensionDataPacket.php": "e293e37fb137e8c9239e30da15cc1217683fbf014bc57ba42e6124da31342a24",
+        "src/DisconnectPacket.php": "b5c44c4b46ea380dd21a9f3607a0aa87ee620cb5f2f3fb318c2b8c8e02829708",
+        "src/EditorNetworkPacket.php": "21939db41f47a7e985a9400ee2977bc63d531623792bb7036f2bcf09ab82a450",
+        "src/EduUriResourcePacket.php": "f223cec1c07232eb614e7edada8c61b0a52e78f29ba67a82cf19ae77bcd72d29",
+        "src/EducationSettingsPacket.php": "ac89403d526dfac159127c38c42330e75a649a43f6f3665466e3bc54e7ba527e",
+        "src/EmoteListPacket.php": "66c223d6a846efca9957ba036d3145e0ed9558f28c066c1944fda9159d00bb06",
+        "src/EmotePacket.php": "c1f3a1a3387e9e37562ab1713482c8f009dea0f8ab083c0eba51081d9c7b165d",
+        "src/FeatureRegistryPacket.php": "29948d7131bfc0690d79926c622869675818f6f3ef4ba0b0a2032aa2d8e06fa2",
+        "src/GameRulesChangedPacket.php": "7ef8874a8165bb0dffbd52c2fc8b9837013bb53862a531928f06de98b386a8c9",
+        "src/GameTestRequestPacket.php": "361e31e85d4f68c16d8aec7bfd372beb7a8831296e05bedc0087183151790b1f",
+        "src/GameTestResultsPacket.php": "e148c8be3c904e99875431e50f360aa894f717ae9540d30c48e613cf4534d50d",
+        "src/GraphicsOverrideParameterPacket.php": "570691572047c37f733a59424723b1a46436a1a11c1aea30f5ad18a7083e47dc",
+        "src/GuiDataPickItemPacket.php": "062cad860d7ee0f2c59fc898c0c40aae36f48cdb99bffacf8f24186446401093",
+        "src/HurtArmorPacket.php": "a2275e74708ef0614e59c78a828cb277d4a2e402a88b38094d4b2deba7b72a49",
+        "src/InteractPacket.php": "cb0790779d7f54f5f71b0534fab91bf7f33cb515729090c60f9518c69746b9a2",
+        "src/InventoryContentPacket.php": "65c8894b22d747ca35374a1be56727f749f8d361682818a266fef299a8179bca",
+        "src/InventorySlotPacket.php": "46d6c3b67aa5c68a02782928dc231569a0d169c373917bd960644307b90fb425",
+        "src/InventoryTransactionPacket.php": "e2ed7dd5b5d88ee8f4755d6ff6ec5d3de5167ad86ae35b423ae4d6dcaea61dec",
+        "src/ItemRegistryPacket.php": "f69800d355bb1a73b8212b424073c03722d6f6321fe37ed944eb22db80481768",
+        "src/ItemStackRequestPacket.php": "badc4f06987c5ed7f7df1c7741d56ce0344fdf526e91af6c96e67dc4f7c7a337",
+        "src/ItemStackResponsePacket.php": "82c64419a80b7441f66933a56c27b079d8e51ab7c8b61b29dc0184e35b4e8b76",
+        "src/JigsawStructureDataPacket.php": "24ea865212f9d2f8fc135ede412e105d13b69e7cbff6bd4a4e5ad0e08694c4f5",
+        "src/LabTablePacket.php": "a37962f99fa400c42bf841bc2c07ff5bda3f5f84bd2687954e1d20b10a97dfcd",
+        "src/LecternUpdatePacket.php": "04ee11270ed71a64f9a8a8f6c765f7cb27107c51f0835fe9de30ac3eb6b8b46c",
+        "src/LegacyTelemetryEventPacket.php": "7e2084dda6ca6b3945e2ce7f43e72289dfe1106662ee21a27e8a25ebb2f74d44",
+        "src/LessonProgressPacket.php": "01814836a2d77dd4ff7a889aabb6991d10a03cc5df4e956a9f2f5a9a71aa77e0",
+        "src/LevelChunkPacket.php": "a1b96b13013de41566eb11296f172884508f77e4e52cd5c3226269604493fd34",
+        "src/LevelEventGenericPacket.php": "5b9c16e82bf45095d7eb1b55af83e668140a551ce588b67f6d700ea0926ab2f9",
+        "src/LevelEventPacket.php": "ca77fbdd249feb14602382de289f64cf56bf546b10d585dd17082188dd9c672c",
+        "src/LevelSoundEventPacket.php": "4b8e0e3ebb709eef10492dd52f361397b2a317d4ac52d00a9d0b8fc2b902ceed",
+        "src/LocatorBarPacket.php": "a43711d05e6b088d843e6ef1fe910a21c0659bd2df70c875d2848d348b256912",
+        "src/LoginPacket.php": "de9dd73b4f270e139300ce1deb1f314ded63d78b32b5417c0cdaa014a4dc1233",
+        "src/MapCreateLockedCopyPacket.php": "d8274f11a2e3d067a973101645b813851712b90bec07b73a5415063b935abcdf",
+        "src/MapInfoRequestPacket.php": "dd9caef39cc2d7e4bd677548da1ee6a7012183bc1e61ca2e7d07068000ea610a",
+        "src/MobArmorEquipmentPacket.php": "cdb849c16b6ec2286c44d40d45527ce20a2757c303a40febaaa485fbed61babf",
+        "src/MobEffectPacket.php": "f625c79daff4eb1b6b012aa59265972d4bec025f0de57c7fa37ae00037f4a404",
+        "src/MobEquipmentPacket.php": "eb3f7070a4b8f82fd53930479d846e575913e8595abcc9b48e3748ec2e38e2a9",
+        "src/ModalFormRequestPacket.php": "951efbb9e32ae9be57c5475b63df24c7a99a967347be83005f6f369c0be335e9",
+        "src/ModalFormResponsePacket.php": "9142478de553d84bf132c266035e86ea55f5027de756db047e2479a061bfef27",
+        "src/MotionPredictionHintsPacket.php": "17f26b5b8fd2b3a44e72cf1237449f7ce0978a55de0ca1abb5f648e42e325678",
+        "src/MoveActorAbsolutePacket.php": "0fc163e5ecfef2c479419ef84a2e1afb61fe5a1a139f0400851bdfe6c871adba",
+        "src/MoveActorDeltaPacket.php": "ef62eab8108b15baa676fcc93cb9bb8e5e78775094c1593fdd72208700c87ade",
+        "src/MovePlayerPacket.php": "f9343ffbd6b56f93a0752d20fc21fc2c464ff63824dc3f39231265dfd4445163",
+        "src/MovementEffectPacket.php": "83843bc6827dd1d895bea3e92780c2fa48bfd3ffe793d97b59fd583b373df1ea",
+        "src/MultiplayerSettingsPacket.php": "a2981e6bb2bf63ef9e8a82c75f322ca293b9b75110aad26626c813ccc381977b",
+        "src/NetworkChunkPublisherUpdatePacket.php": "53f2b84ec197ac0d34a6595759abb55be35951c0e6a8724cfd4572dee6600b72",
+        "src/NetworkSettingsPacket.php": "e203ca848d979db1bc79dfd89802f2554751aab31278f23baffdfbaf8102033c",
+        "src/NetworkStackLatencyPacket.php": "aaf639c1c9c72958d0c3323d0a487e2416a51875c72a3a8eb9625ca03fd1873a",
+        "src/NpcDialoguePacket.php": "9da6efa89bed53fae6356478059f0a9868c82d8744bf885194b75343ac9a5d3d",
+        "src/NpcRequestPacket.php": "9e2e915c90f6ad12eedecb9ec1b74c54984c9bb857acb9003a6807f05349703e",
+        "src/OnScreenTextureAnimationPacket.php": "dafe483084ab6c0076ddf053581338481c0c92e791a22e2258004531143dffa8",
+        "src/OpenSignPacket.php": "732046ac8406d547ef868b7cb25bd0757eff33d45d671c090af48b6f70448aab",
+        "src/Packet.php": "0d2f6846215158f8533ec41f0f9e97e1c7ad5d8f9d2840d3e0edd7363df645b8",
+        "src/PacketDecodeException.php": "90381e3b282775031251d0cc7f46590a2ea40e0d7edd01f84809b22189aa85a8",
+        "src/PacketHandlerDefaultImplTrait.php": "1f905ac37c3e6e74b215a2f73bf77afa6127a0f9b9d44b71c1239e8f31101d1e",
+        "src/PacketHandlerInterface.php": "3b4d88d78a19ae5e3317d065666e07257953f8b24569ab77df8ca7f2c4c529f7",
+        "src/PacketPool.php": "65161f39e64a254e5a93383b4634780383c24515dbc86e36d84df02556d90365",
+        "src/PacketViolationWarningPacket.php": "20daa64bfeedae1c02a84b281648463666fbcf47b41ad0e996bb81e6b552b93d",
+        "src/PartyChangedPacket.php": "88339603f2aaaaa879963af1011c149366088a62ccc25b74061f27d3b5b1d84f",
+        "src/PhotoTransferPacket.php": "a7c85ca18bced2bae525d38ab349b98dbf46bf1511fcbaa6e53635016c4688ba",
+        "src/PlaySoundPacket.php": "bb3ed67c07ad13a7eaa26c9620f91882e51738469a421b65061f84ce9519d846",
+        "src/PlayStatusPacket.php": "021c536b86ccf2c48621a2ff4eb9f9d7d076b45952b97e88d65793e25db62f98",
+        "src/PlayerActionPacket.php": "bcbde78782cc75af5271b4587bce8e60f1d411dd79f0323251f7a0c9e599b14f",
+        "src/PlayerArmorDamagePacket.php": "be7cd39370d9f48fe922e7568528b5632a7b9b43fd6da09ca7661d42d2fa4e21",
+        "src/PlayerAuthInputPacket.php": "795da76a3d1348016ae5086bc88524a26bcb33451be062b9ede2f016cb825494",
+        "src/PlayerEnchantOptionsPacket.php": "a5321a4a61e250aef2b623f64a1d28c111324e50d3e301c4f3a355d6b0eed545",
+        "src/PlayerFogPacket.php": "3d180bfd0aaef70d934b807ccad83ea50625e78ff6f0b27e86c5949ed2dd495c",
+        "src/PlayerHotbarPacket.php": "cdf4a690f184a763d142cb720122971dfeed28d1184a374948eda34bc6c0acdc",
+        "src/PlayerListPacket.php": "ed19fbf648fbf7997e739169411c07da5109ee4a28dbe5c23c55e5fb41937731",
+        "src/PlayerLocationPacket.php": "ae2b4292ba753c3fa7a8141d6ea4aee995da2254c179a87b53f817227edf470c",
+        "src/PlayerSkinPacket.php": "71ca69ba35bea370fdf89e9ea119bd2a4c27ee130a0cb83d49c4b1738ff955e3",
+        "src/PlayerStartItemCooldownPacket.php": "7b8f83a6018798f1891882c3c42b079feb3130a6e82b970b053b2e5205e91fa7",
+        "src/PlayerToggleCrafterSlotRequestPacket.php": "fcfdd0ebb0d70e067a61f003e3bbb94d25ec64b5f27750ba9cb28a5e0b9ba5ea",
+        "src/PlayerUpdateEntityOverridesPacket.php": "5603d1797ed3dc8c6aefd553f57a357388d9453990ca4a16f0a79178cf00bafd",
+        "src/PlayerVideoCapturePacket.php": "2da6b5b232873ee16d4d18e11721c23af41731b22bc8434ed065e0e5890c694d",
+        "src/PositionTrackingDBClientRequestPacket.php": "5b89f255be820a8a940480f0fd945322f1d58da07672c20ad0f194cbca2bba7c",
+        "src/PositionTrackingDBServerBroadcastPacket.php": "d93d9534bfaeb8f7bc3a148932a37992e5a91ab2e6ccd794c4ec9450f6359808",
+        "src/ProtocolInfo.php": "79c928ce009bec55aec4aa8367ad7355eb6cb0b7d2d47ca8e83ad95f9919af14",
+        "src/PurchaseReceiptPacket.php": "319de237160c4e63940ccdc763ad54e5f6b2a33932edf7848d638dbd5e83ab72",
+        "src/RefreshEntitlementsPacket.php": "a4c2b13e0b1d1bc89f34a7d1a6c0554afe1139e1521484d74db118bc948b8b3f",
+        "src/RemoveActorPacket.php": "8eb9b64d301360b50c4d52678a1d99b3e4ef009c117eda64f13e658b74bc3db6",
+        "src/RemoveObjectivePacket.php": "1cdf7d4ddb886a4f09a2ae760d8b7bec8fd71bf6ddb5955594163d7a84821649",
+        "src/RemoveVolumeEntityPacket.php": "4610548eced203f1a46a3520c53e4146a6d67611bd54063177dac2a65a2e02fb",
+        "src/RequestAbilityPacket.php": "ef565eb2f8309403b2054b4982de603476cd1bfdd3f421e7d61c34b5da98fda3",
+        "src/RequestChunkRadiusPacket.php": "9aedfdd6d74f512bc66bf8083093812c106697150f835a8e13abe0851556194c",
+        "src/RequestNetworkSettingsPacket.php": "573e8ba5fe1d3b6dc7dca65f426c4963718c2107ace4530f68a02eeeb9523bf3",
+        "src/RequestPermissionsPacket.php": "ab099965759946a6bf350690740c6fe912bb7d23b71f1277785320c514aedd5c",
+        "src/ResourcePackChunkDataPacket.php": "6a06de00756ebf50f3453c8b426c101c7891919d7858ba2053d465a32dc72c31",
+        "src/ResourcePackChunkRequestPacket.php": "f9e3f32068ccdaf14fd8e467488e71e5df510f6ee256d9aedb007db526453beb",
+        "src/ResourcePackClientResponsePacket.php": "bba94c121e43227eca20cbd73b4d0d40c65b55efd30b1af96be24cfe8100ee0f",
+        "src/ResourcePackDataInfoPacket.php": "0f1874b669e81169ef324889c70bc0f78c32636a3f6423f6b8aedf948e092044",
+        "src/ResourcePackStackPacket.php": "516d5bd759d3acdcc8328a8c786485e8917166e258aad3c67d6dd41b9afd5595",
+        "src/ResourcePacksInfoPacket.php": "891dbf3aeb5c977efa675848b3d961840f72a2f222bd910292a8fc5c22d27b00",
+        "src/ResourcePacksReadyForValidationPacket.php": "6ac030e5ae71cd54a39cc890b9686308467d492ce2966696bc4a874fabe8b32a",
+        "src/RespawnPacket.php": "55f1d7b6dd09adb829ebb16189790095b6380fdc445de485e4021dfd915f6064",
+        "src/ScriptMessagePacket.php": "8913acd23d83f7966875db0054c636d4d96172a92015e21bf89d06f946e27cfd",
+        "src/ServerPlayerPostMovePositionPacket.php": "cf480ea751ac054dd2675083de61b0178d0aec1ecda72246db3ffa585d7e684a",
+        "src/ServerSettingsRequestPacket.php": "775928582aa7aecde833920e17afd40753b1fd46d71da677a46998a3e5c0360c",
+        "src/ServerSettingsResponsePacket.php": "7a70aa8b2456de377aa49f3498120ff38e75c6f7f6d80628c959e9efd939d085",
+        "src/ServerStatsPacket.php": "14ac3c5b8a5cd31d239e79d8069c67678410464fe1826c4e6a70a49b6e25ceab",
+        "src/ServerToClientHandshakePacket.php": "7c560e1e97e6bb7d1c010b502bc04797a82b67deb26d9a83de90c84dba76f792",
+        "src/ServerboundDataDrivenScreenClosedPacket.php": "1a02975aee4b03edda9e56e666e0749eee50acae47ef69c3edb71ab4948547fe",
+        "src/ServerboundDataStorePacket.php": "fa2aa043a57364f4b1302285b6b0bed205af93620cb5c7651b43c968dd615fa0",
+        "src/ServerboundDiagnosticsPacket.php": "2a73a8d4ba1d22ee5e4dabff0d9fd6cc24796ee48a54ee4373139bd4cab886b4",
+        "src/ServerboundLoadingScreenPacket.php": "4200d2a1a576f4904e8846e57c84740735bede4d8d025c27fbc5c2099a383e11",
+        "src/ServerboundPackSettingChangePacket.php": "e03ffb5a132b04a73af0f59d6336503a56d3356420a9b849c4dd14cb1aea7f2b",
+        "src/ServerboundPacket.php": "d2466e301e4a6d1d53312f52d14920b7878652e3b763acd318f9916e353c80bd",
+        "src/SetActorDataPacket.php": "e7e28781b3abe7569f38cb2f41ee943cd98c630c7beb60c9b4be39efafaae420",
+        "src/SetActorLinkPacket.php": "5a8d0e42972a7ba1cc6acfc962266f3b5abca3f7c4be3c19eeaf6d4e0370b4d2",
+        "src/SetActorMotionPacket.php": "deefc15ed648d8349dccd3d89630335346b36ed5110ffc381f7858d5f72209bb",
+        "src/SetCommandsEnabledPacket.php": "b03ff74b6a2c20f15205ea7ac05de0cbc353e2e07b7be75d98a1e3d9d4c7d8d9",
+        "src/SetDefaultGameTypePacket.php": "5bc0ab3ab36c290ae4e97668297487fdb5b0491fd1e96515b8ed425daea8ec35",
+        "src/SetDifficultyPacket.php": "86e9515a2b0f877cec8d6e32f77f7a4a8d96c41c30c7c1a79ac57beb203ce72b",
+        "src/SetDisplayObjectivePacket.php": "3a04796165a21c1ce22db49cc1f5ae858f77211c2a5a22140c30f3cd86dadb88",
+        "src/SetHealthPacket.php": "b8165e42dc1b0ace9393462c5612df073e7fe80eb73c6798c5735b9317327fb2",
+        "src/SetHudPacket.php": "608b19b42694fdaa02794b173b61ac4acf5ecf62d8098dd54ed1a0282a4e4e6c",
+        "src/SetLastHurtByPacket.php": "5a43186439d4fceaec28fca0683dd0f6c015b7c6a6d3a5376e4626bb49eea391",
+        "src/SetLocalPlayerAsInitializedPacket.php": "7bd6d1756321d78b6515d97ed06490ba9258951b17fc789fe4aa67a7c3d8ab22",
+        "src/SetPlayerGameTypePacket.php": "1747679f66b248e40dd2d1bfc6da41bd29959abbc78f47c50546ada79494239f",
+        "src/SetPlayerInventoryOptionsPacket.php": "5ac7d476fa4bbb8433938f70745960e8c886fb6463ab57630ec7c200729afadf",
+        "src/SetScorePacket.php": "591ebb18a45653aa258fc4814fb1ea8f3abc0336015522eca16ed03b2c6c5e7e",
+        "src/SetScoreboardIdentityPacket.php": "c9c073a43106bebf31248198ddc18c098417e1ec4d82abd5bf9251651c2890a6",
+        "src/SetSpawnPositionPacket.php": "a2fe971714c70b4967e3964fd27e595a6994749558cc1237f68883c050fd5c72",
+        "src/SetTimePacket.php": "c450537460f7fe7cae8a88cdbd25ebecd61d88497a920488dbe5444f8cbf6d58",
+        "src/SetTitlePacket.php": "961a53c60f230f70682f15742420a145c53d744dabe02463630e2fdefc99f6a0",
+        "src/SettingsCommandPacket.php": "8c209875186db311d840d07254784732ae1e17380b0650ac8a285b29ef1c4eca",
+        "src/ShowCreditsPacket.php": "3d3f8618c0ca96c9f4c68f5b6dbc868ae26c2f163e2a8cdacc62762c0c0cbaff",
+        "src/ShowProfilePacket.php": "88ea8c8f485074df301edf24fc79f86a2eb5711aaca4ea286560cba7fa77b981",
+        "src/ShowStoreOfferPacket.php": "b35db0ccca115483cacec7052c6b6bf2e2ffdf7d7949e49a9a61d53035bc0d10",
+        "src/SimpleEventPacket.php": "4ddf30a7fd2368dd4df36764299a57b35f56f6b6b1720b94923735d70ead0c67",
+        "src/SimulationTypePacket.php": "9efea57032da936fb6669d5cd6c9ab8ffdb788f3a88936b3506915b7aab6da22",
+        "src/SpawnExperienceOrbPacket.php": "60fe7bcab9c03cdae9ce3d914e059f109edf8d232fe0b5df7851c218b86f62ca",
+        "src/SpawnParticleEffectPacket.php": "695cb7f59ab2ec2be1756ac1fe38adc9efd47cc5507c8e2f176fa975b15515b1",
+        "src/StartGamePacket.php": "ec0c067e2256363788591ccfe885b82fde40083c72b0a5e304840ce7acb6bcfb",
+        "src/StopSoundPacket.php": "42aa11de08686f3bc3fb12c91e4cbecc815945de0dddd9b7ae513f5255c84f0b",
+        "src/StructureBlockUpdatePacket.php": "f2fd4a2948d2c84c5cf4d0830425c2dd12ad96cbf96a98162e0ece988269caed",
+        "src/StructureTemplateDataRequestPacket.php": "9c3396ca70b2ac53b4ed5713d4a2850bd585a87bd963aea4f64b69f2cdb284ac",
+        "src/StructureTemplateDataResponsePacket.php": "5cfada3e4e00bfa3eb2511636a0c3dd34317e6d15a8430920cb43e107b3e247e",
+        "src/SubChunkPacket.php": "99bcf82b6ed774f4072ac888b5d94bfa90a68269dee1cc0a6911c803e7b714c6",
+        "src/SubChunkRequestPacket.php": "2708a023df8c32af921e48f5b44dd1df08759fe57ad2f3ecaedc74d520c20b65",
+        "src/SubClientLoginPacket.php": "6d965179ee289169f9ea6fae24ef66c2fb8a4853e6ab5876909ae6f83ca44013",
+        "src/SyncActorPropertyPacket.php": "fcdaa03c4ac636f9de39ca2bd627dbe1fe1b64063c5d19d4bf65d001aa4e4e44",
+        "src/SyncWorldClocksPacket.php": "19c4ca17db64c798082c250703998f645cd348c6e93d508f757f8e03e2231ec4",
+        "src/TakeItemActorPacket.php": "41455f2ca92e6d24c374c5e81e2a1624cf261589b7973de6f03832ad15f07868",
+        "src/TextPacket.php": "eca287d8a8788b8e30b93822ce085bdda12ba45c99cf2084db97c3fe744b60d7",
+        "src/TickingAreasLoadStatusPacket.php": "530ac25ff6c832d41502288ad608e0b5df148c67af6283d805ca3f15fef85293",
+        "src/ToastRequestPacket.php": "b88222fcf674cfddaa9856623e82237deb525318c3fee2aa1ef6674dd45e32b9",
+        "src/TransferPacket.php": "c1392efcfe3955ff84e98d43a475862ff606dc33994fa5824a53a416f5352236",
+        "src/TrimDataPacket.php": "b578946ee85ca67d8fa2965645a356ced71c6a88d39777cf86ab1ac2ec4e7218",
+        "src/UnlockedRecipesPacket.php": "f8f717e405081baac550de8207c474dc304b1ec0b3ded65ee6ff160a7411ce37",
+        "src/UpdateAbilitiesPacket.php": "f325e95b46df2dec99fdf19dca8d4f70efa054f9ed96269518eee8d21cefaa62",
+        "src/UpdateAdventureSettingsPacket.php": "29707233c6e8bf30c71e8cc415fbe714cc55f4f507d0c9174b6de6333283f1f9",
+        "src/UpdateAttributesPacket.php": "3deb8f0e9edea68c163f76472c35c1dd5ba1ca254fc659ac085b4be60c31d3f8",
+        "src/UpdateBlockPacket.php": "c40617e14e439e6652e98179f721afe539e9f5016544cd40454fed252ac27d6a",
+        "src/UpdateBlockSyncedPacket.php": "22106744c730eeac86e223afd1283dc32b5374c8ef0240853fa0d94a2e46a3e1",
+        "src/UpdateClientInputLocksPacket.php": "ed6ee0becbbfd493920d836cf213d795970893ce3966844a739c7a7f2b309b0d",
+        "src/UpdateClientOptionsPacket.php": "4b78d50e935e2deb0fd579e8bed011de3c38321c2b425e19591ef2664f78fa3a",
+        "src/UpdateEquipPacket.php": "58777466188c524730e64fe425fbda3da8dc4cb47de70abc1310375d6de24b6f",
+        "src/UpdatePlayerGameTypePacket.php": "746ea020d8dab44a02d9d454400fda6b5bc2715e4b1dbad4ebccb7df9c9abaed",
+        "src/UpdateSoftEnumPacket.php": "d5b9dfac74430428f21334a756290a8512953032ad11aff6fac96c7b6b1b9e0a",
+        "src/UpdateSubChunkBlocksPacket.php": "dee35ec0a10a7963221cbbcfd3e126a4ebdc77d1157c255705ffb7f8352ce4bf",
+        "src/UpdateTradePacket.php": "20c67ee6c4b4ff198c59a139f6b18b90d311530864bf631608b59657598d9c2b",
+        "src/VoxelShapesPacket.php": "3b9380da906e8c64ffd329c33d07e964401568d69b1eedb87b7aca2a136ad8d9",
+        "src/serializer/AvailableCommandsPacketAssembler.php": "8b41a4133ad1cbf4158015e61d5d8b0c90de4a4757410d4e312fd5ee1997eafc",
+        "src/serializer/AvailableCommandsPacketDisassembler.php": "21ef7f2c5cdb2c59ff3c5fed2118b63ba9a728a776a22fe3eca71a7797f37b51",
+        "src/serializer/BitSet.php": "f6c5bb6f9426efe7a12090631ab5d443433192f303661b81fad31bd2eff325a7",
+        "src/serializer/CommonTypes.php": "555125799f3fb4179ea7a5c6da82cf6f072debc5d44172fa2fb3ad8fbafc7ac7",
+        "src/serializer/DisassembledAvailableCommandsData.php": "90e630d76abb05baff37da8f80451d5f2691ee5002991538a6ff66d07767d1e5",
+        "src/serializer/ItemTypeDictionary.php": "6df0a248f77b661ee4a283366fb3426360c64f465430b458a18196b7f91e2072",
+        "src/serializer/NetworkNbtSerializer.php": "ba08660061a4704e642d083c7d79411c2a086a4b7a9d63e980870bd37d43ab08",
+        "src/serializer/PacketBatch.php": "1b18c140350a45bc8bc6fa016fb1eb18732b3ffdeeae4270d66f9ecff86960a0",
+        "src/types/AbilitiesData.php": "69f5c41821991108d1be33f8f6c126972ac14bc82983140fe10204d5597fe963",
+        "src/types/AbilitiesLayer.php": "d39a6c74f231417164f86324a0a25589c865febc12258b048d9d7fb78c3e71f9",
+        "src/types/ActorEvent.php": "699ea4f66c9bda4d4acc4609f7ae1beba7d2494c1dcba08cfba07cc9c9ecb19a",
+        "src/types/AgentActionType.php": "525c89340b0b9a8aa2203afe04eb67b32433b90392143ad2a42fcfdde8cc0729",
+        "src/types/ArmorSlot.php": "1715ee4e3b7670e69ff28b0f0c3a55ee35c50e892a4a3780fd6b8fc7f4736bd0",
+        "src/types/ArmorSlotAndDamagePair.php": "95424e7da5302ed6e7b28e051293baf4836724e34220cc55052b5a570f437542",
+        "src/types/AttributeEnvironment.php": "510636125b70c322cf772b7ece31a6b9365b816e2a9afd6e6e11148f6b7eaf6b",
+        "src/types/AttributeLayer.php": "9ff9c9a78a42558fe896f6f21ade7d60f91e9bc00bce9ae7b386578cbacf8a8d",
+        "src/types/AttributeLayerSettings.php": "ecc25d8e04afb0b5ca9dfb6a70d381c87ae44c6eb1040339f24481b7667fefd9",
+        "src/types/AttributeLayerSettingsWeight.php": "b6d23b4a581d2b3498dc7aa1a4106e712fbce4d15cde5c94842db2c77dcc4cc9",
+        "src/types/AttributeLayerSettingsWeightFloat.php": "ca12e60a86cbdc23e50ace42fef7ca4a429feab3886f56d7c9315c347f7c9133",
+        "src/types/AttributeLayerSettingsWeightString.php": "6e09f23b829ae611111b33efc0d8395a45f2c14dc2c4f4050997866bb8277f21",
+        "src/types/AttributeLayerSettingsWeightType.php": "f5cc834b5ecfba9cf43d02a62aa7ec8f2d1eaaf63b1d226769a23c03c860fffd",
+        "src/types/AttributeLayerSyncPayload.php": "7c2c433082951c3b43adaae3500e18e18661c996278db7be14fd86ce0c7f7fd7",
+        "src/types/AttributeLayerSyncType.php": "08fb0455b67a2ac7795e24eb4bd611675f8093a98559f7e74131b53da19d4ab1",
+        "src/types/AttributeUpdateLayerSettings.php": "7f6e31e4054f73171067bc6724f69781848b17689144e6e79979aa2bb5598921",
+        "src/types/AttributeUpdateLayers.php": "7a1d5800ae9070c8225524191a55090bfc93299ecff8015564b78cf92a4566c6",
+        "src/types/AttributeValue.php": "248e34922d5ab2e1773c71275aa77907f3e881ad55e4b2ea231948d149ace7c0",
+        "src/types/AttributeValueBool.php": "3eae158e18421f2c4f8179fa991e683b5140197b31b320dd0964e03ba6120df7",
+        "src/types/AttributeValueColor.php": "9ba3d6e7ddb937b5f8154c3741ef28c983bad9fe6c70d64c2b55a0991327ca04",
+        "src/types/AttributeValueColorArray.php": "20b1985eb42d693c62d45cf4ed47ab2a5bef9fddec4dcc5088b2dafb884cdc59",
+        "src/types/AttributeValueColorString.php": "537f56c7a92972e849c49242a1a58190310fb9622eaff4ce7b56556073901bee",
+        "src/types/AttributeValueColorType.php": "bf0d897e07a80702ffe098027eb8509f1a70297c045a427cfd12aac21482eb1d",
+        "src/types/AttributeValueColorValue.php": "0635ddedd1705d4675e6fe2eeaee42a6e8ab16e700a7816a56e10f1f88bd5bd4",
+        "src/types/AttributeValueFloat.php": "38e6910edcd9de4ae03d0b0487a9b6cda087a103fc0765287f637a2d6be65f2d",
+        "src/types/AttributeValueType.php": "70ba45ebb5966c52f4dd6dcbe8367c7fe2933874694d0934459c981cbd98a72d",
+        "src/types/AttributesRemoveEnvironment.php": "240db6feafc6ba9fc801bb83f5726b105bd9536b40606f728df6f11172121682",
+        "src/types/AttributesUpdateEnvironment.php": "5c12d29b380e47d810f4a68401850c7a646e3428846388a8a34c02d917b52ce1",
+        "src/types/BlockPaletteEntry.php": "e4b5d625b3502a88cb0d1921f2b3e8d361af1e41c3ba5c15aecb1014573d3678",
+        "src/types/BlockPosition.php": "f8f150d77343d0134c63f66a8bf39ad74122d8e4c6a07539d8041d36d3aa8da0",
+        "src/types/BoolDataStoreValue.php": "fe4564375288a78e1229b0650b858ecb07ab24b796a28fba211b7ef61aa850b4",
+        "src/types/BoolGameRule.php": "e4dd6e6c14a6463df77dafff6e3301f536c942b8d298a5cb28f9fd93605a0766",
+        "src/types/BoolPackSetting.php": "0534719f60995d9e580344cb8882dbe21f76f9515807584e0e8bad7b5299185c",
+        "src/types/BossBarColor.php": "a3b4c75497c937721c755509d56f678d3854016e287c237de0a47076a2c2c565",
+        "src/types/CacheableNbt.php": "9cccebac89474c2c23be77b5a5333f6386e7c9528d4bd2cdb3a0efae403d5ed9",
+        "src/types/ChatRestrictionLevel.php": "d378148165c669931b67f1ba2b28d693282628c75ddc6e7c2fc51cd764195b54",
+        "src/types/ChunkCacheBlob.php": "4b385cc2da8e936b09cf803f262c5af574e78279fe3cd4e7fa53da249264fbeb",
+        "src/types/ChunkPosition.php": "6fae421bcf23d46c710a69313b4a63f642b6a2632353e57784516e5986288f10",
+        "src/types/CompressionAlgorithm.php": "0f3db3d039404da5621c26b3a063445490f5238af3cefb5de6def81ac0884918",
+        "src/types/ControlScheme.php": "c8a6cfdd9d0a1efdaa09d8823e0385f7e72b0a8c7a552aa017b55f0288188b45",
+        "src/types/DataStore.php": "6e65b53b2f494d81816f0e211ee6d246c90388e9b3a11c82944e1882a2a7866c",
+        "src/types/DataStoreChange.php": "27b94203071f2d888d656569620cee985fbe0aac31fe428c1fe59ba5cb13f246",
+        "src/types/DataStoreRemoval.php": "2db302ef2cdc66f688db719a2cab0fb937fed2e7be755fc48fd1b0ec37619b7f",
+        "src/types/DataStoreType.php": "f9c0dd110c4e58a52fbf050e6bc4127d953e211643ea50a9ca06e6a42bd46e36",
+        "src/types/DataStoreUpdate.php": "d2ef50a359d1ed418dad909157e2920d82205f803a269eafd3f048c6b5b9f5bc",
+        "src/types/DataStoreValue.php": "64dac1747093de2c671e620ccbbd35d4c2171f6559fe33fb198229bd6aad140c",
+        "src/types/DataStoreValueType.php": "c14822de0ec830f62ad844b6fea950e17374820b449bb69d68e0824239cfc69c",
+        "src/types/DebugMarkerData.php": "5f4675cbecb1fa82fd4c168f7c7362dbf553b5cef2bc42b887a875d51fc695ac",
+        "src/types/DeviceOS.php": "3bf2fd107a0401baaddf2ff800b062e2faeeeb3623a58320cf60e54204ae3141",
+        "src/types/DimensionData.php": "b308b8a8901c0fa1e883644a62ad2b3d48a8ec668d3d9aa6a43a8f901105e044",
+        "src/types/DimensionIds.php": "feaa445501b50984359acedb2b8e11de10317728cf50def3ac36e8dc3f78a82e",
+        "src/types/DimensionNameIds.php": "7127dc2d8ae651538599b078a45270e75ed9d42caf76fc1d1c70826eb549c2fc",
+        "src/types/DoubleDataStoreValue.php": "c54783e4bc1c4c5674ab39522a0ca66457a86cea0820c7becf681216928a856d",
+        "src/types/EditorWorldType.php": "9ca40b366274e465103c35a545c7349a5cb127f88a84557e1a82af1f261f5860",
+        "src/types/EducationEditionOffer.php": "3aa233ba9cb660e795548a63e56abc7c98c21bf144a3c842a0b973d95e6e7121",
+        "src/types/EducationSettingsAgentCapabilities.php": "e0c36ed7e7f7026376bc57fb52d07b99c01fec12cf483063058494e94ccedcbc",
+        "src/types/EducationSettingsExternalLinkSettings.php": "cec687f78b005d50b2ea7a0f675d8458c0a4224a62f021c29ce0a3f3d4ccdd6b",
+        "src/types/EducationUriResource.php": "b2aedd9978f9fe84e19a8c1fda5f1e6b4deeaca74bdac6667c0daad2a08a2f26",
+        "src/types/Enchant.php": "d713a39c809b86cd46d239ca6a3a3e6d2f87f1471ec3685c2ffd1d413df144e7",
+        "src/types/EnchantOption.php": "a353e001318d736a27a0d2b67e8a4d453d524a25127cab22188847ffe3ed6679",
+        "src/types/Experiments.php": "c73f5202afac1a93bd7aa46f880d8df11e7907887230bbb1b7fce295b5e95a17",
+        "src/types/FeatureRegistryPacketEntry.php": "ed70782ce416b49c7dbf05ce93df71a10e34b776fbce1f616dbe142097c6010c",
+        "src/types/FloatGameRule.php": "05f859de4cb6cd7c4ac514804a3623a5b5b868f31f909e03f3e103f89aba552e",
+        "src/types/FloatPackSetting.php": "2aa61f37bb1901292a7985b44f332137e6e1b230b40cbad07f18d44b4426152d",
+        "src/types/GameMode.php": "74d9ea81affbc5c3906878da40be5d2483715fa018e1fad9803610ac22db2d63",
+        "src/types/GameRule.php": "62a580d1af1a2e3437cb7024098a59cbf50237466a10279651fa721e99f84880",
+        "src/types/GameRuleType.php": "3bdb2cf5b1553af9f568c2193ff2a008a11eebc3639f4494bcf747c2b1660489",
+        "src/types/GatheringJoinInfo.php": "526c60de35f4f67630d37243fe3e48e265c9285dbbe2d2d5abd45203f1cc0040",
+        "src/types/GeneratorType.php": "27dd1292b238949eb8f4e05cfdcd5b84931f25fd9d2ff4a8cba76efd065019c6",
+        "src/types/GetTypeIdFromConstTrait.php": "9024ff7336fb5ca335621b45bde89bb4a71051bb4c262a42148ff87b83a69dca",
+        "src/types/GraphicsMode.php": "afdf6880fcc29ca045260b86101ef7f30e7694f3a669798feb42812386f73762",
+        "src/types/GraphicsOverrideParameterType.php": "f30a28e33ed6896d332e8220cbae03ebe8dc44d0f5fe4da0b1ff8dc46eaf5c04",
+        "src/types/InputMode.php": "9b018ae7489da609bdeeb25539e14d1039f62704d3ca9f16e144f0d23cd705b6",
+        "src/types/IntGameRule.php": "aac8d1661cd26d62e285b9c3513040dbdbfa88b9bda25d3db806de61298e2670",
+        "src/types/InteractionMode.php": "bc2738842994747eb00e3525c0b1f8952c1c70b4f8b8a8a9d455584e4ef24b81",
+        "src/types/ItemInteractionData.php": "e3c12609a7be8d66b536037685f0951800acc2c314daead050c97298d8df9fdd",
+        "src/types/ItemTypeEntry.php": "4332fc07f9a838f9bd4f95daf4ceb49d94457d122e7bcb2f40c725a4e34c2b06",
+        "src/types/LevelEvent.php": "acdd44e201cac389cabe1259aa52eabb9fa30c0381d5704719a805a3d716f371",
+        "src/types/LevelSettings.php": "a457205da4490dd80f27749b605e89c496815c75bcf6367a42563be6cfc5025e",
+        "src/types/LevelSoundEvent.php": "eac90e2b9b23ed8b8c346d013fe766236c3e6cdb475c7027531e8b5d686e49d0",
+        "src/types/LocatorBarWaypoint.php": "04c3cf4ecd3d01f0b57b20d5943be05f1c5db67de78c861a49218b955955f886",
+        "src/types/LocatorBarWaypointPayload.php": "7bd1724d5846a700e8457e1faa2490e2f2f91f2b384b8d067306b7cb5bf2419b",
+        "src/types/MapDecoration.php": "4074ef7254702cec48b64abc02a853bc6786726afabdce8501e5bedd905ed223",
+        "src/types/MapImage.php": "2ff9d41e33ffb119b7c29fe51d5811ee611f7bf579251c6a69242d35b3d35ba5",
+        "src/types/MapInfoRequestPacketClientPixel.php": "bf596927d8655e95279d8967022f8068083524517bd7ccc96c614a90e1e31fdc",
+        "src/types/MapTrackedObject.php": "9cdad9307d381da5bff4e092da81353deb8ff8a3be61ccb53de18a45a582d988",
+        "src/types/MemoryCategory.php": "fab715f1e2ec02ab1c31ce3af9f732903062e9db7a708700cb6c4d6049438870",
+        "src/types/MemoryCategoryCounter.php": "3ebc518e949ef2bf6552c1bde7241bbf3420565c81ff2076496945be8f4d6cb2",
+        "src/types/MovementEffectType.php": "77785ee738d72baba7c93f58b5dc2997bb127012247a8b032a430c55c805229a",
+        "src/types/MultiplayerGameVisibility.php": "46e164b62b8101ffba83a684e0f75294f98ddd59d536ae2835475928f6460f25",
+        "src/types/NetworkPermissions.php": "507ffacafa38a9ed2cf6062c069c0645c52632a6fb03ad76c837f217a926eb87",
+        "src/types/OverrideUpdateType.php": "dddd660961507bfa914fe1997bd9db002fd9ec4446878932c059bada984201ec",
+        "src/types/PackSetting.php": "54ea386290d2f06fae47fd1e6cbf5b4e1b4e877c7516a77fcb3eea08b8009acb",
+        "src/types/PackSettingType.php": "f4be73e00cc5bf8a358c7a795ebd9d61fac3d888e65e88f041d75065e5b86a76",
+        "src/types/PacketIntEnumTrait.php": "101d4076ea3cf6b83484348782a8cb86af9641ce4bc7fa17ad6c8cf776545a1b",
+        "src/types/PacketShapeData.php": "14031b85531d185cc1d35de274a5fbd0beb6e4ad7a32792e95e5fde3496b2461",
+        "src/types/ParameterKeyframeValue.php": "a61384bb5af44d7c985085990bd8b20b3af8300d9554ab8930e94ad648a6168f",
+        "src/types/ParticleIds.php": "f6eba156b7044e137fa840ec30321b7c3aaccc17bbd3572ce7ecced6ea943e5a",
+        "src/types/PlayMode.php": "605d53b0f4304b385e1595c9fd41faafcf5348f0f31e76e5504cb1e52ae93caf",
+        "src/types/PlayerAction.php": "96f22957a00e0c4be0b27aa742b78bf65846dd7102091ff46492ac21843f642b",
+        "src/types/PlayerAuthInputFlags.php": "f272208ef05d64aae77f78c2e76716d7c75675e769eda3ca741e43d41013ec9a",
+        "src/types/PlayerAuthInputVehicleInfo.php": "27b1bcd8ea58f6ce2aa4359a80330fb0baffed3edb31f3847f83233c59b49b6d",
+        "src/types/PlayerBlockAction.php": "38431899639fdf0e9ba6c6419f5d2549034792d6b0dbb548ebc2c4c6083ffd91",
+        "src/types/PlayerBlockActionStopBreak.php": "0b8872f2f48bfa4375f863fd3e4f52fd39d8c0e6649273bfd07fe246431c35c8",
+        "src/types/PlayerBlockActionWithBlockInfo.php": "6826496716c97fc7b9d565e4b80e84b3f013319f3031f5ad137e9e00a9ff55ba",
+        "src/types/PlayerListEntry.php": "2cd76647322db8bce78cf6715ec4afb69558b2c5d25beffa1d4c40991b3b522d",
+        "src/types/PlayerLocationType.php": "6c213d2ecf767466f51d111d87dd7d8dcc57ccd4fe3a5842a025968ff95387ae",
+        "src/types/PlayerMovementSettings.php": "dce0db73a99dabb5bbb072d74e802d40647c84ec813add0792c1d12f45dccb5c",
+        "src/types/PlayerPermissions.php": "04d4b71eb0f18250c7247a38039d2a0d1185805dff8de0f822b99b43a4e12a73",
+        "src/types/ScorePacketEntry.php": "d9d1cce9e5081478ee9c7d1e399ed191e54faef1928c4d58832f78c812b2ccaa",
+        "src/types/ScoreboardIdentityPacketEntry.php": "7636ed7027568f84a8d3b52a2dc2cf7f4e492f4bf6f305e4e2a965652d5af4f3",
+        "src/types/ScreenCloseReason.php": "aa34a83927aa0f365e85b61f88cc36e75badb762ab16ec225908aadcd94ad430",
+        "src/types/ScriptDebugShapeType.php": "5523a1ce3f29184087c925ef2ab54151adca55a4baebd1503ff089f1b35d7f15",
+        "src/types/SerializableVoxelCells.php": "ac86ffeff06994d0c8027374f42d8901bd96048a0cb7a97e02b700ced2ad6f08",
+        "src/types/SerializableVoxelShape.php": "6c4c0386f258973e98e06e6cd2bccf36ac7f23bc0f8fdeb22bb06f295a283e93",
+        "src/types/ServerJoinInformation.php": "4f31c6e3e74d86d202d2b153dfb29ef96e5b47a0cfa599cd3baad45780122995",
+        "src/types/ServerTelemetryData.php": "469a9e1b83bb4adc493b06e9ef2a01fcfe70f35ca764f49533f3d9df5ceaed8a",
+        "src/types/ShowStoreOfferRedirectType.php": "7d390c907785341a159039f9e8463ebbdb523d6bb72ea9b17fffa9a27cd2e8d3",
+        "src/types/SpawnSettings.php": "ec9734dcd20217da73cb79d6940f55cf90ea3bf32cf6862b7341b34abd2fbf80",
+        "src/types/StringDataStoreValue.php": "365d54388bdd6f56bcc7354ea7f99be5ed6175e126f511de00ccec6a19b6ffee",
+        "src/types/StringPackSetting.php": "dac950beec504f1b9dc6623430180f4df85cf2e7474739b082a5e916694381d3",
+        "src/types/StructureEditorData.php": "ad8fa629caea1e2cc0e2cb43b06b66c939476ec012d4d96f07bf185f968feba2",
+        "src/types/StructureSettings.php": "f4cdad980480d4b9da6e49cd9b80960909c6a9b50e95e546e2edc709eceab7cd",
+        "src/types/SubChunkPacketEntryCommon.php": "3ef2d050636621b4a2633d74ffa8182a1255cd6aeb0638748d9fc841ee3f4105",
+        "src/types/SubChunkPacketEntryWithCache.php": "e81fcefa83be88dee3a8606b55a000aa87a5fcdcdc4f223c42cd0820af575615",
+        "src/types/SubChunkPacketEntryWithCacheList.php": "647d294911ef9708dc68d9206ef4c4c8cd92bf9b4d92e66d2275a966d698bcf2",
+        "src/types/SubChunkPacketEntryWithoutCache.php": "4813c2ca863dce5c982cddde6cb45cda2b6263352843399f38bde94a8ff53552",
+        "src/types/SubChunkPacketEntryWithoutCacheList.php": "9e20e829813bc50050569bf387ba194874d460866f44dd22de7305cfbfcf1400",
+        "src/types/SubChunkPacketHeightMapInfo.php": "c9dc2d1f945df1b79080cd5479ebb87f87617eb99498a187b11619be1c685957",
+        "src/types/SubChunkPacketHeightMapType.php": "c64c24a3d531bbef5b5943f396f19fa9462e430c57b40ccc32a3372dc1ac0069",
+        "src/types/SubChunkPosition.php": "d0eea174dfd9fad5057f7014e07673fe36426c028136e05e6288ec9d3473f795",
+        "src/types/SubChunkPositionOffset.php": "e504e8b1fe48a9f6a2bfe1cf549f4ae62237359b388b9bcbe3d509b6e61d98fe",
+        "src/types/SubChunkRequestResult.php": "d3e71bc21c573f7d768aa76c64fcc7b543778804d4b046c503d1ea3457cf8e85",
+        "src/types/SyncWorldClockData.php": "2964930ee3cc409bc41ec5cf16d4083c53bb28d6c87103cc5b53bb6a2f88f8c1",
+        "src/types/SyncWorldClockMarkerData.php": "455f6aca1102f40968ba75a2158cbe4f63dfe10f6ec736de09b45f0ef27b480b",
+        "src/types/SyncWorldClockStateData.php": "adca10a1ea63b8ec07a4ddef1463435e461303cb16ca72e27342865ee141548f",
+        "src/types/SyncWorldClocksAddTimeMarker.php": "ad6e1cd64b473bff72eb8d79fd26615af2a02578486e98fcdf7fdf8d13650231",
+        "src/types/SyncWorldClocksInitializeRegistry.php": "ab2ad5301f0c809e61254fe3251ef4579789a977cfb7e5a7a095ce8d15ca8382",
+        "src/types/SyncWorldClocksPayload.php": "7027d3a7bc51ee92fa877a704650af423b2aa902ef02c6106de568fc4a9a9491",
+        "src/types/SyncWorldClocksRemoveTimeMarker.php": "92ca32422e65ec563fe9a8a2b810fb7a9deb8347a18bf58e7bb2c929eba73dba",
+        "src/types/SyncWorldClocksSyncState.php": "792d1d551223a63fd983f019093e2d4ff53548d060e66ffaac6d54f3d584a0bc",
+        "src/types/SyncWorldClocksType.php": "4931cc6396f8a4a5c165b0cacee9c113cabc9ce01ba702eb2230bba2a6193679",
+        "src/types/TextureShiftAction.php": "befef1b34e01323c5acaf791369f29292ef5061b5d571514d4ef2473318271e3",
+        "src/types/TrimMaterial.php": "cc10d579fb035e8636b0c4c564fc67b053c143f9c1b47884306d92e46bb58444",
+        "src/types/TrimPattern.php": "7c211e512948e3ad85ad10538dda565f4290f6ff2d37ba7d946f36dfdcf80b6c",
+        "src/types/UIProfile.php": "8cdb8e36459ce2a0553ee43a0318757df9298cfdbb6d32d56a62fd1d6fb96e4e",
+        "src/types/UpdateSubChunkBlocksPacketEntry.php": "63fce4e36430f4a3e6e8900c1ca457d777ba0ac43439f4439eaf3ac56aca5ca4",
+        "src/types/WorldPosition.php": "5465336ec62baa4bea288756132da408cd552bdfed14eb3d67584ec1ae9e324c",
+        "src/types/biome/BiomeDefinitionData.php": "c677df5d82bc9b0eb6639087c72423a41155544aa11aa63e679cb23434a8829e",
+        "src/types/biome/BiomeDefinitionEntry.php": "0fc2490bf4b440f2343d3527e3a9e92bf636b3dea8525e94da11426e7820f0d4",
+        "src/types/biome/chunkgen/BiomeCappedSurfaceData.php": "99433c2c0e4c70c19c11c2dcfb66f5cbe97a3e5cc6b92f3339a8ed8cad18cde7",
+        "src/types/biome/chunkgen/BiomeClimateData.php": "edf47fc7c64b6db2368f9dd79ae41cbe67b858de0869acc76762d835450533e5",
+        "src/types/biome/chunkgen/BiomeConditionalTransformationData.php": "14fda56e6c50dc913d6dc29fb677af9c3c9f15b04203119670bc711a92efa5b4",
+        "src/types/biome/chunkgen/BiomeConsolidatedFeatureData.php": "db6e042f129ef45d4b94c0f4b984e787dd0fda1708a7889027e45deb7632b77b",
+        "src/types/biome/chunkgen/BiomeConsolidatedFeaturesData.php": "440c2685f4435ee34a76c268d373e8a8a6eb2aeab2d769dbe6921c9217bdf46b",
+        "src/types/biome/chunkgen/BiomeCoordinateData.php": "0b0b714257ee4e1e7957399c7e1360a5de6643670c41be4359b5b40215ac52bc",
+        "src/types/biome/chunkgen/BiomeDefinitionChunkGenData.php": "5ab858b516fde5f489404e6d79bddab22850e6abb1b07ea688537fa44a07db33",
+        "src/types/biome/chunkgen/BiomeElementData.php": "45bf8f9b919cd41ab07c826e2cd8078c2b532299710c268913c8f4531b2816b4",
+        "src/types/biome/chunkgen/BiomeLegacyWorldGenRulesData.php": "7be0d0b292b57994fdd7fe929c8bdb615f8b5739c9ea1dc4866a942d44f514a8",
+        "src/types/biome/chunkgen/BiomeMesaSurfaceData.php": "317f0633e3f78b6623d11f815b365dd6986dd0acb17ade825c5baf228420aee5",
+        "src/types/biome/chunkgen/BiomeMountainParamsData.php": "058738737c87d7d968088018de7c42f29bea11770cbed42107f89c3f97428aaf",
+        "src/types/biome/chunkgen/BiomeMultinoiseGenRulesData.php": "5e972b463ffd9fa43cbb57c23d467ea873530303d062292fb119060b57928454",
+        "src/types/biome/chunkgen/BiomeOverworldGenRulesData.php": "0913afbda8c08c2cc9fa24e549f422f322802a6d34e2f507a1cdae6aa4698c8a",
+        "src/types/biome/chunkgen/BiomeReplacementData.php": "6e24ad0bf37f6142f42c7ec12767be1ed3b4b7896ab650799ce73a0bf9f978bb",
+        "src/types/biome/chunkgen/BiomeScatterParamData.php": "c0d6da7b7ce9fc8a8c1ee1932ef596f14f3bef7ccc6bebdbc836f1f3e1c0baae",
+        "src/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.php": "e3a1b4a59a826fc11665ee09843bce67fbd88461cb10a210ad96224989c46aec",
+        "src/types/biome/chunkgen/BiomeSurfaceMaterialData.php": "857cab3dbfbf794762063cffa4b09762d299cbe040b751154484c176e7983d23",
+        "src/types/biome/chunkgen/BiomeWeightedData.php": "950acfdb90e56ae9842233193b4e75badf0fa85cce14b1d67c47e8cfdfe1259a",
+        "src/types/biome/chunkgen/BiomeWeightedTemperatureData.php": "94235c0396b42f4789733d8d67baa40a75e7bff03b019e4882994870effe2cb4",
+        "src/types/camera/CameraAimAssistActionType.php": "10bc3a4d0a93751c9f3061ff4f9656d7f52bf5a901a3bde0202211f62a66d31f",
+        "src/types/camera/CameraAimAssistActorPriorityData.php": "8ad3335378aad5c19ced940df814dc608bc8f558d4ef376e1b5f082ad2dfb42c",
+        "src/types/camera/CameraAimAssistCategory.php": "7713d1214aacf5a3fec5b6a7a94cac4f5464ef811ae20aeae356dca4d9379127",
+        "src/types/camera/CameraAimAssistCategoryPriorities.php": "08d7859d22157c9d0f5456dd1ca6b748e7d7f9b89321bf86ff9330a979dad928",
+        "src/types/camera/CameraAimAssistCategoryPriority.php": "23d3e694b07c372f523c975a099aa3ca7f3cb374b80afb7e348c81f0447f9740",
+        "src/types/camera/CameraAimAssistPreset.php": "ad297df7ec702476800fb8131441fa412f15a84cfcd4e27f426b9d2f28067dd9",
+        "src/types/camera/CameraAimAssistPresetExclusionDefinition.php": "fc2d0b9cccd8b82f1747ebd12757eaa371c5454ff4742e7ec1a674682310a26f",
+        "src/types/camera/CameraAimAssistPresetItemSettings.php": "92c93799809709b669e26f0cd570e9f6aa474d7f221a5afc0d6c90b2ad956f4b",
+        "src/types/camera/CameraAimAssistPresetsPacketOperation.php": "7f61b18fd08a022dfd6151d5628358aba23e5d0e11345cafb980e987a0c1ba67",
+        "src/types/camera/CameraAimAssistTargetMode.php": "c9639b26eaffebecb6370d0b946420f1c6d28581e79cf1288bf540b040c8e90a",
+        "src/types/camera/CameraFadeInstruction.php": "37ac9f7e539708b1333f12ce91c099ad867e26fcfd1abb08e730546685ef214f",
+        "src/types/camera/CameraFadeInstructionColor.php": "9d10beaa8635acca4fc1fa2e7131688ca9a94f253bc9976440bd1ad610c2cb4e",
+        "src/types/camera/CameraFadeInstructionTime.php": "9a9ffe9bd6b8c8e82f718ad45bac4a1641e29243cac7f1a0e84b5f3ec0019155",
+        "src/types/camera/CameraFovInstruction.php": "1376c3b7add5bb86b903b95ca819b2c1f0706f5245480b6b6e05e4179237852a",
+        "src/types/camera/CameraPreset.php": "71601ddeb8be996ad65dbf1a7551d6115aad2f29a28504f46d540eb255ab44c5",
+        "src/types/camera/CameraPresetAimAssist.php": "6442eeae339cc21f3f4922e80735fc6397fc62938925470975ef30dd80e35166",
+        "src/types/camera/CameraProgressOption.php": "b47ba7d6c01c96b4f0cd184b237dfe1ec5e5fe412099046f691547a51983d6e5",
+        "src/types/camera/CameraRotationOption.php": "8c96cb9b6b3e3d87773afe03d32b6b0b4d8d7ccb2135038f72d2f738ed452f33",
+        "src/types/camera/CameraSetInstruction.php": "dffa606dd15fb0045ae30b08d5f986989a63793a19c7daa21ce3d5ddb3c6a54c",
+        "src/types/camera/CameraSetInstructionEase.php": "8f5a3da726ce6746285937639399427aed3b0b0ab7b1e430122aab6fe92b23b9",
+        "src/types/camera/CameraSetInstructionEaseType.php": "b9dc939cd3f53ba26325c79d6b4d67b5b9d0815f5b09ed29913fb5c729f6426d",
+        "src/types/camera/CameraSetInstructionRotation.php": "0fb28ff22a0db5f3c3c605af5221a417c70665e06a6ea60b37816766fe8bcb4f",
+        "src/types/camera/CameraSplineDefinition.php": "230d87a8fae35f3c584a730c6683508cf72be5657e465e2ed5541b222ecfbf05",
+        "src/types/camera/CameraSplineInstruction.php": "68ac13eecf6b347059edceefb8f545ef3d812ba4d24e30478fe88b75da8fdba6",
+        "src/types/camera/CameraTargetInstruction.php": "9289b554a6dd57cca82b02b2ce5494bf4456098160c118ddc8918dd9bcbe4e2e",
+        "src/types/command/ChainedSubCommandData.php": "0d1f2bc18676bfd48cecad15a5cdb8a11f8752a5feee11fb7f7efcc23b177369",
+        "src/types/command/ChainedSubCommandValue.php": "dbacb6e726d25cb561bfea35af8654942553da8a746b5c22e7589cdb9e906c1d",
+        "src/types/command/CommandData.php": "c22b86b185f8adc2c0c958d131839804c8628e3960d799add7ca4790ff3474dd",
+        "src/types/command/CommandHardEnum.php": "f72a318ce44037c83c840850554073c073fe1a8f66c46a5df45cabfb1f84653e",
+        "src/types/command/CommandOriginData.php": "7facbabd940c391c8f66acd4268a618f37ff487bb929e2f9dc7432c4930b5398",
+        "src/types/command/CommandOutputMessage.php": "7bef30993c04015ed49185592cccbb5ab67773294ebb581a7596a1c9d541aa1b",
+        "src/types/command/CommandOverload.php": "36ef1993e541fa33c0e5ec71b7ceec5ce49dd8fcb4b124b29c00893ad4b526b9",
+        "src/types/command/CommandParameter.php": "6467850088486eda26e227790a38a76582f1227f55d12f0c0c8e3d7203a73753",
+        "src/types/command/CommandParameterTypes.php": "e837490ba61952dded8edb9911a2a2c68afd6e3c8e88db2e3c82be1b25631853",
+        "src/types/command/CommandPermissions.php": "90bc3e0d53e8ee781fabe293f837cad23057b7ac80d8a1050545fbb2e2a38ac0",
+        "src/types/command/CommandSoftEnum.php": "a33aa9f3f494438e29f6575fc842d82f26ca61523efd27f2735bd7022776fab7",
+        "src/types/command/ConstrainedEnumValue.php": "02d7fcc5d2e3a501495dc7ed10bac44f7119a09f0375bc6ae2d6a63cdd880a85",
+        "src/types/command/raw/ChainedSubCommandRawData.php": "254e641ca22677d25e549640d4055e2d97ba485d6e32a2e9e0502479c1a22bcb",
+        "src/types/command/raw/ChainedSubCommandValueRawData.php": "c1514f15da6dda459b77f673afd7ee43aa98af70130e0267bc3f5fbf6c4023a9",
+        "src/types/command/raw/CommandEnumConstraintRawData.php": "bfb45993f4a4d3472c57094273101cd297f8c9d1b6391d03abf1c170221ef636",
+        "src/types/command/raw/CommandEnumRawData.php": "d73da14a6ae559772491ac95fdccbe62bd9b3da5a8a9493b4efc721dd702b4fe",
+        "src/types/command/raw/CommandOverloadRawData.php": "b39cdd5434377811ade2300ac095c814902fb8d678b0956ddbcd6a81805969b3",
+        "src/types/command/raw/CommandParameterRawData.php": "d26cb471d0e45be2bef838e80197ce0ad39706a2b98ab8bb5fc7ce7c5bfb17f9",
+        "src/types/command/raw/CommandRawData.php": "678b021f0368237e82a933055098ed8f80737c3e6cd93a01bdef8b84c7702d03",
+        "src/types/entity/Attribute.php": "74ff8962ec530a9eacf0a14e05278b80896bcdbed67122edfb8bb85025f6b3f2",
+        "src/types/entity/AttributeModifier.php": "7e3600934981ea5451ac1cbd418bec9144ca21863d1982915f61af320510f908",
+        "src/types/entity/AttributeModifierOperation.php": "b144d40504fa5099a0dd38e4ecffb465eb3ef0625ff9d05ba8af0da64e4fefae",
+        "src/types/entity/AttributeModifierTargetOperand.php": "18c4f0f19011c44521e4293472b5d609e30053803492a4edeaf161a0c7a4a28f",
+        "src/types/entity/BlockPosMetadataProperty.php": "ef0b14c0dd35f250b349dc9214d4a188b5bbabf7f801e48d88ae121752f1571d",
+        "src/types/entity/ByteMetadataProperty.php": "b11be90ed3d782508d3b967994a6fefc36c1f1135b6cd768d0954e62a085d6e3",
+        "src/types/entity/CompoundTagMetadataProperty.php": "a3bbd2dc60354ef0800bd50c4c389c484b94e9b9376cfb5a0a64270dfc720dbb",
+        "src/types/entity/EntityIds.php": "4dfa3e2a25a770de4b1a04e7cdf85a33a96b69f660be186ccc7fd8a22fddea06",
+        "src/types/entity/EntityLink.php": "e09d2b4b31598d7d6c70ebaa84680602867c82f9984b7ed1a167130a70fe7e3d",
+        "src/types/entity/EntityMetadataCollection.php": "5a25aa1e0e5016d5ecb9e6147d92784654b8bd13b55baf6bf451fe942556f782",
+        "src/types/entity/EntityMetadataFlags.php": "d27faf8f90d54ad0711d31a5c3a4015722ef7fb8ec09c6855a3fe18fe8015430",
+        "src/types/entity/EntityMetadataProperties.php": "15768009f5ae8c85cd52f220ddf6c685e295d4b0663bf5bff199d1c8f63e6232",
+        "src/types/entity/EntityMetadataTypes.php": "bc9a74e96338afeb310270cbeae1109b994e7844a9974c5703b56ac80ae9b4a2",
+        "src/types/entity/FloatMetadataProperty.php": "b5c7d4c8d84f624c5969eeb747c40c6a43090ec2c4a67ab6523b54acfe3cb63a",
+        "src/types/entity/IntMetadataProperty.php": "ea39a41121993be929173646a2c9a1b029967667c49e9f569ab30b6fe1e90257",
+        "src/types/entity/IntegerishMetadataProperty.php": "fb01979a88ade2e39d931857b8246b88d64340cda37703ec126e756d4c99bb48",
+        "src/types/entity/LongMetadataProperty.php": "0edf1c639a71156dc4b34ada8147a6bbed0b628fcf6f62251e284922b9ef7ea8",
+        "src/types/entity/MetadataProperty.php": "d688ae5b493626be267efa58de87f6a1c89dd77df695baad47332fa893692584",
+        "src/types/entity/PlayerMetadataFlags.php": "93bfccd4d1cba4d605c1937ff494ee599a28619d412e6d23a82b7483dd7d55e0",
+        "src/types/entity/PropertySyncData.php": "678719a6da5586815392ad350c4346d2b6990af278647845738d2a6b28b546c2",
+        "src/types/entity/ShortMetadataProperty.php": "f9b1a36455353d3e17a3b1d5e17a885c5a17f3d59212eb853bd50a3f97bfa8eb",
+        "src/types/entity/StringMetadataProperty.php": "fd1272c61bb6c0e312cb8af2fe914973e364f898a3ed3c569d223387422f880c",
+        "src/types/entity/UpdateAttribute.php": "7ba7fb3236e310de83e8873ecf6c74eac3360bc1e31aba9b11193c84aff7cf17",
+        "src/types/entity/Vec3MetadataProperty.php": "eec2d53030fcd1af88a1be6b1973575ca0f7dd3d9aec7e44b00928e2689d0511",
+        "src/types/hud/HudElement.php": "67d943fd8d14426972de616fc41ce2ea4217536e0d649b0244d0ad571bca5c55",
+        "src/types/hud/HudVisibility.php": "6177159dd4678975cf40a307eecfc69ec677ce1d1021bf7d866ac3018cf65581",
+        "src/types/hud/LoadingScreenType.php": "8a1122b2701f3fe93b6cc437211ac4b830ece30d05ac889f957d411bb06d7522",
+        "src/types/inventory/ContainerIds.php": "293ac710c6c95fa818398f0052c9af7c8539fc06b3fb54e690076679f45e73c4",
+        "src/types/inventory/ContainerUIIds.php": "a4ef984477c3917b45c986fd5f7cec3d9cb51f783c9514eb671a6a8fb87cd93e",
+        "src/types/inventory/CreativeGroupEntry.php": "b42dcee978eed6642ae036317ed5c81adeaef44c35b4d3c6eeaa7a405bfb1581",
+        "src/types/inventory/CreativeItemEntry.php": "6dad18e6cb98e0c8ad78434d90904b35465e02b3eadb32bceb7efc0d64e778a7",
+        "src/types/inventory/FullContainerName.php": "55a8d791be09ce64af683b7a43e7f3d51acb5d508333e5175cb61c9254f4a9c6",
+        "src/types/inventory/InventoryLayout.php": "a72d48d54b42c2e34f336ba1c14602851c228f4e192445d1644a4e3451e9ef24",
+        "src/types/inventory/InventoryLeftTab.php": "932e276a41413a8b3df4389eff27af8161debdc9c4d91616c50d540c999233bd",
+        "src/types/inventory/InventoryRightTab.php": "58ab7e46c16e6481fc71816c1bfe110503fea47edf476ed917a3ded9f714e569",
+        "src/types/inventory/InventoryTransactionChangedSlotsHack.php": "a20662804649b2e4eb460d235003f765f40d9491ea9f3f91f9629593c521397b",
+        "src/types/inventory/ItemStack.php": "e301e3fec92550d5d726ef75d09d6436ba3d0c3369deca22657469f8516b90b4",
+        "src/types/inventory/ItemStackExtraData.php": "35b7b728fb5b9fd19757117e53758448e7f582721cb507566b70bde60febe7c0",
+        "src/types/inventory/ItemStackExtraDataShield.php": "e11f79d9c358851fdeb91e0a6cf8c1fb7a239e1fcb0996e0cd15b78b133e7f2d",
+        "src/types/inventory/ItemStackWrapper.php": "8bc5cbc2ca4d6cbbc7080093c867c1012cc0529e41c57cd9edebfd663ad12f87",
+        "src/types/inventory/MismatchTransactionData.php": "00737191ef31235289c8af116bf7249d3c9fb072392797e7bee3d04550ad72d0",
+        "src/types/inventory/NetworkInventoryAction.php": "1a177f011a93e368493b151a06009739cf11c3dd461b7a3033da6f8d43abfbf8",
+        "src/types/inventory/NormalTransactionData.php": "f83f228c4f5bd074de847e93c6a5fb5353859d8614d891aeaa3a669b4dc53a74",
+        "src/types/inventory/PredictedResult.php": "374486d7da2861800226ad8a5cefca46c16c96d2ded0e7de38104e9809013dca",
+        "src/types/inventory/ReleaseItemTransactionData.php": "7ea133b06cfa78a32a2f731607a27b89ec0405e47aa6db52b33b6fac99ab01fb",
+        "src/types/inventory/TransactionData.php": "2ee4a699309867a40999457c4c667b5ffd3fbbc896f2d759c4df178ffabca0ae",
+        "src/types/inventory/TriggerType.php": "a188b238a21926883127a637dae2bdc4ba7cdd64ebcdca616f283836694c207d",
+        "src/types/inventory/UIInventorySlotOffset.php": "05bed51a591db7b326f85b0142462a68c6cfd41e9a4aa3a16d32fad07f9533b1",
+        "src/types/inventory/UseItemOnEntityTransactionData.php": "b0c2d6e78c5c831a2ec1753ba68fa4bb4cb0251b374c0227c0280691f91f753c",
+        "src/types/inventory/UseItemTransactionData.php": "5c48068ab6aaaf2ed9ff10ce6436c0b41f04cb39afb10664de2cbea1167a9158",
+        "src/types/inventory/WindowTypes.php": "9bd45cf78e84f04b04eaac8f6dd97fd240a8160a51be139737056d4383d6949e",
+        "src/types/inventory/stackrequest/BeaconPaymentStackRequestAction.php": "d8f0abbeeeea9763c11a120416d8f43ce2f9f0b0d8268415f5e1f284822abe5f",
+        "src/types/inventory/stackrequest/CraftRecipeAutoStackRequestAction.php": "5d74c9033597648bcda5b2cc43413076ee8bd0ca6f84c71bea9cbe7d0bbce421",
+        "src/types/inventory/stackrequest/CraftRecipeOptionalStackRequestAction.php": "4b4e91fe323c26f7882bb835e0159827e1aa707c90e39aa41154135fcd348fce",
+        "src/types/inventory/stackrequest/CraftRecipeStackRequestAction.php": "552f0b56927c3311bb43c30b07ced638d154b4c4bca1ab45b3f794881826f042",
+        "src/types/inventory/stackrequest/CraftingConsumeInputStackRequestAction.php": "ff80c5642984e3cb13677b9034e873c4c89031c8d3d797da028305167e1d70d5",
+        "src/types/inventory/stackrequest/CraftingCreateSpecificResultStackRequestAction.php": "042e26772111e4603e6ee523f490c5b8bffe295bdfd3a18745f740806a048cda",
+        "src/types/inventory/stackrequest/CreativeCreateStackRequestAction.php": "0aa371a518339b4b8e44d4738572d5b1bd0137fe10b48e10644e7546c028c22b",
+        "src/types/inventory/stackrequest/DeprecatedCraftingNonImplementedStackRequestAction.php": "2d85aed8ee6de0ea10c3652c4059b329064e90a96d3936ce4f2f11b42bdf7b8c",
+        "src/types/inventory/stackrequest/DeprecatedCraftingResultsStackRequestAction.php": "025bffc71227b9da94f7748603da98dbd289f0e01e007cfd3fed726ddef83030",
+        "src/types/inventory/stackrequest/DestroyStackRequestAction.php": "e9c8be94179079330f360eda3d5c2b8aa7eeb403c6ec46472dfe83c4182d5481",
+        "src/types/inventory/stackrequest/DisappearStackRequestActionTrait.php": "68ac10f667c75e52de151f682e3413f323b22cb525567ccb568d3fc01204528c",
+        "src/types/inventory/stackrequest/DropStackRequestAction.php": "d211407d3e4ba62286593dcb0f4028e2b6360be109d260673db949ceb54e5aaa",
+        "src/types/inventory/stackrequest/GrindstoneStackRequestAction.php": "e89c548cfb02ac8636e19bff698d5dd5b0585db2d5bdf83b5595dc0e8fb60e1a",
+        "src/types/inventory/stackrequest/ItemStackRequest.php": "19f3907e60d821c6686e6d7ef4233d01ba0702db0cccf6bc3e46ada49d587613",
+        "src/types/inventory/stackrequest/ItemStackRequestAction.php": "6a45946ee95f7a113f3908c698917e07bef5eb94ce2c3a5d0d8074a81bc7593c",
+        "src/types/inventory/stackrequest/ItemStackRequestActionType.php": "2740dfd4a6ddef05c56871353dc363ca9c7f8e493515360fba29c2e82986e670",
+        "src/types/inventory/stackrequest/ItemStackRequestSlotInfo.php": "af1f6a1160d94c1c097dce4334722a662b80c294e19205c0f8abddf064ac9e08",
+        "src/types/inventory/stackrequest/LabTableCombineStackRequestAction.php": "2c539b806bd76a76dc90ddad09cb698cae5b3feb3d4359d9474faed797d0de03",
+        "src/types/inventory/stackrequest/LoomStackRequestAction.php": "d38a969beca4f0d15a8bcedd22f6640b01640a8710b0275c46cc7c09b0b139b1",
+        "src/types/inventory/stackrequest/MineBlockStackRequestAction.php": "6968b68b3361c10e56bf193688d3f3077649008e05ec79eec2136d30646ae266",
+        "src/types/inventory/stackrequest/PlaceStackRequestAction.php": "b0b3c6e71d30c4c26fc81d2170a2615877c8e7494fdeb506cbad2dbca1504c5f",
+        "src/types/inventory/stackrequest/SwapStackRequestAction.php": "23f0a9f7f87e0005cd9d261bc7cd2b91e47c66d58af86c14b3e9ad356bd0decd",
+        "src/types/inventory/stackrequest/TakeOrPlaceStackRequestActionTrait.php": "85b1c3a4503e452dccbe2845719b40a452511c587e07522669e6a282aa31931d",
+        "src/types/inventory/stackrequest/TakeStackRequestAction.php": "b721feece071b66d1720a79ffeab81d3bb6860d48e23dc125d0b93285cab08cf",
+        "src/types/inventory/stackresponse/ItemStackResponse.php": "16ad83b06ffa3ed4fbf9b474fd22eed0c12c9061ff7d53bc00484cc3316626a8",
+        "src/types/inventory/stackresponse/ItemStackResponseContainerInfo.php": "14633f7529e8030329562d53ae2d56d0a5b0a26a863b588020b943f1bad1a3d6",
+        "src/types/inventory/stackresponse/ItemStackResponseSlotInfo.php": "d671b11132419d90d4a14f99042d3bded560810d8323296b813b572248950bf2",
+        "src/types/login/AuthenticationInfo.php": "93bde7df5a4d60684b030de6d313eef8c54670d609ff229244e024ffb2a5f636",
+        "src/types/login/AuthenticationType.php": "0f755883b103f8630020ab0a8ce5fdce2ef35a49a72eb5f7e5fed6026947ae2c",
+        "src/types/login/JwtBodyRfc7519.php": "e82a273d723a24865a8a2ed3151e40932ec8a44b9c94d8b8d26c337de169440f",
+        "src/types/login/SelfSignedJwtHeader.php": "0870b01fe004adfd0da341667f67b2fa1cf6c75cc32e68bf6c472d2b8b2cff04",
+        "src/types/login/clientdata/ClientData.php": "c605d49985924d685a697004d30b30e5b8eb259b11bbf6ac7bd1e6fc64f45159",
+        "src/types/login/clientdata/ClientDataAnimationFrame.php": "6edda0852f272775a796a0b74ed477ae3c6d835d4907cefb158b54866561f992",
+        "src/types/login/clientdata/ClientDataPersonaPieceTintColor.php": "4916825b58cc22fb80d37549ba6f0233e4ea9f452fa3d892c139a78566bb1820",
+        "src/types/login/clientdata/ClientDataPersonaSkinPiece.php": "de38ee48464246b86d082d8902dd42cbc42916899b6ba3518dbdad7dee9e8c59",
+        "src/types/login/clientdata/ClientDataToSkinDataHelper.php": "28bab10e0c217d2880cf7b3a43b23ca601e92a903ad0e1711d4b6405cb60b1a1",
+        "src/types/login/legacy/LegacyAuthChain.php": "9d4673fc794a5d5cb836d36f38cca2003dc5d65aa45239065b86ee8d310137c4",
+        "src/types/login/legacy/LegacyAuthIdentityData.php": "d5239612f96e384404c1f042c8d8d19657d5a205cff9c7db9654face616aa12d",
+        "src/types/login/legacy/LegacyAuthJwtBody.php": "f3204eed72a690205bc199b10aafb1c6a01bf5bcaae6885825420c1ddbeb540d",
+        "src/types/login/openid/XboxAuthJwtBody.php": "b4760a88cd115727f2b20d83827f8245ea2453a4e7692dce427a8f941c4a5811",
+        "src/types/login/openid/XboxAuthJwtHeader.php": "71d5260f2c866efa5b581f77f775eeb76cf5cae52faeff9d4b6a9d63a7f61c2f",
+        "src/types/login/openid/api/AuthServiceKey.php": "160958dda497ec8f88cef17f5fc6251e6de8c0e7906a1c628693710fb744075a",
+        "src/types/login/openid/api/AuthServiceOpenIdConfiguration.php": "6a5a8024bd2a376b4d1d8b145ccdfaa516c4d969530fce309f854d9975d924e1",
+        "src/types/login/openid/api/MinecraftServiceAuthEnvironment.php": "8bc547c38680dbac4267b7e34aba6073a27adbb7586aad94d7b61c4cb6e0557d",
+        "src/types/login/openid/api/MinecraftServiceAuthEnvironments.php": "63a80e745e5589a34451a5f12b748b73e2917d6da58eb86352a32514605f2f67",
+        "src/types/login/openid/api/MinecraftServiceEnvironments.php": "71d8849cb87447520c2683209a17a27cf384ef089d90e54f54a2f257e79b5193",
+        "src/types/login/openid/api/MinecraftServicesDiscovery.php": "41080e87a4d200b1c818f77e7813ad0c2bd394866834db11241d71673c791d7a",
+        "src/types/login/openid/api/MinecraftServicesResult.php": "75687f917d49c790e0914e68678ab5697232eeebf5af8156785c201ff36cca16",
+        "src/types/recipe/ComplexAliasItemDescriptor.php": "5cea12990e4d9ba39d8285fdd4c3ae478a8ca67509ad459a1b1f5d19b3a713ea",
+        "src/types/recipe/CraftingRecipeBlockName.php": "2c253da634863549dff3cc22e6cb34b541850d9e107f13b5d81206bdd26b8771",
+        "src/types/recipe/FurnaceRecipe.php": "abc0e7d07d1a986109d7f1c751a34574bb034dddab4dbefda0a6a2af9e270119",
+        "src/types/recipe/FurnaceRecipeBlockName.php": "66a2961a6d04a25a71bf8949d1520d5af469701ed04c50e46b217e7d35c7ac08",
+        "src/types/recipe/IntIdMetaItemDescriptor.php": "0a572e766442d9ecbc1229eee58ceaf693c322bb1494448009838b120ff70c06",
+        "src/types/recipe/ItemDescriptor.php": "b1d1aeae1f65690240b652ef271a962966956879a72a8b3d663a4bc4cdf769e8",
+        "src/types/recipe/ItemDescriptorType.php": "7a81a2c5f8cb7f54cc2deaadbb1e3cfa4356fbd955424aff5df39a72cebe971c",
+        "src/types/recipe/MaterialReducerRecipe.php": "e7b59b2574fc03bf725041882ff8e95199963c307e4d268f75dbd25bd76e60aa",
+        "src/types/recipe/MaterialReducerRecipeOutput.php": "0f07f255352d871f2bbc9f14abc975011822d7790ab379af817706453e8632a6",
+        "src/types/recipe/MolangItemDescriptor.php": "b1555a6a145abc9bec09754d4eec980e4fc5f86d2cd1662518981b8602d21c10",
+        "src/types/recipe/MultiRecipe.php": "01735aaff11a19d3bbe117e1ca79728072e7c24d7a0e677eb5739d07e85226eb",
+        "src/types/recipe/PotionContainerChangeRecipe.php": "a79759db54df9af47ddc37c8fcec0f7542b47c33cc2ff4ec8d69106563b314ae",
+        "src/types/recipe/PotionTypeRecipe.php": "7d3eddd9a9e2036701b191fdfc7f240f936d669fe39b227600d109cbe7b6bfc9",
+        "src/types/recipe/RecipeIngredient.php": "c687867b39003c00b66e0e9e19d281ce94ceeec5117b38f6e0bf8b07f6026880",
+        "src/types/recipe/RecipeUnlockingRequirement.php": "b2b0a31e989e48f8424e280f0f0d6e2a83460d3bda1025103b11fd05d4c01096",
+        "src/types/recipe/RecipeWithTypeId.php": "c92e4714cc98dff85bbda7f1c7e168e41a7af4ee6f285907beda2ddf8a1b4d02",
+        "src/types/recipe/ShapedRecipe.php": "6fa0b5025cd2cf47a192164f5c8c6692608563dab3f6fdd361f9b7bb355395c1",
+        "src/types/recipe/ShapelessRecipe.php": "0d416f127019221b776dffa191fa668909829997382c152ceb28895c0d0f7546",
+        "src/types/recipe/SmithingTransformRecipe.php": "5ad95beff8cc0c0567b0642fdc2261654bc4f253e4dc4f3b27602634876f731b",
+        "src/types/recipe/SmithingTrimRecipe.php": "937c0e64d32d99bfc84513035dc9d51abdc4c475bd4e1a831e2661a748f23169",
+        "src/types/recipe/StringIdMetaItemDescriptor.php": "f385ef8b45eb263b116cb198b2fe81c0ed711c943f99b0301e4c93c0a57a79e9",
+        "src/types/recipe/TagItemDescriptor.php": "e45b0c63567ed54b1e66dd68707840e5dfeea0f69b096cdeedfc89f292f5f15b",
+        "src/types/resourcepacks/ResourcePackInfoEntry.php": "0afc40a5bef0393f82b261744372e46750f2a903b2f6eb00cff522feb55b6f55",
+        "src/types/resourcepacks/ResourcePackStackEntry.php": "808fb272cf50316d265ef8d7726bbf3db0d0e420cdf45712d47f11774171d2b2",
+        "src/types/resourcepacks/ResourcePackType.php": "938551f5ecee5438bb0c52d7adde90d3c27ae59f0c1b48247cbef60e14013fc2",
+        "src/types/skin/PersonaPieceTintColor.php": "7a433e0cc1c15b1bf88f62d5896b985877f01f39a546708d33da9086e0834f49",
+        "src/types/skin/PersonaSkinPiece.php": "d9c66150f851e620e634e296ba479495201786b6b1c57fb7e3210d7d8c1a53ca",
+        "src/types/skin/SkinAnimation.php": "2d2fb9cf439923448da543c47fe9b259b286edc4e74f1955a6565593ed67a7b9",
+        "src/types/skin/SkinData.php": "06488d5456ad8f68227f9b10f1ba72ea8be1d93ea432eb5c890e2de6846aa974",
+        "src/types/skin/SkinImage.php": "ab7f0949da78513ead317e7db22b5de4ef65436a4490d3d483f66fa328093590"
+    },
+    "packets": [
+        {
+            "name": "LoginPacket",
+            "networkId": 1,
+            "source": "src/LoginPacket.php:24"
+        },
+        {
+            "name": "PlayStatusPacket",
+            "networkId": 2,
+            "source": "src/PlayStatusPacket.php:21"
+        },
+        {
+            "name": "ServerToClientHandshakePacket",
+            "networkId": 3,
+            "source": "src/ServerToClientHandshakePacket.php:21"
+        },
+        {
+            "name": "ClientToServerHandshakePacket",
+            "networkId": 4,
+            "source": "src/ClientToServerHandshakePacket.php:20"
+        },
+        {
+            "name": "DisconnectPacket",
+            "networkId": 5,
+            "source": "src/DisconnectPacket.php:22"
+        },
+        {
+            "name": "ResourcePacksInfoPacket",
+            "networkId": 6,
+            "source": "src/ResourcePacksInfoPacket.php:25"
+        },
+        {
+            "name": "ResourcePackStackPacket",
+            "networkId": 7,
+            "source": "src/ResourcePackStackPacket.php:25"
+        },
+        {
+            "name": "ResourcePackClientResponsePacket",
+            "networkId": 8,
+            "source": "src/ResourcePackClientResponsePacket.php:24"
+        },
+        {
+            "name": "TextPacket",
+            "networkId": 9,
+            "source": "src/TextPacket.php:24"
+        },
+        {
+            "name": "SetTimePacket",
+            "networkId": 10,
+            "source": "src/SetTimePacket.php:21"
+        },
+        {
+            "name": "StartGamePacket",
+            "networkId": 11,
+            "source": "src/StartGamePacket.php:34"
+        },
+        {
+            "name": "AddPlayerPacket",
+            "networkId": 12,
+            "source": "src/AddPlayerPacket.php:31"
+        },
+        {
+            "name": "AddActorPacket",
+            "networkId": 13,
+            "source": "src/AddActorPacket.php:29"
+        },
+        {
+            "name": "RemoveActorPacket",
+            "networkId": 14,
+            "source": "src/RemoveActorPacket.php:21"
+        },
+        {
+            "name": "AddItemActorPacket",
+            "networkId": 15,
+            "source": "src/AddItemActorPacket.php:24"
+        },
+        {
+            "name": "ServerPlayerPostMovePositionPacket",
+            "networkId": 16,
+            "source": "src/ServerPlayerPostMovePositionPacket.php:22"
+        },
+        {
+            "name": "TakeItemActorPacket",
+            "networkId": 17,
+            "source": "src/TakeItemActorPacket.php:21"
+        },
+        {
+            "name": "MoveActorAbsolutePacket",
+            "networkId": 18,
+            "source": "src/MoveActorAbsolutePacket.php:23"
+        },
+        {
+            "name": "MovePlayerPacket",
+            "networkId": 19,
+            "source": "src/MovePlayerPacket.php:25"
+        },
+        {
+            "name": "UpdateBlockPacket",
+            "networkId": 21,
+            "source": "src/UpdateBlockPacket.php:23"
+        },
+        {
+            "name": "AddPaintingPacket",
+            "networkId": 22,
+            "source": "src/AddPaintingPacket.php:23"
+        },
+        {
+            "name": "LevelEventPacket",
+            "networkId": 25,
+            "source": "src/LevelEventPacket.php:24"
+        },
+        {
+            "name": "BlockEventPacket",
+            "networkId": 26,
+            "source": "src/BlockEventPacket.php:23"
+        },
+        {
+            "name": "ActorEventPacket",
+            "networkId": 27,
+            "source": "src/ActorEventPacket.php:24"
+        },
+        {
+            "name": "MobEffectPacket",
+            "networkId": 28,
+            "source": "src/MobEffectPacket.php:23"
+        },
+        {
+            "name": "UpdateAttributesPacket",
+            "networkId": 29,
+            "source": "src/UpdateAttributesPacket.php:24"
+        },
+        {
+            "name": "InventoryTransactionPacket",
+            "networkId": 30,
+            "source": "src/InventoryTransactionPacket.php:33"
+        },
+        {
+            "name": "MobEquipmentPacket",
+            "networkId": 31,
+            "source": "src/MobEquipmentPacket.php:23"
+        },
+        {
+            "name": "MobArmorEquipmentPacket",
+            "networkId": 32,
+            "source": "src/MobArmorEquipmentPacket.php:22"
+        },
+        {
+            "name": "InteractPacket",
+            "networkId": 33,
+            "source": "src/InteractPacket.php:23"
+        },
+        {
+            "name": "BlockPickRequestPacket",
+            "networkId": 34,
+            "source": "src/BlockPickRequestPacket.php:23"
+        },
+        {
+            "name": "ActorPickRequestPacket",
+            "networkId": 35,
+            "source": "src/ActorPickRequestPacket.php:23"
+        },
+        {
+            "name": "PlayerActionPacket",
+            "networkId": 36,
+            "source": "src/PlayerActionPacket.php:24"
+        },
+        {
+            "name": "HurtArmorPacket",
+            "networkId": 38,
+            "source": "src/HurtArmorPacket.php:21"
+        },
+        {
+            "name": "SetActorDataPacket",
+            "networkId": 39,
+            "source": "src/SetActorDataPacket.php:24"
+        },
+        {
+            "name": "SetActorMotionPacket",
+            "networkId": 40,
+            "source": "src/SetActorMotionPacket.php:23"
+        },
+        {
+            "name": "SetActorLinkPacket",
+            "networkId": 41,
+            "source": "src/SetActorLinkPacket.php:22"
+        },
+        {
+            "name": "SetHealthPacket",
+            "networkId": 42,
+            "source": "src/SetHealthPacket.php:21"
+        },
+        {
+            "name": "SetSpawnPositionPacket",
+            "networkId": 43,
+            "source": "src/SetSpawnPositionPacket.php:24"
+        },
+        {
+            "name": "AnimatePacket",
+            "networkId": 44,
+            "source": "src/AnimatePacket.php:23"
+        },
+        {
+            "name": "RespawnPacket",
+            "networkId": 45,
+            "source": "src/RespawnPacket.php:23"
+        },
+        {
+            "name": "ContainerOpenPacket",
+            "networkId": 46,
+            "source": "src/ContainerOpenPacket.php:23"
+        },
+        {
+            "name": "ContainerClosePacket",
+            "networkId": 47,
+            "source": "src/ContainerClosePacket.php:22"
+        },
+        {
+            "name": "PlayerHotbarPacket",
+            "networkId": 48,
+            "source": "src/PlayerHotbarPacket.php:24"
+        },
+        {
+            "name": "InventoryContentPacket",
+            "networkId": 49,
+            "source": "src/InventoryContentPacket.php:25"
+        },
+        {
+            "name": "InventorySlotPacket",
+            "networkId": 50,
+            "source": "src/InventorySlotPacket.php:24"
+        },
+        {
+            "name": "ContainerSetDataPacket",
+            "networkId": 51,
+            "source": "src/ContainerSetDataPacket.php:22"
+        },
+        {
+            "name": "CraftingDataPacket",
+            "networkId": 52,
+            "source": "src/CraftingDataPacket.php:34"
+        },
+        {
+            "name": "GuiDataPickItemPacket",
+            "networkId": 54,
+            "source": "src/GuiDataPickItemPacket.php:22"
+        },
+        {
+            "name": "BlockActorDataPacket",
+            "networkId": 56,
+            "source": "src/BlockActorDataPacket.php:23"
+        },
+        {
+            "name": "LevelChunkPacket",
+            "networkId": 58,
+            "source": "src/LevelChunkPacket.php:28"
+        },
+        {
+            "name": "SetCommandsEnabledPacket",
+            "networkId": 59,
+            "source": "src/SetCommandsEnabledPacket.php:21"
+        },
+        {
+            "name": "SetDifficultyPacket",
+            "networkId": 60,
+            "source": "src/SetDifficultyPacket.php:21"
+        },
+        {
+            "name": "ChangeDimensionPacket",
+            "networkId": 61,
+            "source": "src/ChangeDimensionPacket.php:24"
+        },
+        {
+            "name": "SetPlayerGameTypePacket",
+            "networkId": 62,
+            "source": "src/SetPlayerGameTypePacket.php:21"
+        },
+        {
+            "name": "PlayerListPacket",
+            "networkId": 63,
+            "source": "src/PlayerListPacket.php:27"
+        },
+        {
+            "name": "SimpleEventPacket",
+            "networkId": 64,
+            "source": "src/SimpleEventPacket.php:21"
+        },
+        {
+            "name": "LegacyTelemetryEventPacket",
+            "networkId": 65,
+            "source": "src/LegacyTelemetryEventPacket.php:23"
+        },
+        {
+            "name": "SpawnExperienceOrbPacket",
+            "networkId": 66,
+            "source": "src/SpawnExperienceOrbPacket.php:23"
+        },
+        {
+            "name": "ClientboundMapItemDataPacket",
+            "networkId": 67,
+            "source": "src/ClientboundMapItemDataPacket.php:32"
+        },
+        {
+            "name": "MapInfoRequestPacket",
+            "networkId": 68,
+            "source": "src/MapInfoRequestPacket.php:25"
+        },
+        {
+            "name": "RequestChunkRadiusPacket",
+            "networkId": 69,
+            "source": "src/RequestChunkRadiusPacket.php:22"
+        },
+        {
+            "name": "ChunkRadiusUpdatedPacket",
+            "networkId": 70,
+            "source": "src/ChunkRadiusUpdatedPacket.php:21"
+        },
+        {
+            "name": "GameRulesChangedPacket",
+            "networkId": 72,
+            "source": "src/GameRulesChangedPacket.php:22"
+        },
+        {
+            "name": "CameraPacket",
+            "networkId": 73,
+            "source": "src/CameraPacket.php:21"
+        },
+        {
+            "name": "BossEventPacket",
+            "networkId": 74,
+            "source": "src/BossEventPacket.php:24"
+        },
+        {
+            "name": "ShowCreditsPacket",
+            "networkId": 75,
+            "source": "src/ShowCreditsPacket.php:22"
+        },
+        {
+            "name": "AvailableCommandsPacket",
+            "networkId": 76,
+            "source": "src/AvailableCommandsPacket.php:38"
+        },
+        {
+            "name": "CommandRequestPacket",
+            "networkId": 77,
+            "source": "src/CommandRequestPacket.php:22"
+        },
+        {
+            "name": "CommandBlockUpdatePacket",
+            "networkId": 78,
+            "source": "src/CommandBlockUpdatePacket.php:24"
+        },
+        {
+            "name": "CommandOutputPacket",
+            "networkId": 79,
+            "source": "src/CommandOutputPacket.php:27"
+        },
+        {
+            "name": "UpdateTradePacket",
+            "networkId": 80,
+            "source": "src/UpdateTradePacket.php:25"
+        },
+        {
+            "name": "UpdateEquipPacket",
+            "networkId": 81,
+            "source": "src/UpdateEquipPacket.php:24"
+        },
+        {
+            "name": "ResourcePackDataInfoPacket",
+            "networkId": 82,
+            "source": "src/ResourcePackDataInfoPacket.php:24"
+        },
+        {
+            "name": "ResourcePackChunkDataPacket",
+            "networkId": 83,
+            "source": "src/ResourcePackChunkDataPacket.php:22"
+        },
+        {
+            "name": "ResourcePackChunkRequestPacket",
+            "networkId": 84,
+            "source": "src/ResourcePackChunkRequestPacket.php:22"
+        },
+        {
+            "name": "TransferPacket",
+            "networkId": 85,
+            "source": "src/TransferPacket.php:22"
+        },
+        {
+            "name": "PlaySoundPacket",
+            "networkId": 86,
+            "source": "src/PlaySoundPacket.php:23"
+        },
+        {
+            "name": "StopSoundPacket",
+            "networkId": 87,
+            "source": "src/StopSoundPacket.php:21"
+        },
+        {
+            "name": "SetTitlePacket",
+            "networkId": 88,
+            "source": "src/SetTitlePacket.php:22"
+        },
+        {
+            "name": "AddBehaviorTreePacket",
+            "networkId": 89,
+            "source": "src/AddBehaviorTreePacket.php:21"
+        },
+        {
+            "name": "StructureBlockUpdatePacket",
+            "networkId": 90,
+            "source": "src/StructureBlockUpdatePacket.php:23"
+        },
+        {
+            "name": "ShowStoreOfferPacket",
+            "networkId": 91,
+            "source": "src/ShowStoreOfferPacket.php:24"
+        },
+        {
+            "name": "PurchaseReceiptPacket",
+            "networkId": 92,
+            "source": "src/PurchaseReceiptPacket.php:23"
+        },
+        {
+            "name": "PlayerSkinPacket",
+            "networkId": 93,
+            "source": "src/PlayerSkinPacket.php:23"
+        },
+        {
+            "name": "SubClientLoginPacket",
+            "networkId": 94,
+            "source": "src/SubClientLoginPacket.php:21"
+        },
+        {
+            "name": "AutomationClientConnectPacket",
+            "networkId": 95,
+            "source": "src/AutomationClientConnectPacket.php:21"
+        },
+        {
+            "name": "SetLastHurtByPacket",
+            "networkId": 96,
+            "source": "src/SetLastHurtByPacket.php:21"
+        },
+        {
+            "name": "BookEditPacket",
+            "networkId": 97,
+            "source": "src/BookEditPacket.php:22"
+        },
+        {
+            "name": "NpcRequestPacket",
+            "networkId": 98,
+            "source": "src/NpcRequestPacket.php:22"
+        },
+        {
+            "name": "PhotoTransferPacket",
+            "networkId": 99,
+            "source": "src/PhotoTransferPacket.php:23"
+        },
+        {
+            "name": "ModalFormRequestPacket",
+            "networkId": 100,
+            "source": "src/ModalFormRequestPacket.php:22"
+        },
+        {
+            "name": "ModalFormResponsePacket",
+            "networkId": 101,
+            "source": "src/ModalFormResponsePacket.php:23"
+        },
+        {
+            "name": "ServerSettingsRequestPacket",
+            "networkId": 102,
+            "source": "src/ServerSettingsRequestPacket.php:20"
+        },
+        {
+            "name": "ServerSettingsResponsePacket",
+            "networkId": 103,
+            "source": "src/ServerSettingsResponsePacket.php:22"
+        },
+        {
+            "name": "ShowProfilePacket",
+            "networkId": 104,
+            "source": "src/ShowProfilePacket.php:21"
+        },
+        {
+            "name": "SetDefaultGameTypePacket",
+            "networkId": 105,
+            "source": "src/SetDefaultGameTypePacket.php:21"
+        },
+        {
+            "name": "RemoveObjectivePacket",
+            "networkId": 106,
+            "source": "src/RemoveObjectivePacket.php:21"
+        },
+        {
+            "name": "SetDisplayObjectivePacket",
+            "networkId": 107,
+            "source": "src/SetDisplayObjectivePacket.php:22"
+        },
+        {
+            "name": "SetScorePacket",
+            "networkId": 108,
+            "source": "src/SetScorePacket.php:26"
+        },
+        {
+            "name": "LabTablePacket",
+            "networkId": 109,
+            "source": "src/LabTablePacket.php:23"
+        },
+        {
+            "name": "UpdateBlockSyncedPacket",
+            "networkId": 110,
+            "source": "src/UpdateBlockSyncedPacket.php:21"
+        },
+        {
+            "name": "MoveActorDeltaPacket",
+            "networkId": 111,
+            "source": "src/MoveActorDeltaPacket.php:23"
+        },
+        {
+            "name": "SetScoreboardIdentityPacket",
+            "networkId": 112,
+            "source": "src/SetScoreboardIdentityPacket.php:25"
+        },
+        {
+            "name": "SetLocalPlayerAsInitializedPacket",
+            "networkId": 113,
+            "source": "src/SetLocalPlayerAsInitializedPacket.php:21"
+        },
+        {
+            "name": "UpdateSoftEnumPacket",
+            "networkId": 114,
+            "source": "src/UpdateSoftEnumPacket.php:24"
+        },
+        {
+            "name": "NetworkStackLatencyPacket",
+            "networkId": 115,
+            "source": "src/NetworkStackLatencyPacket.php:22"
+        },
+        {
+            "name": "SpawnParticleEffectPacket",
+            "networkId": 118,
+            "source": "src/SpawnParticleEffectPacket.php:24"
+        },
+        {
+            "name": "AvailableActorIdentifiersPacket",
+            "networkId": 119,
+            "source": "src/AvailableActorIdentifiersPacket.php:22"
+        },
+        {
+            "name": "NetworkChunkPublisherUpdatePacket",
+            "networkId": 121,
+            "source": "src/NetworkChunkPublisherUpdatePacket.php:26"
+        },
+        {
+            "name": "BiomeDefinitionListPacket",
+            "networkId": 122,
+            "source": "src/BiomeDefinitionListPacket.php:26"
+        },
+        {
+            "name": "LevelSoundEventPacket",
+            "networkId": 123,
+            "source": "src/LevelSoundEventPacket.php:25"
+        },
+        {
+            "name": "LevelEventGenericPacket",
+            "networkId": 124,
+            "source": "src/LevelEventGenericPacket.php:25"
+        },
+        {
+            "name": "LecternUpdatePacket",
+            "networkId": 125,
+            "source": "src/LecternUpdatePacket.php:23"
+        },
+        {
+            "name": "ClientCacheStatusPacket",
+            "networkId": 129,
+            "source": "src/ClientCacheStatusPacket.php:21"
+        },
+        {
+            "name": "OnScreenTextureAnimationPacket",
+            "networkId": 130,
+            "source": "src/OnScreenTextureAnimationPacket.php:21"
+        },
+        {
+            "name": "MapCreateLockedCopyPacket",
+            "networkId": 131,
+            "source": "src/MapCreateLockedCopyPacket.php:21"
+        },
+        {
+            "name": "StructureTemplateDataRequestPacket",
+            "networkId": 132,
+            "source": "src/StructureTemplateDataRequestPacket.php:24"
+        },
+        {
+            "name": "StructureTemplateDataResponsePacket",
+            "networkId": 133,
+            "source": "src/StructureTemplateDataResponsePacket.php:23"
+        },
+        {
+            "name": "ClientCacheBlobStatusPacket",
+            "networkId": 135,
+            "source": "src/ClientCacheBlobStatusPacket.php:23"
+        },
+        {
+            "name": "ClientCacheMissResponsePacket",
+            "networkId": 136,
+            "source": "src/ClientCacheMissResponsePacket.php:25"
+        },
+        {
+            "name": "EducationSettingsPacket",
+            "networkId": 137,
+            "source": "src/EducationSettingsPacket.php:23"
+        },
+        {
+            "name": "EmotePacket",
+            "networkId": 138,
+            "source": "src/EmotePacket.php:23"
+        },
+        {
+            "name": "MultiplayerSettingsPacket",
+            "networkId": 139,
+            "source": "src/MultiplayerSettingsPacket.php:21"
+        },
+        {
+            "name": "SettingsCommandPacket",
+            "networkId": 140,
+            "source": "src/SettingsCommandPacket.php:21"
+        },
+        {
+            "name": "AnvilDamagePacket",
+            "networkId": 141,
+            "source": "src/AnvilDamagePacket.php:23"
+        },
+        {
+            "name": "CompletedUsingItemPacket",
+            "networkId": 142,
+            "source": "src/CompletedUsingItemPacket.php:21"
+        },
+        {
+            "name": "NetworkSettingsPacket",
+            "networkId": 143,
+            "source": "src/NetworkSettingsPacket.php:29"
+        },
+        {
+            "name": "PlayerAuthInputPacket",
+            "networkId": 144,
+            "source": "src/PlayerAuthInputPacket.php:38"
+        },
+        {
+            "name": "CreativeContentPacket",
+            "networkId": 145,
+            "source": "src/CreativeContentPacket.php:24"
+        },
+        {
+            "name": "PlayerEnchantOptionsPacket",
+            "networkId": 146,
+            "source": "src/PlayerEnchantOptionsPacket.php:23"
+        },
+        {
+            "name": "ItemStackRequestPacket",
+            "networkId": 147,
+            "source": "src/ItemStackRequestPacket.php:23"
+        },
+        {
+            "name": "ItemStackResponsePacket",
+            "networkId": 148,
+            "source": "src/ItemStackResponsePacket.php:23"
+        },
+        {
+            "name": "PlayerArmorDamagePacket",
+            "networkId": 149,
+            "source": "src/PlayerArmorDamagePacket.php:23"
+        },
+        {
+            "name": "CodeBuilderPacket",
+            "networkId": 150,
+            "source": "src/CodeBuilderPacket.php:21"
+        },
+        {
+            "name": "UpdatePlayerGameTypePacket",
+            "networkId": 151,
+            "source": "src/UpdatePlayerGameTypePacket.php:23"
+        },
+        {
+            "name": "EmoteListPacket",
+            "networkId": 152,
+            "source": "src/EmoteListPacket.php:24"
+        },
+        {
+            "name": "PositionTrackingDBServerBroadcastPacket",
+            "networkId": 153,
+            "source": "src/PositionTrackingDBServerBroadcastPacket.php:24"
+        },
+        {
+            "name": "PositionTrackingDBClientRequestPacket",
+            "networkId": 154,
+            "source": "src/PositionTrackingDBClientRequestPacket.php:22"
+        },
+        {
+            "name": "DebugInfoPacket",
+            "networkId": 155,
+            "source": "src/DebugInfoPacket.php:21"
+        },
+        {
+            "name": "PacketViolationWarningPacket",
+            "networkId": 156,
+            "source": "src/PacketViolationWarningPacket.php:22"
+        },
+        {
+            "name": "MotionPredictionHintsPacket",
+            "networkId": 157,
+            "source": "src/MotionPredictionHintsPacket.php:22"
+        },
+        {
+            "name": "AnimateEntityPacket",
+            "networkId": 158,
+            "source": "src/AnimateEntityPacket.php:24"
+        },
+        {
+            "name": "CameraShakePacket",
+            "networkId": 159,
+            "source": "src/CameraShakePacket.php:22"
+        },
+        {
+            "name": "PlayerFogPacket",
+            "networkId": 160,
+            "source": "src/PlayerFogPacket.php:23"
+        },
+        {
+            "name": "CorrectPlayerMovePredictionPacket",
+            "networkId": 161,
+            "source": "src/CorrectPlayerMovePredictionPacket.php:26"
+        },
+        {
+            "name": "ItemRegistryPacket",
+            "networkId": 162,
+            "source": "src/ItemRegistryPacket.php:26"
+        },
+        {
+            "name": "ClientboundDebugRendererPacket",
+            "networkId": 164,
+            "source": "src/ClientboundDebugRendererPacket.php:22"
+        },
+        {
+            "name": "SyncActorPropertyPacket",
+            "networkId": 165,
+            "source": "src/SyncActorPropertyPacket.php:22"
+        },
+        {
+            "name": "AddVolumeEntityPacket",
+            "networkId": 166,
+            "source": "src/AddVolumeEntityPacket.php:24"
+        },
+        {
+            "name": "RemoveVolumeEntityPacket",
+            "networkId": 167,
+            "source": "src/RemoveVolumeEntityPacket.php:21"
+        },
+        {
+            "name": "SimulationTypePacket",
+            "networkId": 168,
+            "source": "src/SimulationTypePacket.php:21"
+        },
+        {
+            "name": "NpcDialoguePacket",
+            "networkId": 169,
+            "source": "src/NpcDialoguePacket.php:23"
+        },
+        {
+            "name": "EduUriResourcePacket",
+            "networkId": 170,
+            "source": "src/EduUriResourcePacket.php:21"
+        },
+        {
+            "name": "CreatePhotoPacket",
+            "networkId": 171,
+            "source": "src/CreatePhotoPacket.php:22"
+        },
+        {
+            "name": "UpdateSubChunkBlocksPacket",
+            "networkId": 172,
+            "source": "src/UpdateSubChunkBlocksPacket.php:25"
+        },
+        {
+            "name": "SubChunkPacket",
+            "networkId": 174,
+            "source": "src/SubChunkPacket.php:29"
+        },
+        {
+            "name": "SubChunkRequestPacket",
+            "networkId": 175,
+            "source": "src/SubChunkRequestPacket.php:25"
+        },
+        {
+            "name": "PlayerStartItemCooldownPacket",
+            "networkId": 176,
+            "source": "src/PlayerStartItemCooldownPacket.php:22"
+        },
+        {
+            "name": "ScriptMessagePacket",
+            "networkId": 177,
+            "source": "src/ScriptMessagePacket.php:21"
+        },
+        {
+            "name": "CodeBuilderSourcePacket",
+            "networkId": 178,
+            "source": "src/CodeBuilderSourcePacket.php:21"
+        },
+        {
+            "name": "TickingAreasLoadStatusPacket",
+            "networkId": 179,
+            "source": "src/TickingAreasLoadStatusPacket.php:21"
+        },
+        {
+            "name": "DimensionDataPacket",
+            "networkId": 180,
+            "source": "src/DimensionDataPacket.php:28"
+        },
+        {
+            "name": "AgentActionEventPacket",
+            "networkId": 181,
+            "source": "src/AgentActionEventPacket.php:26"
+        },
+        {
+            "name": "ChangeMobPropertyPacket",
+            "networkId": 182,
+            "source": "src/ChangeMobPropertyPacket.php:27"
+        },
+        {
+            "name": "LessonProgressPacket",
+            "networkId": 183,
+            "source": "src/LessonProgressPacket.php:25"
+        },
+        {
+            "name": "RequestAbilityPacket",
+            "networkId": 184,
+            "source": "src/RequestAbilityPacket.php:31"
+        },
+        {
+            "name": "RequestPermissionsPacket",
+            "networkId": 185,
+            "source": "src/RequestPermissionsPacket.php:27"
+        },
+        {
+            "name": "ToastRequestPacket",
+            "networkId": 186,
+            "source": "src/ToastRequestPacket.php:25"
+        },
+        {
+            "name": "UpdateAbilitiesPacket",
+            "networkId": 187,
+            "source": "src/UpdateAbilitiesPacket.php:25"
+        },
+        {
+            "name": "UpdateAdventureSettingsPacket",
+            "networkId": 188,
+            "source": "src/UpdateAdventureSettingsPacket.php:27"
+        },
+        {
+            "name": "DeathInfoPacket",
+            "networkId": 189,
+            "source": "src/DeathInfoPacket.php:26"
+        },
+        {
+            "name": "EditorNetworkPacket",
+            "networkId": 190,
+            "source": "src/EditorNetworkPacket.php:25"
+        },
+        {
+            "name": "FeatureRegistryPacket",
+            "networkId": 191,
+            "source": "src/FeatureRegistryPacket.php:26"
+        },
+        {
+            "name": "ServerStatsPacket",
+            "networkId": 192,
+            "source": "src/ServerStatsPacket.php:25"
+        },
+        {
+            "name": "RequestNetworkSettingsPacket",
+            "networkId": 193,
+            "source": "src/RequestNetworkSettingsPacket.php:26"
+        },
+        {
+            "name": "GameTestRequestPacket",
+            "networkId": 194,
+            "source": "src/GameTestRequestPacket.php:24"
+        },
+        {
+            "name": "GameTestResultsPacket",
+            "networkId": 195,
+            "source": "src/GameTestResultsPacket.php:21"
+        },
+        {
+            "name": "UpdateClientInputLocksPacket",
+            "networkId": 196,
+            "source": "src/UpdateClientInputLocksPacket.php:21"
+        },
+        {
+            "name": "CameraPresetsPacket",
+            "networkId": 198,
+            "source": "src/CameraPresetsPacket.php:23"
+        },
+        {
+            "name": "UnlockedRecipesPacket",
+            "networkId": 199,
+            "source": "src/UnlockedRecipesPacket.php:24"
+        },
+        {
+            "name": "CameraInstructionPacket",
+            "networkId": 300,
+            "source": "src/CameraInstructionPacket.php:27"
+        },
+        {
+            "name": "TrimDataPacket",
+            "networkId": 302,
+            "source": "src/TrimDataPacket.php:24"
+        },
+        {
+            "name": "OpenSignPacket",
+            "networkId": 303,
+            "source": "src/OpenSignPacket.php:25"
+        },
+        {
+            "name": "AgentAnimationPacket",
+            "networkId": 304,
+            "source": "src/AgentAnimationPacket.php:22"
+        },
+        {
+            "name": "RefreshEntitlementsPacket",
+            "networkId": 305,
+            "source": "src/RefreshEntitlementsPacket.php:20"
+        },
+        {
+            "name": "PlayerToggleCrafterSlotRequestPacket",
+            "networkId": 306,
+            "source": "src/PlayerToggleCrafterSlotRequestPacket.php:24"
+        },
+        {
+            "name": "SetPlayerInventoryOptionsPacket",
+            "networkId": 307,
+            "source": "src/SetPlayerInventoryOptionsPacket.php:25"
+        },
+        {
+            "name": "SetHudPacket",
+            "networkId": 308,
+            "source": "src/SetHudPacket.php:24"
+        },
+        {
+            "name": "AwardAchievementPacket",
+            "networkId": 309,
+            "source": "src/AwardAchievementPacket.php:21"
+        },
+        {
+            "name": "ClientboundCloseFormPacket",
+            "networkId": 310,
+            "source": "src/ClientboundCloseFormPacket.php:20"
+        },
+        {
+            "name": "ServerboundLoadingScreenPacket",
+            "networkId": 312,
+            "source": "src/ServerboundLoadingScreenPacket.php:24"
+        },
+        {
+            "name": "JigsawStructureDataPacket",
+            "networkId": 313,
+            "source": "src/JigsawStructureDataPacket.php:22"
+        },
+        {
+            "name": "CurrentStructureFeaturePacket",
+            "networkId": 314,
+            "source": "src/CurrentStructureFeaturePacket.php:21"
+        },
+        {
+            "name": "ServerboundDiagnosticsPacket",
+            "networkId": 315,
+            "source": "src/ServerboundDiagnosticsPacket.php:24"
+        },
+        {
+            "name": "CameraAimAssistPacket",
+            "networkId": 316,
+            "source": "src/CameraAimAssistPacket.php:26"
+        },
+        {
+            "name": "ContainerRegistryCleanupPacket",
+            "networkId": 317,
+            "source": "src/ContainerRegistryCleanupPacket.php:23"
+        },
+        {
+            "name": "MovementEffectPacket",
+            "networkId": 318,
+            "source": "src/MovementEffectPacket.php:23"
+        },
+        {
+            "name": "CameraAimAssistPresetsPacket",
+            "networkId": 320,
+            "source": "src/CameraAimAssistPresetsPacket.php:25"
+        },
+        {
+            "name": "ClientCameraAimAssistPacket",
+            "networkId": 321,
+            "source": "src/ClientCameraAimAssistPacket.php:23"
+        },
+        {
+            "name": "ClientMovementPredictionSyncPacket",
+            "networkId": 322,
+            "source": "src/ClientMovementPredictionSyncPacket.php:24"
+        },
+        {
+            "name": "UpdateClientOptionsPacket",
+            "networkId": 323,
+            "source": "src/UpdateClientOptionsPacket.php:23"
+        },
+        {
+            "name": "PlayerVideoCapturePacket",
+            "networkId": 324,
+            "source": "src/PlayerVideoCapturePacket.php:22"
+        },
+        {
+            "name": "PlayerUpdateEntityOverridesPacket",
+            "networkId": 325,
+            "source": "src/PlayerUpdateEntityOverridesPacket.php:25"
+        },
+        {
+            "name": "PlayerLocationPacket",
+            "networkId": 326,
+            "source": "src/PlayerLocationPacket.php:24"
+        },
+        {
+            "name": "ClientboundControlSchemeSetPacket",
+            "networkId": 327,
+            "source": "src/ClientboundControlSchemeSetPacket.php:22"
+        },
+        {
+            "name": "DebugDrawerPacket",
+            "networkId": 328,
+            "source": "src/DebugDrawerPacket.php:23"
+        },
+        {
+            "name": "ServerboundPackSettingChangePacket",
+            "networkId": 329,
+            "source": "src/ServerboundPackSettingChangePacket.php:28"
+        },
+        {
+            "name": "ClientboundDataStorePacket",
+            "networkId": 330,
+            "source": "src/ClientboundDataStorePacket.php:27"
+        },
+        {
+            "name": "GraphicsOverrideParameterPacket",
+            "networkId": 331,
+            "source": "src/GraphicsOverrideParameterPacket.php:28"
+        },
+        {
+            "name": "ServerboundDataStorePacket",
+            "networkId": 332,
+            "source": "src/ServerboundDataStorePacket.php:21"
+        },
+        {
+            "name": "ClientboundDataDrivenUIShowScreenPacket",
+            "networkId": 333,
+            "source": "src/ClientboundDataDrivenUIShowScreenPacket.php:22"
+        },
+        {
+            "name": "ClientboundDataDrivenUICloseScreenPacket",
+            "networkId": 334,
+            "source": "src/ClientboundDataDrivenUICloseScreenPacket.php:22"
+        },
+        {
+            "name": "ClientboundDataDrivenUIReloadPacket",
+            "networkId": 335,
+            "source": "src/ClientboundDataDrivenUIReloadPacket.php:20"
+        },
+        {
+            "name": "ClientboundTextureShiftPacket",
+            "networkId": 336,
+            "source": "src/ClientboundTextureShiftPacket.php:25"
+        },
+        {
+            "name": "VoxelShapesPacket",
+            "networkId": 337,
+            "source": "src/VoxelShapesPacket.php:25"
+        },
+        {
+            "name": "CameraSplinePacket",
+            "networkId": 338,
+            "source": "src/CameraSplinePacket.php:23"
+        },
+        {
+            "name": "CameraAimAssistActorPriorityPacket",
+            "networkId": 339,
+            "source": "src/CameraAimAssistActorPriorityPacket.php:23"
+        },
+        {
+            "name": "ResourcePacksReadyForValidationPacket",
+            "networkId": 340,
+            "source": "src/ResourcePacksReadyForValidationPacket.php:20"
+        },
+        {
+            "name": "LocatorBarPacket",
+            "networkId": 341,
+            "source": "src/LocatorBarPacket.php:23"
+        },
+        {
+            "name": "PartyChangedPacket",
+            "networkId": 342,
+            "source": "src/PartyChangedPacket.php:21"
+        },
+        {
+            "name": "ServerboundDataDrivenScreenClosedPacket",
+            "networkId": 343,
+            "source": "src/ServerboundDataDrivenScreenClosedPacket.php:22"
+        },
+        {
+            "name": "SyncWorldClocksPacket",
+            "networkId": 344,
+            "source": "src/SyncWorldClocksPacket.php:26"
+        },
+        {
+            "name": "ClientboundAttributeLayerSyncPacket",
+            "networkId": 345,
+            "source": "src/ClientboundAttributeLayerSyncPacket.php:26"
+        }
+    ],
+    "declarations": 583,
+    "enums": 67,
+    "poolRegistrations": 224
+}

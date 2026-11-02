@@ -1,0 +1,57 @@
+#pragma once
+
+#include <cstdint>
+#include <limits>
+#include <magic_enum/magic_enum.hpp>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
+#include <bedrock/protocol/io/BinaryStream.hpp>
+#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/AttributeLayerSettings.hpp>
+#include <bedrock/protocol/types/AttributeLayerSettings.hpp>
+#include <bedrock/protocol/types/AttributeLayerSettings.hpp>
+#include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
+
+class AttributeUpdateLayerSettings : public AttributeLayerSyncPayload {
+public:
+    static constexpr int64_t ID = 1;
+
+    std::string name;
+    uint32_t dimension;
+    std::shared_ptr<AttributeLayerSettings> settings;
+
+    AttributeUpdateLayerSettings() = default;
+    virtual ~AttributeUpdateLayerSettings() = default;
+    explicit AttributeUpdateLayerSettings(
+        const std::string& nameValue,
+        const uint32_t& dimensionValue,
+        const std::shared_ptr<AttributeLayerSettings>& settingsValue
+    ) :
+        name(nameValue),
+        dimension(dimensionValue),
+        settings(settingsValue) {}
+
+    int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
+
+    void read(ReadOnlyBinaryStream& stream) override {
+        name = stream.readString().value_or("");
+        dimension = stream.readUnsignedVarInt().value_or(0);
+        settings = ([&]() {
+    auto value = std::make_shared<AttributeLayerSettings>();
+    value->read(stream);
+    return value;
+}());
+    }
+
+    void write(BinaryStream& stream) const override {
+		stream.writeString(name);
+		stream.writeUnsignedVarInt(dimension);
+		settings->write(stream);
+    }
+};

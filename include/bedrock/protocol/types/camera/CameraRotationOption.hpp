@@ -1,0 +1,40 @@
+#pragma once
+
+#include <cstdint>
+#include <limits>
+#include <magic_enum/magic_enum.hpp>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
+#include <bedrock/protocol/io/BinaryStream.hpp>
+#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
+
+class CameraRotationOption {
+public:
+    std::string easeType;
+    glm::vec3 value;
+    float time;
+
+    CameraRotationOption() = default;
+    explicit CameraRotationOption(const glm::vec3& valueValue, const float& timeValue, const std::string& easeTypeValue) : value(valueValue), time(timeValue), easeType(easeTypeValue) {
+
+    }
+
+    virtual void read(ReadOnlyBinaryStream& stream) {
+        value = stream.readVec3().value_or(glm::vec3(0.0f));
+        time = stream.readFloat().value_or(0.0f);
+        easeType = stream.readString().value_or("");
+    }
+
+    virtual void write(BinaryStream& stream) const {
+		stream.writeVec3(value);
+		stream.writeFloat(time);
+		stream.writeString(easeType);
+    }
+};

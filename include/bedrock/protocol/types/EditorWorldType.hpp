@@ -1,0 +1,11 @@
+#pragma once
+
+#include <cstdint>
+#include <string_view>
+
+enum class EditorWorldType : uint8_t {
+    NonEditor = 0,
+    Project = 1,
+    TestLevel = 2,
+    RealmsUpload = 3,
+};

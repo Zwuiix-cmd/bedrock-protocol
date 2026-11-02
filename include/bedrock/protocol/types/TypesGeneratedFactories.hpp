@@ -1,0 +1,385 @@
+#pragma once
+
+#include <bedrock/protocol/types/TypesGeneratedIncludes0.hpp>
+#include <bedrock/protocol/types/TypesGeneratedIncludes1.hpp>
+
+
+inline std::shared_ptr<AttributeLayerSettingsWeight> AttributeLayerSettingsWeight::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 0: {
+            auto value = std::make_shared<AttributeLayerSettingsWeightFloat>();
+            value->read(stream);
+            return value;
+        }
+        case 1: {
+            auto value = std::make_shared<AttributeLayerSettingsWeightString>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<AttributeLayerSyncPayload> AttributeLayerSyncPayload::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<AttributeUpdateLayerSettings>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<AttributeUpdateLayers>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<AttributesRemoveEnvironment>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<AttributesUpdateEnvironment>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<AttributeValue> AttributeValue::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 0: {
+            auto value = std::make_shared<AttributeValueBool>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<AttributeValueColor>();
+            value->read(stream);
+            return value;
+        }
+        case 1: {
+            auto value = std::make_shared<AttributeValueFloat>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<AttributeValueColorValue> AttributeValueColorValue::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<AttributeValueColorArray>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<AttributeValueColorString>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<DataStore> DataStore::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<DataStoreChange>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<DataStoreRemoval>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<DataStoreUpdate>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<DataStoreValue> DataStoreValue::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<BoolDataStoreValue>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<DoubleDataStoreValue>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<StringDataStoreValue>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<BoolGameRule>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<FloatGameRule>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<IntGameRule>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: return BoolGameRule::decode(stream, isPlayerModifiable);
+        case 3: return FloatGameRule::decode(stream, isPlayerModifiable);
+        case 2: return IntGameRule::decode(stream, isPlayerModifiable, isStartGame);
+        default: return nullptr;
+    }
+}
+
+inline std::map<std::string, std::shared_ptr<GameRule>> GameRule::readRules(ReadOnlyBinaryStream& stream, const bool& isStartGame) {
+    std::map<std::string, std::shared_ptr<GameRule>> rules;
+    const auto count = stream.readUnsignedVarInt().value_or(0);
+    for (uint32_t index = 0; index < count; ++index) {
+        auto name = stream.readString().value_or("");
+        const auto isPlayerModifiable = stream.readBool().value_or(false);
+        rules.emplace(std::move(name), decode(stream, isPlayerModifiable, isStartGame));
+    }
+    return rules;
+}
+
+inline void GameRule::writeRules(BinaryStream& stream, const std::map<std::string, std::shared_ptr<GameRule>>& rules, const bool& isStartGame) {
+    stream.writeUnsignedVarInt(static_cast<uint32_t>(rules.size()));
+    for (const auto& [name, rule] : rules) {
+        stream.writeString(name);
+        if (!rule) continue;
+        stream.writeBool(rule->isPlayerModifiable);
+        stream.writeUnsignedVarInt(static_cast<uint32_t>(rule->getTypeId()));
+        rule->write(stream, isStartGame);
+    }
+}
+
+inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 10: {
+            auto value = std::make_shared<BeaconPaymentStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 13: {
+            auto value = std::make_shared<CraftRecipeAutoStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 15: {
+            auto value = std::make_shared<CraftRecipeOptionalStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 12: {
+            auto value = std::make_shared<CraftRecipeStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 5: {
+            auto value = std::make_shared<CraftingConsumeInputStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 6: {
+            auto value = std::make_shared<CraftingCreateSpecificResultStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 14: {
+            auto value = std::make_shared<CreativeCreateStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 18: {
+            auto value = std::make_shared<DeprecatedCraftingNonImplementedStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 19: {
+            auto value = std::make_shared<DeprecatedCraftingResultsStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 4: {
+            auto value = std::make_shared<DestroyStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<DropStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 16: {
+            auto value = std::make_shared<GrindstoneStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 9: {
+            auto value = std::make_shared<LabTableCombineStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 17: {
+            auto value = std::make_shared<LoomStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 11: {
+            auto value = std::make_shared<MineBlockStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 1: {
+            auto value = std::make_shared<PlaceStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<SwapStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<TakeStackRequestAction>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<PackSetting> PackSetting::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 2: {
+            auto value = std::make_shared<StringPackSetting>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<SyncWorldClocksPayload> SyncWorldClocksPayload::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 2: {
+            auto value = std::make_shared<SyncWorldClocksAddTimeMarker>();
+            value->read(stream);
+            return value;
+        }
+        case 1: {
+            auto value = std::make_shared<SyncWorldClocksInitializeRegistry>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<SyncWorldClocksRemoveTimeMarker>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<SyncWorldClocksSyncState>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<TransactionData> TransactionData::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 1: {
+            auto value = std::make_shared<MismatchTransactionData>();
+            value->read(stream);
+            return value;
+        }
+        case 0: {
+            auto value = std::make_shared<NormalTransactionData>();
+            value->read(stream);
+            return value;
+        }
+        case 4: {
+            auto value = std::make_shared<ReleaseItemTransactionData>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<UseItemOnEntityTransactionData>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<UseItemTransactionData>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}
+
+inline std::shared_ptr<ItemDescriptor> ItemDescriptor::decode(ReadOnlyBinaryStream& stream) {
+    switch (stream.readUnsignedVarInt().value_or(0)) {
+        case 5: {
+            auto value = std::make_shared<ComplexAliasItemDescriptor>();
+            value->read(stream);
+            return value;
+        }
+        case 1: {
+            auto value = std::make_shared<IntIdMetaItemDescriptor>();
+            value->read(stream);
+            return value;
+        }
+        case 2: {
+            auto value = std::make_shared<MolangItemDescriptor>();
+            value->read(stream);
+            return value;
+        }
+        case 4: {
+            auto value = std::make_shared<StringIdMetaItemDescriptor>();
+            value->read(stream);
+            return value;
+        }
+        case 3: {
+            auto value = std::make_shared<TagItemDescriptor>();
+            value->read(stream);
+            return value;
+        }
+        default:
+            return nullptr;
+    }
+}

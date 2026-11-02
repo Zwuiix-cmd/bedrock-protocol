@@ -103,9 +103,9 @@ public:
         BelowName = 2,
     };
 
-    enum class Sort : uint8_t {
-        OrderAscending = 0,
-        OrderDescending = 1,
+    enum class Order : uint8_t {
+        Ascending = 0,
+        Descending = 1,
     };
 
     DisplaySlot displaySlot;

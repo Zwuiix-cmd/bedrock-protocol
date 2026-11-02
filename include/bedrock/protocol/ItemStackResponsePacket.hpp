@@ -106,11 +106,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto len = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < len); ++i) {
-				responses.push_back(stream.readObject<ItemStackResponse>());
-		    }
+		auto responsesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < responsesCount; ++i) {
+		    responses.push_back(stream.readObject<ItemStackResponse>());
 		}
     }
 

@@ -30,19 +30,19 @@ public:
     explicit MapImage(const std::vector<std::vector<uint32_t>>& pixelsValue) : pixels(pixelsValue) {
 		std::optional<std::size_t> rowLength;
 		for (const auto& row : pixelsValue) {
-			if ((!rowLength)) {
+			if (!rowLength) {
 				rowLength = row.size();
-			} else if ((row.size() != rowLength.value())) {
+			} else if (row.size() != rowLength.value()) {
 				throw std::exception{};
 			}
 		}
-		if ((!rowLength)) {
+		if (!rowLength) {
 			throw std::exception{};
 		}
-		if ((rowLength.value() > magic_enum::enum_integer(Max::Width))) {
+		if (rowLength.value() > magic_enum::enum_integer(Max::Width)) {
 			throw std::exception{};
 		}
-		if ((pixelsValue.size() > magic_enum::enum_integer(Max::Height))) {
+		if (pixelsValue.size() > magic_enum::enum_integer(Max::Height)) {
 			throw std::exception{};
 		}
 		height = pixelsValue.size();
@@ -51,10 +51,10 @@ public:
     }
 
     static std::shared_ptr<MapImage> decode(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
-		if ((width > magic_enum::enum_integer(Max::Width))) {
+		if (width > magic_enum::enum_integer(Max::Width)) {
 			throw std::exception{};
 		}
-		if ((height > magic_enum::enum_integer(Max::Height))) {
+		if (height > magic_enum::enum_integer(Max::Height)) {
 			throw std::exception{};
 		}
 		auto pixels = std::vector<std::vector<uint32_t>>();
@@ -82,7 +82,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		if ((!encodedPixelCache)) {
+		if (!encodedPixelCache) {
 			auto serializer = BinaryStream();
 			for (std::size_t y = 0; (y < height); ++y) {
 				for (std::size_t x = 0; (x < width); ++x) {

@@ -167,11 +167,23 @@ public:
 			auto max = stream.readVarInt().value_or(0);
 			for (std::size_t i = 0; (i < max); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
-				blockActions.value().push_back(([&]() -> PlayerBlockAction {
-					if (true == PlayerBlockAction::isValidActionType(actionType)) return PlayerBlockAction::decodeWithBlockInfo(stream, actionType);
-					if (true == (actionType == magic_enum::enum_integer(PlayerAction::Stop::Break))) return PlayerBlockAction{};
-					throw std::exception{};
-				}()));
+				auto matchSubject = true;
+				switch (matchSubject) {
+					case PlayerBlockAction::isValidActionType(actionType):
+					{
+						blockActions = PlayerBlockAction::decodeWithBlockInfo(stream, actionType);
+						break;
+					}
+					case (actionType == magic_enum::enum_integer(PlayerAction::Stop::Break)):
+					{
+						blockActions = PlayerBlockAction{};
+						break;
+					}
+					default:
+					{
+						throw std::exception{};
+					}
+				}
 			}
 		}
 		if (inputFlags.get(InputData::IN_CLIENT_PREDICTED_VEHICLE)) {

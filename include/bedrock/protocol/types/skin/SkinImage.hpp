@@ -24,10 +24,10 @@ public:
     explicit SkinImage(const uint32_t& heightValue, const uint32_t& widthValue, const std::string& dataValue) : height(heightValue), width(widthValue), data(dataValue) {
 		std::remove_cvref_t<decltype(((heightValue * widthValue) * 4))> expected{};
 		std::remove_cvref_t<decltype(dataValue.size())> actual{};
-		if (((heightValue < 0) || (widthValue < 0))) {
+		if ((heightValue < 0) || (widthValue < 0)) {
 			throw std::exception{};
 		}
-		if (((expected = ((heightValue * widthValue) * 4)) != (actual = dataValue.size()))) {
+		if ((expected = ((heightValue * widthValue) * 4)) != (actual = dataValue.size())) {
 			throw std::exception{};
 		}
     }

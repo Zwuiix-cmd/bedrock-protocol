@@ -106,11 +106,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				priorityData.push_back(stream.readObject<CameraAimAssistActorPriorityData>());
-		    }
+		auto priorityDataCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < priorityDataCount; ++i) {
+		    priorityData.push_back(stream.readObject<CameraAimAssistActorPriorityData>());
 		}
     }
 

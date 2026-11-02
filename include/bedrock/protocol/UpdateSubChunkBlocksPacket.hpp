@@ -109,17 +109,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		baseBlockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				layer0Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
-		    }
+		auto layer0UpdatesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < layer0UpdatesCount; ++i) {
+		    layer0Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		}
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				layer1Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
-		    }
+		auto layer1UpdatesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < layer1UpdatesCount; ++i) {
+		    layer1Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		}
     }
 

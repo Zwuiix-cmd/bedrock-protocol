@@ -116,10 +116,10 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeBool(recording);
 		if (recording) {
-			if ((!frameRate)) {
+			if (!frameRate) {
 				throw std::exception{};
 			}
-			if ((!filePrefix)) {
+			if (!filePrefix) {
 				throw std::exception{};
 			}
 			stream.writeUnsignedInt(*(frameRate));

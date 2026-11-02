@@ -108,11 +108,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto shapesCount = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < shapesCount); ++i) {
-				shapes.push_back(stream.readObject<SerializableVoxelShape>());
-		    }
+		auto shapesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < shapesCount; ++i) {
+		    shapes.push_back(stream.readObject<SerializableVoxelShape>());
 		}
 		nameMap = {};
 		{

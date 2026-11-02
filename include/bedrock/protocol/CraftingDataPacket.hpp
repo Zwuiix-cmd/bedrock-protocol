@@ -133,19 +133,46 @@ public:
 		auto previousType = "none";
 		for (std::size_t i = 0; (i < recipeCount); ++i) {
 			auto recipeType = stream.readVarInt().value_or(0);
-			recipesWithTypeIds.push_back(([&]() -> std::shared_ptr<RecipeWithTypeId> {
-				if (recipeType == magic_enum::enum_integer(Entry::Shapeless)) return ShapelessRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::UserDataShapeless)) return ShapelessRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::ShapelessChemistry)) return ShapelessRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::Shaped)) return ShapedRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::ShapedChemistry)) return ShapedRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::Furnace)) return FurnaceRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::FurnaceData)) return FurnaceRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::Multi)) return MultiRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::SmithingTransform)) return SmithingTransformRecipe::decode(recipeType, stream);
-				if (recipeType == magic_enum::enum_integer(Entry::SmithingTrim)) return SmithingTrimRecipe::decode(recipeType, stream);
-				throw std::exception{};
-			}()));
+			switch (static_cast<Entry>(recipeType)) {
+				case Entry::Shapeless:
+				case Entry::UserDataShapeless:
+				case Entry::ShapelessChemistry:
+				{
+					recipesWithTypeIds = ShapelessRecipe::decode(recipeType, stream);
+					break;
+				}
+				case Entry::Shaped:
+				case Entry::ShapedChemistry:
+				{
+					recipesWithTypeIds = ShapedRecipe::decode(recipeType, stream);
+					break;
+				}
+				case Entry::Furnace:
+				case Entry::FurnaceData:
+				{
+					recipesWithTypeIds = FurnaceRecipe::decode(recipeType, stream);
+					break;
+				}
+				case Entry::Multi:
+				{
+					recipesWithTypeIds = MultiRecipe::decode(recipeType, stream);
+					break;
+				}
+				case Entry::SmithingTransform:
+				{
+					recipesWithTypeIds = SmithingTransformRecipe::decode(recipeType, stream);
+					break;
+				}
+				case Entry::SmithingTrim:
+				{
+					recipesWithTypeIds = SmithingTrimRecipe::decode(recipeType, stream);
+					break;
+				}
+				default:
+				{
+					throw std::exception{};
+				}
+			}
 			(void)(recipeType);
 		}
 		{

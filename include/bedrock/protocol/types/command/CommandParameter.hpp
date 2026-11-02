@@ -37,9 +37,7 @@ public:
         paramName = stream.readString().value_or("");
         paramType = stream.readInt().value_or(0);
         isOptional = stream.readBool().value_or(false);
-        flags = magic_enum::enum_cast<Flag>(
-            stream.readInt().value_or(0)
-        ).value_or(Flag{});
+        flags = static_cast<Flag>(stream.readInt().value_or(0));
         enum_ = ([&]() { auto value = stream.readOptional([&]() { return stream.readObject<CommandHardEnum>(); }); return value ? std::variant<std::monostate, std::shared_ptr<CommandHardEnum>, std::shared_ptr<CommandSoftEnum>>{*value} : std::variant<std::monostate, std::shared_ptr<CommandHardEnum>, std::shared_ptr<CommandSoftEnum>>{std::monostate{}}; }());
         postfix = stream.readOptional([&]() {
             return stream.readString().value_or("");

@@ -107,13 +107,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		protocol = stream.readUnsignedIntBE().value_or(0);
-		([&]() {
-			auto connRequestReader = ReadOnlyBinaryStream(stream.readString().value_or(""));
-			auto authInfoJsonLength = connRequestReader.readUnsignedInt().value_or(0);
-			authInfoJson = connRequestReader.readByteArray(authInfoJsonLength).value_or("");
-			auto clientDataJwtLength = connRequestReader.readUnsignedInt().value_or(0);
-			clientDataJwt = connRequestReader.readByteArray(clientDataJwtLength).value_or("");
-		}());
+		auto connRequestReader = ReadOnlyBinaryStream(stream.readString().value_or(""));
+		auto authInfoJsonLength = connRequestReader.readUnsignedInt().value_or(0);
+		authInfoJson = connRequestReader.readByteArray(authInfoJsonLength).value_or("");
+		auto clientDataJwtLength = connRequestReader.readUnsignedInt().value_or(0);
+		clientDataJwt = connRequestReader.readByteArray(clientDataJwtLength).value_or("");
     }
 
     void write(BinaryStream& stream) override {

@@ -116,7 +116,7 @@ public:
 			stream.readUnsignedByte().value_or(0)
 		).value_or(Status::Refused);
 		auto entryCount = stream.readUnsignedShort().value_or(0);
-		while ((entryCount-- > 0)) {
+		while (entryCount-- > 0) {
 			packIds.push_back(stream.readString().value_or(""));
 		}
     }

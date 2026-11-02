@@ -41,7 +41,7 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
-		if ((requestId != 0)) {
+		if (requestId != 0) {
 			stream.writeUnsignedVarInt(requestChangedSlots.size());
 			for (const auto& changedSlot : requestChangedSlots) {
 				changedSlot->write(stream);

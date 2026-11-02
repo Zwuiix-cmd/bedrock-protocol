@@ -113,13 +113,11 @@ public:
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		radius = stream.readUnsignedVarInt().value_or(0);
 		auto count = stream.readUnsignedInt().value_or(0);
-		if ((count > MAX_SAVED_CHUNKS)) {
+		if (count > MAX_SAVED_CHUNKS) {
 			throw std::exception{};
 		}
-		{
 		for (std::size_t i = 0; i < count; i++) {
 		    savedChunks.push_back(stream.readObject<ChunkPosition>());
-		}
 		}
     }
 

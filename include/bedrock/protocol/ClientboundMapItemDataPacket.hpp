@@ -134,16 +134,16 @@ public:
 		dimensionId = stream.readUnsignedByte().value_or(0);
 		isLocked = stream.readBool().value_or(false);
 		origin = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		if (((type & Bitflag::MapCreation) != 0)) {
+		if ((type & magic_enum::enum_integer(Bitflag::MapCreation)) != 0) {
 			auto count = stream.readUnsignedVarInt().value_or(0);
 			for (std::size_t i = 0; (i < count); ++i) {
 				parentMapIds.push_back(stream.readActorUniqueID().value_or(0));
 			}
 		}
-		if (((magic_enum::enum_integer(type) & ((Bitflag::MapCreation | Bitflag::DecorationUpdate) | magic_enum::enum_integer(Bitflag::TextureUpdate))) != 0)) {
+		if ((magic_enum::enum_integer(type) & ((magic_enum::enum_integer(Bitflag::MapCreation) | magic_enum::enum_integer(Bitflag::DecorationUpdate)) | magic_enum::enum_integer(Bitflag::TextureUpdate))) != 0) {
 			scale = stream.readUnsignedByte().value_or(0);
 		}
-		if (((type & Bitflag::DecorationUpdate) != 0)) {
+		if ((type & magic_enum::enum_integer(Bitflag::DecorationUpdate)) != 0) {
 			{
 			    auto count = stream.readUnsignedVarInt().value_or(0);
 			    for (std::size_t i = 0; (i < count); ++i) {
@@ -151,9 +151,9 @@ public:
 					object->type = magic_enum::enum_cast<MapTrackedObject::Type>(
 						stream.readUnsignedInt().value_or(0)
 					).value_or(MapTrackedObject::Type::Entity);
-					if ((object->type == MapTrackedObject::Type::Block)) {
+					if (object->type == magic_enum::enum_integer(MapTrackedObject::Type::Block)) {
 						object->blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-					} else if ((object->type == MapTrackedObject::Type::Entity)) {
+					} else if (object->type == magic_enum::enum_integer(MapTrackedObject::Type::Entity)) {
 						object->actorUniqueId = stream.readActorUniqueID().value_or(0);
 					} else {
 						throw std::exception{};
@@ -174,13 +174,13 @@ public:
 			    }
 			}
 		}
-		if (((type & Bitflag::TextureUpdate) != 0)) {
+		if ((type & magic_enum::enum_integer(Bitflag::TextureUpdate)) != 0) {
 			auto width = stream.readVarInt().value_or(0);
 			auto height = stream.readVarInt().value_or(0);
 			xOffset = stream.readVarInt().value_or(0);
 			yOffset = stream.readVarInt().value_or(0);
 			auto count = stream.readUnsignedVarInt().value_or(0);
-			if ((count != (width * height))) {
+			if (count != (width * height)) {
 				throw std::exception{};
 			}
 			colors = std::make_shared<MapImage>();
@@ -193,10 +193,10 @@ public:
 		std::remove_cvref_t<decltype(decorations.size())> decorationCount{};
 		stream.writeActorUniqueID(mapId);
 		auto type = 0;
-		if (((parentMapIdsCount = parentMapIds.size()) > 0)) {
+		if ((parentMapIdsCount = parentMapIds.size()) > 0) {
 			type = type | Bitflag::MapCreation;
 		}
-		if (((decorationCount = decorations.size()) > 0)) {
+		if ((decorationCount = decorations.size()) > 0) {
 			type = type | Bitflag::DecorationUpdate;
 		}
 		if (colors.has_value()) {
@@ -206,22 +206,22 @@ public:
 		stream.writeUnsignedByte(dimensionId);
 		stream.writeBool(isLocked);
 		stream.writeSignedBlockPos(origin);
-		if (((type & magic_enum::enum_integer(Bitflag::MapCreation)) != 0)) {
+		if ((type & magic_enum::enum_integer(Bitflag::MapCreation)) != 0) {
 			stream.writeUnsignedVarInt(parentMapIdsCount);
 			for (const auto& parentMapId : parentMapIds) {
 				stream.writeActorUniqueID(parentMapId);
 			}
 		}
-		if (((type & ((Bitflag::MapCreation | Bitflag::TextureUpdate) | magic_enum::enum_integer(Bitflag::DecorationUpdate))) != 0)) {
+		if ((type & ((magic_enum::enum_integer(Bitflag::MapCreation) | magic_enum::enum_integer(Bitflag::TextureUpdate)) | magic_enum::enum_integer(Bitflag::DecorationUpdate))) != 0) {
 			stream.writeUnsignedByte(scale);
 		}
-		if (((type & magic_enum::enum_integer(Bitflag::DecorationUpdate)) != 0)) {
+		if ((type & magic_enum::enum_integer(Bitflag::DecorationUpdate)) != 0) {
 			stream.writeUnsignedVarInt(trackedEntities.size());
 			for (const auto& object : trackedEntities) {
 				stream.writeUnsignedInt(magic_enum::enum_integer(object->type));
-				if ((object->type == MapTrackedObject::Type::Block)) {
+				if (object->type == magic_enum::enum_integer(MapTrackedObject::Type::Block)) {
 					stream.writeSignedBlockPos(object->blockPosition);
-				} else if ((object->type == MapTrackedObject::Type::Entity)) {
+				} else if (object->type == magic_enum::enum_integer(MapTrackedObject::Type::Entity)) {
 					stream.writeActorUniqueID(object->actorUniqueId);
 				} else {
 					throw std::exception{};

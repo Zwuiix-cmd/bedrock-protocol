@@ -116,11 +116,9 @@ public:
 		stopExpressionVersion = stream.readInt().value_or(0);
 		controller = stream.readString().value_or("");
 		blendOutTime = stream.readFloat().value_or(0.0f);
-		{
-		    auto len = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < len); ++i) {
-				actorRuntimeIds.push_back(stream.readActorRuntimeID().value_or(0));
-		    }
+		auto actorRuntimeIdsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < actorRuntimeIdsCount; ++i) {
+		    actorRuntimeIds.push_back(stream.readActorRuntimeID().value_or(0));
 		}
     }
 

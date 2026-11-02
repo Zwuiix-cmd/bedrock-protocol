@@ -104,15 +104,15 @@ public:
         Priority = 8,
     };
 
-    enum class Data : uint8_t {
-        LayerNormal = 0,
-        LayerLiquid = 1,
+    enum class Layer : uint8_t {
+        Normal = 0,
+        Liquid = 1,
     };
 
     glm::ivec3 blockPosition;
     uint32_t blockRuntimeId;
     Flag flags = Flag::Network;
-    Data dataLayerId = Data::LayerNormal;
+    Data dataLayerId = Layer::Normal;
 
 public:
     std::string_view getName() override {

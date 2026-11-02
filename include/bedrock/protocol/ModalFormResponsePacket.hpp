@@ -96,9 +96,9 @@ public:
     }
 
 public:
-    enum class Cancel : uint8_t {
-        ReasonClosed = 0,
-        ReasonUserBusy = 1,
+    enum class Reason : uint8_t {
+        Closed = 0,
+        UserBusy = 1,
     };
 
     uint32_t formId;

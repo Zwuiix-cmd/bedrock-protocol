@@ -106,13 +106,33 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		payload = ([&]() -> std::shared_ptr<AttributeLayerSyncPayload> {
-			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayers::ID) return stream.readObject<AttributeUpdateLayers>();
-			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayerSettings::ID) return stream.readObject<AttributeUpdateLayerSettings>();
-			if (stream.readUnsignedVarInt().value_or(0) == AttributesUpdateEnvironment::ID) return stream.readObject<AttributesUpdateEnvironment>();
-			if (stream.readUnsignedVarInt().value_or(0) == AttributesRemoveEnvironment::ID) return stream.readObject<AttributesRemoveEnvironment>();
-			throw std::exception{};
-		}());
+		auto matchSubject = stream.readUnsignedVarInt().value_or(0);
+		switch (matchSubject) {
+			case AttributeUpdateLayers::ID:
+			{
+				payload = stream.readObject<AttributeUpdateLayers>();
+				break;
+			}
+			case AttributeUpdateLayerSettings::ID:
+			{
+				payload = stream.readObject<AttributeUpdateLayerSettings>();
+				break;
+			}
+			case AttributesUpdateEnvironment::ID:
+			{
+				payload = stream.readObject<AttributesUpdateEnvironment>();
+				break;
+			}
+			case AttributesRemoveEnvironment::ID:
+			{
+				payload = stream.readObject<AttributesRemoveEnvironment>();
+				break;
+			}
+			default:
+			{
+				throw std::exception{};
+			}
+		}
     }
 
     void write(BinaryStream& stream) override {

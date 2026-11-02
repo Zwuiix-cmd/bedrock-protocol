@@ -106,11 +106,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto len = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < len); ++i) {
-				waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
-		    }
+		auto waypointsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < waypointsCount; ++i) {
+		    waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
 		}
     }
 

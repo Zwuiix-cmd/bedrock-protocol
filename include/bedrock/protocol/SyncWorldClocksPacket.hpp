@@ -106,13 +106,33 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		payload = ([&]() -> std::shared_ptr<SyncWorldClocksPayload> {
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksSyncState::ID) return stream.readObject<SyncWorldClocksSyncState>();
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksInitializeRegistry::ID) return stream.readObject<SyncWorldClocksInitializeRegistry>();
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksAddTimeMarker::ID) return stream.readObject<SyncWorldClocksAddTimeMarker>();
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksRemoveTimeMarker::ID) return stream.readObject<SyncWorldClocksRemoveTimeMarker>();
-			throw std::exception{};
-		}());
+		auto matchSubject = stream.readUnsignedVarInt().value_or(0);
+		switch (matchSubject) {
+			case SyncWorldClocksSyncState::ID:
+			{
+				payload = stream.readObject<SyncWorldClocksSyncState>();
+				break;
+			}
+			case SyncWorldClocksInitializeRegistry::ID:
+			{
+				payload = stream.readObject<SyncWorldClocksInitializeRegistry>();
+				break;
+			}
+			case SyncWorldClocksAddTimeMarker::ID:
+			{
+				payload = stream.readObject<SyncWorldClocksAddTimeMarker>();
+				break;
+			}
+			case SyncWorldClocksRemoveTimeMarker::ID:
+			{
+				payload = stream.readObject<SyncWorldClocksRemoveTimeMarker>();
+				break;
+			}
+			default:
+			{
+				throw std::exception{};
+			}
+		}
     }
 
     void write(BinaryStream& stream) override {

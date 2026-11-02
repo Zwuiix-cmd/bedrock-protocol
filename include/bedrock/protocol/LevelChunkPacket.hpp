@@ -120,10 +120,10 @@ public:
 		chunkPosition->read(stream);
 		dimensionId = stream.readVarInt().value_or(0);
 		auto subChunkCountButNotReally = stream.readUnsignedVarInt().value_or(0);
-		if ((subChunkCountButNotReally == CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT)) {
+		if (subChunkCountButNotReally == CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT) {
 			clientSubChunkRequestsEnabled = true;
 			subChunkCount = std::numeric_limits<uint32_t>::max();
-		} else if ((subChunkCountButNotReally == CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT)) {
+		} else if (subChunkCountButNotReally == CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT) {
 			clientSubChunkRequestsEnabled = true;
 			subChunkCount = stream.readUnsignedShort().value_or(0);
 		} else {
@@ -134,7 +134,7 @@ public:
 		if (cacheEnabled) {
 			usedBlobHashes = {};
 			auto count = stream.readUnsignedVarInt().value_or(0);
-			if ((count > MAX_BLOB_HASHES)) {
+			if (count > MAX_BLOB_HASHES) {
 				throw std::exception{};
 			}
 			for (std::size_t i = 0; (i < count); ++i) {
@@ -148,7 +148,7 @@ public:
 		chunkPosition->write(stream);
 		stream.writeVarInt(dimensionId);
 		if (clientSubChunkRequestsEnabled) {
-			if ((subChunkCount == std::numeric_limits<uint32_t>::max())) {
+			if (subChunkCount == std::numeric_limits<uint32_t>::max()) {
 				stream.writeUnsignedVarInt(CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT);
 			} else {
 				stream.writeUnsignedVarInt(CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT);

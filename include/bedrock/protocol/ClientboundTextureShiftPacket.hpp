@@ -115,11 +115,9 @@ public:
 		collectionName = stream.readString().value_or("");
 		fromStep = stream.readString().value_or("");
 		toStep = stream.readString().value_or("");
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				allSteps.push_back(stream.readString().value_or(""));
-		    }
+		auto allStepsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < allStepsCount; ++i) {
+		    allSteps.push_back(stream.readString().value_or(""));
 		}
 		currentLengthTicks = stream.readUnsignedVarLong().value_or(0);
 		totalLengthTicks = stream.readUnsignedVarLong().value_or(0);

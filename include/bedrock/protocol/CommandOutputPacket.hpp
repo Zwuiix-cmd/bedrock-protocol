@@ -129,18 +129,14 @@ public:
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < size); ++i) {
-				messages.push_back(([&]() -> std::shared_ptr<CommandOutputMessage> {
-					(void)(std::make_shared<CommandOutputMessage>());
-					message->messageId = stream.readString().value_or("");
-					message->isInternal = stream.readBool().value_or(false);
-					{
-					    auto size = stream.readUnsignedVarInt().value_or(0);
-					    for (std::size_t i = 0; (i < size); ++i) {
-							message->parameters.push_back(stream.readString().value_or(""));
-					    }
-					}
-					return message;
-				}()));
+				auto message = std::make_shared<CommandOutputMessage>();
+				message->messageId = stream.readString().value_or("");
+				message->isInternal = stream.readBool().value_or(false);
+				auto parametersCount = stream.readUnsignedVarInt().value_or(0);
+				for (std::size_t i = 0; i < parametersCount; ++i) {
+				    message->parameters.push_back(stream.readString().value_or(""));
+				}
+				messages.push_back(message);
 		    }
 		}
 		data = stream.readOptional([&]() {
@@ -154,14 +150,12 @@ public:
 		stream.writeUnsignedInt(successCount);
 		stream.writeUnsignedVarInt(messages.size());
 		for (const auto& message : messages) {
-			([&]() {
-				stream.writeString(message->messageId);
-				stream.writeBool(message->isInternal);
-				stream.writeUnsignedVarInt(message->parameters.size());
-				for (const auto& parameter : message->parameters) {
-					stream.writeString(magic_enum::enum_integer(parameter));
-				}
-			}());
+			stream.writeString(message->messageId);
+			stream.writeBool(message->isInternal);
+			stream.writeUnsignedVarInt(message->parameters.size());
+			for (const auto& parameter : message->parameters) {
+				stream.writeString(magic_enum::enum_integer(parameter));
+			}
 		}
 		stream.writeOptional(data, [&](const auto& value) {
 			stream.writeString(value);

@@ -113,11 +113,9 @@ public:
 		dimension = stream.readVarInt().value_or(0);
 		basePosition = std::make_shared<SubChunkPosition>();
 		basePosition->read(stream);
-		{
-		auto count = stream.readUnsignedInt().value_or(0);
-		for (std::size_t i = 0; i < count; i++) {
+		auto entriesCount = stream.readUnsignedInt().value_or(0);
+		for (std::size_t i = 0; i < entriesCount; i++) {
 		    entries.push_back(stream.readObject<SubChunkPositionOffset>());
-		}
 		}
     }
 

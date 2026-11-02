@@ -25,7 +25,7 @@ public:
     IntIdMetaItemDescriptor() = default;
     virtual ~IntIdMetaItemDescriptor() = default;
     explicit IntIdMetaItemDescriptor(const int16_t& idValue, const int16_t& metaValue) : id(idValue), meta(metaValue) {
-		if (((idValue == 0) && (metaValue != 0))) {
+		if ((idValue == 0) && (metaValue != 0)) {
 			throw std::exception{};
 		}
     }
@@ -39,7 +39,7 @@ public:
 
     void write(BinaryStream& stream) const override {
 		stream.writeShort(id);
-		if ((id != 0)) {
+		if (id != 0) {
 			stream.writeShort(meta);
 		}
     }

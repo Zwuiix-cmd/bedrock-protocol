@@ -142,12 +142,7 @@ public:
 				healthPercent = stream.readFloat().value_or(0.0f);
 			}
 			case Type::Properties: {
-				darkenScreen = ([&]() -> bool {
-					auto raw = stream.readUnsignedShort().value_or(0);
-					if (raw == 0) return false;
-					if (raw == 1) return true;
-					throw std::exception{};
-				}());
+				darkenScreen = stream.readUnsignedShort().value_or(0) != 0;
 			}
 			case Type::Texture: {
 				color = stream.readUnsignedVarInt().value_or(0);

@@ -25,7 +25,7 @@ public:
     StringIdMetaItemDescriptor() = default;
     virtual ~StringIdMetaItemDescriptor() = default;
     explicit StringIdMetaItemDescriptor(const std::string& idValue, const uint16_t& metaValue) : id(idValue), meta(metaValue) {
-		if ((metaValue < 0)) {
+		if (metaValue < 0) {
 			throw std::exception{};
 		}
     }

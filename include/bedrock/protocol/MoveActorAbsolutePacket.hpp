@@ -116,9 +116,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		flags = magic_enum::enum_cast<Flag>(
-			stream.readUnsignedByte().value_or(0)
-		).value_or(Flag{});
+		flags = static_cast<Flag>(stream.readUnsignedByte().value_or(0));
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		pitch = stream.readRotationByte().value_or(0);
 		yaw = stream.readRotationByte().value_or(0);

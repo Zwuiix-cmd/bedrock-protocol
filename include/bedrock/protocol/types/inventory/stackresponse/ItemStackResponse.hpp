@@ -35,7 +35,7 @@ public:
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if (((result != Result::Ok) && (containerInfos.size() != 0))) {
+		if ((result != magic_enum::enum_integer(Result::Ok)) && (containerInfos.size() != 0)) {
 			throw std::exception{};
 		}
     }
@@ -51,7 +51,7 @@ public:
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedByte(magic_enum::enum_integer(result));
 		stream.writeInt(requestId);
-		if ((result == Result::Ok)) {
+		if (result == magic_enum::enum_integer(Result::Ok)) {
 			stream.writeUnsignedVarInt(containerInfos.size());
 			for (const auto& containerInfo : containerInfos) {
 				containerInfo->write(stream);

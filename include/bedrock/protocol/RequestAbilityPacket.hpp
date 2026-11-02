@@ -96,9 +96,9 @@ public:
     }
 
 public:
-    enum class Value : uint8_t {
-        TypeBool = 1,
-        TypeFloat = 2,
+    enum class Type : uint8_t {
+        Bool = 1,
+        Float = 2,
     };
 
     enum class Ability : uint8_t {
@@ -121,18 +121,29 @@ public:
 		auto valueType = stream.readUnsignedByte().value_or(0);
 		auto boolValue = stream.readBool().value_or(false);
 		auto floatValue = stream.readFloat().value_or(0.0f);
-		abilityValue = ([&]() -> std::variant<float, bool> {
-			if (valueType == magic_enum::enum_integer(Value::TypeBool)) return boolValue;
-			if (valueType == magic_enum::enum_integer(Value::TypeFloat)) return floatValue;
-			throw std::exception{};
-		}());
+		switch (static_cast<Type>(valueType)) {
+			case Type::Bool:
+			{
+				abilityValue = boolValue;
+				break;
+			}
+			case Type::Float:
+			{
+				abilityValue = floatValue;
+				break;
+			}
+			default:
+			{
+				throw std::exception{};
+			}
+		}
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeVarInt(magic_enum::enum_integer(abilityId));
 		auto [valueType, boolValue, floatValue] = ([&]() -> std::tuple<int64_t, bool, float> {
-			if (true == std::holds_alternative<bool>(abilityValue)) return std::tuple<int64_t, bool, float>{Value::TypeBool, std::get<bool>(abilityValue), 0};
-			if (true == std::holds_alternative<float>(abilityValue)) return std::tuple<int64_t, bool, float>{Value::TypeFloat, false, std::get<float>(abilityValue)};
+			if (true == std::holds_alternative<bool>(abilityValue)) return std::tuple<int64_t, bool, float>{magic_enum::enum_integer(Type::Bool), std::get<bool>(abilityValue), 0};
+			if (true == std::holds_alternative<float>(abilityValue)) return std::tuple<int64_t, bool, float>{magic_enum::enum_integer(Type::Float), false, std::get<float>(abilityValue)};
 			throw std::exception{};
 		}());
 		stream.writeUnsignedByte(valueType);

@@ -116,7 +116,7 @@ public:
 				if (definitions.find(dimensionNameId) != definitions.end()) {
 					throw std::exception{};
 				}
-				if ((((dimensionNameId != magic_enum::enum_integer(DimensionNameIds::Overworld)) && (dimensionNameId != magic_enum::enum_integer(DimensionNameIds::Nether))) && (dimensionNameId != magic_enum::enum_integer(DimensionNameIds::TheEnd)))) {
+				if (((dimensionNameId != magic_enum::enum_integer(DimensionNameIds::Overworld)) && (dimensionNameId != magic_enum::enum_integer(DimensionNameIds::Nether))) && (dimensionNameId != magic_enum::enum_integer(DimensionNameIds::TheEnd))) {
 					throw std::exception{};
 				}
 				definitions[dimensionNameId] = dimensionData;

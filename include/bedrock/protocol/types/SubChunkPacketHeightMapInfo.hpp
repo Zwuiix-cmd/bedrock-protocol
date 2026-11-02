@@ -20,7 +20,7 @@ public:
 
     SubChunkPacketHeightMapInfo() = default;
     explicit SubChunkPacketHeightMapInfo(const std::vector<int32_t>& heightsValue) : heights(heightsValue) {
-		if ((heightsValue.size() != 256)) {
+		if (heightsValue.size() != 256) {
 			throw std::exception{};
 		}
     }

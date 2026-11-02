@@ -111,7 +111,7 @@ public:
 			stream.readUnsignedInt().value_or(0)
 		).value_or(PlayerLocationType::PlayerLocationCoordinates);
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
-		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
+		if (type == magic_enum::enum_integer(PlayerLocationType::PlayerLocationCoordinates)) {
 			position = stream.readVec3().value_or(glm::vec3(0.0f));
 		}
     }
@@ -119,8 +119,8 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedInt(magic_enum::enum_integer(type));
 		stream.writeActorUniqueID(actorUniqueId);
-		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
-			if ((!position)) {
+		if (type == magic_enum::enum_integer(PlayerLocationType::PlayerLocationCoordinates)) {
+			if (!position) {
 				throw std::exception{};
 			}
 			stream.writeVec3(*(position));

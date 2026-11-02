@@ -106,11 +106,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto len = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < len); ++i) {
-				removedContainers.push_back(stream.readObject<FullContainerName>());
-		    }
+		auto removedContainersCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < removedContainersCount; ++i) {
+		    removedContainers.push_back(stream.readObject<FullContainerName>());
 		}
     }
 

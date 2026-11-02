@@ -16,9 +16,7 @@
 
 class MapInfoRequestPacketClientPixel {
 public:
-    enum class Y : uint8_t {
-        IndexMultiplier = 128,
-    };
+    static constexpr int64_t INDEX_MULTIPLIER = 128;
 
     uint32_t color;
     int32_t x;
@@ -37,6 +35,6 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedInt(static_cast<uint32_t>(color));
-		stream.writeUnsignedShort((x + (y * Y::IndexMultiplier)));
+		stream.writeUnsignedShort((x + (y * magic_enum::enum_integer(Y::IndexMultiplier))));
     }
 };

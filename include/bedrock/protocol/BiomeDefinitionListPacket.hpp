@@ -107,17 +107,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				definitionData.push_back(stream.readObject<BiomeDefinitionData>());
-		    }
+		auto definitionDataCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < definitionDataCount; ++i) {
+		    definitionData.push_back(stream.readObject<BiomeDefinitionData>());
 		}
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				strings.push_back(stream.readString().value_or(""));
-		    }
+		auto stringsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < stringsCount; ++i) {
+		    strings.push_back(stream.readString().value_or(""));
 		}
     }
 

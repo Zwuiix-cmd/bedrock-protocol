@@ -106,11 +106,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto len = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < len); ++i) {
-				shapes.push_back(stream.readObject<PacketShapeData>());
-		    }
+		auto shapesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < shapesCount; ++i) {
+		    shapes.push_back(stream.readObject<PacketShapeData>());
 		}
     }
 

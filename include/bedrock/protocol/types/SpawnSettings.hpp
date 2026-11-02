@@ -16,9 +16,9 @@
 
 class SpawnSettings {
 public:
-    enum class Biome : uint8_t {
-        TypeDefault = 0,
-        TypeUserDefined = 1,
+    enum class Type : uint8_t {
+        Default = 0,
+        UserDefined = 1,
     };
 
     Biome biomeType;

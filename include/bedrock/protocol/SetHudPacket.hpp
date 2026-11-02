@@ -107,13 +107,11 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				hudElements.push_back(magic_enum::enum_cast<HudElement>(
-					stream.readVarInt().value_or(0)
-				).value_or(HudElement::PaperDoll));
-		    }
+		auto hudElementsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < hudElementsCount; ++i) {
+		    hudElements.push_back(magic_enum::enum_cast<HudElement>(
+			stream.readVarInt().value_or(0)
+		).value_or(HudElement::PaperDoll));
 		}
 		visibility = magic_enum::enum_cast<HudVisibility>(
 			stream.readVarInt().value_or(0)

@@ -119,9 +119,7 @@ public:
 		emoteLengthTicks = stream.readUnsignedVarInt().value_or(0);
 		xboxUserId = stream.readString().value_or("");
 		platformChatId = stream.readString().value_or("");
-		flags = magic_enum::enum_cast<Flag>(
-			stream.readUnsignedByte().value_or(0)
-		).value_or(Flag{});
+		flags = static_cast<Flag>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {

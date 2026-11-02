@@ -122,7 +122,7 @@ public:
 				entry->scoreboardId = stream.readVarLong().value_or(0);
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
-				if ((type != Type::Remove)) {
+				if (type != magic_enum::enum_integer(Type::Remove)) {
 					entry->type = magic_enum::enum_cast<ScorePacketEntry::Type>(
 						stream.readUnsignedByte().value_or(0)
 					).value_or(ScorePacketEntry::Type::Player);
@@ -153,7 +153,7 @@ public:
 			stream.writeVarLong(entry->scoreboardId);
 			stream.writeString(entry->objectiveName);
 			stream.writeInt(entry->score);
-			if ((type != Type::Remove)) {
+			if (type != magic_enum::enum_integer(Type::Remove)) {
 				stream.writeUnsignedByte(magic_enum::enum_integer(entry->type));
 				switch (entry->type) {
 					case magic_enum::enum_integer(ScorePacketEntry::Type::Player):

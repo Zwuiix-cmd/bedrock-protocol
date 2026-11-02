@@ -112,7 +112,9 @@ public:
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		particleName = stream.readString().value_or("");
-		molangVariablesJson = ([&]() -> std::optional<std::remove_cvref_t<decltype(stream.readString().value_or(""))>> { if (stream.readBool().value_or(false)) return stream.readString().value_or(""); return std::nullopt; })();
+		if (stream.readBool().value_or(false)) {
+			molangVariablesJson = stream.readString().value_or("");
+		}
     }
 
     void write(BinaryStream& stream) override {

@@ -109,17 +109,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				trimPatterns.push_back(stream.readObject<TrimPattern>());
-		    }
+		auto trimPatternsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < trimPatternsCount; ++i) {
+		    trimPatterns.push_back(stream.readObject<TrimPattern>());
 		}
-		{
-		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
-				trimMaterials.push_back(stream.readObject<TrimMaterial>());
-		    }
+		auto trimMaterialsCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < trimMaterialsCount; ++i) {
+		    trimMaterials.push_back(stream.readObject<TrimMaterial>());
 		}
     }
 

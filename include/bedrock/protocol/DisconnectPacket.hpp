@@ -108,8 +108,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		reason = stream.readVarInt().value_or(0);
 		auto skipMessage = stream.readBool().value_or(false);
-		message = ([&]() -> std::optional<std::remove_cvref_t<decltype(stream.readString().value_or(""))>> { if (skipMessage) return stream.readString().value_or(""); return std::nullopt; })();
-		filteredMessage = ([&]() -> std::optional<std::remove_cvref_t<decltype(stream.readString().value_or(""))>> { if (skipMessage) return stream.readString().value_or(""); return std::nullopt; })();
+		if (!skipMessage) {
+			message = stream.readString().value_or("");
+		}
+		if (!skipMessage) {
+			filteredMessage = stream.readString().value_or("");
+		}
     }
 
     void write(BinaryStream& stream) override {

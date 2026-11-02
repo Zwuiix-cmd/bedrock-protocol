@@ -112,12 +112,23 @@ public:
 		auto typeId = magic_enum::enum_cast<PackSettingType>(
 			stream.readUnsignedVarInt().value_or(0)
 		).value_or(PackSettingType::Float);
-		packSetting = ([&]() -> std::shared_ptr<PackSetting> {
-			if (typeId == PackSettingType::Float) return FloatPackSetting::read(stream, name);
-			if (typeId == PackSettingType::Bool) return BoolPackSetting::read(stream, name);
-			if (typeId == PackSettingType::String) return StringPackSetting::read(stream, name);
-			return {};
-		}());
+		switch (typeId) {
+			case PackSettingType::Float:
+			{
+				packSetting = FloatPackSetting::read(stream, name);
+				break;
+			}
+			case PackSettingType::Bool:
+			{
+				packSetting = BoolPackSetting::read(stream, name);
+				break;
+			}
+			case PackSettingType::String:
+			{
+				packSetting = StringPackSetting::read(stream, name);
+				break;
+			}
+		}
     }
 
     void write(BinaryStream& stream) override {

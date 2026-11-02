@@ -106,11 +106,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		messageTranslationKey = stream.readString().value_or("");
-		{
-		auto len = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < len; i++) {
+		auto messageParametersCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < messageParametersCount; i++) {
 		    messageParameters.push_back(stream.readString().value_or(""));
-		}
 		}
     }
 

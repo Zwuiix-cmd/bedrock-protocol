@@ -96,9 +96,9 @@ public:
     }
 
 public:
-    enum class Prediction : uint8_t {
-        TypePlayer = 0,
-        TypeVehicle = 1,
+    enum class Type : uint8_t {
+        Player = 0,
+        Vehicle = 1,
     };
 
     glm::vec3 position;

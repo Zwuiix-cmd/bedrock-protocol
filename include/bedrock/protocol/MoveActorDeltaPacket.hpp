@@ -124,79 +124,47 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		flags = magic_enum::enum_cast<Flag>(
-			stream.readUnsignedShort().value_or(0)
-		).value_or(Flag{});
-		xPos = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasX) != 0)) {
-				return stream.readFloat().value_or(0.0f);
-			}
-			return 0;
-		}());
-		yPos = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasY) != 0)) {
-				return stream.readFloat().value_or(0.0f);
-			}
-			return 0;
-		}());
-		zPos = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasZ) != 0)) {
-				return stream.readFloat().value_or(0.0f);
-			}
-			return 0;
-		}());
-		pitch = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasPitch) != 0)) {
-				return stream.readRotationByte().value_or(0);
-			}
-			return 0;
-		}());
-		yaw = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasYaw) != 0)) {
-				return stream.readRotationByte().value_or(0);
-			}
-			return 0;
-		}());
-		headYaw = ([&]() -> float {
-			if (((magic_enum::enum_integer(flags) & Flag::HasHeadYaw) != 0)) {
-				return stream.readRotationByte().value_or(0);
-			}
-			return 0;
-		}());
+		flags = static_cast<Flag>(stream.readUnsignedShort().value_or(0));
+		if (hasFlag(flags, Has::X)) {
+			xPos = stream.readFloat().value_or(0.0f);
+		}
+		if (hasFlag(flags, Has::Y)) {
+			yPos = stream.readFloat().value_or(0.0f);
+		}
+		if (hasFlag(flags, Has::Z)) {
+			zPos = stream.readFloat().value_or(0.0f);
+		}
+		if (hasFlag(flags, Has::Pitch)) {
+			pitch = stream.readRotationByte().value_or(0);
+		}
+		if (hasFlag(flags, Has::Yaw)) {
+			yaw = stream.readRotationByte().value_or(0);
+		}
+		if (hasFlag(flags, Has::HeadYaw)) {
+			headYaw = stream.readRotationByte().value_or(0);
+		}
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
 		stream.writeUnsignedShort(magic_enum::enum_integer(flags));
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasX) != 0)) {
-				stream.writeFloat(xPos);
-			}
-		}());
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasY) != 0)) {
-				stream.writeFloat(yPos);
-			}
-		}());
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasZ) != 0)) {
-				stream.writeFloat(zPos);
-			}
-		}());
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasPitch) != 0)) {
-				stream.writeRotationByte(pitch);
-			}
-		}());
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasYaw) != 0)) {
-				stream.writeRotationByte(yaw);
-			}
-		}());
-		([&]() {
-			if (((magic_enum::enum_integer(flags) & Flag::HasHeadYaw) != 0)) {
-				stream.writeRotationByte(headYaw);
-			}
-		}());
+		if (hasFlag(flags, Has::X)) {
+			stream.writeFloat(xPos);
+		}
+		if (hasFlag(flags, Has::Y)) {
+			stream.writeFloat(yPos);
+		}
+		if (hasFlag(flags, Has::Z)) {
+			stream.writeFloat(zPos);
+		}
+		if (hasFlag(flags, Has::Pitch)) {
+			stream.writeRotationByte(pitch);
+		}
+		if (hasFlag(flags, Has::Yaw)) {
+			stream.writeRotationByte(yaw);
+		}
+		if (hasFlag(flags, Has::HeadYaw)) {
+			stream.writeRotationByte(headYaw);
+		}
     }
 };

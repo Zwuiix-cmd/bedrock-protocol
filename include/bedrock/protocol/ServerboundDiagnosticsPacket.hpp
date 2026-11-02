@@ -124,11 +124,9 @@ public:
 		avgEndFrameTimeMS = stream.readFloat().value_or(0.0f);
 		avgRemainderTimePercent = stream.readFloat().value_or(0.0f);
 		avgUnaccountedTimePercent = stream.readFloat().value_or(0.0f);
-		{
-		auto count = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < count; i++) {
+		auto memoryCategoryValuesCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; i < memoryCategoryValuesCount; i++) {
 		    memoryCategoryValues.push_back(stream.readObject<MemoryCategoryCounter>());
-		}
 		}
     }
 

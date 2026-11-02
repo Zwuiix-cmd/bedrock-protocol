@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
@@ -32,9 +31,6 @@ public:
 		auto requestChangedSlots = std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>();
 		if (requestId != 0) {
 			auto len = stream.readUnsignedVarInt().value_or(0);
-			if (len > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; (i < len); ++i) {
 				requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}

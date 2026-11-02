@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -45,25 +44,16 @@ public:
 		auto easeType = stream.readUnsignedByte().value_or(0);
 		auto curve = std::vector<glm::vec3>();
 		auto curveCount = stream.readUnsignedVarInt().value_or(0);
-		if (curveCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < curveCount); ++i) {
 			curve.push_back(stream.readVec3().value_or(glm::vec3(0.0f)));
 		}
 		auto progressKeyFrames = std::vector<std::shared_ptr<CameraProgressOption>>();
 		auto progressKeyFrameCount = stream.readUnsignedVarInt().value_or(0);
-		if (progressKeyFrameCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < progressKeyFrameCount); ++i) {
 			progressKeyFrames.push_back(stream.readObject<CameraProgressOption>());
 		}
 		auto rotationOptions = std::vector<std::shared_ptr<CameraRotationOption>>();
 		auto rotationOptionCount = stream.readUnsignedVarInt().value_or(0);
-		if (rotationOptionCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < rotationOptionCount); ++i) {
 			rotationOptions.push_back(stream.readObject<CameraRotationOption>());
 		}

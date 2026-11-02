@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 
 
@@ -36,9 +35,6 @@ public:
 		auto dimension = stream.readVarInt().value_or(0);
 		auto targetBiomes = std::vector<int16_t>();
 		auto targetBiomeCount = stream.readUnsignedVarInt().value_or(0);
-		if (targetBiomeCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < targetBiomeCount); ++i) {
 			targetBiomes.push_back(stream.readShort().value_or(0));
 		}

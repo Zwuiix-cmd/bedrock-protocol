@@ -117,18 +117,12 @@ public:
 		auto count = stream.readUnsignedInt().value_or(0);
 		if (cacheEnabled) {
 			auto entriesValue = std::vector<std::shared_ptr<SubChunkPacketEntryWithCache>>();
-			if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; (i < count); i++) {
 				entriesValue.push_back(stream.readObject<SubChunkPacketEntryWithCache>());
 			}
 			entries = std::make_shared<SubChunkPacketEntryWithCacheList>(entriesValue);
 		} else {
 			auto entriesValue = std::vector<std::shared_ptr<SubChunkPacketEntryWithoutCache>>();
-			if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; (i < count); i++) {
 				entriesValue.push_back(stream.readObject<SubChunkPacketEntryWithoutCache>());
 			}

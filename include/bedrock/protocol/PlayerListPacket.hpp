@@ -116,9 +116,6 @@ public:
 			stream.readUnsignedByte().value_or(0)
 		).value_or(Type::Add);
 		auto count = stream.readUnsignedVarInt().value_or(0);
-		if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < count); ++i) {
 			auto entry = std::make_shared<PlayerListEntry>();
 			if (type == Type::Add) {
@@ -142,9 +139,6 @@ public:
 			entries.push_back(entry);
 		}
 		if (type == Type::Add) {
-			if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; (i < count); ++i) {
 				entries[i]->skinData->isVerified = stream.readBool().value_or(false);
 			}

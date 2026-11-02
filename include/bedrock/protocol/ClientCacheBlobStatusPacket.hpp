@@ -107,14 +107,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto missCount = stream.readUnsignedVarInt().value_or(0);
 		auto hitCount = stream.readUnsignedVarInt().value_or(0);
-		if (missCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < missCount); ++i) {
 			missHashes.push_back(stream.readUnsignedLong().value_or(0));
-		}
-		if (hitCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
 		}
 		for (std::size_t i = 0; (i < hitCount); ++i) {
 			hitHashes.push_back(stream.readUnsignedLong().value_or(0));

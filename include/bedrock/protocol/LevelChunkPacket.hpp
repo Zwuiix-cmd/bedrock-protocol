@@ -137,9 +137,6 @@ public:
 			if (count > MAX_BLOB_HASHES) {
 				throw std::exception{};
 			}
-			if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (std::size_t i = 0; (i < count); ++i) {
 				usedBlobHashes.value().push_back(stream.readUnsignedLong().value_or(0));
 			}

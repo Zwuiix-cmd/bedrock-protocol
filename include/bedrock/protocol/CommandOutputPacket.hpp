@@ -128,9 +128,6 @@ public:
 		successCount = stream.readUnsignedInt().value_or(0);
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
-		    if (size > ReadOnlyBinaryStream::MaxCollectionSize) {
-		        throw std::runtime_error("protocol collection is too large");
-		    }
 		    for (std::size_t i = 0; (i < size); ++i) {
 				auto message = std::make_shared<CommandOutputMessage>();
 				message->messageId = stream.readString().value_or("");

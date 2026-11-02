@@ -8,7 +8,6 @@
 #include <exception>
 #include <memory>
 #include <optional>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -56,14 +55,8 @@ public:
 			throw std::exception{};
 		}
 		auto pixels = std::vector<std::vector<uint32_t>>();
-		if (height > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (int32_t y = 0; (y < height); ++y) {
 			auto row = std::vector<uint32_t>();
-			if (width > ReadOnlyBinaryStream::MaxCollectionSize) {
-			    throw std::runtime_error("protocol collection is too large");
-			}
 			for (int32_t x = 0; (x < width); ++x) {
 				row.push_back(static_cast<uint32_t>(BinaryStream::flipIntEndianness(stream.readUnsignedVarInt().value_or(0))));
 			}

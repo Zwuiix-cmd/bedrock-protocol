@@ -131,9 +131,6 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto recipeCount = stream.readUnsignedVarInt().value_or(0);
 		auto previousType = "none";
-		if (recipeCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-		    throw std::runtime_error("protocol collection is too large");
-		}
 		for (std::size_t i = 0; (i < recipeCount); ++i) {
 			auto recipeType = stream.readVarInt().value_or(0);
 			switch (static_cast<Entry>(recipeType)) {
@@ -180,9 +177,6 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-		        throw std::runtime_error("protocol collection is too large");
-		    }
 		    for (std::size_t i = 0; (i < count); ++i) {
 				auto inputId = stream.readVarInt().value_or(0);
 				auto inputMeta = stream.readVarInt().value_or(0);
@@ -195,9 +189,6 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-		        throw std::runtime_error("protocol collection is too large");
-		    }
 		    for (std::size_t i = 0; (i < count); ++i) {
 				auto input = stream.readVarInt().value_or(0);
 				auto ingredient = stream.readVarInt().value_or(0);
@@ -207,9 +198,6 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
-		        throw std::runtime_error("protocol collection is too large");
-		    }
 		    for (std::size_t i = 0; (i < count); ++i) {
 				auto inputIdAndData = stream.readVarInt().value_or(0);
 				auto inputId = (inputIdAndData >> 16);
@@ -217,9 +205,6 @@ public:
 				auto outputs = std::vector<std::shared_ptr<MaterialReducerRecipeOutput>>();
 				{
 				    auto outputCount = stream.readUnsignedVarInt().value_or(0);
-				    if (outputCount > ReadOnlyBinaryStream::MaxCollectionSize) {
-				        throw std::runtime_error("protocol collection is too large");
-				    }
 				    for (std::size_t j = 0; (j < outputCount); ++j) {
 						auto outputItemId = stream.readVarInt().value_or(0);
 						auto outputItemCount = stream.readVarInt().value_or(0);

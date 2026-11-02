@@ -42,7 +42,7 @@ trait DeclarationEmissionMethods
     private function writeEnum(string $output, array $declaration): void
     {
         $name = $this->generatedTypeName($declaration);
-        $body = "#pragma once\n\n#include <cstdint>\n#include <string_view>\n\n";
+        $body = "#pragma once\n\n#include <cstdint>\n#include <magic_enum/magic_enum.hpp>\n#include <string_view>\n\n";
         $cases = $this->enumCases($declaration);
         $enumInclude = $this->generatedTypeInclude($declaration);
         $body .= 'enum class ' . $name . ' : ' . $this->enumUnderlyingType($declaration) . " {\n";
@@ -68,6 +68,20 @@ trait DeclarationEmissionMethods
             $body .= implode('', $caseLines);
         }
         $body .= "};\n";
+        if ($this->isStringEnumDeclaration($declaration)) {
+            $body .= "\nnamespace magic_enum::customize {\n\n";
+            $body .= 'template <> constexpr customize_t enum_name<' . $name . '>('
+                . $name . " value) noexcept {\n    switch (value) {\n";
+            foreach ($cases as $case) {
+                if (!is_string($case['value'] ?? null)) {
+                    continue;
+                }
+                $literal = json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                $body .= '        case ' . $name . '::' . CPPName::enumCase((string) $case['name'])
+                    . ': return ' . $literal . ";\n";
+            }
+            $body .= "        default: return invalid_tag;\n    }\n}\n\n}\n";
+        }
         $this->write($this->typePath($output, $name, $declaration), $body);
     }
 

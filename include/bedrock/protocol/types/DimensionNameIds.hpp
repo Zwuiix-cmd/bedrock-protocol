@@ -1,32 +1,24 @@
 #pragma once
 
 #include <cstdint>
-#include <limits>
 #include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
 #include <string_view>
-#include <utility>
-#include <vector>
-#include <bedrock/protocol/io/BinaryStream.hpp>
-#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
 
-class DimensionNameIds {
-public:
-    static constexpr std::string_view OVERWORLD = "minecraft:overworld";
-    static constexpr std::string_view NETHER = "minecraft:nether";
-    static constexpr std::string_view THE_END = "minecraft:the_end";
-
-    DimensionNameIds() = default;
-
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        (void)stream;
-    }
-
-    virtual void write(BinaryStream& stream) const {
-        (void)stream;
-    }
+enum class DimensionNameIds : uint16_t {
+    Overworld = 0,
+    Nether = 1,
+    TheEnd = 2,
 };
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<DimensionNameIds>(DimensionNameIds value) noexcept {
+    switch (value) {
+        case DimensionNameIds::Overworld: return "minecraft:overworld";
+        case DimensionNameIds::Nether: return "minecraft:nether";
+        case DimensionNameIds::TheEnd: return "minecraft:the_end";
+        default: return invalid_tag;
+    }
+}
+
+}

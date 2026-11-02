@@ -229,6 +229,10 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             $current = $this->findDeclaration($declaration['name']) ?? $declaration;
             foreach ($current['constants'] ?? [] as $constant) {
                 if ($constant['name'] === $name && is_string($constant['value'])) {
+                    if ($this->isEnumLikeDeclaration($current)) {
+                        return 'magic_enum::enum_name(' . CPPName::type($declaration['name'])
+                            . '::' . CPPName::enumCase($name) . ')';
+                    }
                     return 'std::string(' . CPPName::type($declaration['name']) . '::' . CPPName::identifier($name) . ')';
                 }
             }
@@ -283,6 +287,10 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
         }
         foreach ($referenced['constants'] ?? [] as $constant) {
             if ($constant['name'] === $name && is_string($constant['value'])) {
+                if ($this->isEnumLikeDeclaration($referenced)) {
+                    return 'magic_enum::enum_name(' . CPPName::type($class)
+                        . '::' . CPPName::enumCase($name) . ')';
+                }
                 return 'std::string(' . CPPName::type($class) . '::' . CPPName::identifier($name) . ')';
             }
         }

@@ -1,6 +1,11 @@
 #pragma once
 
-#include <bedrock/protocol/types/recipe/CraftingRecipeBlockName.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeAutoStackRequestAction.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeOptionalStackRequestAction.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeStackRequestAction.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftReservedStackRequestAction.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftingConsumeInputStackRequestAction.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/CraftingCreateSpecificResultStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CreativeCreateStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/CreativeGroupEntry.hpp>
 #include <bedrock/protocol/types/inventory/CreativeItemEntry.hpp>
@@ -14,7 +19,6 @@
 #include <bedrock/protocol/types/inventory/stackrequest/DeprecatedCraftingResultsStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/DestroyStackRequestAction.hpp>
 #include <bedrock/protocol/types/DimensionData.hpp>
-#include <bedrock/protocol/types/DimensionNameIds.hpp>
 #include <bedrock/protocol/types/ddui/update/DoubleDataStoreUpdateValue.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/DropStackRequestAction.hpp>
 #include <bedrock/protocol/types/cereal/DynamicValue.hpp>
@@ -30,7 +34,6 @@
 #include <bedrock/protocol/types/Enchant.hpp>
 #include <bedrock/protocol/types/EnchantOption.hpp>
 #include <bedrock/protocol/types/EntityDiagnosticTimingInfo.hpp>
-#include <bedrock/protocol/types/entity/EntityIds.hpp>
 #include <bedrock/protocol/types/entity/EntityLink.hpp>
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/FeatureRegistryPacketEntry.hpp>
@@ -38,7 +41,6 @@
 #include <bedrock/protocol/types/FloatPackSetting.hpp>
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
 #include <bedrock/protocol/types/furnace/FurnaceOptions.hpp>
-#include <bedrock/protocol/types/recipe/FurnaceRecipeBlockName.hpp>
 #include <bedrock/protocol/types/GameRule.hpp>
 #include <bedrock/protocol/types/GatheringJoinInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/GrindstoneStackRequestAction.hpp>
@@ -61,7 +63,6 @@
 #include <bedrock/protocol/types/login/legacy/LegacyAuthIdentityData.hpp>
 #include <bedrock/protocol/types/login/legacy/LegacyAuthJwtBody.hpp>
 #include <bedrock/protocol/types/LevelSettings.hpp>
-#include <bedrock/protocol/types/LevelSoundEvent.hpp>
 #include <bedrock/protocol/types/LocatorBarWaypoint.hpp>
 #include <bedrock/protocol/types/LocatorBarWaypointPayload.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/LoomStackRequestAction.hpp>
@@ -119,7 +120,6 @@
 #include <bedrock/protocol/types/resourcepacks/ResourcePackStackEntry.hpp>
 #include <bedrock/protocol/types/ScorePacketEntry.hpp>
 #include <bedrock/protocol/types/ScoreboardIdentityPacketEntry.hpp>
-#include <bedrock/protocol/types/ScreenCloseReason.hpp>
 #include <bedrock/protocol/types/login/openid/SelfSignedJwtBody.hpp>
 #include <bedrock/protocol/types/login/SelfSignedJwtHeader.hpp>
 #include <bedrock/protocol/types/SerializableVoxelCells.hpp>

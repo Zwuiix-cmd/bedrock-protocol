@@ -1,34 +1,28 @@
 #pragma once
 
 #include <cstdint>
-#include <limits>
 #include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
 #include <string_view>
-#include <utility>
-#include <vector>
-#include <bedrock/protocol/io/BinaryStream.hpp>
-#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
 
-class FurnaceRecipeBlockName {
-public:
-    static constexpr std::string_view BLAST_FURNACE = "blast_furnace";
-    static constexpr std::string_view CAMPFIRE = "campfire";
-    static constexpr std::string_view FURNACE = "furnace";
-    static constexpr std::string_view SMOKER = "smoker";
-    static constexpr std::string_view SOUL_CAMPFIRE = "soul_campfire";
-
-    FurnaceRecipeBlockName() = default;
-
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        (void)stream;
-    }
-
-    virtual void write(BinaryStream& stream) const {
-        (void)stream;
-    }
+enum class FurnaceRecipeBlockName : uint16_t {
+    BlastFurnace = 0,
+    Campfire = 1,
+    Furnace = 2,
+    Smoker = 3,
+    SoulCampfire = 4,
 };
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<FurnaceRecipeBlockName>(FurnaceRecipeBlockName value) noexcept {
+    switch (value) {
+        case FurnaceRecipeBlockName::BlastFurnace: return "blast_furnace";
+        case FurnaceRecipeBlockName::Campfire: return "campfire";
+        case FurnaceRecipeBlockName::Furnace: return "furnace";
+        case FurnaceRecipeBlockName::Smoker: return "smoker";
+        case FurnaceRecipeBlockName::SoulCampfire: return "soul_campfire";
+        default: return invalid_tag;
+    }
+}
+
+}

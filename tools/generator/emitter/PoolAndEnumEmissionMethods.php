@@ -145,7 +145,9 @@ CPP;
             return false;
         }
         foreach ($constants as $constant) {
-            if (!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null)) {
+            if (!is_int($constant['value'] ?? null)
+                && !is_bool($constant['value'] ?? null)
+                && !is_string($constant['value'] ?? null)) {
                 return false;
             }
         }
@@ -193,6 +195,27 @@ CPP;
             return 'int32_t';
         }
         return $maximum <= 0xff ? 'uint8_t' : 'uint32_t';
+    }
+
+    private function isStringEnumDeclaration(array $declaration): bool
+    {
+        if (($declaration['kind'] ?? null) === 'enum') {
+            return ($declaration['backingType'] ?? null) === 'string';
+        }
+        if (($declaration['kind'] ?? null) !== 'class'
+            || ($declaration['properties'] ?? []) !== []) {
+            return false;
+        }
+        $constants = array_values(array_filter(
+            $declaration['constants'] ?? [],
+            static fn (array $constant): bool => ($constant['name'] ?? '') !== 'NETWORK_ID',
+        ));
+        return $constants !== []
+            && array_reduce(
+                $constants,
+                static fn (bool $valid, array $constant): bool => $valid && is_string($constant['value'] ?? null),
+                true,
+            );
     }
 
     private function isGeneratedType(array $declaration): bool

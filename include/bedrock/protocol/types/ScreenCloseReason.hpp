@@ -1,34 +1,28 @@
 #pragma once
 
 #include <cstdint>
-#include <limits>
 #include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
 #include <string_view>
-#include <utility>
-#include <vector>
-#include <bedrock/protocol/io/BinaryStream.hpp>
-#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
 
-class ScreenCloseReason {
-public:
-    static constexpr std::string_view PROGRAMMATIC_CLOSE = "programmaticclose";
-    static constexpr std::string_view PROGRAMMATIC_CLOSE_ALL = "programmaticcloseall";
-    static constexpr std::string_view CLIENT_CANCELED = "clientcanceled";
-    static constexpr std::string_view USER_BUSY = "userbusy";
-    static constexpr std::string_view INVALID_FORM = "invalidform";
-
-    ScreenCloseReason() = default;
-
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        (void)stream;
-    }
-
-    virtual void write(BinaryStream& stream) const {
-        (void)stream;
-    }
+enum class ScreenCloseReason : uint16_t {
+    ProgrammaticClose = 0,
+    ProgrammaticCloseAll = 1,
+    ClientCanceled = 2,
+    UserBusy = 3,
+    InvalidForm = 4,
 };
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<ScreenCloseReason>(ScreenCloseReason value) noexcept {
+    switch (value) {
+        case ScreenCloseReason::ProgrammaticClose: return "programmaticclose";
+        case ScreenCloseReason::ProgrammaticCloseAll: return "programmaticcloseall";
+        case ScreenCloseReason::ClientCanceled: return "clientcanceled";
+        case ScreenCloseReason::UserBusy: return "userbusy";
+        case ScreenCloseReason::InvalidForm: return "invalidform";
+        default: return invalid_tag;
+    }
+}
+
+}

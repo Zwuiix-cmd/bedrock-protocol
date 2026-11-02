@@ -50,7 +50,9 @@ private function isEnumLikeDeclaration(array $declaration): bool
             return false;
         }
         foreach ($constants as $constant) {
-            if (!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null)) {
+            if (!is_int($constant['value'] ?? null)
+                && !is_bool($constant['value'] ?? null)
+                && !is_string($constant['value'] ?? null)) {
                 return false;
             }
         }

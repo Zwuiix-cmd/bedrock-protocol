@@ -24,6 +24,9 @@ class CPPTranslationCatalog
     /** @var array<string, list<string>> */
     private array $typeIncludes;
 
+    /** @var array<string, array<string, string>> */
+    private array $propertyEnumTypes;
+
     /** @var array<string, array<string, mixed>> */
     private array $typeCodecs;
 
@@ -68,6 +71,7 @@ class CPPTranslationCatalog
 
         $this->typeAliases = array_replace($defaults['typeAliases'], $config['typeAliases']);
         $this->typeIncludes = array_replace($defaults['typeIncludes'], $config['typeIncludes']);
+        $this->propertyEnumTypes = array_replace_recursive($defaults['propertyEnumTypes'], $config['propertyEnumTypes']);
         $this->typeCodecs = array_replace_recursive($defaults['typeCodecs'], $config['typeCodecs']);
         $this->runtimeDeclarations = array_fill_keys(
             array_values(array_unique(array_merge($defaults['runtimeDeclarations'], $config['runtimeDeclarations']))),
@@ -131,6 +135,11 @@ class CPPTranslationCatalog
     public function includesFor(string $type): array
     {
         return $this->typeIncludes[CPPName::type($type)] ?? [];
+    }
+
+    public function propertyEnumType(string $declaration, string $property): ?string
+    {
+        return $this->propertyEnumTypes[$declaration][$property] ?? null;
     }
 
     /** @return array<string, mixed>|null */
@@ -255,6 +264,7 @@ class CPPTranslationCatalog
         $keys = [
             'typeAliases',
             'typeIncludes',
+            'propertyEnumTypes',
             'typeCodecs',
             'runtimeDeclarations',
             'knownValueTypes',

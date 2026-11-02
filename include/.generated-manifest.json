@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "bcd4087a99b493d30c24c04d9ce96ef9ae8f8038022d1f80c7c5267cfd7c6ad5",
+    "generatorFingerprint": "b98e6e4d687c47b0993f3a6a7287114cf9003c06bff0f8679257b1fac83af116",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -1025,8 +1025,8 @@
             "bytes": 5781
         },
         "include/bedrock/protocol/MobEffectPacket.hpp": {
-            "sha256": "fbf7f841c703edec41694cf5bfc37fea39e87e80f941ac2d3c0f110d187c8eed",
-            "bytes": 6136
+            "sha256": "8f05ccdd3a0ce25e0548e4ec3976d93dc179fee3b41fa29940f9f5ee66c8275d",
+            "bytes": 6287
         },
         "include/bedrock/protocol/MobEquipmentPacket.hpp": {
             "sha256": "659fcb34f622475ecdff95e53d44dffa699a279ed333a4a9ee7056357b9455b7",
@@ -1875,6 +1875,10 @@
         "include/bedrock/protocol/types/MemoryCategoryCounter.hpp": {
             "sha256": "8886943ed5e0213abbaea0e0584b3c0b97ca3baf7b8a919038d7e9944bd1a0ba",
             "bytes": 775
+        },
+        "include/bedrock/protocol/types/MobEffectIds.hpp": {
+            "sha256": "e08fc49e0ffd4b34e71e2ad71bdbe80f24c2d5d216597ce68d8497765946cdb4",
+            "bytes": 909
         },
         "include/bedrock/protocol/types/MovementEffectType.hpp": {
             "sha256": "e7d9a457b51e0f8becd3d3d7b59efb8341a5dab1e24624b21d9a556d73d8c1b5",

@@ -45,6 +45,8 @@ CPP));
             $byName[(string) ($declaration['name'] ?? '')] = $declaration;
         }
 
+        $this->writeMobEffectIds($output);
+
         foreach (['PlayerAuthInputFlags', 'PlayerBlockAction'] as $name) {
             if (!isset($byName[$name])) {
                 throw new RuntimeException('Source declaration is missing: ' . $name);
@@ -97,6 +99,57 @@ CPP));
             $this->runtimeTypePath($output, $byName['PropertySyncData'], 'PropertySyncData'),
             $this->wrapProtocolHeader($this->propertySyncDataHeader()),
         );
+    }
+
+    private function writeMobEffectIds(string $output): void
+    {
+        $base = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . 'types';
+        $this->write($base . DIRECTORY_SEPARATOR . 'MobEffectIds.hpp', $this->wrapProtocolHeader(<<<'CPP'
+#pragma once
+
+#include <cstdint>
+
+enum class MobEffectIds : int32_t {
+    Empty = 0,
+    Speed = 1,
+    Slowness = 2,
+    Haste = 3,
+    MiningFatigue = 4,
+    Strength = 5,
+    InstantHealth = 6,
+    InstantDamage = 7,
+    JumpBoost = 8,
+    Nausea = 9,
+    Regeneration = 10,
+    Resistance = 11,
+    FireResistance = 12,
+    WaterBreathing = 13,
+    Invisibility = 14,
+    Blindness = 15,
+    NightVision = 16,
+    Hunger = 17,
+    Weakness = 18,
+    Poison = 19,
+    Wither = 20,
+    HealthBoost = 21,
+    Absorption = 22,
+    Saturation = 23,
+    Levitation = 24,
+    FatalPoison = 25,
+    ConduitPower = 26,
+    SlowFalling = 27,
+    BadOmen = 28,
+    VillageHero = 29,
+    Darkness = 30,
+    TrialOmen = 31,
+    WindCharged = 32,
+    Weaving = 33,
+    Oozing = 34,
+    Infested = 35,
+    RaidOmen = 36,
+    BreathOfTheNautilus = 37,
+};
+CPP));
     }
 
     private function propertySyncDataHeader(): string

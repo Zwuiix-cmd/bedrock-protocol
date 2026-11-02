@@ -39,6 +39,14 @@ final class CPPTranslationCatalogDefaults
                 'EntityMetadataCollection' => [
                     'types/MetadataProperty.hpp',
                 ],
+                'MobEffectIds' => [
+                    'types/MobEffectIds.hpp',
+                ],
+            ],
+            'propertyEnumTypes' => [
+                'MobEffectPacket' => [
+                    'effectId' => 'MobEffectIds',
+                ],
             ],
             'typeCodecs' => [
                 'Vector2' => [

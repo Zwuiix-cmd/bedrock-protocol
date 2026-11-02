@@ -85,6 +85,7 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
+#include <bedrock/protocol/types/MobEffectIds.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 namespace bedrock::protocol {
 
@@ -106,7 +107,7 @@ public:
 
     uint64_t actorRuntimeId;
     Event eventId;
-    int32_t effectId;
+    MobEffectIds effectId;
     int32_t amplifier = 0;
     bool particles = true;
     int32_t duration = 0;
@@ -123,7 +124,9 @@ public:
 		eventId = magic_enum::enum_cast<Event>(
 			stream.readUnsignedByte().value_or(0)
 		).value_or(Event::Add);
-		effectId = stream.readVarInt().value_or(0);
+		effectId = magic_enum::enum_cast<MobEffectIds>(
+			stream.readVarInt().value_or(0)
+		).value_or(MobEffectIds{});
 		amplifier = stream.readVarInt().value_or(0);
 		particles = stream.readBool().value_or(false);
 		duration = stream.readVarInt().value_or(0);
@@ -134,7 +137,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
 		stream.writeUnsignedByte(magic_enum::enum_integer(eventId));
-		stream.writeVarInt(effectId);
+		stream.writeVarInt(magic_enum::enum_integer(effectId));
 		stream.writeVarInt(amplifier);
 		stream.writeBool(particles);
 		stream.writeVarInt(duration);

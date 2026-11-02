@@ -1,6 +1,7 @@
 #include <bedrock/protocol/CameraInstructionPacket.hpp>
 #include <bedrock/protocol/InventoryTransactionPacket.hpp>
 #include <bedrock/protocol/LoginPacket.hpp>
+#include <bedrock/protocol/MobEffectPacket.hpp>
 #include <bedrock/protocol/PacketIds.hpp>
 #include <bedrock/protocol/PlayerAuthInputPacket.hpp>
 #include <bedrock/protocol/SetHudPacket.hpp>
@@ -9,6 +10,7 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/pool/PacketPool.hpp>
 #include <bedrock/protocol/types/MapInfoRequestPacketClientPixel.hpp>
+#include <bedrock/protocol/types/MobEffectIds.hpp>
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/MismatchTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/NormalTransactionData.hpp>
@@ -285,6 +287,30 @@ void testOptionalPacketFields() {
     expect(!decoded.target.has_value(), "absent optional camera field became engaged");
 }
 
+void testMobEffectIdType() {
+    static_assert(std::is_same_v<decltype(MobEffectPacket{}.effectId), MobEffectIds>);
+
+    MobEffectPacket packet;
+    packet.actorRuntimeId = 42;
+    packet.eventId = MobEffectPacket::Event::Add;
+    packet.effectId = MobEffectIds::Nausea;
+    packet.amplifier = 1;
+    packet.particles = true;
+    packet.duration = 200;
+    packet.tick = 10;
+    packet.ambient = false;
+
+    BinaryStream output;
+    packet.write(output);
+
+    MobEffectPacket decoded;
+    ReadOnlyBinaryStream input(output.getBuffer());
+    decoded.read(input);
+    expect(decoded.effectId == MobEffectIds::Nausea, "MobEffect effect ID enum changed");
+    expect(!input.hasOverflowed(), "MobEffect packet overflowed");
+    expect(input.position() == input.size(), "MobEffect packet left unread bytes");
+}
+
 void testGeneratedCodecFixes() {
     UpdateBlockSyncedPacket synced;
     synced.actorUniqueId = 300;
@@ -390,6 +416,7 @@ int main() {
         testStackRequestAndResponseIds();
         testPlayerAuthInputBlockActions();
         testOptionalPacketFields();
+        testMobEffectIdType();
         testGeneratedCodecFixes();
         testMalformedBuffers();
         testMalformedCollectionBounds();

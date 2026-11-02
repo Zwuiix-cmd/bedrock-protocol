@@ -62,6 +62,14 @@ private function enumPropertyType(Node $expression, array $declaration): ?string
 
 private function propertyEnumType(array $property, array $declaration): ?string
     {
+        $configuredType = $this->catalog->propertyEnumType(
+            CPPName::type((string) ($declaration['name'] ?? '')),
+            (string) ($property['name'] ?? ''),
+        );
+        if ($configuredType !== null) {
+            return $configuredType;
+        }
+
         $type = ltrim((string) ($property['type'] ?? ''), '?');
         if ($type !== '' && $this->catalog->typeCodec($type) !== null) {
             return null;

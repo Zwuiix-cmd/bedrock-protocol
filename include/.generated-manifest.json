@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "7ebabd8f90a29e9d09dad0cb2fd41ed5fa948973ec74ac5ce1ce4722ea89b85f",
+    "generatorFingerprint": "3aac8913d57e9e33d0ba7b32b22242bd52ca8c35d688690f057d2ac58763c15e",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -14,8 +14,8 @@
             "bytes": 13809
         },
         "include/bedrock/protocol/io/ReadOnlyBinaryStream.hpp": {
-            "sha256": "4a9e228ee9ba801a39587f8958834b31882fcfdd40b8bab6d00817fcb393d678",
-            "bytes": 17041
+            "sha256": "05b62702067cfcffada108fc19f18fc5ccb9a24fd031193caa8445cade70b6aa",
+            "bytes": 17796
         },
         "include/bedrock/protocol/types/NetworkNbt.hpp": {
             "sha256": "9bd0a87056ec3b0b2ebce9d60f7b635508cb6dda3524dcf015f9d6fa4096962e",
@@ -793,8 +793,8 @@
             "bytes": 5524
         },
         "include/bedrock/protocol/ClientboundDataStorePacket.hpp": {
-            "sha256": "584f2b5d3d81c440729a44a4ecb18487213aa1879244a1d92119e50969023f5a",
-            "bytes": 5997
+            "sha256": "32a38a12300cd7f8372ae714d6b832ed2f37a143d53f3917e953b864f95f8aa1",
+            "bytes": 6026
         },
         "include/bedrock/protocol/ClientboundDebugRendererPacket.hpp": {
             "sha256": "fb875b3434dcde113ba7c46a9875df23d528489f8d0d81af68a8e987d947ed81",
@@ -1009,8 +1009,8 @@
             "bytes": 5538
         },
         "include/bedrock/protocol/LoginPacket.hpp": {
-            "sha256": "697421a10eae7040b211d4299389b9927a642adc60c095f26e2dc2af1629ca6e",
-            "bytes": 5954
+            "sha256": "e41092eafc82a875f910789324c41f71622ce5bb9f526a84b08b383938c4daae",
+            "bytes": 5907
         },
         "include/bedrock/protocol/MapCreateLockedCopyPacket.hpp": {
             "sha256": "45737f69fe3d9e969692e750f6ec648e39ef3d5b0c7e86c0c9b6ff516ba92f09",
@@ -1201,8 +1201,8 @@
             "bytes": 5264
         },
         "include/bedrock/protocol/RequestAbilityPacket.hpp": {
-            "sha256": "5aef4b575de906e00dd2b7060362770e0c5c63b119b490b3b7a8570ac0abf79f",
-            "bytes": 6409
+            "sha256": "4a0f2d7a8218eb723a66fc6256106761723434f4e10a4740b03e9534dc2dcb87",
+            "bytes": 6395
         },
         "include/bedrock/protocol/RequestChunkRadiusPacket.hpp": {
             "sha256": "100a3c02d664029ee7d6c0421588ca79d9118260d288ab539147a170a629fbf9",
@@ -2341,8 +2341,8 @@
             "bytes": 942
         },
         "include/bedrock/protocol/types/command/CommandParameter.hpp": {
-            "sha256": "4bbee72bf2413fe685d267423cb446b05899c95d7f9a749d009c1d23454025b0",
-            "bytes": 2280
+            "sha256": "1f97fdd9032168934518b70ddbf3faf18429ca5c5b4a329361066348198d6913",
+            "bytes": 2119
         },
         "include/bedrock/protocol/types/command/CommandParameterTypes.hpp": {
             "sha256": "b9564bd3d136f5889694ea681ac3f5773f7e1cd6d7eb2d1ed5279024e2e71e64",
@@ -2863,7 +2863,7 @@
         "enums": 72,
         "registrations": 224,
         "unsupported": 46,
-        "changed": 46,
+        "changed": 3,
         "removed": 2,
         "cached": 0
     }

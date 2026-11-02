@@ -116,13 +116,11 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedIntBE(protocol);
-		stream.writeString(([&]() -> std::string {
-			auto connRequestWriter = BinaryStream();
-			connRequestWriter.writeUnsignedInt(authInfoJson.size());
-			connRequestWriter.writeByteArray(authInfoJson);
-			connRequestWriter.writeUnsignedInt(clientDataJwt.size());
-			connRequestWriter.writeByteArray(clientDataJwt);
-			return connRequestWriter.getBuffer();
-		}()));
+		auto connRequestWriter = BinaryStream();
+		connRequestWriter.writeUnsignedInt(authInfoJson.size());
+		connRequestWriter.writeByteArray(authInfoJson);
+		connRequestWriter.writeUnsignedInt(clientDataJwt.size());
+		connRequestWriter.writeByteArray(clientDataJwt);
+		stream.writeString(connRequestWriter.getBuffer());
     }
 };

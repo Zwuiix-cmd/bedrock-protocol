@@ -141,11 +141,20 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeVarInt(magic_enum::enum_integer(abilityId));
-		auto [valueType, boolValue, floatValue] = ([&]() -> std::tuple<int64_t, bool, float> {
-			if (true == std::holds_alternative<bool>(abilityValue)) return std::tuple<int64_t, bool, float>{magic_enum::enum_integer(Type::Bool), std::get<bool>(abilityValue), 0};
-			if (true == std::holds_alternative<float>(abilityValue)) return std::tuple<int64_t, bool, float>{magic_enum::enum_integer(Type::Float), false, std::get<float>(abilityValue)};
+		int64_t valueType{};
+		bool boolValue{};
+		float floatValue{};
+		if (std::holds_alternative<bool>(abilityValue)) {
+			valueType = magic_enum::enum_integer(Type::Bool);
+			boolValue = std::get<bool>(abilityValue);
+			floatValue = 0;
+		} else if (std::holds_alternative<float>(abilityValue)) {
+			valueType = magic_enum::enum_integer(Type::Float);
+			boolValue = false;
+			floatValue = std::get<float>(abilityValue);
+		} else {
 			throw std::exception{};
-		}());
+		}
 		stream.writeUnsignedByte(valueType);
 		stream.writeBool(boolValue);
 		stream.writeFloat(floatValue);

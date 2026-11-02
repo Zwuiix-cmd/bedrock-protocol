@@ -44,7 +44,7 @@ enum class InputData : int {
 CPP;
         $body .= "\n";
         foreach ($constants as [$name, $value]) {
-            $body .= '    ' . CPPName::identifier($name) . ' = ' . $value . ",\n";
+            $body .= '    ' . CPPName::enumCase($name) . ' = ' . $value . ",\n";
         }
         $body .= <<<'CPP'
 };

@@ -236,7 +236,7 @@ void testPlayerAuthInputBlockActions() {
     packet.headYaw = 0.0f;
     packet.moveVecX = 0.0f;
     packet.moveVecZ = 0.0f;
-    packet.inputFlags.addFlag(InputData::PERFORM_BLOCK_ACTIONS);
+    packet.inputFlags.addFlag(InputData::PerformBlockActions);
     packet.inputMode = InputMode::MouseKeyboard;
     packet.playMode = PlayMode::Normal;
     packet.interactionMode = InteractionMode::Touch;

@@ -218,7 +218,7 @@ class CPPTranslationCatalog
     public function constantAlias(string $class, string $name): ?string
     {
         if ($class === 'PlayerAuthInputFlags' && $name !== 'NUMBER_OF_FLAGS') {
-            return 'InputData::' . CPPName::identifier($name);
+            return 'InputData::' . CPPName::enumCase($name);
         }
         return $this->constantAliases[$class][$name] ?? null;
     }

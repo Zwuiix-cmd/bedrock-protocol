@@ -156,15 +156,15 @@ public:
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
-		if (inputFlags.get(InputData::PERFORM_ITEM_INTERACTION)) {
+		if (inputFlags.get(InputData::PerformItemInteraction)) {
 			itemInteractionData = std::make_shared<ItemInteractionData>();
 			itemInteractionData.value()->read(stream);
 		}
-		if (inputFlags.get(InputData::PERFORM_ITEM_STACK_REQUEST)) {
+		if (inputFlags.get(InputData::PerformItemStackRequest)) {
 			itemStackRequest = std::make_shared<ItemStackRequest>();
 			itemStackRequest.value()->read(stream);
 		}
-		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
+		if (inputFlags.get(InputData::PerformBlockActions)) {
 			blockActions.emplace();
 			auto max = stream.readVarInt().value_or(0);
 			    const bool maxAvailable = stream.canReadCollection(max);
@@ -179,7 +179,7 @@ public:
 				}
 			}
 		}
-		if (inputFlags.get(InputData::IN_CLIENT_PREDICTED_VEHICLE)) {
+		if (inputFlags.get(InputData::InClientPredictedVehicle)) {
 			vehicleInfo.emplace();
 			vehicleInfo.value().read(stream);
 		}

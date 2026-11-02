@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "21e0e0ad0908fe766c87e8eecf70d9dbe53bc1b0eda9d905d6dbe862a3f32788",
+    "generatorFingerprint": "bcd4087a99b493d30c24c04d9ce96ef9ae8f8038022d1f80c7c5267cfd7c6ad5",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -1129,8 +1129,8 @@
             "bytes": 5858
         },
         "include/bedrock/protocol/PlayerAuthInputPacket.hpp": {
-            "sha256": "4853d936f73e2c6612ebec8b0e7278e86449d779283e4d514558c8ab723fe62f",
-            "bytes": 9924
+            "sha256": "33014e17ac803e6b1687f4dabb4133c556e780c7f5ffc875a89c44f3beeebd13",
+            "bytes": 9914
         },
         "include/bedrock/protocol/PlayerEnchantOptionsPacket.hpp": {
             "sha256": "7de35bf883563efb9200014e7e706474fe47f4418a1702aaf194193150ef716f",
@@ -1921,8 +1921,8 @@
             "bytes": 1075
         },
         "include/bedrock/protocol/types/PlayerAuthInputFlags.hpp": {
-            "sha256": "faadf8554e53b0902f16153395a0acc3cc9bc4a58f3301bdd42a2b3a157dac5a",
-            "bytes": 4146
+            "sha256": "fe096fc39cd4175cc3b68063b4b554267e98ae1048ed539e063eb886f5f955fa",
+            "bytes": 4059
         },
         "include/bedrock/protocol/types/PlayerAuthInputVehicleInfo.hpp": {
             "sha256": "ed3264d7870b808ed93d713f408f6e37cc6a301e9b2f620c91d28c2724357e22",

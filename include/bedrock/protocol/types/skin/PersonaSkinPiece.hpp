@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
-#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
 
 class PersonaSkinPiece {
 public:
@@ -42,7 +41,9 @@ public:
         pieceId = stream.readString().value_or("");
         isDefaultPiece = stream.readBool().value_or(false);
         productId = stream.readString().value_or("");
-        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0)).value_or(PersonaSkinPieceType::Unknown);
+        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(PersonaSkinPieceType::Unknown);
         packId = stream.readUUID().value_or("");
     }
 

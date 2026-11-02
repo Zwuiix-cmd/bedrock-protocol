@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <limits>
 #include <magic_enum/magic_enum.hpp>
@@ -44,7 +43,10 @@ public:
     CommandOriginData() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = magic_enum::enum_cast<CommandOriginData::Type>(std::string_view(stream.readString().value_or(""))).value_or(CommandOriginData::Type::Player);
+        const auto typeRaw = stream.readString().value_or("");
+        type = magic_enum::enum_cast<Type>(
+            std::string_view(typeRaw)
+        ).value_or(Type::Player);
         requestId = stream.readString().value_or("");
         playerActorUniqueId = stream.readLong().value_or(0);
         uuid = stream.readUUID().value_or("");
@@ -58,30 +60,28 @@ public:
     }
 };
 
-inline constexpr std::array<std::string_view, 16> CommandOriginDataTypeNames = {
-    "player",
-    "commandblock",
-    "minecartcommandblock",
-    "devconsole",
-    "test",
-    "automationplayer",
-    "clientautomation",
-    "dedicatedserver",
-    "entity",
-    "virtual",
-    "gameargument",
-    "entityserver",
-    "precompiled",
-    "gamedirectorentityserver",
-    "scripting",
-    "executecontext",
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<CommandOriginData::Type>(CommandOriginData::Type value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < CommandOriginDataTypeNames.size() ? customize_t{CommandOriginDataTypeNames[index]} : invalid_tag;
+    switch (value) {
+        case CommandOriginData::Type::Player: return "player";
+        case CommandOriginData::Type::Block: return "commandblock";
+        case CommandOriginData::Type::MinecartBlock: return "minecartcommandblock";
+        case CommandOriginData::Type::DevConsole: return "devconsole";
+        case CommandOriginData::Type::Test: return "test";
+        case CommandOriginData::Type::AutomationPlayer: return "automationplayer";
+        case CommandOriginData::Type::ClientAutomation: return "clientautomation";
+        case CommandOriginData::Type::DedicatedServer: return "dedicatedserver";
+        case CommandOriginData::Type::Entity: return "entity";
+        case CommandOriginData::Type::Virtual: return "virtual";
+        case CommandOriginData::Type::GameArgument: return "gameargument";
+        case CommandOriginData::Type::EntityServer: return "entityserver";
+        case CommandOriginData::Type::Precompiled: return "precompiled";
+        case CommandOriginData::Type::GameDirectorEntityServer: return "gamedirectorentityserver";
+        case CommandOriginData::Type::Scripting: return "scripting";
+        case CommandOriginData::Type::ExecuteContext: return "executecontext";
+        default: return invalid_tag;
+    }
 }
 
 }

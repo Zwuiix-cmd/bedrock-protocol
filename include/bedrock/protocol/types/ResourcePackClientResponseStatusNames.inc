@@ -1,4 +1,0 @@
-"cancel",
-"downloading",
-"downloadingfinished",
-"resourcepackstackfinished",

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeScatterParamData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeScatterParamData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeScatterParamData.hpp>
 
 class BiomeConsolidatedFeatureData {
 public:
@@ -44,11 +42,8 @@ public:
         identifier = stream.readShort().value_or(0);
         pass = stream.readShort().value_or(0);
         useInternal = stream.readBool().value_or(false);
-        scatter = ([&]() {
-    auto value = std::make_shared<BiomeScatterParamData>();
-    value->read(stream);
-    return value;
-}());
+        scatter = std::make_shared<BiomeScatterParamData>();
+        scatter->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

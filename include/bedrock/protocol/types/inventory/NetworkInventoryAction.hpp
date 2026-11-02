@@ -52,27 +52,27 @@ public:
     NetworkInventoryAction() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
+        stream.writeUnsignedVarInt(sourceType);
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
+            stream.writeInt(optionalValue);
+        });
         stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
+            stream.writeInt(optionalValue);
+        });
         oldItem.write(stream);
         newItem.write(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
+        stream.writeUnsignedVarInt(sourceType);
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
+            stream.writeInt(optionalValue);
+        });
         stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
+            stream.writeInt(optionalValue);
+        });
         oldItem.write(stream);
         newItem.write(stream);
     }

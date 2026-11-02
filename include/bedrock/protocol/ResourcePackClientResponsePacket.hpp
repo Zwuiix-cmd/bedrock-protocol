@@ -126,7 +126,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		status = magic_enum::enum_cast<ResourcePackClientResponseStatus>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(ResourcePackClientResponseStatus::Refused);
+		status = magic_enum::enum_cast<ResourcePackClientResponseStatus>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(ResourcePackClientResponseStatus::Refused);
 		auto innerType = stream.readString().value_or("");
 		if ((innerType != magic_enum::enum_name(status))) {
 			throw std::exception{};
@@ -143,9 +145,13 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeVarInt(magic_enum::enum_integer(status));
-        stream.writeList(packIds, [&](const auto& item) {
-	stream.writeString(item);
-});
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(status));
+		stream.writeString(magic_enum::enum_name(status));
+		if ((status == ResourcePackClientResponseStatus::SendPacks)) {
+			stream.writeUnsignedVarInt(packIds.size());
+			for (const auto& id : packIds) {
+				stream.writeString(id);
+			}
+		}
     }
 };

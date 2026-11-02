@@ -76,7 +76,14 @@ elseif(TARGET EnTT)
     set(BEDROCK_PROTOCOL_ENTT_TARGET EnTT)
 endif()
 
-add_library(bedrock-protocol STATIC)
+if(BEDROCK_PROTOCOL_BUILD_POOL)
+    add_library(bedrock-protocol STATIC)
+    set(BEDROCK_PROTOCOL_TARGET_SCOPE PUBLIC)
+else()
+    add_library(bedrock-protocol INTERFACE)
+    set(BEDROCK_PROTOCOL_TARGET_SCOPE INTERFACE)
+endif()
+
 add_library(bedrock-protocol::bedrock-protocol ALIAS bedrock-protocol)
 
 if(BEDROCK_PROTOCOL_BUILD_POOL)
@@ -87,21 +94,30 @@ if(BEDROCK_PROTOCOL_BUILD_POOL)
     )
 endif()
 
-target_compile_features(bedrock-protocol PUBLIC cxx_std_20)
+target_compile_features(bedrock-protocol ${BEDROCK_PROTOCOL_TARGET_SCOPE} cxx_std_20)
 target_include_directories(
     bedrock-protocol
-    PUBLIC
+    ${BEDROCK_PROTOCOL_TARGET_SCOPE}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_link_libraries(bedrock-protocol PUBLIC ${BEDROCK_PROTOCOL_MAGIC_ENUM_TARGET} glm::glm)
+target_link_libraries(
+    bedrock-protocol
+    ${BEDROCK_PROTOCOL_TARGET_SCOPE}
+    ${BEDROCK_PROTOCOL_MAGIC_ENUM_TARGET}
+    glm::glm
+)
 
 if(BEDROCK_PROTOCOL_BUILD_POOL)
     target_link_libraries(bedrock-protocol PUBLIC ${BEDROCK_PROTOCOL_ENTT_TARGET})
 endif()
 
 if(MSVC)
-    target_compile_options(bedrock-protocol PRIVATE /bigobj)
+    if(BEDROCK_PROTOCOL_BUILD_POOL)
+        target_compile_options(bedrock-protocol PRIVATE /bigobj)
+    else()
+        target_compile_options(bedrock-protocol INTERFACE /bigobj)
+    endif()
 endif()
 
 install(

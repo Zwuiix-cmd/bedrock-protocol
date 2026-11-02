@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/ControlScheme.hpp>
 #include <bedrock/protocol/types/camera/CameraPresetAimAssist.hpp>
-#include <bedrock/protocol/types/camera/CameraPresetAimAssist.hpp>
-#include <bedrock/protocol/types/ControlScheme.hpp>
-#include <bedrock/protocol/types/camera/CameraPresetAimAssist.hpp>
-#include <bedrock/protocol/types/ControlScheme.hpp>
 
 class CameraPreset {
 public:
@@ -45,7 +41,7 @@ public:
     std::optional<float> radius;
     std::optional<float> yawLimitMin;
     std::optional<float> yawLimitMax;
-    Audiolistenertype audioListenerType;
+    std::optional<Audiolistenertype> audioListenerType;
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
@@ -72,7 +68,7 @@ public:
         const std::optional<float>& radiusValue,
         const std::optional<float>& yawLimitMinValue,
         const std::optional<float>& yawLimitMaxValue,
-        const Audiolistenertype& audioListenerTypeValue,
+        const std::optional<Audiolistenertype>& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
         const std::optional<ControlScheme>& controlSchemeValue,
@@ -109,72 +105,74 @@ public:
         parent = stream.readString().value_or("");
         applyInheritedStartingRotation = stream.readBool().value_or(false);
         xPosition = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         yPosition = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         zPosition = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         pitch = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         yaw = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         rotationSpeed = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         snapToTarget = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
         horizontalRotationLimit = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
         verticalRotationLimit = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
         continueTargeting = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
         blockListeningRadius = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         viewOffset = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
         entityOffset = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         radius = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         yawLimitMin = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         yawLimitMax = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
-        audioListenerType = magic_enum::enum_cast<Audiolistenertype>(stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-})).value_or(Audiolistenertype::ListenerTypeCamera);
+            return stream.readFloat().value_or(0.0f);
+        });
+        audioListenerType = stream.readOptional([&]() {
+            return magic_enum::enum_cast<Audiolistenertype>(
+            stream.readInt().value_or(0)
+        ).value_or(Audiolistenertype{});
+        });
         playerEffects = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
         aimAssist = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraPresetAimAssist>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CameraPresetAimAssist>();
+            value->read(stream);
+            return value;
+        });
         controlScheme = stream.readOptional([&]() {
-	return magic_enum::enum_cast<ControlScheme>(stream.readVarInt().value_or(0)).value_or(ControlScheme::LockedPlayerRelativeStrafe);
-});
+            return magic_enum::enum_cast<ControlScheme>(
+                stream.readVarInt().value_or(0)
+            ).value_or(ControlScheme::LockedPlayerRelativeStrafe);
+        });
         startingRotation = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

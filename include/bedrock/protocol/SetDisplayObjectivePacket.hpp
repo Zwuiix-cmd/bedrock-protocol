@@ -140,11 +140,15 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		displaySlot = magic_enum::enum_cast<SetDisplayObjectivePacket::DisplaySlot>(std::string_view(stream.readString().value_or(""))).value_or(SetDisplayObjectivePacket::DisplaySlot::List);
+		displaySlot = magic_enum::enum_cast<SetDisplayObjectivePacket::DisplaySlot>(
+			std::string_view(stream.readString().value_or(""))
+		).value_or(SetDisplayObjectivePacket::DisplaySlot::List);
 		objectiveName = stream.readString().value_or("");
 		displayName = stream.readString().value_or("");
 		criteriaName = stream.readString().value_or("");
-		sortOrder = magic_enum::enum_cast<Sort>(stream.readVarInt().value_or(0)).value_or(Sort::OrderAscending);
+		sortOrder = magic_enum::enum_cast<Sort>(
+			stream.readVarInt().value_or(0)
+		).value_or(Sort::OrderAscending);
     }
 
     void write(BinaryStream& stream) override {
@@ -156,17 +160,15 @@ public:
     }
 };
 
-inline constexpr std::array<std::string_view, 3> SetDisplayObjectivePacketDisplaySlotNames = {
-    "list",
-    "sidebar",
-    "belowname",
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<SetDisplayObjectivePacket::DisplaySlot>(SetDisplayObjectivePacket::DisplaySlot value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < SetDisplayObjectivePacketDisplaySlotNames.size() ? customize_t{SetDisplayObjectivePacketDisplaySlotNames[index]} : invalid_tag;
+    switch (value) {
+        case SetDisplayObjectivePacket::DisplaySlot::List: return "list";
+        case SetDisplayObjectivePacket::DisplaySlot::Sidebar: return "sidebar";
+        case SetDisplayObjectivePacket::DisplaySlot::BelowName: return "belowname";
+        default: return invalid_tag;
+    }
 }
 
 }

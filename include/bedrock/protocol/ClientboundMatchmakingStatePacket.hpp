@@ -129,7 +129,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		state = magic_enum::enum_cast<MatchmakingState>(std::string_view(stream.readUnsignedByte().value_or(0))).value_or(MatchmakingState::Idle);
+		state = magic_enum::enum_cast<MatchmakingState>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(MatchmakingState::Idle);
 		destinationName = stream.readString().value_or("");
 		options = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<MatchmakingStateOptions>();
@@ -139,10 +141,10 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeString(destinationName);
-        stream.writeVarInt(magic_enum::enum_integer(state));
-        stream.writeOptional(options, [&](const auto& optionalValue) {
-	if (optionalValue) optionalValue->write(stream);
-});
+		stream.writeUnsignedByte(magic_enum::enum_integer(state));
+		stream.writeString(destinationName);
+		stream.writeOptional(options, [&](const auto& options) {
+			options->write(stream);
+		});
     }
 };

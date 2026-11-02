@@ -173,9 +173,9 @@ public:
 		}()); });
 		systemCategories = stream.readOptional([&]() {
 			return stream.readList([&]() { return ([&]() {
-			auto value = std::make_shared<SystemCategory>();
-			value->read(stream);
-			return value;
+			    auto value = std::make_shared<SystemCategory>();
+			    value->read(stream);
+			    return value;
 			}()); });
 		});
 		whiskerScopes = stream.readList([&]() { return ([&]() {
@@ -206,7 +206,7 @@ public:
 		});
 		stream.writeOptional(systemCategories, [&](const auto& v) {
 			stream.writeList(v, [&](const auto& v) {
-			v.write(stream);
+				v.write(stream);
 			});
 		});
 		stream.writeList(whiskerScopes, [&](const auto& v) {

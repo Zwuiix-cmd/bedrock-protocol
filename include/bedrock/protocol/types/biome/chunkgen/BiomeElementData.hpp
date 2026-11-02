@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
 
 class BiomeElementData {
 public:
@@ -56,11 +54,8 @@ public:
         heightMin = stream.readShort().value_or(0);
         heightMaxType = stream.readVarInt().value_or(0);
         heightMax = stream.readShort().value_or(0);
-        surfaceMaterial = ([&]() {
-    auto value = std::make_shared<BiomeSurfaceMaterialData>();
-    value->read(stream);
-    return value;
-}());
+        surfaceMaterial = std::make_shared<BiomeSurfaceMaterialData>();
+        surfaceMaterial->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

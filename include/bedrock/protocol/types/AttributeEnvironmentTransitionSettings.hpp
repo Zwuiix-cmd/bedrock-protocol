@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class AttributeEnvironmentTransitionSettings {
 public:
@@ -40,13 +38,15 @@ public:
         totalTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         currentTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         clockName = stream.readString().value_or("");
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(totalTransitionTicks);
-        stream.writeUnsignedVarInt(currentTransitionTicks);
-        stream.writeString(clockName);
-        stream.writeVarInt(magic_enum::enum_integer(easeType));
+		stream.writeUnsignedVarInt(totalTransitionTicks);
+		stream.writeUnsignedVarInt(currentTransitionTicks);
+		stream.writeVarInt(magic_enum::enum_integer(easeType));
+		stream.writeString(clockName);
     }
 };

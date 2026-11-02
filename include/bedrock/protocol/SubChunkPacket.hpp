@@ -133,11 +133,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		cacheEnabled = stream.readBool().value_or(false);
 		dimension = stream.readVarInt().value_or(0);
-		baseSubChunkPosition = ([&]() {
-		    auto value = std::make_shared<SubChunkPosition>();
-		    value->read(stream);
-		    return value;
-		}());
+		baseSubChunkPosition = std::make_shared<SubChunkPosition>();
+		baseSubChunkPosition->read(stream);
 		entries = stream.readList([&]() { return ([&]() {
 		    auto value = std::make_shared<SubChunkPacketEntry>();
 		    value->read(stream);

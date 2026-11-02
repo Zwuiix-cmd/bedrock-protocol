@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -12,16 +11,17 @@ enum class ScreenCloseReason : uint16_t {
     UserBusy = 3,
     InvalidForm = 4,
 };
-
-inline constexpr std::array<std::string_view, 5> ScreenCloseReasonNames = {
-#include <bedrock/protocol/types/ScreenCloseReasonNames.inc>
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<ScreenCloseReason>(ScreenCloseReason value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < ScreenCloseReasonNames.size() ? customize_t{ScreenCloseReasonNames[index]} : invalid_tag;
+    switch (value) {
+        case ScreenCloseReason::ProgrammaticClose: return "programmaticclose";
+        case ScreenCloseReason::ProgrammaticCloseAll: return "programmaticcloseall";
+        case ScreenCloseReason::ClientCanceled: return "clientcanceled";
+        case ScreenCloseReason::UserBusy: return "userbusy";
+        case ScreenCloseReason::InvalidForm: return "invalidform";
+        default: return invalid_tag;
+    }
 }
 
 }

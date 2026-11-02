@@ -15,9 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
-#include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
-#include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
-#include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
 
 class ItemInteractionData {
 public:
@@ -37,25 +34,16 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         requestId = stream.readVarInt().value_or(0);
-        requestChangedSlots = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<InventoryTransactionChangedSlotsHack>();
-	value->read(stream);
-	return value;
-	}());
-});
-        transactionData = ([&]() {
-    auto value = std::make_shared<UseItemTransactionData>();
-    value->read(stream);
-    return value;
-}());
+        requestChangedSlots = stream.readObjectList<InventoryTransactionChangedSlotsHack>();
+        transactionData = std::make_shared<UseItemTransactionData>();
+        transactionData->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
 		stream.writeOptional(requestChangedSlots, [&](const auto& list) {
 			stream.writeList(list, [&](const auto& v) {
-			v->write(stream);
+				v->write(stream);
 			});
 		});
 		transactionData->write(stream);

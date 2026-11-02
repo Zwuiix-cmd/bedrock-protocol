@@ -130,11 +130,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		command = stream.readString().value_or("");
-		originData = ([&]() {
-		    auto value = std::make_shared<CommandOriginData>();
-		    value->read(stream);
-		    return value;
-		}());
+		originData = std::make_shared<CommandOriginData>();
+		originData->read(stream);
 		isInternal = stream.readBool().value_or(false);
 		version = stream.readString().value_or("");
     }

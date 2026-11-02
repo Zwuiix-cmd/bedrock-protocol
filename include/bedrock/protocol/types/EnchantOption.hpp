@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/Enchant.hpp>
-#include <bedrock/protocol/types/Enchant.hpp>
-#include <bedrock/protocol/types/Enchant.hpp>
 
 class EnchantOption {
 public:
@@ -49,27 +47,9 @@ public:
         cost = stream.readUnsignedByte().value_or(0);
         slotFlags = stream.readUnsignedInt().value_or(0);
         name = stream.readString().value_or("");
-        equipActivatedEnchantments = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<Enchant>();
-	value->read(stream);
-	return value;
-	}());
-});
-        heldActivatedEnchantments = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<Enchant>();
-	value->read(stream);
-	return value;
-	}());
-});
-        selfActivatedEnchantments = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<Enchant>();
-	value->read(stream);
-	return value;
-	}());
-});
+        equipActivatedEnchantments = stream.readObjectList<Enchant>();
+        heldActivatedEnchantments = stream.readObjectList<Enchant>();
+        selfActivatedEnchantments = stream.readObjectList<Enchant>();
         optionId = stream.readInt().value_or(0);
     }
 
@@ -78,14 +58,14 @@ public:
         stream.writeUnsignedInt(slotFlags);
         stream.writeString(name);
         stream.writeList(equipActivatedEnchantments, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeList(heldActivatedEnchantments, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeList(selfActivatedEnchantments, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeInt(optionId);
     }
 };

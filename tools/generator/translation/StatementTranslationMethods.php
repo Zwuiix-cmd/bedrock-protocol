@@ -38,7 +38,7 @@ private function statement(Node $statement, array $declaration, array $method, i
             if ($statement->expr instanceof Node\Expr\Assign) {
                 $directRead = $this->directReadAssignment($statement->expr, $declaration, $method);
                 if ($directRead !== null) {
-                    return $prefix . $directRead;
+                    return $prefix . str_replace("\n", "\n" . $prefix, $directRead);
                 }
             }
             if ($statement->expr instanceof Node\Expr\Assign && $statement->expr->var instanceof Node\Expr\Variable && $statement->expr->var->name !== 'this') {

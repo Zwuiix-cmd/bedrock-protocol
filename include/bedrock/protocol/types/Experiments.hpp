@@ -26,15 +26,15 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         hasPreviouslyUsedExperiments = stream.readBool().value_or(false);
         experiments = ([&]() {
-    std::map<std::string, bool> result;
-    const auto count = stream.readUnsignedInt().value_or(0);
-    for (uint32_t i = 0; i < count; ++i) {
-        auto key = stream.readString().value_or("");
-        auto value = stream.readBool().value_or(false);
-        result.emplace(std::move(key), std::move(value));
-    }
-    return result;
-}());
+            std::map<std::string, bool> result;
+            const auto count = stream.readUnsignedInt().value_or(0);
+            for (uint32_t i = 0; i < count; ++i) {
+                auto key = stream.readString().value_or("");
+                auto value = stream.readBool().value_or(false);
+                result.emplace(std::move(key), std::move(value));
+            }
+            return result;
+        }());
     }
 
     virtual void write(BinaryStream& stream) const {

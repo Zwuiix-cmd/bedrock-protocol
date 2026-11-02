@@ -15,7 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 
 class SmithingTransformRecipe {
 public:
@@ -48,21 +47,12 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readString().value_or("");
         blockName = stream.readString().value_or("");
-        template_ = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        input = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        addition = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
+        template_ = std::make_shared<RecipeIngredient>();
+        template_->read(stream);
+        input = std::make_shared<RecipeIngredient>();
+        input->read(stream);
+        addition = std::make_shared<RecipeIngredient>();
+        addition->read(stream);
         output.read(stream);
         recipeNetId = stream.readInt().value_or(0);
     }
@@ -70,9 +60,9 @@ public:
     virtual void write(BinaryStream& stream) const {
         stream.writeString(recipeId);
         stream.writeString(blockName);
-        if (template_) template_->write(stream);
-        if (input) input->write(stream);
-        if (addition) addition->write(stream);
+        template_->write(stream);
+        input->write(stream);
+        addition->write(stream);
         output.write(stream);
         stream.writeInt(recipeNetId);
     }

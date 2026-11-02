@@ -125,7 +125,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		scheme = magic_enum::enum_cast<ControlScheme>(stream.readUnsignedByte().value_or(0)).value_or(ControlScheme::LockedPlayerRelativeStrafe);
+		scheme = magic_enum::enum_cast<ControlScheme>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(ControlScheme::LockedPlayerRelativeStrafe);
     }
 
     void write(BinaryStream& stream) override {

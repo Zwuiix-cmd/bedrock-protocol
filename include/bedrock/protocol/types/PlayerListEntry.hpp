@@ -15,8 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/BuildPlatform.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
-#include <bedrock/protocol/types/BuildPlatform.hpp>
-#include <bedrock/protocol/types/skin/SkinData.hpp>
 
 class PlayerListEntry {
 public:
@@ -43,19 +41,18 @@ public:
         xboxUserId = stream.readString().value_or("");
         playFabId = stream.readString().value_or("");
         platformChatId = stream.readString().value_or("");
-        buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
+        buildPlatform = magic_enum::enum_cast<BuildPlatform>(
+            stream.readInt().value_or(0)
+        ).value_or(BuildPlatform::Unknown);
         isTeacher = stream.readBool().value_or(false);
         isHost = stream.readBool().value_or(false);
         isSubClient = stream.readBool().value_or(false);
         uuid = stream.readUUID().value_or("");
-        skinData = ([&]() {
-    auto value = std::make_shared<SkinData>();
-    value->read(stream);
-    return value;
-}());
+        skinData = std::make_shared<SkinData>();
+        skinData->read(stream);
         color = stream.readOptional([&]() {
-	return stream.readUnsignedInt().value_or(0);
-});
+            return stream.readUnsignedInt().value_or(0);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -65,14 +62,14 @@ public:
         stream.writeString(xboxUserId);
         stream.writeString(playFabId);
         stream.writeString(platformChatId);
-        stream.writeInt(magic_enum::enum_integer(buildPlatform));
+        stream.writeInt(buildPlatform);
         stream.writeBool(isTeacher);
         stream.writeBool(isHost);
         stream.writeBool(isSubClient);
         stream.writeUUID(uuid);
-        if (skinData) skinData->write(stream);
+        skinData->write(stream);
         stream.writeOptional(color, [&](const auto& optionalValue) {
-	stream.writeUnsignedInt(optionalValue);
-});
+            stream.writeUnsignedInt(optionalValue);
+        });
     }
 };

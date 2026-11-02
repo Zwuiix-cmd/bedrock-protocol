@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriorities.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriorities.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriorities.hpp>
 
 class CameraAimAssistCategory {
 public:
@@ -32,11 +30,8 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
-        priorities = ([&]() {
-    auto value = std::make_shared<CameraAimAssistCategoryPriorities>();
-    value->read(stream);
-    return value;
-}());
+        priorities = std::make_shared<CameraAimAssistCategoryPriorities>();
+        priorities->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

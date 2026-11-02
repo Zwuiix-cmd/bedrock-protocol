@@ -126,11 +126,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		update = ([&]() {
-		    auto value = std::make_shared<DataStoreUpdate>();
-		    value->read(stream);
-		    return value;
-		}());
+		update = std::make_shared<DataStoreUpdate>();
+		update->read(stream);
     }
 
     void write(BinaryStream& stream) override {

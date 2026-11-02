@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeatureData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeatureData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeatureData.hpp>
 
 class BiomeConsolidatedFeaturesData {
 public:
@@ -25,13 +23,7 @@ public:
     explicit BiomeConsolidatedFeaturesData(const std::vector<std::shared_ptr<BiomeConsolidatedFeatureData>>& featuresValue) : features(featuresValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        features = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeConsolidatedFeatureData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        features = stream.readObjectList<BiomeConsolidatedFeatureData>();
     }
 
     virtual void write(BinaryStream& stream) const {

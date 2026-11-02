@@ -129,7 +129,9 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		packId = stream.readUUID().value_or("");
 		auto name = stream.readString().value_or("");
-		auto typeId = magic_enum::enum_cast<PackSettingType>(stream.readUnsignedVarInt().value_or(0)).value_or(PackSettingType::Float);
+		auto typeId = magic_enum::enum_cast<PackSettingType>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(PackSettingType::Float);
 		packSetting = ([&]() -> std::shared_ptr<PackSetting> {
 			if (typeId == PackSettingType::Float) return FloatPackSetting::read(stream, name);
 			if (typeId == PackSettingType::Bool) return BoolPackSetting::read(stream, name);

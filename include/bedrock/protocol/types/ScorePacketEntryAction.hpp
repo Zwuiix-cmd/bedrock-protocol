@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -11,16 +10,16 @@ enum class ScorePacketEntryAction : uint16_t {
     ChangeEntity = 2,
     ChangeFakePlayer = 3,
 };
-
-inline constexpr std::array<std::string_view, 4> ScorePacketEntryActionNames = {
-#include <bedrock/protocol/types/ScorePacketEntryActionNames.inc>
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<ScorePacketEntryAction>(ScorePacketEntryAction value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < ScorePacketEntryActionNames.size() ? customize_t{ScorePacketEntryActionNames[index]} : invalid_tag;
+    switch (value) {
+        case ScorePacketEntryAction::Remove: return "remove";
+        case ScorePacketEntryAction::ChangePlayer: return "changeplayer";
+        case ScorePacketEntryAction::ChangeEntity: return "changeentity";
+        case ScorePacketEntryAction::ChangeFakePlayer: return "changefakeplayer";
+        default: return invalid_tag;
+    }
 }
 
 }

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/cereal/DynamicValue.hpp>
-#include <bedrock/protocol/types/cereal/DynamicValue.hpp>
-#include <bedrock/protocol/types/cereal/DynamicValue.hpp>
 #include <bedrock/protocol/types/ddui/DataStoreOperation.hpp>
 
 class DataStoreChange : public DataStoreOperation {
@@ -47,8 +45,8 @@ public:
         property = stream.readString().value_or("");
         updateCount = stream.readUnsignedInt().value_or(0);
         data = stream.readOptional([&]() {
-	return DynamicValue::decode(stream);
-});
+            return DynamicValue::decode(stream);
+        });
     }
 
     void write(BinaryStream& stream) const override {
@@ -56,7 +54,7 @@ public:
         stream.writeString(property);
         stream.writeUnsignedInt(updateCount);
         stream.writeOptional(data, [&](const auto& optionalValue) {
-	if (optionalValue) optionalValue->write(stream);
-});
+            optionalValue->write(stream);
+        });
     }
 };

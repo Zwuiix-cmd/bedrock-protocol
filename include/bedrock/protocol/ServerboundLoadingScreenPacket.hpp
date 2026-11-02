@@ -126,7 +126,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		loadingScreenType = magic_enum::enum_cast<LoadingScreenType>(stream.readVarInt().value_or(0)).value_or(LoadingScreenType::Unknown);
+		loadingScreenType = magic_enum::enum_cast<LoadingScreenType>(
+			stream.readVarInt().value_or(0)
+		).value_or(LoadingScreenType::Unknown);
 		loadingScreenId = stream.readOptional([&]() {
 			return stream.readUnsignedInt().value_or(0);
 		});

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentPayload.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentPayload.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentPayload.hpp>
 
 class AttributeEnvironment {
 public:

@@ -147,7 +147,9 @@ public:
 		pitch = stream.readFloat().value_or(0.0f);
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		mode = magic_enum::enum_cast<Mode>(stream.readUnsignedByte().value_or(0)).value_or(Mode::Normal);
+		mode = magic_enum::enum_cast<Mode>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Mode::Normal);
 		onGround = stream.readBool().value_or(false);
 		ridingActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		telemetryData = stream.readOptional([&]() { return ([&]() {

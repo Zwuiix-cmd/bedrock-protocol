@@ -132,11 +132,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actorUniqueId = stream.readUnsignedVarLong().value_or(0);
-        updateType = magic_enum::enum_cast<Type>(stream.readUnsignedVarLong().value_or(0)).value_or(Type::None);
+        updateType = magic_enum::enum_cast<Type>(
+            stream.readUnsignedVarLong().value_or(0)
+        ).value_or(Type::None);
     }
 
     void write(BinaryStream& stream) override {
         stream.writeUnsignedVarLong(actorUniqueId);
-        stream.writeUnsignedVarLong(magic_enum::enum_integer(updateType));
+        stream.writeUnsignedVarLong(updateType);
     }
 };

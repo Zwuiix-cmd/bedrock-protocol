@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/ArmorSlot.hpp>
-#include <bedrock/protocol/types/ArmorSlot.hpp>
-#include <bedrock/protocol/types/ArmorSlot.hpp>
 
 class ArmorSlotAndDamagePair {
 public:
@@ -27,7 +25,9 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         damage = stream.readUnsignedShort().value_or(0);
-        slot = magic_enum::enum_cast<ArmorSlot>(stream.readVarInt().value_or(0)).value_or(ArmorSlot::Head);
+        slot = magic_enum::enum_cast<ArmorSlot>(
+            stream.readVarInt().value_or(0)
+        ).value_or(ArmorSlot::Head);
     }
 
     virtual void write(BinaryStream& stream) const {

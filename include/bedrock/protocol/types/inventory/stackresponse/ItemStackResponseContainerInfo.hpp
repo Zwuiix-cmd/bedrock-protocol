@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/FullContainerName.hpp>
-#include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/FullContainerName.hpp>
-#include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseSlotInfo.hpp>
 
 class ItemStackResponseContainerInfo {
 public:
@@ -34,18 +30,9 @@ public:
         slots(slotsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        containerName = ([&]() {
-    auto value = std::make_shared<FullContainerName>();
-    value->read(stream);
-    return value;
-}());
-        slots = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ItemStackResponseSlotInfo>();
-	value->read(stream);
-	return value;
-	}());
-});
+        containerName = std::make_shared<FullContainerName>();
+        containerName->read(stream);
+        slots = stream.readObjectList<ItemStackResponseSlotInfo>();
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp>
 
 class BiomeDefinitionData {
 public:
@@ -68,15 +66,13 @@ public:
         rain = stream.readBool().value_or(false);
         mapWaterColor = stream.readUnsignedInt().value_or(0);
         tagIndexes = stream.readList([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         chunkGenData = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeDefinitionChunkGenData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeDefinitionChunkGenData>();
+            value->read(stream);
+            return value;
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

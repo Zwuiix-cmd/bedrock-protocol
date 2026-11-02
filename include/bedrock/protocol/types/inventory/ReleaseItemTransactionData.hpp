@@ -15,7 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
-#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
 class ReleaseItemTransactionData : public TransactionData {
@@ -39,15 +38,19 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(Action::Release);
+        actionType = magic_enum::enum_cast<Action>(
+            stream.readVarInt().value_or(0)
+        ).value_or(Action::Release);
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         itemInHand.read(stream);
-        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(HandSlot::Mainhand);
+        hand = magic_enum::enum_cast<HandSlot>(
+            stream.readVarInt().value_or(0)
+        ).value_or(HandSlot::Mainhand);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeVarInt(magic_enum::enum_integer(actionType));
+        stream.writeVarInt(actionType);
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(headPosition);
         itemInHand.write(stream);

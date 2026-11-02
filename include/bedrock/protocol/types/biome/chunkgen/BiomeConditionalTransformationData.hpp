@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
 
 class BiomeConditionalTransformationData {
 public:
@@ -36,13 +34,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         conditionJSON = stream.readShort().value_or(0);
         minPassingNeighbors = stream.readUnsignedInt().value_or(0);
-        weightedBiomes = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        weightedBiomes = stream.readObjectList<BiomeWeightedData>();
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -23,20 +23,6 @@
 #include <bedrock/protocol/types/GameRule.hpp>
 #include <bedrock/protocol/types/PlayerPermissions.hpp>
 #include <bedrock/protocol/types/SpawnSettings.hpp>
-#include <bedrock/protocol/types/ChatRestrictionLevel.hpp>
-#include <bedrock/protocol/types/EditorLevelMigrationVersion.hpp>
-#include <bedrock/protocol/types/EditorWorldType.hpp>
-#include <bedrock/protocol/types/EducationUriResource.hpp>
-#include <bedrock/protocol/types/Experiments.hpp>
-#include <bedrock/protocol/types/GameRule.hpp>
-#include <bedrock/protocol/types/SpawnSettings.hpp>
-#include <bedrock/protocol/types/GameMode.hpp>
-#include <bedrock/protocol/types/PlayerPermissions.hpp>
-#include <bedrock/protocol/types/EducationUriResource.hpp>
-#include <bedrock/protocol/types/Experiments.hpp>
-#include <bedrock/protocol/types/SpawnSettings.hpp>
-#include <bedrock/protocol/types/GameMode.hpp>
-#include <bedrock/protocol/types/PlayerPermissions.hpp>
 
 class LevelSettings {
 public:
@@ -69,7 +55,7 @@ public:
     std::shared_ptr<Experiments> experiments;
     bool hasBonusChestEnabled = false;
     bool hasStartWithMapEnabled = false;
-    PlayerPermissions defaultPlayerPermission = static_cast<PlayerPermissions>(0);
+    PlayerPermissions defaultPlayerPermission = PlayerPermissions::Visitor;
     int32_t serverChunkTickRadius = 4;
     bool hasLockedBehaviorPack = false;
     bool hasLockedResourcePack = false;
@@ -101,10 +87,14 @@ public:
         difficulty = stream.readVarInt().value_or(0);
         spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         hasAchievementsDisabled = stream.readBool().value_or(false);
-        editorWorldType = magic_enum::enum_cast<EditorWorldType>(stream.readVarInt().value_or(0)).value_or(EditorWorldType::NonEditor);
+        editorWorldType = magic_enum::enum_cast<EditorWorldType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(EditorWorldType::NonEditor);
         createdInEditorMode = stream.readBool().value_or(false);
         exportedFromEditorMode = stream.readBool().value_or(false);
-        editorLevelMigrationVersion = magic_enum::enum_cast<EditorLevelMigrationVersion>(stream.readByte().value_or(0)).value_or(EditorLevelMigrationVersion::Legacy);
+        editorLevelMigrationVersion = magic_enum::enum_cast<EditorLevelMigrationVersion>(
+            stream.readByte().value_or(0)
+        ).value_or(EditorLevelMigrationVersion::Legacy);
         time = stream.readVarInt().value_or(0);
         eduEditionOffer = stream.readUnsignedVarInt().value_or(0);
         hasEduFeaturesEnabled = stream.readBool().value_or(false);
@@ -135,42 +125,40 @@ public:
         limitedWorldWidth = stream.readInt().value_or(0);
         limitedWorldLength = stream.readInt().value_or(0);
         isNewNether = stream.readBool().value_or(false);
-        chatRestrictionLevel = magic_enum::enum_cast<ChatRestrictionLevel>(stream.readUnsignedByte().value_or(0)).value_or(ChatRestrictionLevel::None);
+        chatRestrictionLevel = magic_enum::enum_cast<ChatRestrictionLevel>(
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(ChatRestrictionLevel::None);
         disablePlayerInteractions = stream.readBool().value_or(false);
         serverEditorConnectionPolicy = stream.readVarInt().value_or(0);
         allowAnonymousBlockDropsInEditorWorlds = stream.readBool().value_or(false);
-        spawnSettings = ([&]() {
-    auto value = std::make_shared<SpawnSettings>();
-    value->read(stream);
-    return value;
-}());
-        worldGamemode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(GameMode::Survival);
+        spawnSettings = std::make_shared<SpawnSettings>();
+        spawnSettings->read(stream);
+        worldGamemode = magic_enum::enum_cast<GameMode>(
+            stream.readVarInt().value_or(0)
+        ).value_or(GameMode::Survival);
         gameRules = ([&]() {
-    std::map<std::string, std::shared_ptr<GameRule>> result;
-    const auto count = stream.readUnsignedInt().value_or(0);
-    for (uint32_t i = 0; i < count; ++i) {
-        auto key = stream.readString().value_or("");
-        auto value = GameRule::decode(stream);
-        result.emplace(std::move(key), std::move(value));
-    }
-    return result;
-}());
-        experiments = ([&]() {
-    auto value = std::make_shared<Experiments>();
-    value->read(stream);
-    return value;
-}());
-        defaultPlayerPermission = magic_enum::enum_cast<PlayerPermissions>(stream.readVarInt().value_or(0)).value_or(PlayerPermissions::Custom);
+            std::map<std::string, std::shared_ptr<GameRule>> result;
+            const auto count = stream.readUnsignedInt().value_or(0);
+            for (uint32_t i = 0; i < count; ++i) {
+                auto key = stream.readString().value_or("");
+                auto value = GameRule::decode(stream);
+                result.emplace(std::move(key), std::move(value));
+            }
+            return result;
+        }());
+        experiments = std::make_shared<Experiments>();
+        experiments->read(stream);
+        defaultPlayerPermission = magic_enum::enum_cast<PlayerPermissions>(
+            stream.readVarInt().value_or(0)
+        ).value_or(PlayerPermissions::Custom);
         eduSharedUriResource = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<EducationUriResource>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<EducationUriResource>();
+            value->read(stream);
+            return value;
+        });
         experimentalGameplayOverride = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -180,10 +168,10 @@ public:
         stream.writeVarInt(difficulty);
         stream.writeSignedBlockPos(spawnPosition);
         stream.writeBool(hasAchievementsDisabled);
-        stream.writeVarInt(magic_enum::enum_integer(editorWorldType));
+        stream.writeVarInt(editorWorldType);
         stream.writeBool(createdInEditorMode);
         stream.writeBool(exportedFromEditorMode);
-        stream.writeByte(magic_enum::enum_integer(editorLevelMigrationVersion));
+        stream.writeByte(editorLevelMigrationVersion);
         stream.writeVarInt(time);
         stream.writeUnsignedVarInt(eduEditionOffer);
         stream.writeBool(hasEduFeaturesEnabled);
@@ -214,24 +202,24 @@ public:
         stream.writeInt(limitedWorldWidth);
         stream.writeInt(limitedWorldLength);
         stream.writeBool(isNewNether);
-        stream.writeUnsignedByte(magic_enum::enum_integer(chatRestrictionLevel));
+        stream.writeUnsignedByte(chatRestrictionLevel);
         stream.writeBool(disablePlayerInteractions);
         stream.writeVarInt(serverEditorConnectionPolicy);
         stream.writeBool(allowAnonymousBlockDropsInEditorWorlds);
-        if (spawnSettings) spawnSettings->write(stream);
+        spawnSettings->write(stream);
         stream.writeVarInt(magic_enum::enum_integer(worldGamemode));
         stream.writeUnsignedInt(gameRules.size());
-for (const auto& [key, item] : gameRules) {
-    stream.writeString(key);
-    if (item) item->write(stream);
-}
-        if (experiments) experiments->write(stream);
+        for (const auto& [key, item] : gameRules) {
+            stream.writeString(key);
+            item->write(stream);
+        }
+        experiments->write(stream);
         stream.writeVarInt(magic_enum::enum_integer(defaultPlayerPermission));
         stream.writeOptional(eduSharedUriResource, [&](const auto& optionalValue) {
-	if (optionalValue) optionalValue->write(stream);
-});
+            optionalValue->write(stream);
+        });
         stream.writeOptional(experimentalGameplayOverride, [&](const auto& optionalValue) {
-	stream.writeBool(optionalValue);
-});
+            stream.writeBool(optionalValue);
+        });
     }
 };

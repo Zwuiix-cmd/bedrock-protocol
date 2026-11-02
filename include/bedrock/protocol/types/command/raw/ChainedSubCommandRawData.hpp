@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/command/raw/ChainedSubCommandValueRawData.hpp>
-#include <bedrock/protocol/types/command/raw/ChainedSubCommandValueRawData.hpp>
 
 class ChainedSubCommandRawData {
 public:
@@ -31,13 +30,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
-        valueData = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ChainedSubCommandValueRawData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        valueData = stream.readObjectList<ChainedSubCommandValueRawData>();
     }
 
     virtual void write(BinaryStream& stream) const {

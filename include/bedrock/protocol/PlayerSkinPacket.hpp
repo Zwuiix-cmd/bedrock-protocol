@@ -130,11 +130,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		uuid = stream.readUUID().value_or("");
-		skin = ([&]() {
-		    auto value = std::make_shared<SkinData>();
-		    value->read(stream);
-		    return value;
-		}());
+		skin = std::make_shared<SkinData>();
+		skin->read(stream);
 		newSkinName = stream.readString().value_or("");
 		oldSkinName = stream.readString().value_or("");
     }

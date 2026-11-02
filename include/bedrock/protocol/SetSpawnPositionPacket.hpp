@@ -132,7 +132,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		spawnType = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(Type::PlayerSpawn);
+		spawnType = magic_enum::enum_cast<Type>(
+			stream.readVarInt().value_or(0)
+		).value_or(Type::PlayerSpawn);
 		spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		dimension = stream.readVarInt().value_or(0);
 		causingBlockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));

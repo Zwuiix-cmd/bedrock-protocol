@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeEnvironment.hpp>
-#include <bedrock/protocol/types/AttributeEnvironment.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
 
 class AttributesUpdateEnvironment : public AttributeLayerSyncPayload {
@@ -41,13 +40,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         name = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
-        attributes = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<AttributeEnvironment>();
-	value->read(stream);
-	return value;
-	}());
-});
+        attributes = stream.readObjectList<AttributeEnvironment>();
     }
 
     void write(BinaryStream& stream) const override {

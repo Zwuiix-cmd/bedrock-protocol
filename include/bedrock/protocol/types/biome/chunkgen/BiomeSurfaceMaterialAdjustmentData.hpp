@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeElementData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeElementData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeElementData.hpp>
 
 class BiomeSurfaceMaterialAdjustmentData {
 public:
@@ -25,13 +23,7 @@ public:
     explicit BiomeSurfaceMaterialAdjustmentData(const std::vector<std::shared_ptr<BiomeElementData>>& adjustmentsValue) : adjustments(adjustmentsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        adjustments = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeElementData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        adjustments = stream.readObjectList<BiomeElementData>();
     }
 
     virtual void write(BinaryStream& stream) const {

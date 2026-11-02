@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraRotationOption {
 public:
@@ -36,7 +34,9 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readVec3().value_or(glm::vec3(0.0f));
         time = stream.readFloat().value_or(0.0f);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {

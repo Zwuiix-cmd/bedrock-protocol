@@ -73,6 +73,9 @@ public function expression(?Node $expression, array $declaration, ?array $method
                     ?? $this->expressionType($expression->var, $declaration);
                 if ($enumType !== null) {
                     $enumDeclaration = $this->findDeclaration(CPPName::type($enumType));
+                    if (($enumDeclaration['backingType'] ?? null) === 'string') {
+                        return 'magic_enum::enum_name(' . $object . ')';
+                    }
                     if ($enumType === 'Action'
                         || $enumType === 'BuildPlatform'
                         || $enumType === 'Type'
@@ -355,7 +358,12 @@ public function expression(?Node $expression, array $declaration, ?array $method
                 $enumType = null;
             }
             if ($enumType !== null) {
+                $isNumericRead = preg_match(
+                    '/read(?:Unsigned|Signed)?(?:Byte|Short|Int|Long|VarInt|VarLong)/',
+                    $value,
+                ) === 1;
                 $value = $this->isStringEnumProperty($expression->var, $declaration)
+                    && !$isNumericRead
                     ? $this->stringEnumFromString($expression->var, $value, $declaration)
                     : (str_starts_with($value, 'static_cast<' . $enumType . '>(')
                         || str_starts_with($value, 'magic_enum::enum_')

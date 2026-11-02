@@ -134,7 +134,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        action = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(Action::Update);
+        action = magic_enum::enum_cast<Action>(
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(Action::Update);
         trackingId = stream.readVarInt().value_or(0);
         nbt = NetworkNbtSerializer::read(stream);
     }

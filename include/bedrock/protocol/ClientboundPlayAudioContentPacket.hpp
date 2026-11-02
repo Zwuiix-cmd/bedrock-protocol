@@ -131,7 +131,9 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         sharedMetadata = stream.readString().value_or("");
         playbackContent = stream.readString().value_or("");
-        playbackType = magic_enum::enum_cast<AudioContentPlaybackType>(stream.readVarInt().value_or(0)).value_or(AudioContentPlaybackType::Music);
+        playbackType = magic_enum::enum_cast<AudioContentPlaybackType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(AudioContentPlaybackType::Music);
         playSound = std::monostate{};
     }
 

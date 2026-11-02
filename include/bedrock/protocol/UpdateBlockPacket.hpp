@@ -142,8 +142,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
-		flags = magic_enum::enum_cast<Flag>(stream.readUnsignedVarInt().value_or(0)).value_or(Flag::None);
-		dataLayerId = magic_enum::enum_cast<Data>(stream.readUnsignedVarInt().value_or(0)).value_or(Data::LayerNormal);
+		flags = magic_enum::enum_cast<Flag>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(Flag::None);
+		dataLayerId = magic_enum::enum_cast<Data>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(Data::LayerNormal);
     }
 
     void write(BinaryStream& stream) override {

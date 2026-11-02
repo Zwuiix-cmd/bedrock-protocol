@@ -131,11 +131,19 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		leftTab = magic_enum::enum_cast<InventoryLeftTab>(stream.readVarInt().value_or(0)).value_or(InventoryLeftTab::None);
-		rightTab = magic_enum::enum_cast<InventoryRightTab>(stream.readVarInt().value_or(0)).value_or(InventoryRightTab::None);
+		leftTab = magic_enum::enum_cast<InventoryLeftTab>(
+			stream.readVarInt().value_or(0)
+		).value_or(InventoryLeftTab::None);
+		rightTab = magic_enum::enum_cast<InventoryRightTab>(
+			stream.readVarInt().value_or(0)
+		).value_or(InventoryRightTab::None);
 		filtering = stream.readBool().value_or(false);
-		inventoryLayout = magic_enum::enum_cast<InventoryLayout>(stream.readVarInt().value_or(0)).value_or(InventoryLayout::None);
-		craftingLayout = magic_enum::enum_cast<InventoryLayout>(stream.readVarInt().value_or(0)).value_or(InventoryLayout::None);
+		inventoryLayout = magic_enum::enum_cast<InventoryLayout>(
+			stream.readVarInt().value_or(0)
+		).value_or(InventoryLayout::None);
+		craftingLayout = magic_enum::enum_cast<InventoryLayout>(
+			stream.readVarInt().value_or(0)
+		).value_or(InventoryLayout::None);
     }
 
     void write(BinaryStream& stream) override {

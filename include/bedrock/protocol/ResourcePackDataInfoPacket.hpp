@@ -123,7 +123,7 @@ public:
     uint64_t compressedPackSize;
     std::string sha256;
     bool isPremium = false;
-    ResourcePackType packType = static_cast<ResourcePackType>(0);
+    ResourcePackType packType = ResourcePackType::Invalid;
 
 public:
     std::string_view getName() override {
@@ -137,7 +137,9 @@ public:
 		compressedPackSize = stream.readUnsignedLong().value_or(0);
 		sha256 = stream.readString().value_or("");
 		isPremium = stream.readBool().value_or(false);
-		packType = magic_enum::enum_cast<ResourcePackType>(stream.readUnsignedByte().value_or(0)).value_or(ResourcePackType::Invalid);
+		packType = magic_enum::enum_cast<ResourcePackType>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(ResourcePackType::Invalid);
     }
 
     void write(BinaryStream& stream) override {

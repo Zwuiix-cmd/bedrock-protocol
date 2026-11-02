@@ -39,10 +39,10 @@ public:
 		if ((!rowLength)) {
 			throw std::exception{};
 		}
-		if ((rowLength.value() > Max::Width)) {
+		if ((rowLength.value() > magic_enum::enum_integer(Max::Width))) {
 			throw std::exception{};
 		}
-		if ((pixelsValue.size() > Max::Height)) {
+		if ((pixelsValue.size() > magic_enum::enum_integer(Max::Height))) {
 			throw std::exception{};
 		}
 		height = pixelsValue.size();
@@ -51,10 +51,10 @@ public:
     }
 
     static std::shared_ptr<MapImage> decode(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
-		if ((width > Max::Width)) {
+		if ((width > magic_enum::enum_integer(Max::Width))) {
 			throw std::exception{};
 		}
-		if ((height > Max::Height)) {
+		if ((height > magic_enum::enum_integer(Max::Height))) {
 			throw std::exception{};
 		}
 		auto pixels = std::vector<std::vector<uint32_t>>();
@@ -72,13 +72,13 @@ public:
         width = stream.readInt().value_or(0);
         height = stream.readInt().value_or(0);
         pixels = stream.readList([&]() {
-	return stream.readList([&]() {
-	return stream.readUnsignedInt().value_or(0);
-	});
-});
+            return stream.readList([&]() {
+                return stream.readUnsignedInt().value_or(0);
+            });
+        });
         encodedPixelCache = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

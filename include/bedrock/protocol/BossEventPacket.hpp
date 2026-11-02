@@ -135,8 +135,8 @@ public:
     float healthPercent = 0.0f;
     std::string title;
     std::string filteredTitle;
-    BossBarColor color = static_cast<BossBarColor>(0);
-    BossBarOverlay overlay = static_cast<BossBarOverlay>(0);
+    BossBarColor color = BossBarColor::Pink;
+    BossBarOverlay overlay = BossBarOverlay::Progress;
 
 public:
     std::string_view getName() override {
@@ -145,12 +145,18 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		bossActorUniqueId = stream.readActorUniqueID().value_or(0);
-		eventType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::Show);
+		eventType = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::Show);
 		title = stream.readString().value_or("");
 		filteredTitle = stream.readString().value_or("");
 		healthPercent = stream.readFloat().value_or(0.0f);
-		color = magic_enum::enum_cast<BossBarColor>(stream.readUnsignedByte().value_or(0)).value_or(BossBarColor::Pink);
-		overlay = magic_enum::enum_cast<BossBarOverlay>(stream.readUnsignedByte().value_or(0)).value_or(BossBarOverlay::Progress);
+		color = magic_enum::enum_cast<BossBarColor>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(BossBarColor::Pink);
+		overlay = magic_enum::enum_cast<BossBarOverlay>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(BossBarOverlay::Progress);
     }
 
     void write(BinaryStream& stream) override {

@@ -23,8 +23,8 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         canModifyBlocks = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

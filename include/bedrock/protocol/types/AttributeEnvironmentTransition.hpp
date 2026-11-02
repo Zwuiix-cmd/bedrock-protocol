@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentTransitionSettings.hpp>
 #include <bedrock/protocol/types/AttributeValue.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentTransitionSettings.hpp>
-#include <bedrock/protocol/types/AttributeValue.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentTransitionSettings.hpp>
-#include <bedrock/protocol/types/AttributeValue.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentPayload.hpp>
 
 class AttributeEnvironmentTransition : public AttributeEnvironmentPayload {
@@ -45,11 +41,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         fromAttribute = AttributeValue::decode(stream);
         toAttribute = AttributeValue::decode(stream);
-        settings = ([&]() {
-    auto value = std::make_shared<AttributeEnvironmentTransitionSettings>();
-    value->read(stream);
-    return value;
-}());
+        settings = std::make_shared<AttributeEnvironmentTransitionSettings>();
+        settings->read(stream);
     }
 
     void write(BinaryStream& stream) const override {

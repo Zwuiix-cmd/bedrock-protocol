@@ -56,7 +56,12 @@ trait DefaultValueEmissionMethods
         return false;
     }
 
-    private function propertyInitializer(array $property, array $declaration, string $cppType): ?string
+    private function propertyInitializer(
+        array $property,
+        array $declaration,
+        string $cppType,
+        array $types = [],
+    ): ?string
     {
         $sourceType = (string) ($property['type'] ?? '');
         $nullable = str_starts_with($sourceType, '?') || str_contains($sourceType, '|null') || str_contains($sourceType, '| null');
@@ -79,6 +84,13 @@ trait DefaultValueEmissionMethods
             }
             $defaultValue = $this->integerDefaultValue($property);
             if ($defaultValue !== null) {
+                $member = $this->enumMemberForValue($cppType, $defaultValue, $declaration, $types);
+                if ($member !== null) {
+                    return $member;
+                }
+                if ($defaultValue === 0) {
+                    return $cppType . '{}';
+                }
                 return 'static_cast<' . $cppType . '>(' . $defaultValue . ')';
             }
         }
@@ -93,18 +105,56 @@ trait DefaultValueEmissionMethods
                     : 'static_cast<BuildPlatform>(' . (int) ($property['defaultValue'] ?? -1) . ')';
             }
             if (isset($this->enumNames[$cppType])) {
-                return $property['defaultNode'] !== null
-                    ? $this->translator->expression($property['defaultNode'], $declaration)
-                    : 'static_cast<' . $cppType . '>(' . (int) ($property['defaultValue'] ?? 0) . ')';
+                if ($property['defaultNode'] !== null) {
+                    return $this->translator->expression($property['defaultNode'], $declaration);
+                }
+                $value = (int) ($property['defaultValue'] ?? 0);
+                return $this->enumMemberForValue($cppType, $value, $declaration, $types)
+                    ?? ($value === 0 ? $cppType . '{}' : null)
+                    ?? 'static_cast<' . $cppType . '>(' . $value . ')';
             }
             return $this->defaultExpression($property, $declaration);
         }
 
         $typeName = CPPName::type($sourceType);
         if (isset($this->enumNames[$typeName])) {
-            return CPPDefaultValueResolver::member($cppType, true);
+            return $this->enumMemberForValue($cppType, 0, $declaration, $types)
+                ?? $cppType . '{}';
         }
         return CPPDefaultValueResolver::member($cppType);
+    }
+
+    private function enumMemberForValue(
+        string $cppType,
+        int $value,
+        array $declaration,
+        array $types,
+    ): ?string {
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            if (!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null)) {
+                continue;
+            }
+            $name = (string) ($constant['name'] ?? '');
+            if (!str_contains($name, '_') || (int) $constant['value'] !== $value) {
+                continue;
+            }
+            [$prefix, $case] = explode('_', $name, 2);
+            if (CPPName::enumCase($prefix) === $cppType) {
+                return $cppType . '::' . CPPName::enumCase($case);
+            }
+        }
+        foreach ($types as $type) {
+            if (!$this->isEnumDeclaration($type)
+                || $this->generatedTypeName($type) !== $cppType) {
+                continue;
+            }
+            foreach ($this->enumCases($type) as $case) {
+                if ((int) ($case['value'] ?? 0) === $value) {
+                    return $cppType . '::' . CPPName::enumCase((string) $case['name']);
+                }
+            }
+        }
+        return null;
     }
 
     private function stringEnumDefault(array $property, array $declaration, string $cppType): ?string

@@ -49,11 +49,11 @@ public:
         customName = stream.readString().value_or("");
         durabilityCorrection = stream.readVarInt().value_or(0);
         itemStackId = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         filteredCustomName = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

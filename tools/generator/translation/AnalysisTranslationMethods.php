@@ -367,23 +367,10 @@ private function isStringEnumProperty(Node $node, array $declaration): bool
             return true;
         }
         if ($node instanceof Node\Expr\Variable) {
-            $type = $this->expressionTypes[(string) $node->name] ?? null;
-            if ($type === null) {
-                return false;
-            }
-            $referenced = $this->findDeclaration(CPPName::type($type));
-            return $referenced !== null && $referenced['kind'] === 'enum' && $referenced['backingType'] === 'string';
+            return false;
         }
         if (!$node instanceof Node\Expr\PropertyFetch || !$node->var instanceof Node\Expr\Variable || $node->var->name !== 'this') {
             return false;
-        }
-        $name = $node->name instanceof Node\Identifier ? $node->name->toString() : '';
-        foreach ($declaration['properties'] as $property) {
-            if ($property['name'] !== $name) {
-                continue;
-            }
-            $referenced = $this->findDeclaration(CPPName::type((string) $property['type']));
-            return $referenced !== null && $referenced['kind'] === 'enum' && $referenced['backingType'] === 'string';
         }
         return false;
     }

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
 
 class DropStackRequestAction : public ItemStackRequestAction {
@@ -42,11 +40,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         count = stream.readUnsignedByte().value_or(0);
         randomly = stream.readBool().value_or(false);
-        source = ([&]() {
-    auto value = std::make_shared<ItemStackRequestSlotInfo>();
-    value->read(stream);
-    return value;
-}());
+        source = std::make_shared<ItemStackRequestSlotInfo>();
+        source->read(stream);
     }
 
     void write(BinaryStream& stream) const override {

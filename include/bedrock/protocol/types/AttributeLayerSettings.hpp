@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
-#include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightFloat.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightString.hpp>
 

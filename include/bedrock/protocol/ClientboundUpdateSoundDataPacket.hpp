@@ -128,11 +128,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		serverSoundHandle = stream.readUnsignedLong().value_or(0);
-		event = ([&]() {
-		    auto value = std::make_shared<SoundDataEvent>();
-		    value->read(stream);
-		    return value;
-		}());
+		event = std::make_shared<SoundDataEvent>();
+		event->read(stream);
     }
 
     void write(BinaryStream& stream) override {

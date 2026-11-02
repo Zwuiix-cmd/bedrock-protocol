@@ -142,11 +142,8 @@ public:
 			}()));
 		}
 		baseGameVersion = stream.readString().value_or("");
-		experiments = ([&]() {
-		    auto value = std::make_shared<Experiments>();
-		    value->read(stream);
-		    return value;
-		}());
+		experiments = std::make_shared<Experiments>();
+		experiments->read(stream);
 		useVanillaEditorPacks = stream.readBool().value_or(false);
     }
 

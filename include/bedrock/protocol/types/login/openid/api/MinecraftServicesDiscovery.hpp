@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/login/openid/api/MinecraftServicesResult.hpp>
-#include <bedrock/protocol/types/login/openid/api/MinecraftServicesResult.hpp>
 
 class MinecraftServicesDiscovery {
 public:
@@ -23,14 +22,11 @@ public:
     MinecraftServicesDiscovery() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        result = ([&]() {
-    auto value = std::make_shared<MinecraftServicesResult>();
-    value->read(stream);
-    return value;
-}());
+        result = std::make_shared<MinecraftServicesResult>();
+        result->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        if (result) result->write(stream);
+        result->write(stream);
     }
 };

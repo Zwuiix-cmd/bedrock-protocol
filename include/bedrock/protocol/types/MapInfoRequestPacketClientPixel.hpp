@@ -30,11 +30,13 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         color = stream.readUnsignedInt().value_or(0);
         x = stream.readInt().value_or(0);
-        y = magic_enum::enum_cast<Y>(stream.readInt().value_or(0)).value_or(Y::IndexMultiplier);
+        y = magic_enum::enum_cast<Y>(
+            stream.readInt().value_or(0)
+        ).value_or(Y::IndexMultiplier);
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedInt(static_cast<uint32_t>(color));
-		stream.writeUnsignedShort((x + (magic_enum::enum_integer(y) * magic_enum::enum_integer(Y::IndexMultiplier))));
+		stream.writeUnsignedShort((x + (y * Y::IndexMultiplier)));
     }
 };

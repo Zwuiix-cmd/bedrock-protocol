@@ -23,6 +23,10 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
         }
         if ($this->nullableType($type)) {
             $base = $this->withoutNullType($type);
+            $objectCallback = $this->readObjectCallback($base);
+            if ($objectCallback !== null) {
+                return 'stream.readOptional(' . $objectCallback . ')';
+            }
             return 'stream.readOptional(' . $this->callback('', 'return ' . $this->fallbackReadValue($base, null, $declaration) . ';') . ')';
         }
         $arrayParts = $this->arrayTypeParts($type, $doc);
@@ -46,7 +50,10 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
             if (in_array(strtolower($element), ['int8', 'uint8', 'byte', 'unsigned byte'], true)) {
                 return 'stream.readByteArray().value_or(std::vector<uint8_t>())';
             }
-            return 'stream.readList(' . $this->callback('', 'return ' . $this->fallbackReadValue($element, null, $declaration) . ';') . ')';
+            $objectType = $this->readObjectListType($element);
+            return $objectType === null
+                ? 'stream.readList(' . $this->readListCallback($element, $declaration) . ')'
+                : 'stream.readObjectList<' . $objectType . '>()';
         }
         $normalized = strtolower(ltrim($type, '\\'));
         if ($normalized === 'string' || $normalized === 'stringview') {
@@ -122,6 +129,74 @@ private function readObject(string $type): string
             . "}())";
     }
 
+    private function readObjectCallback(string $type): ?string
+    {
+        $short = CPPName::type($type);
+        $referenced = $this->findDeclaration($short);
+        if ($referenced !== null
+            && in_array($referenced['kind'] ?? null, ['class', 'interface'], true)
+            && !$this->isEnumLikeDeclaration($referenced)) {
+            if (($referenced['abstract'] ?? false) || ($referenced['kind'] ?? null) === 'interface') {
+                return $this->callback('', 'return ' . $short . '::decode(stream);');
+            }
+            return $this->readObjectCallbackForCppType($this->cppType($short));
+        }
+
+        $codec = $this->catalog->typeCodec($short);
+        if (is_array($codec)
+            && ($codec['value'] ?? false)
+            && is_string($codec['read'] ?? null)
+            && preg_match('/\b[A-Za-z_]\w*\s+value;\s*value\.read\(stream\)/s', $codec['read']) === 1) {
+            return $this->readObjectCallbackForCppType($this->cppType($short));
+        }
+        return null;
+    }
+
+    private function readObjectCallbackForCppType(string $cppType): ?string
+    {
+        if (preg_match('/^std::shared_ptr<([A-Za-z_]\w*)>$/', $cppType, $matches) === 1) {
+            return $this->callback('', implode("\n", [
+                'auto value = std::make_shared<' . $matches[1] . '>();',
+                'value->read(stream);',
+                'return value;',
+            ]));
+        }
+        if (!preg_match('/^[A-Za-z_]\w*$/', $cppType)) {
+            return null;
+        }
+        return $this->callback('', implode("\n", [
+            $cppType . ' value;',
+            'value.read(stream);',
+            'return value;',
+        ]));
+    }
+
+    private function readListCallback(string $type, array $declaration): string
+    {
+        $objectCallback = $this->readObjectCallback($type);
+        if ($objectCallback !== null) {
+            return $objectCallback;
+        }
+        return $this->callback(
+            '',
+            'return ' . $this->fallbackReadValue($type, null, $declaration) . ';',
+        );
+    }
+
+    private function readObjectListType(string $type): ?string
+    {
+        $cppType = $this->cppType($type);
+        $referenced = $this->findDeclaration(CPPName::type($type));
+        if ($referenced !== null
+            && (($referenced['abstract'] ?? false) || ($referenced['kind'] ?? null) === 'interface')) {
+            return null;
+        }
+        return preg_match('/^std::shared_ptr<([A-Za-z_]\w*)>$/', $cppType, $matches) === 1
+            && $this->readObjectCallback($type) !== null
+            ? $matches[1]
+            : null;
+    }
+
 private function constructorArguments(Node\Expr\New_ $expression, string $className, array $declaration, ?array $method): string
     {
         $referenced = $this->findDeclaration($className);
@@ -192,28 +267,28 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
             return 'stream.writeDouble(' . $value . ');';
         }
         if (in_array($normalized, ['int8', 'int8_t', 'byte'], true)) {
-            return 'stream.writeByte(' . $value . ');';
+            return 'stream.writeByte(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['uint8', 'uint8_t', 'unsigned byte'], true)) {
-            return 'stream.writeUnsignedByte(' . $value . ');';
+            return 'stream.writeUnsignedByte(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['int16', 'int16_t', 'short'], true)) {
-            return 'stream.writeShort(' . $value . ');';
+            return 'stream.writeShort(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['uint16', 'uint16_t', 'unsigned short'], true)) {
-            return 'stream.writeUnsignedShort(' . $value . ');';
+            return 'stream.writeUnsignedShort(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['int', 'int32', 'int32_t', 'signed int'], true)) {
-            return 'stream.writeInt(' . $value . ');';
+            return 'stream.writeInt(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['uint32', 'uint32_t', 'unsigned int'], true)) {
-            return 'stream.writeUnsignedInt(' . $value . ');';
+            return 'stream.writeUnsignedInt(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['int64', 'int64_t', 'long', 'long long'], true)) {
-            return 'stream.writeLong(' . $value . ');';
+            return 'stream.writeLong(' . $this->enumStorageValueForWrite($value) . ');';
         }
         if (in_array($normalized, ['uint64', 'uint64_t', 'unsigned long', 'unsigned long long'], true)) {
-            return 'stream.writeUnsignedLong(' . $value . ');';
+            return 'stream.writeUnsignedLong(' . $this->enumStorageValueForWrite($value) . ');';
         }
         $short = CPPName::type($type);
         $codec = $this->catalog->typeCodec($short);
@@ -222,11 +297,35 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
         }
         $referenced = $this->findDeclaration($short);
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
-            return 'stream.writeVarInt(magic_enum::enum_integer(' . $value . '));';
+            return str_contains($value, 'magic_enum::enum_integer')
+                ? 'stream.writeVarInt(' . $value . ');'
+                : 'stream.writeVarInt(magic_enum::enum_integer(' . $value . '));';
         }
         if ($referenced !== null && in_array($referenced['kind'], ['class', 'interface'], true)) {
-            return 'if (' . $value . ') ' . $value . '->write(stream);';
+            $cppType = $this->cppType($short);
+            if (str_starts_with($cppType, 'std::shared_ptr<')) {
+                return $this->nullableType($type)
+                    ? 'if (' . $value . ') ' . $value . '->write(stream);'
+                    : $value . '->write(stream);';
+            }
+            return $value . '.write(stream);';
         }
         return '(void)(' . $value . ');';
+    }
+
+    private function enumStorageValueForWrite(string $value): string
+    {
+        if (preg_match('/^[A-Za-z_]\w*$/', $value) !== 1) {
+            return $value;
+        }
+        $type = $this->expressionTypes[$value] ?? null;
+        if ($type === null) {
+            return $value;
+        }
+        $referenced = $this->findDeclaration(CPPName::type($type));
+        return ($this->isEnumLikeDeclaration($referenced ?? [])
+            || preg_match('/^[A-Z][A-Za-z0-9_]*$/', $type) === 1)
+            ? 'magic_enum::enum_integer(' . $value . ')'
+            : $value;
     }
 }

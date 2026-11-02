@@ -130,7 +130,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		animationType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::ArmSwing);
+		animationType = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::ArmSwing);
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
     }
 

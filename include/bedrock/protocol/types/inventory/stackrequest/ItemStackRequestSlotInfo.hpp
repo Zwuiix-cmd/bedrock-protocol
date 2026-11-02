@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
-#include <bedrock/protocol/types/inventory/FullContainerName.hpp>
-#include <bedrock/protocol/types/inventory/FullContainerName.hpp>
 
 class ItemStackRequestSlotInfo {
 public:
@@ -35,11 +33,8 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         slotId = stream.readUnsignedByte().value_or(0);
-        containerName = ([&]() {
-    auto value = std::make_shared<FullContainerName>();
-    value->read(stream);
-    return value;
-}());
+        containerName = std::make_shared<FullContainerName>();
+        containerName->read(stream);
         stackId = stream.readInt().value_or(0);
     }
 

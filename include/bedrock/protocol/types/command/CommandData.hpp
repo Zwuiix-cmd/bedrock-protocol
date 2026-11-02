@@ -17,10 +17,6 @@
 #include <bedrock/protocol/types/command/CommandHardEnum.hpp>
 #include <bedrock/protocol/types/command/CommandOverload.hpp>
 #include <bedrock/protocol/types/command/CommandPermissions.hpp>
-#include <bedrock/protocol/types/command/ChainedSubCommandData.hpp>
-#include <bedrock/protocol/types/command/CommandHardEnum.hpp>
-#include <bedrock/protocol/types/command/CommandOverload.hpp>
-#include <bedrock/protocol/types/command/CommandPermissions.hpp>
 
 class CommandData {
 public:
@@ -56,28 +52,16 @@ public:
         name = stream.readString().value_or("");
         description = stream.readString().value_or("");
         flags = stream.readInt().value_or(0);
-        permission = magic_enum::enum_cast<CommandPermissions>(stream.readVarInt().value_or(0)).value_or(CommandPermissions::Normal);
+        permission = magic_enum::enum_cast<CommandPermissions>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CommandPermissions::Normal);
         aliases = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CommandHardEnum>();
-	value->read(stream);
-	return value;
-	}());
-});
-        overloads = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CommandOverload>();
-	value->read(stream);
-	return value;
-	}());
-});
-        chainedSubCommandData = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ChainedSubCommandData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CommandHardEnum>();
+            value->read(stream);
+            return value;
+        });
+        overloads = stream.readObjectList<CommandOverload>();
+        chainedSubCommandData = stream.readObjectList<ChainedSubCommandData>();
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -86,13 +70,13 @@ public:
         stream.writeInt(flags);
         stream.writeVarInt(magic_enum::enum_integer(permission));
         stream.writeOptional(aliases, [&](const auto& optionalValue) {
-	if (optionalValue) optionalValue->write(stream);
-});
+            optionalValue->write(stream);
+        });
         stream.writeList(overloads, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeList(chainedSubCommandData, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
     }
 };

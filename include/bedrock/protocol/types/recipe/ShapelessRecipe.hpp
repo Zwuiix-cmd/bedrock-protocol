@@ -15,8 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 
 class ShapelessRecipe {
 public:
@@ -53,24 +51,18 @@ public:
         recipeId = stream.readString().value_or("");
         blockName = stream.readString().value_or("");
         priority = stream.readVarInt().value_or(0);
-        inputs = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<RecipeIngredient>();
-	value->read(stream);
-	return value;
-	}());
-});
+        inputs = stream.readObjectList<RecipeIngredient>();
         outputs = stream.readList([&]() {
-	return ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
-});
+            NetworkItemDescriptor value;
+            value.read(stream);
+            return value;
+        });
         uuid = stream.readUUID().value_or("");
         unlockingRequirement = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<RecipeUnlockingRequirement>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<RecipeUnlockingRequirement>();
+            value->read(stream);
+            return value;
+        });
         recipeNetId = stream.readInt().value_or(0);
     }
 
@@ -79,15 +71,15 @@ public:
         stream.writeString(blockName);
         stream.writeVarInt(priority);
         stream.writeList(inputs, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeList(outputs, [&](const auto& item) {
-	item.write(stream);
-});
+            item.write(stream);
+        });
         stream.writeUUID(uuid);
         stream.writeOptional(unlockingRequirement, [&](const auto& optionalValue) {
-	if (optionalValue) optionalValue->write(stream);
-});
+            optionalValue->write(stream);
+        });
         stream.writeInt(recipeNetId);
     }
 };

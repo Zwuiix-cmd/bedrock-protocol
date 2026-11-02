@@ -24,14 +24,14 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         PieceType = stream.readString().value_or("");
         Colors = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(PieceType);
         stream.writeList(Colors, [&](const auto& item) {
-	stream.writeString(item);
-});
+            stream.writeString(item);
+        });
     }
 };

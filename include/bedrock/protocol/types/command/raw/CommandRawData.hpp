@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/command/raw/CommandOverloadRawData.hpp>
-#include <bedrock/protocol/types/command/raw/CommandOverloadRawData.hpp>
 
 class CommandRawData {
 public:
@@ -51,15 +50,9 @@ public:
         permission = stream.readString().value_or("");
         aliasEnumIndex = stream.readInt().value_or(0);
         chainedSubCommandDataIndexes = stream.readList([&]() {
-	return stream.readInt().value_or(0);
-});
-        overloads = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CommandOverloadRawData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            return stream.readInt().value_or(0);
+        });
+        overloads = stream.readObjectList<CommandOverloadRawData>();
     }
 
     virtual void write(BinaryStream& stream) const {

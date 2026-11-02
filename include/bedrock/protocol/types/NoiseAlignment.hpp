@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/NoiseAlignmentType.hpp>
-#include <bedrock/protocol/types/NoiseAlignmentType.hpp>
-#include <bedrock/protocol/types/NoiseAlignmentType.hpp>
 
 class NoiseAlignment {
 public:
@@ -27,7 +25,9 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readUnsignedVarInt().value_or(0);
-        type = magic_enum::enum_cast<NoiseAlignmentType>(stream.readVarInt().value_or(0)).value_or(NoiseAlignmentType::MinLocalTransitionEnd);
+        type = magic_enum::enum_cast<NoiseAlignmentType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(NoiseAlignmentType::MinLocalTransitionEnd);
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/entity/AttributeModifier.hpp>
-#include <bedrock/protocol/types/entity/AttributeModifier.hpp>
-#include <bedrock/protocol/types/entity/AttributeModifier.hpp>
 
 class UpdateAttribute {
 public:
@@ -56,13 +54,7 @@ public:
         defaultMin = stream.readFloat().value_or(0.0f);
         defaultMax = stream.readFloat().value_or(0.0f);
         default_ = stream.readFloat().value_or(0.0f);
-        modifiers = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<AttributeModifier>();
-	value->read(stream);
-	return value;
-	}());
-});
+        modifiers = stream.readObjectList<AttributeModifier>();
     }
 
     virtual void write(BinaryStream& stream) const {

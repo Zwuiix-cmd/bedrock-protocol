@@ -15,7 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <variant>
 #include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
-#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
 
 class PersonaPieceTintColor {
 public:
@@ -32,7 +31,9 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0)).value_or(PersonaSkinPieceType::Unknown);
+        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(PersonaSkinPieceType::Unknown);
         colors = std::monostate{};
     }
 

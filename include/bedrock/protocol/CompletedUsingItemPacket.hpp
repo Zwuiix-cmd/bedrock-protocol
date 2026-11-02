@@ -146,7 +146,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		itemId = stream.readShort().value_or(0);
-		action = magic_enum::enum_cast<Action>(stream.readInt().value_or(0)).value_or(Action::Unknown);
+		action = magic_enum::enum_cast<Action>(
+			stream.readInt().value_or(0)
+		).value_or(Action::Unknown);
     }
 
     void write(BinaryStream& stream) override {

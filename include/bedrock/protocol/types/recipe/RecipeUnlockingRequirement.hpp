@@ -15,8 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
 
 class RecipeUnlockingRequirement {
 public:
@@ -36,24 +34,20 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        unlockingContext = magic_enum::enum_cast<RecipeUnlockingContext>(stream.readVarInt().value_or(0)).value_or(RecipeUnlockingContext::None);
+        unlockingContext = magic_enum::enum_cast<RecipeUnlockingContext>(
+            stream.readVarInt().value_or(0)
+        ).value_or(RecipeUnlockingContext::None);
         unlockingIngredients = stream.readOptional([&]() {
-	return stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<RecipeIngredient>();
-	value->read(stream);
-	return value;
-	}());
-	});
-});
+            return stream.readObjectList<RecipeIngredient>();
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeVarInt(magic_enum::enum_integer(unlockingContext));
         stream.writeOptional(unlockingIngredients, [&](const auto& optionalValue) {
-	stream.writeList(optionalValue, [&](const auto& item) {
-	if (item) item->write(stream);
-	});
-});
+            stream.writeList(optionalValue, [&](const auto& item) {
+                item->write(stream);
+            });
+        });
     }
 };

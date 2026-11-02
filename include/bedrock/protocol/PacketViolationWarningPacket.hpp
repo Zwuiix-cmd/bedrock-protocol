@@ -137,8 +137,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(Type::Malformed);
-		severity = magic_enum::enum_cast<Severity>(stream.readVarInt().value_or(0)).value_or(Severity::Warning);
+		type = magic_enum::enum_cast<Type>(
+			stream.readVarInt().value_or(0)
+		).value_or(Type::Malformed);
+		severity = magic_enum::enum_cast<Severity>(
+			stream.readVarInt().value_or(0)
+		).value_or(Severity::Warning);
 		packetId = stream.readVarInt().value_or(0);
 		message = stream.readString().value_or("");
     }

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/LocatorBarWaypoint.hpp>
-#include <bedrock/protocol/types/LocatorBarWaypoint.hpp>
-#include <bedrock/protocol/types/LocatorBarWaypoint.hpp>
 
 class LocatorBarWaypointPayload {
 public:
@@ -36,11 +34,8 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         action = stream.readUnsignedByte().value_or(0);
         group = stream.readUUID().value_or("");
-        waypoint = ([&]() {
-    auto value = std::make_shared<LocatorBarWaypoint>();
-    value->read(stream);
-    return value;
-}());
+        waypoint = std::make_shared<LocatorBarWaypoint>();
+        waypoint->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

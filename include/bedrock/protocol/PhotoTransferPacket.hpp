@@ -138,7 +138,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        photoName = magic_enum::enum_cast<PhotoTransferPacket::PhotoName>(std::string_view(stream.readString().value_or(""))).value_or(PhotoTransferPacket::PhotoName::Extension);
+        const auto photoNameRaw = stream.readString().value_or("");
+        photoName = magic_enum::enum_cast<PhotoName>(
+            std::string_view(photoNameRaw)
+        ).value_or(PhotoName::Extension);
         photoData = stream.readByteArray(0).value_or("");
         bookId = stream.readString().value_or("");
         type = stream.readUnsignedByte().value_or(0);
@@ -158,15 +161,13 @@ public:
     }
 };
 
-inline constexpr std::array<std::string_view, 1> PhotoTransferPacketPhotoNameNames = {
-    ".jpeg",
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<PhotoTransferPacket::PhotoName>(PhotoTransferPacket::PhotoName value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < PhotoTransferPacketPhotoNameNames.size() ? customize_t{PhotoTransferPacketPhotoNameNames[index]} : invalid_tag;
+    switch (value) {
+        case PhotoTransferPacket::PhotoName::Extension: return ".jpeg";
+        default: return invalid_tag;
+    }
 }
 
 }

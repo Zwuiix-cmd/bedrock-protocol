@@ -128,7 +128,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
-		type = magic_enum::enum_cast<PlayerLocationType>(stream.readUnsignedVarInt().value_or(0)).value_or(PlayerLocationType::PlayerLocationCoordinates);
+		type = magic_enum::enum_cast<PlayerLocationType>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(PlayerLocationType::PlayerLocationCoordinates);
 		auto innerType = stream.readVarInt().value_or(0);
 		if ((innerType != magic_enum::enum_integer(type))) {
 			throw std::exception{};

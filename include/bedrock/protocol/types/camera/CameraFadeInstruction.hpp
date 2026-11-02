@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraFadeInstructionColor.hpp>
 #include <bedrock/protocol/types/camera/CameraFadeInstructionTime.hpp>
-#include <bedrock/protocol/types/camera/CameraFadeInstructionColor.hpp>
-#include <bedrock/protocol/types/camera/CameraFadeInstructionTime.hpp>
-#include <bedrock/protocol/types/camera/CameraFadeInstructionColor.hpp>
-#include <bedrock/protocol/types/camera/CameraFadeInstructionTime.hpp>
 
 class CameraFadeInstruction {
 public:
@@ -35,19 +31,15 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         time = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraFadeInstructionTime>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CameraFadeInstructionTime>();
+            value->read(stream);
+            return value;
+        });
         color = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraFadeInstructionColor>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CameraFadeInstructionColor>();
+            value->read(stream);
+            return value;
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

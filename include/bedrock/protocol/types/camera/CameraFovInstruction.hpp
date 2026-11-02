@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraFovInstruction {
 public:
@@ -40,7 +38,9 @@ public:
         fieldOfView = stream.readFloat().value_or(0.0f);
         easeTime = stream.readFloat().value_or(0.0f);
         clear = stream.readBool().value_or(false);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {

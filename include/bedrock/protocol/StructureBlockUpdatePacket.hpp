@@ -130,11 +130,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		structureEditorData = ([&]() {
-		    auto value = std::make_shared<StructureEditorData>();
-		    value->read(stream);
-		    return value;
-		}());
+		structureEditorData = std::make_shared<StructureEditorData>();
+		structureEditorData->read(stream);
 		isPowered = stream.readBool().value_or(false);
 		waterlogged = stream.readBool().value_or(false);
     }

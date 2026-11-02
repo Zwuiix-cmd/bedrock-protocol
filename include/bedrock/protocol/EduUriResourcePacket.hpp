@@ -126,11 +126,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		resource = ([&]() {
-		    auto value = std::make_shared<EducationUriResource>();
-		    value->read(stream);
-		    return value;
-		}());
+		resource = std::make_shared<EducationUriResource>();
+		resource->read(stream);
     }
 
     void write(BinaryStream& stream) override {

@@ -33,14 +33,14 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
         values = stream.readList([&]() {
-	return std::variant<std::string, std::shared_ptr<ConstrainedEnumValue>>{stream.readString().value_or("")};
-});
+            return std::variant<std::string, std::shared_ptr<ConstrainedEnumValue>>{stream.readString().value_or("")};
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(name);
         stream.writeList(values, [&](const auto& item) {
-	std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::string>) { stream.writeString(alternative); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<ConstrainedEnumValue>>) { if (alternative) alternative->write(stream); } }, item);
-});
+            std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::string>) { stream.writeString(alternative); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<ConstrainedEnumValue>>) { alternative->write(stream); } }, item);
+        });
     }
 };

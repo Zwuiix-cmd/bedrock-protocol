@@ -126,18 +126,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        entries = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ItemTypeEntry>();
-	value->read(stream);
-	return value;
-	}());
-});
+        entries = stream.readObjectList<ItemTypeEntry>();
     }
 
     void write(BinaryStream& stream) override {
         stream.writeList(entries, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
     }
 };

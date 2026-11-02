@@ -16,8 +16,46 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
             $class = CPPName::type((string) $declaration['name']);
         }
         $name = $call->name instanceof Node\Identifier ? $call->name->toString() : 'call';
+        $callbackName = null;
+        $callbackEnumType = null;
+        $callbackHadType = false;
+        $callbackPreviousType = null;
+        if ($name === 'writeOptional'
+            && isset($call->args[1], $call->args[2])
+            && $call->args[1] instanceof Node\Arg
+            && $call->args[2] instanceof Node\Arg
+            && $call->args[2]->value instanceof Node\Expr\Closure
+            && $call->args[2]->value->params !== []) {
+            $enumType = $this->enumPropertyType($call->args[1]->value, $declaration)
+                ?? $this->assignmentCPPType($call->args[1]->value, $declaration);
+            if (is_string($enumType)) {
+                $enumType = preg_replace('/^std::optional<(.+)>$/', '$1', $enumType) ?? $enumType;
+            }
+            if ($enumType !== null) {
+                $callbackEnumType = $enumType;
+                $callbackName = (string) $call->args[2]->value->params[0]->var->name;
+                $callbackHadType = array_key_exists($callbackName, $this->expressionTypes);
+                $callbackPreviousType = $this->expressionTypes[$callbackName] ?? null;
+                $this->expressionTypes[$callbackName] = $enumType;
+            }
+        }
         $arguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method), $call->args);
         $rawArguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method, false), $call->args);
+        if ($callbackName !== null && $callbackEnumType !== null && isset($arguments[2])) {
+            $arguments[2] = preg_replace(
+                '/(stream\.write(?:Unsigned|Signed)?(?:Byte|Short|Int|Long|VarInt|VarLong)\()'
+                    . preg_quote($callbackName, '/') . '(\))/',
+                '$1magic_enum::enum_integer(' . $callbackName . ')$2',
+                $arguments[2],
+            ) ?? $arguments[2];
+        }
+        if ($callbackName !== null) {
+            if ($callbackHadType) {
+                $this->expressionTypes[$callbackName] = $callbackPreviousType;
+            } else {
+                unset($this->expressionTypes[$callbackName]);
+            }
+        }
         if (count($call->args) > 1
             && (str_starts_with(strtolower($name), 'write') || str_starts_with(strtolower($name), 'put'))) {
             foreach (array_slice($call->args, 1, null, true) as $index => $argument) {
@@ -107,11 +145,14 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
             if ($referenced !== null && $referenced['kind'] === 'enum' && $referenced['backingType'] === 'string') {
                 $value = $arguments[0] ?? '""';
                 $enumType = CPPName::type($class);
+                if (preg_match('/read(?:Unsigned|Signed)?(?:Byte|Short|Int|Long|VarInt|VarLong)/', $value) === 1) {
+                    return $this->enumReadValue($enumType, $value, $declaration);
+                }
                 $default = $this->enumDefaultValue($enumType, $declaration);
                 if ($default === null) {
                     throw new \RuntimeException('Unable to resolve the first case of enum ' . $enumType);
                 }
-                return 'magic_enum::enum_cast<' . $enumType . '>(std::string_view(' . $value . ')).value_or(' . $default . ')';
+                return $this->stringEnumCast($enumType, $value, $default);
             }
             if ($referenced !== null
                 && (($referenced['kind'] ?? null) === 'enum' || $this->isEnumLikeDeclaration($referenced))) {
@@ -233,7 +274,7 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
                         return 'magic_enum::enum_name(' . CPPName::type($declaration['name'])
                             . '::' . CPPName::enumCase($name) . ')';
                     }
-                    return 'std::string(' . CPPName::type($declaration['name']) . '::' . CPPName::identifier($name) . ')';
+                    return '"' . $this->escape((string) $constant['value']) . '"';
                 }
             }
             if (str_starts_with($name, 'TYPE_')) {
@@ -291,7 +332,7 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
                     return 'magic_enum::enum_name(' . CPPName::type($class)
                         . '::' . CPPName::enumCase($name) . ')';
                 }
-                return 'std::string(' . CPPName::type($class) . '::' . CPPName::identifier($name) . ')';
+                return '"' . $this->escape((string) $constant['value']) . '"';
             }
         }
         return CPPName::type($class) . '::' . CPPName::identifier($name);

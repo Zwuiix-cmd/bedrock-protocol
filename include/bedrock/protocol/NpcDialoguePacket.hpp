@@ -135,7 +135,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		npcActorUniqueId = stream.readLong().value_or(0);
-		actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(Action::Open);
+		actionType = magic_enum::enum_cast<Action>(
+			stream.readVarInt().value_or(0)
+		).value_or(Action::Open);
 		dialogue = stream.readString().value_or("");
 		sceneName = stream.readString().value_or("");
 		npcName = stream.readString().value_or("");

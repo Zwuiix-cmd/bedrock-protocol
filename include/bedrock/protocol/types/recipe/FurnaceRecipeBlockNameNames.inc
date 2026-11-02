@@ -1,5 +1,0 @@
-"blast_furnace",
-"campfire",
-"furnace",
-"smoker",
-"soul_campfire",

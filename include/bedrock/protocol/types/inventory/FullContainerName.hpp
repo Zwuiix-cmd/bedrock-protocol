@@ -25,8 +25,8 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         containerId = stream.readUnsignedByte().value_or(0);
         dynamicId = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

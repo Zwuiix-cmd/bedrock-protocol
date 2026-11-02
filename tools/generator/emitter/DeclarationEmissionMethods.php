@@ -45,9 +45,6 @@ trait DeclarationEmissionMethods
         $body = "#pragma once\n\n#include <cstdint>\n#include <magic_enum/magic_enum.hpp>\n#include <string_view>\n\n";
         $cases = $this->enumCases($declaration);
         $enumInclude = $this->generatedTypeInclude($declaration);
-        if ($this->isStringEnumDeclaration($declaration)) {
-            $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
-        }
         $body .= 'enum class ' . $name . ' : ' . $this->enumUnderlyingType($declaration) . " {\n";
         $caseLines = [];
         foreach ($cases as $index => $case) {
@@ -72,30 +69,54 @@ trait DeclarationEmissionMethods
         }
         $body .= "};\n";
         if ($this->isStringEnumDeclaration($declaration)) {
-            $directory = dirname($enumInclude);
-            $basename = pathinfo($enumInclude, PATHINFO_FILENAME);
-            $namesInclude = ($directory === '.' ? '' : $directory . '/') . $basename . 'Names.inc';
-            $nameLines = [];
+            $nameCaseLines = [];
             foreach ($cases as $case) {
                 if (!is_string($case['value'] ?? null)) {
                     continue;
                 }
-                $nameLines[] = json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ",\n";
+                $nameCaseLines[] = '        case ' . $name . '::' . CPPName::enumCase((string) $case['name'])
+                    . ': return ' . json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ";\n";
             }
-            $namesPath = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock'
-                . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR
-                . str_replace('/', DIRECTORY_SEPARATOR, $namesInclude);
-            $this->write($namesPath, implode('', $nameLines));
-            $body .= "\ninline constexpr std::array<std::string_view, " . count($nameLines) . '> ' . $name . "Names = {\n";
-            $body .= '#include <bedrock/protocol/' . $namesInclude . ">\n};\n\n";
             $body .= "namespace magic_enum::customize {\n\n";
             $body .= 'template <> constexpr customize_t enum_name<' . $name . '>('
                 . $name . " value) noexcept {\n"
-                . '    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));' . "\n"
-                . '    return index < ' . $name . 'Names.size() ? customize_t{' . $name . 'Names[index]} : invalid_tag;' . "\n"
-                . "}\n\n}\n";
+                . "    switch (value) {\n";
+            if (count($nameCaseLines) > 300) {
+                $directory = dirname($enumInclude);
+                $basename = pathinfo($enumInclude, PATHINFO_FILENAME);
+                foreach (array_chunk($nameCaseLines, 200) as $chunkIndex => $chunk) {
+                    $fragment = $basename . 'Names' . $chunkIndex . '.inc';
+                    $fragmentInclude = ($directory === '.' ? '' : $directory . '/') . $fragment;
+                    $fragmentPath = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock'
+                        . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR
+                        . str_replace('/', DIRECTORY_SEPARATOR, $fragmentInclude);
+                    $this->write($fragmentPath, implode('', $chunk));
+                    $body .= '#include <bedrock/protocol/' . $fragmentInclude . ">\n";
+                }
+            } else {
+                $body .= implode('', $nameCaseLines);
+            }
+            $body .= "        default: return invalid_tag;\n"
+                . "    }\n}\n\n}\n";
         }
-        $this->write($this->typePath($output, $name, $declaration), $body);
+        $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
+    }
+
+    private function uniqueIncludes(string $body): string
+    {
+        $seen = [];
+        $lines = explode("\n", $body);
+        $result = [];
+        foreach ($lines as $line) {
+            if (preg_match('/^#include\s+<([^>]+)>$/', $line, $matches) === 1) {
+                if (isset($seen[$matches[1]])) {
+                    continue;
+                }
+                $seen[$matches[1]] = true;
+            }
+            $result[] = $line;
+        }
+        return implode("\n", $result);
     }
 
     private function writeType(string $output, array $declaration, array $types): void
@@ -103,9 +124,6 @@ trait DeclarationEmissionMethods
         $name = $this->generatedTypeName($declaration);
         $body = "#pragma once\n\n#include <cstdint>\n#include <limits>\n#include <memory>\n#include <optional>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <utility>\n#include <vector>\n#include <bedrock/protocol/io/BinaryStream.hpp>\n#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>\n#include <bedrock/protocol/Forward.hpp>\n";
         $body = str_replace('#include <memory>', "#include <magic_enum/magic_enum.hpp>\n#include <memory>", $body);
-        if ($this->stringEnumDefinitions($declaration) !== []) {
-            $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
-        }
         $propertyTypes = [];
         foreach ($declaration['properties'] as $property) {
             if (!($property['static'] ?? false)) {
@@ -217,7 +235,7 @@ trait DeclarationEmissionMethods
             $type = $this->propertyType($property, $declaration, false);
             $mutable = $this->propertyAssignedBySerializer($declaration, (string) $property['name'], 'write') ? 'mutable ' : '';
             $body .= '    ' . $mutable . $type . ' ' . CPPName::identifier($property['name']);
-            $default = $this->propertyInitializer($property, $declaration, $type);
+            $default = $this->propertyInitializer($property, $declaration, $type, $types);
             $body .= $default === null ? ";\n" : ' = ' . $default . ";\n";
         }
         $body .= "\n    " . $name . "() = default;\n";
@@ -324,6 +342,6 @@ trait DeclarationEmissionMethods
         }
         $body .= "};\n";
         $body .= $this->stringEnumCustomizations($declaration);
-        $this->write($this->typePath($output, $name, $declaration), $body);
+        $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
     }
 }

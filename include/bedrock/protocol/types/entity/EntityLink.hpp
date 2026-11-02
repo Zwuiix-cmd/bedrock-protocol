@@ -48,7 +48,9 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         fromActorUniqueId = stream.readActorUniqueID().value_or(0);
         toActorUniqueId = stream.readActorUniqueID().value_or(0);
-        type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::Remove);
+        type = magic_enum::enum_cast<Type>(
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(Type::Remove);
         immediate = stream.readBool().value_or(false);
         causedByRider = stream.readBool().value_or(false);
         vehicleAngularVelocity = stream.readFloat().value_or(0.0f);
@@ -57,7 +59,7 @@ public:
     virtual void write(BinaryStream& stream) const {
         stream.writeActorUniqueID(fromActorUniqueId);
         stream.writeActorUniqueID(toActorUniqueId);
-        stream.writeUnsignedByte(magic_enum::enum_integer(type));
+        stream.writeUnsignedByte(type);
         stream.writeBool(immediate);
         stream.writeBool(causedByRider);
         stream.writeFloat(vehicleAngularVelocity);

@@ -29,8 +29,8 @@ public:
         identity = stream.readString().value_or("");
         sandboxId = stream.readString().value_or("");
         titleId = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         XUID = stream.readString().value_or("");
     }
 
@@ -39,8 +39,8 @@ public:
         stream.writeString(identity);
         stream.writeString(sandboxId);
         stream.writeOptional(titleId, [&](const auto& optionalValue) {
-	stream.writeString(optionalValue);
-});
+            stream.writeString(optionalValue);
+        });
         stream.writeString(XUID);
     }
 };

@@ -137,12 +137,11 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		structureTemplateName = stream.readString().value_or("");
 		structureBlockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		structureSettings = ([&]() {
-		    auto value = std::make_shared<StructureSettings>();
-		    value->read(stream);
-		    return value;
-		}());
-		requestType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::ExportFromSaveMode);
+		structureSettings = std::make_shared<StructureSettings>();
+		structureSettings->read(stream);
+		requestType = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::ExportFromSaveMode);
     }
 
     void write(BinaryStream& stream) override {

@@ -128,7 +128,7 @@ public:
     uint64_t actorRuntimeId;
     float data = 0.0f;
     std::optional<std::string> swingSource;
-    HandSlot hand = static_cast<HandSlot>(0);
+    HandSlot hand = HandSlot::Mainhand;
 
 public:
     std::string_view getName() override {
@@ -136,22 +136,26 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        action = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(Action::SwingArm);
+        action = magic_enum::enum_cast<Action>(
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(Action::SwingArm);
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         data = stream.readFloat().value_or(0.0f);
         swingSource = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
-        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(HandSlot::Mainhand);
+            return stream.readString().value_or("");
+        });
+        hand = magic_enum::enum_cast<HandSlot>(
+            stream.readVarInt().value_or(0)
+        ).value_or(HandSlot::Mainhand);
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeUnsignedByte(magic_enum::enum_integer(action));
+        stream.writeUnsignedByte(action);
         stream.writeActorRuntimeID(actorRuntimeId);
         stream.writeFloat(data);
         stream.writeOptional(swingSource, [&](const auto& optionalValue) {
-	stream.writeString(optionalValue);
-});
+            stream.writeString(optionalValue);
+        });
         stream.writeVarInt(magic_enum::enum_integer(hand));
     }
 };

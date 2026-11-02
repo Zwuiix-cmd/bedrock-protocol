@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriority.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriority.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriority.hpp>
 
 class CameraAimAssistCategoryPriorities {
 public:
@@ -43,40 +41,16 @@ public:
         defaultBlockPriority(defaultBlockPriorityValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        entities = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-	value->read(stream);
-	return value;
-	}());
-});
-        blocks = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-	value->read(stream);
-	return value;
-	}());
-});
-        blockTags = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-	value->read(stream);
-	return value;
-	}());
-});
-        entityTypeFamilies = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-	value->read(stream);
-	return value;
-	}());
-});
+        entities = stream.readObjectList<CameraAimAssistCategoryPriority>();
+        blocks = stream.readObjectList<CameraAimAssistCategoryPriority>();
+        blockTags = stream.readObjectList<CameraAimAssistCategoryPriority>();
+        entityTypeFamilies = stream.readObjectList<CameraAimAssistCategoryPriority>();
         defaultEntityPriority = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         defaultBlockPriority = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

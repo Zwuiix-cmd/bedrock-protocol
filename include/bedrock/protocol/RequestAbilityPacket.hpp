@@ -135,13 +135,15 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		abilityId = magic_enum::enum_cast<Ability>(stream.readVarInt().value_or(0)).value_or(Ability::Flying);
+		abilityId = magic_enum::enum_cast<Ability>(
+			stream.readVarInt().value_or(0)
+		).value_or(Ability::Flying);
 		auto valueType = stream.readUnsignedByte().value_or(0);
 		auto boolValue = stream.readBool().value_or(false);
 		auto floatValue = stream.readFloat().value_or(0.0f);
 		abilityValue = ([&]() -> std::variant<float, bool> {
-			if (valueType == Value::TypeBool) return boolValue;
-			if (valueType == Value::TypeFloat) return floatValue;
+			if (valueType == magic_enum::enum_integer(Value::TypeBool)) return boolValue;
+			if (valueType == magic_enum::enum_integer(Value::TypeFloat)) return floatValue;
 			throw std::exception{};
 		}());
     }

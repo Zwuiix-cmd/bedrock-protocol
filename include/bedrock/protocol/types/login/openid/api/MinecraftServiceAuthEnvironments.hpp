@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/login/openid/api/MinecraftServiceAuthEnvironment.hpp>
-#include <bedrock/protocol/types/login/openid/api/MinecraftServiceAuthEnvironment.hpp>
 
 class MinecraftServiceAuthEnvironments {
 public:
@@ -23,14 +22,11 @@ public:
     MinecraftServiceAuthEnvironments() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        prod = ([&]() {
-    auto value = std::make_shared<MinecraftServiceAuthEnvironment>();
-    value->read(stream);
-    return value;
-}());
+        prod = std::make_shared<MinecraftServiceAuthEnvironment>();
+        prod->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        if (prod) prod->write(stream);
+        prod->write(stream);
     }
 };

@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 
 class SmithingTrimRecipe {
 public:
@@ -44,21 +43,12 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readString().value_or("");
         blockName = stream.readString().value_or("");
-        template_ = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        input = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        addition = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
+        template_ = std::make_shared<RecipeIngredient>();
+        template_->read(stream);
+        input = std::make_shared<RecipeIngredient>();
+        input->read(stream);
+        addition = std::make_shared<RecipeIngredient>();
+        addition->read(stream);
         recipeNetId = stream.readInt().value_or(0);
     }
 

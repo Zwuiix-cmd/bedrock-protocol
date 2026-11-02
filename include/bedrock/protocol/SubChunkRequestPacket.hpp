@@ -141,11 +141,8 @@ public:
 		}()));
 		}
 		}
-		basePosition = ([&]() {
-		    auto value = std::make_shared<SubChunkPosition>();
-		    value->read(stream);
-		    return value;
-		}());
+		basePosition = std::make_shared<SubChunkPosition>();
+		basePosition->read(stream);
     }
 
     void write(BinaryStream& stream) override {

@@ -16,12 +16,6 @@
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedTemperatureData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedTemperatureData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedTemperatureData.hpp>
 
 class BiomeOverworldGenRulesData {
 public:
@@ -52,55 +46,13 @@ public:
         climates(climatesValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        hillTransformations = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        mutateTransformations = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        riverTransformations = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        shoreTransformations = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        preHillsEdges = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeConditionalTransformationData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        postShoreEdges = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeConditionalTransformationData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        climates = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeWeightedTemperatureData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        hillTransformations = stream.readObjectList<BiomeWeightedData>();
+        mutateTransformations = stream.readObjectList<BiomeWeightedData>();
+        riverTransformations = stream.readObjectList<BiomeWeightedData>();
+        shoreTransformations = stream.readObjectList<BiomeWeightedData>();
+        preHillsEdges = stream.readObjectList<BiomeConditionalTransformationData>();
+        postShoreEdges = stream.readObjectList<BiomeConditionalTransformationData>();
+        climates = stream.readObjectList<BiomeWeightedTemperatureData>();
     }
 
     virtual void write(BinaryStream& stream) const {

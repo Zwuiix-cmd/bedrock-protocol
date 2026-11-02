@@ -135,11 +135,8 @@ public:
 		for (std::size_t i = 0; (i < count); ++i) {
 			items.push_back(([&]() { NetworkItemStack value; value.read(stream); return value; }()));
 		}
-		containerName = ([&]() {
-		    auto value = std::make_shared<FullContainerName>();
-		    value->read(stream);
-		    return value;
-		}());
+		containerName = std::make_shared<FullContainerName>();
+		containerName->read(stream);
 		storage.read(stream);
     }
 

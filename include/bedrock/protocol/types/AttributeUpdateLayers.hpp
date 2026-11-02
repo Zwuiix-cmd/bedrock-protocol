@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeLayer.hpp>
-#include <bedrock/protocol/types/AttributeLayer.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
 
 class AttributeUpdateLayers : public AttributeLayerSyncPayload {
@@ -30,13 +29,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        layers = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<AttributeLayer>();
-	value->read(stream);
-	return value;
-	}());
-});
+        layers = stream.readObjectList<AttributeLayer>();
     }
 
     void write(BinaryStream& stream) const override {

@@ -140,12 +140,11 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		originData = ([&]() {
-		    auto value = std::make_shared<CommandOriginData>();
-		    value->read(stream);
-		    return value;
-		}());
-		outputType = magic_enum::enum_cast<CommandOutputPacket::OutputType>(std::string_view(stream.readString().value_or(""))).value_or(CommandOutputPacket::OutputType::Last);
+		originData = std::make_shared<CommandOriginData>();
+		originData->read(stream);
+		outputType = magic_enum::enum_cast<CommandOutputPacket::OutputType>(
+			std::string_view(stream.readString().value_or(""))
+		).value_or(CommandOutputPacket::OutputType::Last);
 		successCount = stream.readUnsignedInt().value_or(0);
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
@@ -180,7 +179,7 @@ public:
 				stream.writeBool(message->isInternal);
 				stream.writeUnsignedVarInt(message->parameters.size());
 				for (const auto& parameter : message->parameters) {
-					stream.writeString(parameter);
+					stream.writeString(magic_enum::enum_integer(parameter));
 				}
 			}());
 		}
@@ -190,18 +189,16 @@ public:
     }
 };
 
-inline constexpr std::array<std::string_view, 4> CommandOutputPacketOutputTypeNames = {
-    "lastoutput",
-    "silent",
-    "alloutput",
-    "dataset",
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<CommandOutputPacket::OutputType>(CommandOutputPacket::OutputType value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < CommandOutputPacketOutputTypeNames.size() ? customize_t{CommandOutputPacketOutputTypeNames[index]} : invalid_tag;
+    switch (value) {
+        case CommandOutputPacket::OutputType::Last: return "lastoutput";
+        case CommandOutputPacket::OutputType::Silent: return "silent";
+        case CommandOutputPacket::OutputType::All: return "alloutput";
+        case CommandOutputPacket::OutputType::DataSet: return "dataset";
+        default: return invalid_tag;
+    }
 }
 
 }

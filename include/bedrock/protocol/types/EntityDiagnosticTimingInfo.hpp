@@ -45,11 +45,11 @@ public:
         timeInNS = stream.readUnsignedLong().value_or(0);
         percentOfTotal = stream.readUnsignedByte().value_or(0);
         position = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         dimension = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

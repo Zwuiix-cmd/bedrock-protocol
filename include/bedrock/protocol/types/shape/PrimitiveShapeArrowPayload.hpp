@@ -41,17 +41,17 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         lineEndLocation = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         arrowHeadLength = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         arrowHeadRadius = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         segments = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
     }
 
     void write(BinaryStream& stream) const override {

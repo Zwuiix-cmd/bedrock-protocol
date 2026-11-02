@@ -126,10 +126,53 @@ private function methodCall(Node\Expr\MethodCall $call, array $declaration, ?arr
                 'setOffset' => 'seek',
                 default => $name,
             };
+            $callbackName = null;
+            $callbackEnumType = null;
+            $callbackHadType = false;
+            $callbackPreviousType = null;
+            if ($name === 'writeOptional'
+                && isset($call->args[0], $call->args[1])
+                && $call->args[0] instanceof Node\Arg
+                && $call->args[1] instanceof Node\Arg
+                && $call->args[1]->value instanceof Node\Expr\Closure
+                && $call->args[1]->value->params !== []) {
+                $callbackEnumType = $this->enumPropertyType($call->args[0]->value, $declaration)
+                    ?? $this->assignmentCPPType($call->args[0]->value, $declaration);
+                if (is_string($callbackEnumType)) {
+                    $callbackEnumType = preg_replace('/^std::optional<(.+)>$/', '$1', $callbackEnumType) ?? $callbackEnumType;
+                    $callbackName = (string) $call->args[1]->value->params[0]->var->name;
+                    $callbackHadType = array_key_exists($callbackName, $this->expressionTypes);
+                    $callbackPreviousType = $this->expressionTypes[$callbackName] ?? null;
+                    $this->expressionTypes[$callbackName] = $callbackEnumType;
+                }
+            }
             $arguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method), $call->args);
+            if ($callbackName !== null && $callbackEnumType !== null && isset($arguments[1])) {
+                $arguments[1] = preg_replace(
+                    '/(stream\.write(?:Unsigned|Signed)?(?:Byte|Short|Int|Long|VarInt|VarLong)\()'
+                        . preg_quote($callbackName, '/') . '(\))/',
+                    '$1magic_enum::enum_integer(' . $callbackName . ')$2',
+                    $arguments[1],
+                ) ?? $arguments[1];
+            }
+            if ($callbackName !== null) {
+                if ($callbackHadType) {
+                    $this->expressionTypes[$callbackName] = $callbackPreviousType;
+                } else {
+                    unset($this->expressionTypes[$callbackName]);
+                }
+            }
             if (str_starts_with(strtolower($name), 'write')) {
                 foreach ($call->args as $index => $argument) {
-                    $arguments[$index] = $this->enumStorageCast($argument, $arguments[$index], $declaration);
+                    if ($argument instanceof Node\Arg && $this->isStringEnumProperty($argument->value, $declaration)) {
+                        $arguments[$index] = $this->stringEnumToString(
+                            $argument->value,
+                            $arguments[$index],
+                            $declaration,
+                        );
+                    } else {
+                        $arguments[$index] = $this->enumStorageCast($argument, $arguments[$index], $declaration);
+                    }
                 }
             }
             if ($name === 'seek' && count($arguments) === 1) {

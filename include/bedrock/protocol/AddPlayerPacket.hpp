@@ -161,9 +161,11 @@ public:
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
 		item.read(stream);
-		gameMode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(GameMode::Survival);
+		gameMode = magic_enum::enum_cast<GameMode>(
+			stream.readVarInt().value_or(0)
+		).value_or(GameMode::Survival);
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
-		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
+		syncedProperties.read(stream);
 		abilities = ([&]() {
 		    auto value = std::make_shared<AbilitiesData>();
 		    value->read(stream);
@@ -183,7 +185,9 @@ public:
 		    return value;
 		}()); });
 		deviceId = stream.readString().value_or("");
-		buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
+		buildPlatform = magic_enum::enum_cast<BuildPlatform>(
+			stream.readInt().value_or(0)
+		).value_or(BuildPlatform::Unknown);
     }
 
     void write(BinaryStream& stream) override {
@@ -203,7 +207,7 @@ public:
 		abilities->write(stream);
 		stream.writeUnsignedVarInt(links.size());
 		for (const auto& link : links) {
-			if (link) link->write(stream);
+			if (magic_enum::enum_integer(link)) magic_enum::enum_integer(link)->write(stream);
 		}
 		stream.writeOptional(passengerBlockData, [&](const auto& data) {
 			data->write(stream);

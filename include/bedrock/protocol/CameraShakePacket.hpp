@@ -139,8 +139,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		intensity = stream.readFloat().value_or(0.0f);
 		duration = stream.readFloat().value_or(0.0f);
-		shakeType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::Positional);
-		shakeAction = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(Action::Add);
+		shakeType = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::Positional);
+		shakeAction = magic_enum::enum_cast<Action>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Action::Add);
     }
 
     void write(BinaryStream& stream) override {

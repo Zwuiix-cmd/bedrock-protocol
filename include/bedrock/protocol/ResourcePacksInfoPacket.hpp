@@ -140,9 +140,9 @@ public:
 		worldTemplateVersion = stream.readString().value_or("");
 		resourcePackEntries = stream.readList([&]() {
 			return ([&]() {
-			auto value = std::make_shared<ResourcePackInfoEntry>();
-			value->read(stream);
-			return value;
+			    auto value = std::make_shared<ResourcePackInfoEntry>();
+			    value->read(stream);
+			    return value;
 			}());
 		});
     }

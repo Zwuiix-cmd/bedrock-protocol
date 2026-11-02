@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/SyncWorldClockStateData.hpp>
-#include <bedrock/protocol/types/SyncWorldClockStateData.hpp>
 #include <bedrock/protocol/types/SyncWorldClocksPayload.hpp>
 
 class SyncWorldClocksSyncState : public SyncWorldClocksPayload {
@@ -30,13 +29,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        clockData = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<SyncWorldClockStateData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        clockData = stream.readObjectList<SyncWorldClockStateData>();
     }
 
     void write(BinaryStream& stream) const override {

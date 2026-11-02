@@ -170,9 +170,15 @@ public:
 			}
 			inputFlags.set(flag, true);
 		}
-		inputMode = magic_enum::enum_cast<InputMode>(stream.readUnsignedVarInt().value_or(0)).value_or(InputMode::Undefined);
-		playMode = magic_enum::enum_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0)).value_or(PlayMode::Normal);
-		interactionMode = magic_enum::enum_cast<InteractionMode>(stream.readVarInt().value_or(0)).value_or(InteractionMode::Touch);
+		inputMode = magic_enum::enum_cast<InputMode>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(InputMode::Undefined);
+		playMode = magic_enum::enum_cast<PlayMode>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(PlayMode::Normal);
+		interactionMode = magic_enum::enum_cast<InteractionMode>(
+			stream.readVarInt().value_or(0)
+		).value_or(InteractionMode::Touch);
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
@@ -238,7 +244,7 @@ public:
 		});
 		stream.writeOptional(blockActions, [&](const auto& array) {
 			stream.writeList(array, [&](const auto& v) {
-			v.write(stream);
+				v.write(stream);
 			});
 		});
 		stream.writeOptional(vehicleInfo ? std::optional{vehicleInfo->vehicleRotation} : std::nullopt, [&](const auto& value) {

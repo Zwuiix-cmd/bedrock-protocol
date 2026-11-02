@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -37,16 +36,42 @@ enum class PersonaSkinPieceType : uint16_t {
     Coco = 28,
     Unsupported = 29,
 };
-
-inline constexpr std::array<std::string_view, 30> PersonaSkinPieceTypeNames = {
-#include <bedrock/protocol/types/skin/PersonaSkinPieceTypeNames.inc>
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<PersonaSkinPieceType>(PersonaSkinPieceType value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < PersonaSkinPieceTypeNames.size() ? customize_t{PersonaSkinPieceTypeNames[index]} : invalid_tag;
+    switch (value) {
+        case PersonaSkinPieceType::Unknown: return "unknown";
+        case PersonaSkinPieceType::Skeleton: return "skeleton";
+        case PersonaSkinPieceType::Body: return "body";
+        case PersonaSkinPieceType::Skin: return "skin";
+        case PersonaSkinPieceType::Bottom: return "bottom";
+        case PersonaSkinPieceType::Feet: return "feet";
+        case PersonaSkinPieceType::Dress: return "dress";
+        case PersonaSkinPieceType::Top: return "top";
+        case PersonaSkinPieceType::HighPants: return "high_pants";
+        case PersonaSkinPieceType::Hands: return "hands";
+        case PersonaSkinPieceType::Outerwear: return "outerwear";
+        case PersonaSkinPieceType::FacialHair: return "facialhair";
+        case PersonaSkinPieceType::Mouth: return "mouth";
+        case PersonaSkinPieceType::Eyes: return "eyes";
+        case PersonaSkinPieceType::Hair: return "hair";
+        case PersonaSkinPieceType::Hood: return "hood";
+        case PersonaSkinPieceType::Back: return "back";
+        case PersonaSkinPieceType::FaceAccessory: return "faceaccessory";
+        case PersonaSkinPieceType::Head: return "head";
+        case PersonaSkinPieceType::Legs: return "legs";
+        case PersonaSkinPieceType::LeftLeg: return "leftleg";
+        case PersonaSkinPieceType::RightLeg: return "rightleg";
+        case PersonaSkinPieceType::Arms: return "arms";
+        case PersonaSkinPieceType::LeftArm: return "leftarm";
+        case PersonaSkinPieceType::RightArm: return "rightarm";
+        case PersonaSkinPieceType::Capes: return "capes";
+        case PersonaSkinPieceType::ClassicSkin: return "classicskin";
+        case PersonaSkinPieceType::Emote: return "emote";
+        case PersonaSkinPieceType::Coco: return "coco";
+        case PersonaSkinPieceType::Unsupported: return "unsupported";
+        default: return invalid_tag;
+    }
 }
 
 }

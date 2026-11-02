@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
-#include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
 #include <bedrock/protocol/types/SyncWorldClocksPayload.hpp>
 
 class SyncWorldClocksAddTimeMarker : public SyncWorldClocksPayload {
@@ -37,13 +36,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         clockId = stream.readUnsignedVarLong().value_or(0);
-        markers = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<SyncWorldClockMarkerData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        markers = stream.readObjectList<SyncWorldClockMarkerData>();
     }
 
     void write(BinaryStream& stream) const override {

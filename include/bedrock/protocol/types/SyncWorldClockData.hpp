@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
-#include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
 
 class SyncWorldClockData {
 public:
@@ -43,13 +42,7 @@ public:
         name = stream.readString().value_or("");
         time = stream.readVarInt().value_or(0);
         paused = stream.readBool().value_or(false);
-        markers = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<SyncWorldClockMarkerData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        markers = stream.readObjectList<SyncWorldClockMarkerData>();
     }
 
     virtual void write(BinaryStream& stream) const {

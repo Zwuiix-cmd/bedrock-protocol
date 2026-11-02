@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraSplineProgressKeyFrame {
 public:
@@ -37,8 +35,10 @@ public:
         progress = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
         easeType = stream.readOptional([&]() {
-	return magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
-});
+            return magic_enum::enum_cast<CameraSetInstructionEaseType>(
+                stream.readVarInt().value_or(0)
+            ).value_or(CameraSetInstructionEaseType::Linear);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

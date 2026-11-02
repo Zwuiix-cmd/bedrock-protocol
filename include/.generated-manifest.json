@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "6e6ec746bcd0dcb196e6d5a81d987b21e09c4a612de4f39d4a41ac923189ad37",
-    "generatorFingerprint": "ad883559f35dcbde8c5fbaa5cf6e03ed81342101d020efa4fe77e2a6ae986822",
+    "generatorFingerprint": "a4ac44cb3728fbcd4ff7bba20f38f0e4ab7ac7b0fce736a3f598025b5f7de37f",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "master",
@@ -14,8 +14,8 @@
             "bytes": 11793
         },
         "include/bedrock/protocol/io/ReadOnlyBinaryStream.hpp": {
-            "sha256": "13c400138c2e2cac73f0da677c4bc3ecea164f177c00f26bc18bd14d2026e745",
-            "bytes": 16024
+            "sha256": "60a31af25048975718569f1c9cfc2b0ce9a20065da930e5ac748513265bee974",
+            "bytes": 16493
         },
         "include/bedrock/protocol/types/NetworkNbt.hpp": {
             "sha256": "9bd0a87056ec3b0b2ebce9d60f7b635508cb6dda3524dcf015f9d6fa4096962e",
@@ -690,8 +690,8 @@
             "bytes": 6623
         },
         "include/bedrock/protocol/AddActorPacket.hpp": {
-            "sha256": "1211f79ff6db20343f2eac2e7cfe5cd981a6025b29519f2c61e8cb0de2b2efaa",
-            "bytes": 9197
+            "sha256": "e8845c372f703d882de27af5d10a977ee9f0ed81baf3d07121bf0b02cfda3825",
+            "bytes": 9136
         },
         "include/bedrock/protocol/AddBehaviorTreePacket.hpp": {
             "sha256": "9b64bc50bc1dfc9c877c9a40d22e38b41749a746af7c7bc68359ce87c69a53a4",
@@ -706,28 +706,28 @@
             "bytes": 6853
         },
         "include/bedrock/protocol/AddPlayerPacket.hpp": {
-            "sha256": "7716f608bdab68a16540b357c61b137cc2108938ecb5a394a280c2ade818f353",
-            "bytes": 9762
+            "sha256": "fcd2a3bdb695049126321a701fbbf6c184679e5bcf3c2992728cb181c43227fb",
+            "bytes": 9767
         },
         "include/bedrock/protocol/AddVolumeEntityPacket.hpp": {
             "sha256": "f3c5939516397075e92e7efaf6bf0e2a999e34fe486ce0a02594d180ea5d1dc1",
             "bytes": 7425
         },
         "include/bedrock/protocol/AgentActionEventPacket.hpp": {
-            "sha256": "5ced2b900007d5360c848a7624079d65bd2490d3305396582b8a9962393dbb5d",
-            "bytes": 6779
+            "sha256": "3d207837d0fc9b59daf6a3bbb6b975399f0aa41f7b1d22235ebf845c091e4b4d",
+            "bytes": 6786
         },
         "include/bedrock/protocol/AgentAnimationPacket.hpp": {
-            "sha256": "6729a204d0dd3a743b15a75fc5bf61de9e65ae66174e7c7188fae36468d20cf7",
-            "bytes": 6704
+            "sha256": "07f6cd19fa4669781a3c88c3747ea876684a2b815b12e7eb6a9d5f69f6c6c91f",
+            "bytes": 6711
         },
         "include/bedrock/protocol/AnimateEntityPacket.hpp": {
             "sha256": "8a7a4ed6d116d804b391a4bfdb0fd3d0c0a91cbee3de0df912a2c8ff26276f7f",
             "bytes": 7349
         },
         "include/bedrock/protocol/AnimatePacket.hpp": {
-            "sha256": "f88ad0ba03897278809e59db8f4a6bffb5052b81af6b6ee07b3767989f6a10f9",
-            "bytes": 7396
+            "sha256": "889201bf681204f657a45b5d7a6ca6a87f8542598a38a7dc14873e274e8c4ab5",
+            "bytes": 7446
         },
         "include/bedrock/protocol/AnvilDamagePacket.hpp": {
             "sha256": "ac1f8e787e468e090a01b91851c986c349c694781a7fcc441e47a07b1af22246",
@@ -766,20 +766,20 @@
             "bytes": 6666
         },
         "include/bedrock/protocol/BookEditPacket.hpp": {
-            "sha256": "96338613fe1edd4314af00d1b21550c10e9f6bf05b539e67ca00df0a2df16938",
-            "bytes": 8186
+            "sha256": "2a07d13f15e40f4456653b30979bb4c0d23a36d2bb1fe342ce10d1463d48f00c",
+            "bytes": 8193
         },
         "include/bedrock/protocol/BossEventPacket.hpp": {
-            "sha256": "31dba8b45a63d6150bf3126439177f1a1c857a207e50007f51546ca555c8ebc2",
-            "bytes": 7768
+            "sha256": "267281dfc828c6f6ca593fd5f0f6f1aad0ab5e57a4fbf10775f8e63ae9f69197",
+            "bytes": 7773
         },
         "include/bedrock/protocol/CameraAimAssistActorPriorityPacket.hpp": {
             "sha256": "a39a1632230fbcdcb4754da54ee23bbb8d6d33fb668e10746ca7a8582a6d8ca5",
             "bytes": 6969
         },
         "include/bedrock/protocol/CameraAimAssistPacket.hpp": {
-            "sha256": "f9306f06caa3ce28a6608e54c229c78c308f7f713d74dae966cbbb315140439c",
-            "bytes": 7373
+            "sha256": "477e2f92fc1afe08ac4382db4c0b9c5420cd7ab8caf8217132655e79aa8c966c",
+            "bytes": 7387
         },
         "include/bedrock/protocol/CameraAimAssistPresetsPacket.hpp": {
             "sha256": "2f14ae025d771db2382b43ab0d858109fc82ae2caf2929b746709a5dae64e7d6",
@@ -798,8 +798,8 @@
             "bytes": 6823
         },
         "include/bedrock/protocol/CameraShakePacket.hpp": {
-            "sha256": "d25c78cc3d8a3bca2a74411cf4d2a2c671e8a2f246f5468a8e8d58d030ae77e5",
-            "bytes": 7037
+            "sha256": "89601c2d31a8e814d846aa239f17d0f847adc8f24a83b668f188139a4b605f8e",
+            "bytes": 7051
         },
         "include/bedrock/protocol/CameraSplinePacket.hpp": {
             "sha256": "5ebcc70bb45c61102fa9dfcf922c927ec94f25e7778ae5843afb287acb147295",
@@ -830,12 +830,12 @@
             "bytes": 6384
         },
         "include/bedrock/protocol/ClientCameraAimAssistPacket.hpp": {
-            "sha256": "0daba9f6cbc3adbcf939afff0d53bc045c76c71c44bfac887dd1dc49cfd3e789",
-            "bytes": 6842
+            "sha256": "be9b24944bacbf1d618036512cac83bc6356687ae0d9d8229d0345a47f83b114",
+            "bytes": 6849
         },
         "include/bedrock/protocol/ClientMovementPredictionSyncPacket.hpp": {
-            "sha256": "837351afa494ba3911d1d9fffa3511b1a467255b8e1927312f243f97c26d31ce",
-            "bytes": 8198
+            "sha256": "1d195ab2120991ea452ab1ad6c1b8142b0463741e09db2b52815dc48bf6994b9",
+            "bytes": 8049
         },
         "include/bedrock/protocol/ClientToServerHandshakePacket.hpp": {
             "sha256": "1a6043380bcfb17d9242c90231e752699a2feb2dc4e084c2e5415da02137da43",
@@ -850,8 +850,8 @@
             "bytes": 6340
         },
         "include/bedrock/protocol/ClientboundControlSchemeSetPacket.hpp": {
-            "sha256": "a01d88e2c418520fa473bf733d29677b5198b5452936d2dabb708c8b894ec1f6",
-            "bytes": 6590
+            "sha256": "8b395175eaa03f8f2247d0d2f44b250e0fd4bf74738820b708f686968bbf5c16",
+            "bytes": 6597
         },
         "include/bedrock/protocol/ClientboundDataDrivenUICloseScreenPacket.hpp": {
             "sha256": "628b1e9e6301cbbe69b465ec3dac2eb41a612826ffce7beb89b0a0e8f0000907",
@@ -870,32 +870,32 @@
             "bytes": 7611
         },
         "include/bedrock/protocol/ClientboundDebugRendererPacket.hpp": {
-            "sha256": "5a82be80e9d5087ef4f6c408b372d222c259284a91410e86a3b65147f4c64659",
-            "bytes": 7613
+            "sha256": "f9b15c4fcc4374cf755ae102cd1dd1652c2c7a22f77c0f227d75075c25e4d395",
+            "bytes": 7484
         },
         "include/bedrock/protocol/ClientboundMapItemDataPacket.hpp": {
-            "sha256": "753ee4f6813e4dcde4180eaefb6a80ca353c71ede1944a291bd654904e7f0e6c",
-            "bytes": 9057
+            "sha256": "3a10c2a3da84ac068e88bb4e396eb243edaba0ad541f66399729b2f69b6c73bb",
+            "bytes": 9074
         },
         "include/bedrock/protocol/ClientboundMatchmakingStatePacket.hpp": {
-            "sha256": "611341eb4730d04afef6b6ac17971c1578ea43090d0f9b82c0383c92f4b0dc46",
-            "bytes": 7224
+            "sha256": "997ac512ba58899b91b6c770c80ac8c4ccb52ffde34655732d1fef94b807dfed",
+            "bytes": 7174
         },
         "include/bedrock/protocol/ClientboundPlayAudioContentPacket.hpp": {
-            "sha256": "63319704fc94234e36931ca2719f1cc55ef8e9be220402e01147c681fdf9da36",
-            "bytes": 7067
+            "sha256": "849c6c2fbc4c60e09130d455e504166bc69014e70501b2b72e97e1ae31d8694d",
+            "bytes": 7089
         },
         "include/bedrock/protocol/ClientboundStonecutterSetRecipePacket.hpp": {
             "sha256": "5c1ade075f9a9c91b4264f9cf2b2d0320f585fd777fcae0b26ac5863c8d13403",
             "bytes": 6695
         },
         "include/bedrock/protocol/ClientboundTextureShiftPacket.hpp": {
-            "sha256": "c2ce3d5cdc5c459cb4383537a2e7d8342ce9e714f6cf00300e46f09913a45b34",
-            "bytes": 7643
+            "sha256": "030019eaac8fd425884b304e28e44689cf84f888ca0d3a47f71bbe741d26a186",
+            "bytes": 7650
         },
         "include/bedrock/protocol/ClientboundUpdateSoundDataPacket.hpp": {
-            "sha256": "67f5d4362aaf344df2124a6b1f147e8ff4000c4d5fa4d350412250cd344180db",
-            "bytes": 6762
+            "sha256": "722fdf29a5f10b3909d747848efd2735c4aac31f48731d3d320d344ead76806d",
+            "bytes": 6702
         },
         "include/bedrock/protocol/CodeBuilderPacket.hpp": {
             "sha256": "832c3b3056d8aab2cee65177774cd5d980cb96474c9e494e06b0ed8f5e467a13",
@@ -910,16 +910,16 @@
             "bytes": 7921
         },
         "include/bedrock/protocol/CommandOutputPacket.hpp": {
-            "sha256": "51791e50c850f26a21777601db6794832ae838ef81cfc146c30028e75a950d34",
-            "bytes": 9096
+            "sha256": "cd7d2e5f51f7978d5c2a3414f12a3cfb354df3aa949a5c6ae70e239de8fdb1b8",
+            "bytes": 9053
         },
         "include/bedrock/protocol/CommandRequestPacket.hpp": {
-            "sha256": "605569ea7b79b2fe73cc2a20f98c1efdcd2b5bac76c127c8abbfec9e21b19f01",
-            "bytes": 6952
+            "sha256": "a84cbd26386c753a3502cd3b68e91233da8c67d5fcaa10eb28c20ce43609e5c7",
+            "bytes": 6897
         },
         "include/bedrock/protocol/CompletedUsingItemPacket.hpp": {
-            "sha256": "fa054d8e98dbbf50185fb386aad2bf2172b6d5ccaba659e1ec7f8de8dc8dfe3e",
-            "bytes": 6970
+            "sha256": "c8f8ac3ae1bf504441a837e282dcd77c61efb8441e182ac4982fb5500501e053",
+            "bytes": 6977
         },
         "include/bedrock/protocol/ContainerClosePacket.hpp": {
             "sha256": "f41f5c1f66eac17115788e5021e4d660ce8c21f2042664646bbca44df9ed3488",
@@ -934,12 +934,12 @@
             "bytes": 6933
         },
         "include/bedrock/protocol/ContainerSetDataPacket.hpp": {
-            "sha256": "894edf639c85e588221ac46224d283013c86be538363dc95cbfd405c14f1044e",
-            "bytes": 7002
+            "sha256": "f4288c5fe1b0b1ffc508e20da5fb1a437d53a8ffee59fa7228c0f72e375b3e08",
+            "bytes": 7009
         },
         "include/bedrock/protocol/CorrectPlayerMovePredictionPacket.hpp": {
-            "sha256": "2d1af1fc3da353a33bc8c9e6dfc0d725509d41f68af6c3fa0479f3f105090ee0",
-            "bytes": 7525
+            "sha256": "7af94ca9fa24220a89201a996ffeea2e50d0843ae6b69b14bcd9e317e7a69e6e",
+            "bytes": 7532
         },
         "include/bedrock/protocol/CraftingDataPacket.hpp": {
             "sha256": "adfa1796e1bf9f32c24936bad7a980f513d318f296f55eb2563a33c357a610fc",
@@ -978,20 +978,20 @@
             "bytes": 6664
         },
         "include/bedrock/protocol/EduUriResourcePacket.hpp": {
-            "sha256": "309f9852dc33c91ff57b80ec5c1faeeb425267c35ca56c011f2e0b91a62e5175",
-            "bytes": 6619
+            "sha256": "6d399651994d2a9ac03b5e72e6bb3c320cee7c10f0a14725a260a27a69eaaed5",
+            "bytes": 6562
         },
         "include/bedrock/protocol/EducationSettingsPacket.hpp": {
             "sha256": "9be0c372e1302958b4d4b76f15d18f830657c744d1d6544e580c7805aefb7752",
             "bytes": 8540
         },
         "include/bedrock/protocol/EmoteListPacket.hpp": {
-            "sha256": "b09ab5fd1be38230d60b965951c06eddead728dc4f327c0ec5ea725c5982590a",
-            "bytes": 6766
+            "sha256": "5f1b5275efffedf32dbb5c3cf166e86f1873dfc7f8461c83cedcbf52d82d3d9e",
+            "bytes": 6792
         },
         "include/bedrock/protocol/EmotePacket.hpp": {
-            "sha256": "dc0f565a06701b0217a02049e4ffda22196a9632ad06ddec9c3707b82b2bea84",
-            "bytes": 7146
+            "sha256": "790ce6eab713610d25eb9f731fa6ddf4355f2b47f405246730cd43d3eab9735d",
+            "bytes": 7147
         },
         "include/bedrock/protocol/FeatureRegistryPacket.hpp": {
             "sha256": "67a67844a01a85e0835109e2855df289d69dd4ca1c57a217c64dc9d4be3f048a",
@@ -1006,16 +1006,16 @@
             "bytes": 6548
         },
         "include/bedrock/protocol/GameTestRequestPacket.hpp": {
-            "sha256": "c4a1f1d9561d1258a74d01839ca5069bb17f8a73d4d742f04251d940c9b55fa3",
-            "bytes": 7296
+            "sha256": "42664583172d6604de6e87a42e66e81153548a9bb05578ce536c0ab65d183318",
+            "bytes": 7303
         },
         "include/bedrock/protocol/GameTestResultsPacket.hpp": {
             "sha256": "b6f4205bc466ebd0a44a44e2bf1cbd71e820732a25bac974578d17c0945b4822",
             "bytes": 6581
         },
         "include/bedrock/protocol/GraphicsOverrideParameterPacket.hpp": {
-            "sha256": "2f5f67343d3a73142d50008a20443001e94b20b7a7e273d50a9ef5fc6c1149bb",
-            "bytes": 8162
+            "sha256": "fed72be7dee4df91e7c6481a919c40f26d88f9e62033e031b7134964f6b42b4c",
+            "bytes": 8169
         },
         "include/bedrock/protocol/GuiDataPickItemPacket.hpp": {
             "sha256": "ab8d13080b65dc90433b540f47e9f274b0dfd444cfb4bd87e7b6e977c978e878",
@@ -1026,12 +1026,12 @@
             "bytes": 6596
         },
         "include/bedrock/protocol/InteractPacket.hpp": {
-            "sha256": "9fe30288da8ca28a08da39ff7c7cdc3531fb4a4f2f582042062f33d4bd6ba9e2",
-            "bytes": 6990
+            "sha256": "c5b97f24783d821b1331cae593ebf11c2e053f2b40bd593440591294d52403f3",
+            "bytes": 6997
         },
         "include/bedrock/protocol/InventoryContentPacket.hpp": {
-            "sha256": "7e0725f11f72677ce45629c249a0aef0d7dfb6689204ad6fadca0db5af7895d7",
-            "bytes": 7253
+            "sha256": "86601ff305b60c75a5bbf339a80e4d7dc0a4f910545d3b3eddecd359063ab19c",
+            "bytes": 7201
         },
         "include/bedrock/protocol/InventorySlotPacket.hpp": {
             "sha256": "f513c7d9b9a9f1b2fffe51274c6970c6849bebba30b759c7c9cd28c6e731ce69",
@@ -1042,8 +1042,8 @@
             "bytes": 9400
         },
         "include/bedrock/protocol/ItemRegistryPacket.hpp": {
-            "sha256": "adc58979d238fbed2c6b5233086f9298fb8bdd0a1465dbda1d75af3fdea4f3c8",
-            "bytes": 6691
+            "sha256": "dfd0fc53c27f58307decc4a361c83e38434098b28ea94b8ab0461e473365d44a",
+            "bytes": 6602
         },
         "include/bedrock/protocol/ItemStackRequestPacket.hpp": {
             "sha256": "ff8d3815a601c166e5c96ca0c62c08423a08d4a07cb8c651d5098299a029e3f1",
@@ -1058,28 +1058,28 @@
             "bytes": 6537
         },
         "include/bedrock/protocol/LabTablePacket.hpp": {
-            "sha256": "c2dcab4ce228fb8311297ea05dbe17d3645b090067a869faa6b4ababfb4475cf",
-            "bytes": 6934
+            "sha256": "19477b5ecbb0c9f97f95617c7f6c7ba86b5236b8f994c7390a0ebfa6c9f890c2",
+            "bytes": 6948
         },
         "include/bedrock/protocol/LecternUpdatePacket.hpp": {
             "sha256": "2a13de8f3a7b07b5b98716bdd3fc76f12382c6bc1ef97f89451c17abb0b1a7c3",
             "bytes": 6646
         },
         "include/bedrock/protocol/LegacyTelemetryEventPacket.hpp": {
-            "sha256": "33bfef1724e41ddce445debcb4a95dc3b70cf29bc11b1bf4403aecc60f64dd6a",
-            "bytes": 7461
+            "sha256": "1524d21a626d78c1b27d9e92718cafa0287ee2f38f7813ae6e8a11f9a24cf650",
+            "bytes": 7468
         },
         "include/bedrock/protocol/LessonProgressPacket.hpp": {
-            "sha256": "32ce67ebd7804a42440b12644282365d9c3b522d736fdf20eae93f090966d2a0",
-            "bytes": 6762
+            "sha256": "bcc960b4f49dc08ad30c38d8b67d2e833e219b60bab3c0045ad9872f85efc6c1",
+            "bytes": 6769
         },
         "include/bedrock/protocol/LevelChunkPacket.hpp": {
-            "sha256": "83e1fce6911812b73dfdc66cc12b1e85dcaacd635ebe005c1396fcfadbcdc6ec",
-            "bytes": 7916
+            "sha256": "5601d5380bddb3389505c5ab626d2a44ca467eec85829bc1fe2ddca9a1aae7c6",
+            "bytes": 7864
         },
         "include/bedrock/protocol/LevelEventGenericPacket.hpp": {
-            "sha256": "71ba88be26877e9832e15f4e9cb96573edce0f8a282320391536e95f841f57dd",
-            "bytes": 6774
+            "sha256": "cc7a8e6e2f3fb76f6968b8d3f08759f8bb6db7223a3bdfb9a4f7bc627ff66690",
+            "bytes": 6754
         },
         "include/bedrock/protocol/LevelEventPacket.hpp": {
             "sha256": "5bad92aa6b35a9abb77da54c41de22c59f9ab7386958f4a75b1d39b81971fdf9",
@@ -1110,8 +1110,8 @@
             "bytes": 6843
         },
         "include/bedrock/protocol/MobEffectPacket.hpp": {
-            "sha256": "02c474d2dea565f47a7ba76a3b4fb192c16d920cce823c3184c933f43f7308ba",
-            "bytes": 7321
+            "sha256": "07f7b70c5a5082656024fe41db4a02e721e565963d73df232b4daa40d349a061",
+            "bytes": 7328
         },
         "include/bedrock/protocol/MobEquipmentPacket.hpp": {
             "sha256": "afe0e24a036dbef1a7121a843920f93e749e5f2cfca6946cd8b016caaf2c91ad",
@@ -1122,52 +1122,52 @@
             "bytes": 6504
         },
         "include/bedrock/protocol/ModalFormResponsePacket.hpp": {
-            "sha256": "ad7f68ce5f1c091dfca87c3df49ced9474de7e7c3fe7a8e83116afe7be25001f",
-            "bytes": 7014
+            "sha256": "5dcd9457311d38a58cee2bd774f760de2067dcb0a2e79d979b85fe115178b867",
+            "bytes": 7036
         },
         "include/bedrock/protocol/MotionPredictionHintsPacket.hpp": {
             "sha256": "99938fbdcae36e7ae06692e9f22b8b06254326b734e0438f631dd9389b535d43",
             "bytes": 6636
         },
         "include/bedrock/protocol/MoveActorAbsolutePacket.hpp": {
-            "sha256": "ba26c0ca580d8c46da48c6ba484956321ef88e9d9c23a1fc0380e027d40a3bc7",
-            "bytes": 7186
+            "sha256": "4b5803392c90eda81ad0ded6cad2c68ba3fe0928be842033ed66964b876c0c25",
+            "bytes": 7173
         },
         "include/bedrock/protocol/MoveActorDeltaPacket.hpp": {
             "sha256": "fda826ef4dbff81c369a76629036a178ac17c65a77611bd56ccc93a0f9a53732",
             "bytes": 8746
         },
         "include/bedrock/protocol/MovePlayerPacket.hpp": {
-            "sha256": "105558607e42fd0281f76995b89794aacb1b98271f31abbeb9857373c7971bf9",
-            "bytes": 7948
+            "sha256": "103831cb45071fec216d7ecc293c5116e3a1e2ea8f558252a7d86fc7743cddb2",
+            "bytes": 7955
         },
         "include/bedrock/protocol/MovementEffectPacket.hpp": {
-            "sha256": "af7251fbab294c08434fc83a60ed8b7a9c1ca72a5277648668cb28b6052e406f",
-            "bytes": 6940
+            "sha256": "9e421c935ca65646e64830e6f24ce7056b0fb363131e332ed31b5fb27e6a262b",
+            "bytes": 6947
         },
         "include/bedrock/protocol/MultiplayerSettingsPacket.hpp": {
-            "sha256": "eb597112f78632ee113a2f709d93366a52f1340ef6cc7d45b4ca6432724c203b",
-            "bytes": 6614
+            "sha256": "83224abc2f5065281286003849f50d68d15c8367af4ba04450410af33647a5ad",
+            "bytes": 6621
         },
         "include/bedrock/protocol/NetworkChunkPublisherUpdatePacket.hpp": {
             "sha256": "dce6b0897acc5e1a29afbd0113ca0dbfdb5ff33e26ae36f45bbb44439bca071e",
             "bytes": 7228
         },
         "include/bedrock/protocol/NetworkSettingsPacket.hpp": {
-            "sha256": "cdbcd60f0f16e1f80a45ba1b96a74a78c6d1551b3afa25cb2235fbaf76d2ebef",
-            "bytes": 7287
+            "sha256": "cc5032ab2b0583da5b1df79f53ecdde2db997078e946f353bd7e49f0a9cae095",
+            "bytes": 7294
         },
         "include/bedrock/protocol/NetworkStackLatencyPacket.hpp": {
             "sha256": "409e94e9ff85f0a86e55d93c82b5039c904bbbc68413348382eeda5f128dcbe0",
             "bytes": 6519
         },
         "include/bedrock/protocol/NpcDialoguePacket.hpp": {
-            "sha256": "8bbddab97937ffa68b85c7f3a13f99a7b2237bcded8e5a6e97b3509864174f73",
-            "bytes": 7088
+            "sha256": "28e0f9d2c3dffdec408aa3f16d5b3c462998363839f90663b303a105a89a5401",
+            "bytes": 7095
         },
         "include/bedrock/protocol/NpcRequestPacket.hpp": {
-            "sha256": "49a71551970ffa454afe45352036ceefc7448550d74b4c423f8a48fa65acdcca",
-            "bytes": 7209
+            "sha256": "985d8ba29b19ab4f03ddb9ee17a5beee1c362aed8f9f4fa8b023e5297c0c3234",
+            "bytes": 7216
         },
         "include/bedrock/protocol/OnScreenTextureAnimationPacket.hpp": {
             "sha256": "2e9bb68a3f890e27903fb4219285d5c1f785164cf549bfaaf3e1a14bd9a46e9c",
@@ -1186,8 +1186,8 @@
             "bytes": 11004
         },
         "include/bedrock/protocol/PacketViolationWarningPacket.hpp": {
-            "sha256": "70e9a70fd82b15c12f37f4711304871870f45f898180c88ffcccc9b5dd1b58e0",
-            "bytes": 7045
+            "sha256": "8d3667e12a6c99c4306eab4e3e7cb477371014d0a722343ef3de7b17211bf931",
+            "bytes": 7059
         },
         "include/bedrock/protocol/PartyChangedPacket.hpp": {
             "sha256": "82c871c6504eec19b087960f85be79ea6661a777ee3b090667baed0a347d4e8e",
@@ -1198,16 +1198,16 @@
             "bytes": 6512
         },
         "include/bedrock/protocol/PhotoTransferPacket.hpp": {
-            "sha256": "2264c0f1024364ed84858db9e585a0c2587cbf54dc38e9fe1f35626a1abe6f99",
-            "bytes": 7967
+            "sha256": "3f0225c159f40d9007ecf06154f416a116c2c94dd71c99b1d6236ce31d467961",
+            "bytes": 7812
         },
         "include/bedrock/protocol/PlaySoundPacket.hpp": {
             "sha256": "d93e8c6607dfcbff2a1126fb0d26a69116cf743abc1f275466d81921be285405",
             "bytes": 7687
         },
         "include/bedrock/protocol/PlayStatusPacket.hpp": {
-            "sha256": "62171a40ec8e8202ef5404825ea457edc10f556cf53763f00183eee76d20b67c",
-            "bytes": 6784
+            "sha256": "444e30e98aded445e287d91868fba6c67d32977f2d203ef8bd8958d40bc60335",
+            "bytes": 6789
         },
         "include/bedrock/protocol/PlayerActionPacket.hpp": {
             "sha256": "f6322cac3a7a9ce00ba540f732851ec4bde099a5a1ce21bc38593f78507accab",
@@ -1218,8 +1218,8 @@
             "bytes": 6937
         },
         "include/bedrock/protocol/PlayerAuthInputPacket.hpp": {
-            "sha256": "86dc09859498da3604afc9525fcfaaa38c92217311752484a3ba0088efc9dd7c",
-            "bytes": 11591
+            "sha256": "25b4a318e971f110027f77c12913774c9e7fb3df4b1efb4e6e71c5b165f0c09b",
+            "bytes": 11613
         },
         "include/bedrock/protocol/PlayerEnchantOptionsPacket.hpp": {
             "sha256": "f1879ccb100af75d9342f2bc1ce827978cf213b697e5de3247bc36938bb32a56",
@@ -1234,16 +1234,16 @@
             "bytes": 6671
         },
         "include/bedrock/protocol/PlayerListPacket.hpp": {
-            "sha256": "4b8949620f93f0b2bda0960ac18986bfc7ed4c17d1d6d97911a16542bd4bbd60",
-            "bytes": 6772
+            "sha256": "d1a3e4d8b6fdc2efeecc2593c4dc408b05a977e7e2edd41f98070cb2c2df9134",
+            "bytes": 6683
         },
         "include/bedrock/protocol/PlayerLocationPacket.hpp": {
-            "sha256": "5cf8db72106177991155a4ec908607fc0773047e1e36f444b64f06f390f9a19d",
-            "bytes": 7227
+            "sha256": "f30ed663a646b39049dd23f7c22305e03651fef7195f7556faab6710b28db21e",
+            "bytes": 7234
         },
         "include/bedrock/protocol/PlayerSkinPacket.hpp": {
-            "sha256": "f549d44c51d8eabd9edca8a6d3d87775a2d48ed44bc6e3abef99ac7072dadd80",
-            "bytes": 6888
+            "sha256": "b8ee13f2253ba850fc344bebd7b2111d95efc4bd01cac440a16a1db55f35ed5b",
+            "bytes": 6827
         },
         "include/bedrock/protocol/PlayerStartItemCooldownPacket.hpp": {
             "sha256": "f80259c2fb3a199a4dacfb32e80a128991616fdcc43b374610f84510fe38cace",
@@ -1254,20 +1254,20 @@
             "bytes": 6788
         },
         "include/bedrock/protocol/PlayerUpdateEntityOverridesPacket.hpp": {
-            "sha256": "cd0010f359498341ddadba8320fed5f1296a863df1ffda3cc3fa58654f2eeb9c",
-            "bytes": 7746
+            "sha256": "c0a522f6910222833ffe56eceb6d5da6878e4067390e13abe6ed4ecdeb7e15e2",
+            "bytes": 7898
         },
         "include/bedrock/protocol/PlayerVideoCapturePacket.hpp": {
             "sha256": "fe67a00d52608bd93915ad03df5c676f9d26c101491ead6a1825d1fc85d7855f",
             "bytes": 6816
         },
         "include/bedrock/protocol/PositionTrackingDBClientRequestPacket.hpp": {
-            "sha256": "cfc06c609d6af65ba63fbe67044d16f968c1f784dd357498f4c14c8d6e91594e",
-            "bytes": 6671
+            "sha256": "0d0fccbe90716c927bd917dd6dff187086ea2b99f0add0ba22a87252a21c7d47",
+            "bytes": 6678
         },
         "include/bedrock/protocol/PositionTrackingDBServerBroadcastPacket.hpp": {
-            "sha256": "a3c3342e5ee90702036712539f99791d5d5df63842c2af77eb371f729f0ddda2",
-            "bytes": 6975
+            "sha256": "78ca4a0f73f393d97ad1c27f03b6abd8c629530500138deb6666c19bd25811e0",
+            "bytes": 6997
         },
         "include/bedrock/protocol/PrimitiveShapesPacket.hpp": {
             "sha256": "a2d5ba8e7457ede955495dd1aa2ed78bccae8797dcd32ffbd2734d99c6cdf885",
@@ -1298,8 +1298,8 @@
             "bytes": 6521
         },
         "include/bedrock/protocol/RequestAbilityPacket.hpp": {
-            "sha256": "fd1ceab87a0478c5faede5ca8c518dacddbd7454d32cff7822c1dc74e33dcc25",
-            "bytes": 7588
+            "sha256": "86dfdfdda8d7cc22fabc38a806d92061368d4f662e0516cffd817157e10bd937",
+            "bytes": 7647
         },
         "include/bedrock/protocol/RequestChunkRadiusPacket.hpp": {
             "sha256": "b1a04b72aabdf15ba1c30d887f70b1a9f67cdc85e925c999e061e8643f9b52d5",
@@ -1310,8 +1310,8 @@
             "bytes": 6436
         },
         "include/bedrock/protocol/RequestPermissionsPacket.hpp": {
-            "sha256": "635c9fe289bd3b682eb9b6ef1299d5fea7e62f3b3c34d805a3eb9ab8e364c816",
-            "bytes": 7074
+            "sha256": "5bda62391e74200623591a099a2341f67aeecd3c668bf01a7569c1c16cf8d6d1",
+            "bytes": 7081
         },
         "include/bedrock/protocol/ResourcePackChunkDataPacket.hpp": {
             "sha256": "c1e2a90cda4240c6b888d77136b48b91ec2ac9fbfe952f6a3179a6210e53bf19",
@@ -1322,28 +1322,28 @@
             "bytes": 6520
         },
         "include/bedrock/protocol/ResourcePackClientResponsePacket.hpp": {
-            "sha256": "e501b5dd05faa097c27b8af4d85b69786acc49678f69a9222eba0649346e1eb1",
-            "bytes": 7189
+            "sha256": "107ed957ecf0f0b16a2b08cfd6734cd71f0f43baaa9bf04fdac29ced4d50bab5",
+            "bytes": 7329
         },
         "include/bedrock/protocol/ResourcePackDataInfoPacket.hpp": {
-            "sha256": "74bb6b21105adb2228b038c98ec16fb9662d08f3714ff1410a00ddbd89587b22",
+            "sha256": "ef3f2ede69b18eccee7d676fc7889aa7722cb0b3ac53dff500c5bdcb2871baa5",
             "bytes": 7313
         },
         "include/bedrock/protocol/ResourcePackStackPacket.hpp": {
-            "sha256": "fb0db751feff1932efdf93b77f97188095badf8c3a56123aeef8a6b203603870",
-            "bytes": 7615
+            "sha256": "7d4c3267ff80fa9cfa16aa6f2100d73c3b7b7fb80e4ae7543614f07ccf405913",
+            "bytes": 7561
         },
         "include/bedrock/protocol/ResourcePacksInfoPacket.hpp": {
-            "sha256": "d4590d85830d706084024a6b837e1f13d90e1da2b2d57e3b8fc226be6865c51c",
-            "bytes": 7537
+            "sha256": "1a05207a9b1f2eb87f48306fe7c96122d293f63918ac96cf18fbd7feb90a9abf",
+            "bytes": 7549
         },
         "include/bedrock/protocol/ResourcePacksReadyForValidationPacket.hpp": {
             "sha256": "5510f28eb097440f7ef779389a9b5c25b43c6d2bf0663417c3fabf942776d75e",
             "bytes": 6362
         },
         "include/bedrock/protocol/RespawnPacket.hpp": {
-            "sha256": "0ace7033227a1500a34ea2fd8ed2b4e8a697d3f7921491f91e9ee9743f2fc095",
-            "bytes": 6875
+            "sha256": "7fcaceecb19bc028ba1e6c712957252f9cadfbc6481628f7c197d874791bee53",
+            "bytes": 6880
         },
         "include/bedrock/protocol/ScriptMessagePacket.hpp": {
             "sha256": "5ff327a3a7b51ac1a28072b6410197def5bd86172dd00e54e102f4391b3d060d",
@@ -1382,32 +1382,32 @@
             "bytes": 6392
         },
         "include/bedrock/protocol/ServerboundCursorItemDragPacket.hpp": {
-            "sha256": "a09a421a82cd34444571f03b9bf5f9bc4de5850791c80a680bcaa88520c23c7f",
-            "bytes": 6596
+            "sha256": "4e5ab3bd35d235f0f6c767c211af98839da2c0fa21579b69eb109ab9069f5313",
+            "bytes": 6603
         },
         "include/bedrock/protocol/ServerboundDataDrivenScreenClosedPacket.hpp": {
             "sha256": "5789d94c5ab82bdc6fabba116f5c3dc8c115a952e9dee71aae6423b87c77d51d",
             "bytes": 6541
         },
         "include/bedrock/protocol/ServerboundDataStorePacket.hpp": {
-            "sha256": "f6c6c84604f9b13de3311f252090c1402461d413a8a9ffb34bdd4d0f0e5df95a",
-            "bytes": 6615
+            "sha256": "967db9842807ae11e4c1342cb60f0ffcdf015e933a45c566c4cd53c35e54d19a",
+            "bytes": 6556
         },
         "include/bedrock/protocol/ServerboundDiagnosticsPacket.hpp": {
-            "sha256": "cab6a1368dd36199a2cd4828f8971578092af50f29e6672794b5cce2c872d51e",
-            "bytes": 9899
+            "sha256": "9d9eeb9480ed2768d269b0fd33456078d7b9312514a50986761e0fb6d8779561",
+            "bytes": 9912
         },
         "include/bedrock/protocol/ServerboundLoadingScreenPacket.hpp": {
-            "sha256": "05f13cc8142da471105a6185ecb8c85eca4e9d74e18dd5a1e0bb9eb6dcdba4ae",
-            "bytes": 6858
+            "sha256": "0af597561a64484de88c5dea97aee04e72862771d62008a478ff9652f98f61ca",
+            "bytes": 6865
         },
         "include/bedrock/protocol/ServerboundMatchmakingCancelPacket.hpp": {
             "sha256": "8d4b899d25051724c0a842d2ab16f7131b208d45a1e7f791173823b44baa82e1",
             "bytes": 6356
         },
         "include/bedrock/protocol/ServerboundPackSettingChangePacket.hpp": {
-            "sha256": "5ca24a858702878e29c005b654d6d4719fc5933a6fe5e08aa7d89c7c22c59163",
-            "bytes": 7319
+            "sha256": "4d475ee4024f0ecc719475214de7a475287cbbcb1ad74663a0a63830be40f4eb",
+            "bytes": 7326
         },
         "include/bedrock/protocol/ServerboundRegisterAudioContentPacket.hpp": {
             "sha256": "3e49760a3b528ab9202a2053ea66dcdcb8654c12e4fe37c18f0895dca8361817",
@@ -1418,12 +1418,12 @@
             "bytes": 6548
         },
         "include/bedrock/protocol/SetActorDataPacket.hpp": {
-            "sha256": "450963069ea6a29077bbbcee856578edae3ab9322141125214f8fa07cfdf7dfc",
-            "bytes": 6976
+            "sha256": "583b0679b33f26d72ccbba922c189cecb49bfc9a3dcf85b0fef98867c1f37967",
+            "bytes": 6915
         },
         "include/bedrock/protocol/SetActorLinkPacket.hpp": {
-            "sha256": "84469dbfe2d94306f7d97e0aff986b8a42ababf286a38d20b84fd20c77cade9d",
-            "bytes": 6587
+            "sha256": "00c261adf54c64ea4616c1604a8bcad331c8e013e36db11bf25a7c557ca85759",
+            "bytes": 6526
         },
         "include/bedrock/protocol/SetActorMotionPacket.hpp": {
             "sha256": "bcb372c260e843d40c23e5d455ae887384f40e4a82b1f17d16b1e38f823b219e",
@@ -1434,24 +1434,24 @@
             "bytes": 6386
         },
         "include/bedrock/protocol/SetDefaultGameTypePacket.hpp": {
-            "sha256": "2b7362690ef6bed961396cd9976d61dd5378c26b9265e56b0a4600805639a602",
-            "bytes": 6528
+            "sha256": "967c1710f46a7faa2fe6c9e1fb4164ab9f67deadf25183ed184009eb70e57f45",
+            "bytes": 6535
         },
         "include/bedrock/protocol/SetDifficultyPacket.hpp": {
             "sha256": "2295d1ef52f393efa66f2012a3325f732b12644482901cceddf36addd1d134d0",
             "bytes": 6405
         },
         "include/bedrock/protocol/SetDisplayObjectivePacket.hpp": {
-            "sha256": "de5c408feea9dd36db0c94f9caa27a23d538104e327bd498b261a3fea76a1514",
-            "bytes": 7883
+            "sha256": "a2f21ebf6d32d5cf82bf40d8c46da2f163efac866ae7b0e5575c34de7c78f268",
+            "bytes": 7825
         },
         "include/bedrock/protocol/SetHealthPacket.hpp": {
             "sha256": "c0c3ca7cc42ee0f1f27cbb83b94f563a847d1dfcced6f14f45a319b664653057",
             "bytes": 6368
         },
         "include/bedrock/protocol/SetHudPacket.hpp": {
-            "sha256": "2be222dab2b3780850c12737bc8cf717bae9011f7a3ec6f5a2bafe1502cc90cb",
-            "bytes": 7033
+            "sha256": "23d3773005c33fd255c06a09c7fa60730722cb47bd10cd7e03d27990207f37d3",
+            "bytes": 7051
         },
         "include/bedrock/protocol/SetLastHurtByPacket.hpp": {
             "sha256": "52e789da29a977d72f589b4b7e1e6959d644c5e75ccf6b4e7e3a54ce596a8e24",
@@ -1466,60 +1466,60 @@
             "bytes": 6887
         },
         "include/bedrock/protocol/SetPlayerFurnaceOptionsPacket.hpp": {
-            "sha256": "86f9840f72d137e765af99672285bc776df776bebca016bf611db18b75fdd40d",
-            "bytes": 6920
+            "sha256": "8af161f6b090a6fe7d69715fdceb541c577b35b247d26e458a3e4a90f480faa3",
+            "bytes": 6876
         },
         "include/bedrock/protocol/SetPlayerGameTypePacket.hpp": {
-            "sha256": "ac483e6797bf1618c5772335de319c7ec3d87b97d95fb34612583467490d5941",
-            "bytes": 6526
+            "sha256": "8b3b2ef1d83dba0aee5d6e3995e78bce5adf5de9516e2a2e8f38ed28a6b6bfa0",
+            "bytes": 6533
         },
         "include/bedrock/protocol/SetPlayerInventoryOptionsPacket.hpp": {
-            "sha256": "6dbb0549cbee3ff38c4bc77a7294d4c3c154c08643d5c9ba91f1bc2fec885828",
-            "bytes": 7470
+            "sha256": "ecf4949a7ebcb199120bc07fbcabd8271321b8f95aed4dc8a2d9306f4b18e0ea",
+            "bytes": 7498
         },
         "include/bedrock/protocol/SetScorePacket.hpp": {
-            "sha256": "eb42d18d1ec227b073072115a556efe340af84e7b01d72dab0dc9c730d1ab691",
-            "bytes": 8955
+            "sha256": "8e74115aab7845502c2f04b01a648b561a27fc93951e5f1b184641a5a4a53bae",
+            "bytes": 8959
         },
         "include/bedrock/protocol/SetScoreboardIdentityPacket.hpp": {
-            "sha256": "086d00444eac3c9571bb79a3b361e7c22a9e6ff85581886e7d34a3d613e07a8d",
-            "bytes": 7437
+            "sha256": "e3f202e8c0aa5e2fa47ee1d5ad5e6684b5ea7920002c6aab7c6340047cf52bb6",
+            "bytes": 7444
         },
         "include/bedrock/protocol/SetSpawnPositionPacket.hpp": {
-            "sha256": "86f3461a05247cd27aa17363973588d3955b59e5b37bdacbe8e01da4f24f09d9",
-            "bytes": 6976
+            "sha256": "cc91b7ad9dd9e9c00cb593870a3da540b1e0fed907d0495257964e7eb48f4186",
+            "bytes": 6983
         },
         "include/bedrock/protocol/SetTimePacket.hpp": {
             "sha256": "bfeb1a7126f0712e1798d25b78bd0324feb4d64f934d474798b415506673f4c9",
             "bytes": 6358
         },
         "include/bedrock/protocol/SetTitlePacket.hpp": {
-            "sha256": "69dc2a8edb7759df4e9ea7fa5b62d834826054736356d0ef162a827a2a1ee627",
-            "bytes": 7504
+            "sha256": "448d116d351d0da1506b6c78313b857b9836e4991f41ecf571a236095cc0c8b7",
+            "bytes": 7511
         },
         "include/bedrock/protocol/SettingsCommandPacket.hpp": {
             "sha256": "785c5a651df44345f66915d104e708acc9fbe318d793e99c3dd25f85dc01ee8f",
             "bytes": 6503
         },
         "include/bedrock/protocol/ShowCreditsPacket.hpp": {
-            "sha256": "665f8489590d6d4a12abb8947e715ebf542af991b9a424acd1ff76a6c54d7848",
-            "bytes": 6704
+            "sha256": "cf5db307b8089bc34790a732b169a8ba0bf2021c4c2e33eaab5dc0490e010892",
+            "bytes": 6711
         },
         "include/bedrock/protocol/ShowProfilePacket.hpp": {
             "sha256": "d77f56d20c7dd80238900fb733c785ac017289fc3b4cf56027396c8702075b78",
             "bytes": 6371
         },
         "include/bedrock/protocol/ShowStoreOfferPacket.hpp": {
-            "sha256": "f7a9cae536bacdf3ba7cfdc60e37255de0db9e8156f2fdf8f35a90026ec28f71",
-            "bytes": 6717
+            "sha256": "4f85c28a75fb640199fed976add983e0c81b65545063e009f3e660a5401d47ae",
+            "bytes": 6724
         },
         "include/bedrock/protocol/SimpleEventPacket.hpp": {
-            "sha256": "ac1a412afe4d4a9faabdf9f3df8fa7c97b200b4a07327eb9b484ebef06ed058d",
-            "bytes": 6616
+            "sha256": "350051f3eabe860b6c1f7a1cbdbdf0d77f9f63430e9af57541714931caadea58",
+            "bytes": 6623
         },
         "include/bedrock/protocol/SimulationTypePacket.hpp": {
-            "sha256": "3ffebbc5b036d6e9bbfd5dcb56fc72744c2ac3a9f2cacf32f7a9f92b80b680db",
-            "bytes": 6551
+            "sha256": "f4780326bdf46b129abe1e74773793a29d51e230d2873a5518fe8a48e14999d4",
+            "bytes": 6556
         },
         "include/bedrock/protocol/SpawnExperienceOrbPacket.hpp": {
             "sha256": "40bf5b3b01a6992e28fc80b16279a7bd047b2527bc12ef96633b22d24bec2c5f",
@@ -1530,32 +1530,32 @@
             "bytes": 7201
         },
         "include/bedrock/protocol/StartGamePacket.hpp": {
-            "sha256": "02bcb39fd6815052305d9a718dec5fc95538cec925d1c3a1d872254c0e828ccb",
-            "bytes": 11692
+            "sha256": "c357ab64ddaa53249f6e3f1db533b59181395ab520b4204ad97f6814132effd8",
+            "bytes": 11501
         },
         "include/bedrock/protocol/StopSoundPacket.hpp": {
             "sha256": "bcc6efe0faa3356831b581abd6569a8344024784c1048f8f90a431bc43d03642",
             "bytes": 6594
         },
         "include/bedrock/protocol/StructureBlockUpdatePacket.hpp": {
-            "sha256": "56a81429eec7477282078a4b4716f16329e12c54f98763ba35125124dfde0568",
-            "bytes": 7037
+            "sha256": "0f453ea9af50e6f6d49fb1516dbe7d8b5f57b99f32bc54786297df42c2b256e1",
+            "bytes": 6991
         },
         "include/bedrock/protocol/StructureTemplateDataRequestPacket.hpp": {
-            "sha256": "0d4b791a0154d9c7bfda6dafb77aa774cb09149ce2fc77c9a7bc3d187a786ef6",
-            "bytes": 7347
+            "sha256": "cda68ced50b72b83e27e63f8d3cc630461328c4c0f38f396cef0c65c22ab8a34",
+            "bytes": 7306
         },
         "include/bedrock/protocol/StructureTemplateDataResponsePacket.hpp": {
-            "sha256": "134b96250994fc6a09ddcb6862c3b4e9c1202fb9496be093ca864568edb8f53c",
-            "bytes": 7103
+            "sha256": "c27bf16c021b23fd4a0a4dfe8af32ec54ff54d11df2be8712281b70a8cca60bf",
+            "bytes": 7125
         },
         "include/bedrock/protocol/SubChunkPacket.hpp": {
-            "sha256": "d669b95dfbab374d3dfe9cdac1ecc602df9f308b8ea9e81041146d1773a7cf9d",
-            "bytes": 7264
+            "sha256": "912353b3496888d36c47091e75c3a2fffd77c9e455264d45eb3f5f4f16079512",
+            "bytes": 7219
         },
         "include/bedrock/protocol/SubChunkRequestPacket.hpp": {
-            "sha256": "6d1ba4545ec7c44a62806ea1982a1b0cd7b7e6a4a6297802e86fe1695522afe3",
-            "bytes": 7285
+            "sha256": "07ffb763aafffd28155720eb315ff353b99b9e2c493ea9778020a05382f1b589",
+            "bytes": 7232
         },
         "include/bedrock/protocol/SubClientLoginPacket.hpp": {
             "sha256": "f3206673a6d083c7891d68b3d5372524f9c75998236872e8c5a2cec22c002511",
@@ -1574,8 +1574,8 @@
             "bytes": 6579
         },
         "include/bedrock/protocol/TextPacket.hpp": {
-            "sha256": "b683b45c175fd399ba261b0fe6de202babe64645d05ebc9785a72ee16fa05407",
-            "bytes": 10189
+            "sha256": "44a67091cce2ef8b6146688964a7f38c7d899c586e8819973945029f3170df2d",
+            "bytes": 10196
         },
         "include/bedrock/protocol/TickingAreasLoadStatusPacket.hpp": {
             "sha256": "c190eca77b89d9e899bb185c70e3777df7a301d8a246dab4c3edf0c8c8d2834c",
@@ -1594,8 +1594,8 @@
             "bytes": 7428
         },
         "include/bedrock/protocol/UnlockedRecipesPacket.hpp": {
-            "sha256": "721ba741936aad2cb57230990a11b2225f5649cb790172ff5435cc579dc25b9f",
-            "bytes": 6947
+            "sha256": "55d65017f6adb4fc84b017ce84ea4a7dbbdda7e85d259ce1337495eb63c5113c",
+            "bytes": 6954
         },
         "include/bedrock/protocol/UpdateAbilitiesPacket.hpp": {
             "sha256": "dac70ddeb5e0cc0a611fcc74ac9a889f466590d4defa128624a53a19aa5093d0",
@@ -1610,32 +1610,32 @@
             "bytes": 7101
         },
         "include/bedrock/protocol/UpdateBlockPacket.hpp": {
-            "sha256": "af3019b1690476817c8fa0c9ef83fad3b1bab85f4d7b6bda6c9b535d652831f0",
-            "bytes": 7217
+            "sha256": "d138c58f031e726ac80ffdd8c4cb458d076265deb6e566d18c1ddc38697c2e65",
+            "bytes": 7231
         },
         "include/bedrock/protocol/UpdateBlockSyncedPacket.hpp": {
-            "sha256": "7cc5163c38039f16da4ae4858c71dccd67f4984fa2b834a68c40b381d5f0c731",
-            "bytes": 6744
+            "sha256": "d8b737d9d5dd562eacc7ba875cb9e90f478d8dc29cc5bb08888c605d5c8ba4dc",
+            "bytes": 6740
         },
         "include/bedrock/protocol/UpdateClientInputLocksPacket.hpp": {
             "sha256": "97dfdf3d20fd66a07f7730f9180dc5447ce9d834313245799a53670ebc84fea5",
             "bytes": 6408
         },
         "include/bedrock/protocol/UpdateClientOptionsPacket.hpp": {
-            "sha256": "25deaf1f47e2f18faaa295ec5de8b89b941844aa15b84f4d557d46fd40a5af45",
-            "bytes": 6938
+            "sha256": "657c118209f46490994deed58390f7f2c432b3ea73a9270e4ed771508e20b370",
+            "bytes": 6947
         },
         "include/bedrock/protocol/UpdateEquipPacket.hpp": {
             "sha256": "8b0ab8311dffcd07c864844116f88980150b79d09feb10d3626354b569d3a518",
             "bytes": 7025
         },
         "include/bedrock/protocol/UpdatePlayerGameTypePacket.hpp": {
-            "sha256": "0f4dd0f3817fa75e7b11a4f284086f7c7e3dac6f301efc4c0dd7da98f53c0230",
-            "bytes": 6786
+            "sha256": "b16eafc7a4d6579dc87caec877da0c2935e95ac31245eae11c4bfab81330c4ba",
+            "bytes": 6793
         },
         "include/bedrock/protocol/UpdateSoftEnumPacket.hpp": {
-            "sha256": "2d8090167db8e2959efbe004cb67d72379c032faf99ac4123c98999e5c76046e",
-            "bytes": 6982
+            "sha256": "e32556d40ce0a693c7115a03fd73144a15cb399515e1b5131b97b7e47129695d",
+            "bytes": 6989
         },
         "include/bedrock/protocol/UpdateSubChunkBlocksPacket.hpp": {
             "sha256": "c3eb632e89c720f0fba55d781e8e613ca29c1d46bf938c762868cc8882f7a3ea",
@@ -1678,24 +1678,24 @@
             "bytes": 201
         },
         "include/bedrock/protocol/types/ArmorSlotAndDamagePair.hpp": {
-            "sha256": "21a94eec0fa193f67d44a8f9fff04dd096791155925de64cb56221214fdf9a55",
-            "bytes": 1150
+            "sha256": "a0259dd9634a26c38c8730e160f028616dbc5f96c9062320f2b722dd436bb61b",
+            "bytes": 1076
         },
         "include/bedrock/protocol/types/AttributeEnvironment.hpp": {
-            "sha256": "84c22f71a5d63e7c8648e8e8963fb736aca1631315bb4d4c819c4886b99cbe84",
-            "bytes": 1240
+            "sha256": "9775009ba093bd5697bca9f064b0cc9ae7a27d066f7fde038c128cd8be650807",
+            "bytes": 1108
         },
         "include/bedrock/protocol/types/AttributeEnvironmentConstant.hpp": {
-            "sha256": "301e21e883605de5e30a693a45263d3e435c2e20d9f9b95a47d456400b66bd99",
-            "bytes": 1329
+            "sha256": "076eed89d1753b64b8be4109ba7ebd193eda069434e4e69421f32edddb5ca009",
+            "bytes": 1223
         },
         "include/bedrock/protocol/types/AttributeEnvironmentNoiseTransition.hpp": {
-            "sha256": "82bd0f6a805ec816ffac58e2a33f86c81d7ca66a0625b12a606f028282122e80",
-            "bytes": 2331
+            "sha256": "57ef06bad6960a5e0f06392f9dae45be5c6b3d376e7b29483e98e312506bbaec",
+            "bytes": 2018
         },
         "include/bedrock/protocol/types/AttributeEnvironmentNoiseTransitionSettings.hpp": {
-            "sha256": "4547ea7248df398f4fa10f009d163f5b37276fa44b98841090dffa5430eb4177",
-            "bytes": 3002
+            "sha256": "dfc35894ceade79d2705d8dfbda7a4f95ebbcfff0ef9ba574fa1e71ac9fafe9a",
+            "bytes": 2671
         },
         "include/bedrock/protocol/types/AttributeEnvironmentPayload.hpp": {
             "sha256": "fb36c4ba4d4c0bee9597888927104b5426ca8fc372101a6d507d82c1870bb7c8",
@@ -1706,20 +1706,20 @@
             "bytes": 215
         },
         "include/bedrock/protocol/types/AttributeEnvironmentTransition.hpp": {
-            "sha256": "dc348a4895e977af5ca6f75c5574da00c82d1bd730e472f493aedae2ca0d3a89",
-            "bytes": 2281
+            "sha256": "c8f8833bb454fb8b200c6b418101b37109cf10beccbebacce4eaaca29d65a812",
+            "bytes": 1978
         },
         "include/bedrock/protocol/types/AttributeEnvironmentTransitionSettings.hpp": {
-            "sha256": "86cef59124837927bbc4d9096e217c9789962faea6501b10f91fafd56f9dacf2",
-            "bytes": 1997
+            "sha256": "f282e69e7ec6cb8c4bb03051ccb16f7e2c3c6698333fcb7727f55fa059fa8607",
+            "bytes": 1847
         },
         "include/bedrock/protocol/types/AttributeLayer.hpp": {
-            "sha256": "ded61293635d5c2c68d9c0344623e5867a95194ab2f679dc0216550b333592ec",
-            "bytes": 2044
+            "sha256": "27f5f536e8dd6a188703c4c496d3845048a87cd0d75bc70706e37b9271d8925c",
+            "bytes": 1722
         },
         "include/bedrock/protocol/types/AttributeLayerSettings.hpp": {
-            "sha256": "ddc85560651157b038ae538e271d4de3a640287530715ed6076c8d6ea81a6595",
-            "bytes": 1760
+            "sha256": "62c93661c50121fc5b9367bd4facb63b2eb072a040e3646c2ada2e483d06586a",
+            "bytes": 1693
         },
         "include/bedrock/protocol/types/AttributeLayerSettingsWeight.hpp": {
             "sha256": "3c3093fb21caeb22388f797e33c0ee82473078a6d066c8d8805ed79a25a920d1",
@@ -1746,24 +1746,24 @@
             "bytes": 248
         },
         "include/bedrock/protocol/types/AttributeUpdateLayerSettings.hpp": {
-            "sha256": "8b5ab4aab73ef72009d585c2ad630c23c99ddde368ded0a1c063bae780f59d89",
-            "bytes": 1759
+            "sha256": "362a974934c8fcaeddc49145f1d5f5d2de6daf7c2a7aa8d1af04d457f2d41586",
+            "bytes": 1594
         },
         "include/bedrock/protocol/types/AttributeUpdateLayers.hpp": {
-            "sha256": "b385bd8a4979fe3e75de29a0c9d858b5184e4fef5ee562f8f5eb2e44ba465602",
-            "bytes": 1391
+            "sha256": "79f62f4de40ee57d6d5b899153b98876815c47075efb22982fa4c412142ffd61",
+            "bytes": 1240
         },
         "include/bedrock/protocol/types/AttributeValue.hpp": {
             "sha256": "01af7d26f64472ea022a5b22cfbbb13a62ec95e53a21581e8193099e6c499319",
             "bytes": 717
         },
         "include/bedrock/protocol/types/AttributeValueBool.hpp": {
-            "sha256": "9ac7693af9a3847d7116e56a2c886b2ceb400f038c7a81b10776170dff7a3e40",
-            "bytes": 2214
+            "sha256": "69c451ae8a2739c15d12b3c157a5b8fdb09aa8a0e3b8cc202f01651da658a415",
+            "bytes": 2301
         },
         "include/bedrock/protocol/types/AttributeValueColor.hpp": {
-            "sha256": "fad9206edadf7eaad72cce86f412f8d502e1b284ebee29b8cb76b93b05caeb08",
-            "bytes": 2445
+            "sha256": "46d62b2cb5610b0c696b70a03378314f1695cff369adfcd5360e32d9fce26789",
+            "bytes": 2394
         },
         "include/bedrock/protocol/types/AttributeValueColorArray.hpp": {
             "sha256": "52188b4a502e8c1848194f0ef04710be5fcf011334888d561854fe7fd8ab2347",
@@ -1782,20 +1782,20 @@
             "bytes": 757
         },
         "include/bedrock/protocol/types/AttributeValueFloat.hpp": {
-            "sha256": "359ca8d99efff1e01c2838c7dd3d37583c484258fd62a1775f49cc6727278e6a",
-            "bytes": 2234
+            "sha256": "d14b937d687680e969589b624a3edcb65c767d491011a376ba49c072c570bf63",
+            "bytes": 2288
         },
         "include/bedrock/protocol/types/AttributeValueType.hpp": {
             "sha256": "f6324905e5799205fdd1cb9c369b43b633e8eb0c76f3f873b9b3679b3f811585",
             "bytes": 183
         },
         "include/bedrock/protocol/types/AttributesRemoveEnvironment.hpp": {
-            "sha256": "f00ea33e296e22fe8a8af648cdf1d3e4d7512421156ff0d8c3979e4defb6ebe0",
-            "bytes": 1608
+            "sha256": "f02ac5d4c3ca13e83f5158356378355c60e909d9aec919c0bd3d58e074f5a42d",
+            "bytes": 1627
         },
         "include/bedrock/protocol/types/AttributesUpdateEnvironment.hpp": {
-            "sha256": "1649ec2c66b97e1a3f43be6742f2947bbdfb02ab7901754b676ac98c2e4a404c",
-            "bytes": 1848
+            "sha256": "2e5ab7cf7f8f30b486df2a5d0588ff177b3f1dffa8bf8b8b9d2ffb51697739b3",
+            "bytes": 1691
         },
         "include/bedrock/protocol/types/BlockPaletteEntry.hpp": {
             "sha256": "256a12c3b81720b7310faf3cc4121e18aae09daeb5c98147df9784219b414a9f",
@@ -1858,12 +1858,8 @@
             "bytes": 184
         },
         "include/bedrock/protocol/types/DimensionNameIds.hpp": {
-            "sha256": "b3a54b2bb8840581d8c0f26d3159943c8642b8ef56db6683ae4c1c5ce2bfbd47",
-            "bytes": 674
-        },
-        "include/bedrock/protocol/types/DimensionNameIdsNames.inc": {
-            "sha256": "a292a487a26a6a37e7f66e4f855af82750b9ad99f13a87831cbbef2f563e1bc3",
-            "bytes": 64
+            "sha256": "4147e21b4bf14e989e1edc84099b973cf0cc5df14a6611e96364702866109257",
+            "bytes": 595
         },
         "include/bedrock/protocol/types/EditorLevelMigrationVersion.hpp": {
             "sha256": "11bb443abd8d4265d96521185c4433f476714bf47dfe77c656a3aa22bae5527d",
@@ -1878,8 +1874,8 @@
             "bytes": 202
         },
         "include/bedrock/protocol/types/EducationSettingsAgentCapabilities.hpp": {
-            "sha256": "24d8676e8dfdc7ef631ceacd0dd4c4dc51063d49a753e1131fbe72e10193bfef",
-            "bytes": 979
+            "sha256": "0a223e11c1050e9440d8f3b5c179a33cfa69abac871064c60b209599f261330e",
+            "bytes": 998
         },
         "include/bedrock/protocol/types/EducationSettingsExternalLinkSettings.hpp": {
             "sha256": "3fc235020eaee1be76e11b7366a73f2b7947d5b68ea95a88e57fcd5aa63854b0",
@@ -1898,16 +1894,16 @@
             "bytes": 867
         },
         "include/bedrock/protocol/types/EnchantOption.hpp": {
-            "sha256": "b7896b4ca0e86b7f7b8a0403c18c090edba397155d5d86e71f8d964726fd11b3",
-            "bytes": 2957
+            "sha256": "f549048d0c58e379822e6bcd0dc0619bc7b7535008e7978b8adcd24769d4d757",
+            "bytes": 2598
         },
         "include/bedrock/protocol/types/EntityDiagnosticTimingInfo.hpp": {
-            "sha256": "277bf47a77b68fb8d3d33fc5f95499d6161bda2429bc36f1ee40523d98a4892c",
-            "bytes": 2073
+            "sha256": "93073280dd4e36f42cc46834d7701bdfd92630d4c7eafd8decaad3f84741f3f9",
+            "bytes": 2111
         },
         "include/bedrock/protocol/types/Experiments.hpp": {
-            "sha256": "cc515e837ef70f3a443ab4cbc0bd336fd006209262981fa39748d52c35a9e0a2",
-            "bytes": 1555
+            "sha256": "661019b8e32b1fbce118e687dfc645f9643556af86f7c1056e667912ddac3b59",
+            "bytes": 1627
         },
         "include/bedrock/protocol/types/FeatureRegistryPacketEntry.hpp": {
             "sha256": "e707658204dc5edaf2e95161e18f90f7695e7d0bc73543d28fc4782e53afe9a7",
@@ -1934,8 +1930,8 @@
             "bytes": 189
         },
         "include/bedrock/protocol/types/GatheringJoinInfo.hpp": {
-            "sha256": "c4516890f95d585a71203392ea26f61aefc4572fd7c6aa6bea468fdae5d934f9",
-            "bytes": 2939
+            "sha256": "09520b58e510066fd83751217386f6321f8b1c8806f8581cf24076c5f1aded0f",
+            "bytes": 3034
         },
         "include/bedrock/protocol/types/GeneratorType.hpp": {
             "sha256": "6a28038a7efb71f1526a780ee769b0bac2b1b57c984d7d4bac6cac59266d0fb6",
@@ -1962,8 +1958,8 @@
             "bytes": 187
         },
         "include/bedrock/protocol/types/ItemInteractionData.hpp": {
-            "sha256": "490e695d9849958aebfd3835cfdf6a29f5b3d1c781c124034982be04becf688b",
-            "bytes": 2166
+            "sha256": "46aa10e76fbe747d1b2ecfc5d79374db3e9675faaf2bc0bd5f8b9b4538180afc",
+            "bytes": 1806
         },
         "include/bedrock/protocol/types/ItemTypeEntry.hpp": {
             "sha256": "e69f44d8ce9bf9317986c27474264664e8c1a6e335cafa8266ae4cddffdc8623",
@@ -1974,12 +1970,12 @@
             "bytes": 3749
         },
         "include/bedrock/protocol/types/LevelSettings.hpp": {
-            "sha256": "43eadb5807aa791a68f1534d8b48d6d9a9aef1ce156fe6ec551c934c614fe613",
-            "bytes": 11108
+            "sha256": "9af939edaa2d9fa73b0691033ed998c16f8818b7f50ea52f4ab7db90182dd223",
+            "bytes": 10414
         },
         "include/bedrock/protocol/types/LevelSoundEvent.hpp": {
-            "sha256": "748fba21003450f873cfcaf9cd5f9dd727d13c93a5166b22e38d2f3bddb28944",
-            "bytes": 798
+            "sha256": "a0aa9f34118ef6f7014e7b123ac41e9dc15b805ee4f5becd727b3c7b3b25ee7b",
+            "bytes": 696
         },
         "include/bedrock/protocol/types/LevelSoundEventCases0.inc": {
             "sha256": "5778fb8d8cfa36744b069d1146ea12e1457d339501ac7ef94a00d29618bfff9e",
@@ -1993,45 +1989,49 @@
             "sha256": "19126936e2eb1297b90b764b08a741648a48d1cf213a14bc66fb3d72629b667f",
             "bytes": 4919
         },
-        "include/bedrock/protocol/types/LevelSoundEventNames.inc": {
-            "sha256": "9b6c6b654f241a08237c0464729e47a2ab3e8f7e48b5d2a5624c6414dc58607a",
-            "bytes": 11272
+        "include/bedrock/protocol/types/LevelSoundEventNames0.inc": {
+            "sha256": "c837c4bdae510ca02158a08ae8bd5d1d329613ab67e2f5e5cd9f92320f7683a6",
+            "bytes": 13043
+        },
+        "include/bedrock/protocol/types/LevelSoundEventNames1.inc": {
+            "sha256": "a770cd2fcf549238ba216c11a629fa70b9487d8593664a7261f16f7fc67eea3c",
+            "bytes": 15204
+        },
+        "include/bedrock/protocol/types/LevelSoundEventNames2.inc": {
+            "sha256": "2dc714a5bd9581ca0a3eefeedaf696295e2b9af0b79f446ff873feba4e37fc94",
+            "bytes": 13519
         },
         "include/bedrock/protocol/types/LocatorBarWaypoint.hpp": {
-            "sha256": "45deb49e19bfea362ed83bea5aa0ce8c0d386c5deeaa03a7810b7163b23f78c2",
-            "bytes": 3550
+            "sha256": "3ef6aaffb5a63b64b66be7512ed212dc0b7301d436f76959f1da5708eaed9d47",
+            "bytes": 3691
         },
         "include/bedrock/protocol/types/LocatorBarWaypointPayload.hpp": {
-            "sha256": "060e59f5c424597fbd7df5de1eb816937a353506ee32c1b2570e097be27deb7b",
-            "bytes": 1451
+            "sha256": "7fd74e8641763229a448cc9c0bb5d7a0df7f5a9e25367aac6976fe3661226060",
+            "bytes": 1294
         },
         "include/bedrock/protocol/types/MapDecoration.hpp": {
             "sha256": "9f4e407746747ebd936cfc937d2e14c346de68415f511c4584831dbb8ad4390f",
             "bytes": 1688
         },
         "include/bedrock/protocol/types/MapImage.hpp": {
-            "sha256": "63e7e890ecd0ee13420c77ec6e2191a2b1d8f76105e70e2a3b3f50687bb4e5ce",
-            "bytes": 2636
+            "sha256": "bfffaa122ffe2b3c0a6347b4ced16acc154ba8929f40763da37b974e3c710600",
+            "bytes": 2804
         },
         "include/bedrock/protocol/types/MapInfoRequestPacketClientPixel.hpp": {
-            "sha256": "a6b760466d67d4b115ae3d3dd68a867fcf35631a4613276f5fd8dd63edbdfd53",
-            "bytes": 1225
+            "sha256": "368bc6e383324bed8ecb8542a3d8ef85c521984e94bdf6544fe2d4aa99b31745",
+            "bytes": 1195
         },
         "include/bedrock/protocol/types/MapTrackedObject.hpp": {
-            "sha256": "2527c30fb70d807388908bb00ff77024eb714e9c5917afc67958113dc51d786d",
-            "bytes": 1382
+            "sha256": "31cff67afea191e8c230c7551c279fb184e09f33b1c52afd749166908bb75da4",
+            "bytes": 1454
         },
         "include/bedrock/protocol/types/MatchmakingState.hpp": {
-            "sha256": "d3c13b8fbf4032f3c5dc856dfb4cfc36011138b6c7445a65ca29ed08c226bfcd",
-            "bytes": 813
-        },
-        "include/bedrock/protocol/types/MatchmakingStateNames.inc": {
-            "sha256": "7dcd82d5928768a39913d5b698be031eb74cafd24ed2c7e048bcd5ea1d229164",
-            "bytes": 136
+            "sha256": "38efe6ad222f0a39c46d9f8ab12d3454e1fb7145a28fd459eaa473be0f2d74f4",
+            "bytes": 1125
         },
         "include/bedrock/protocol/types/MatchmakingStateOptions.hpp": {
-            "sha256": "82a9cd9d871decc0ba83c60511b3d11f157f1abca748efeea41385a026ce3790",
-            "bytes": 1400
+            "sha256": "3c1703c44404347cb66f6db659cf0b66ba48530d53dfee9dc52f727f5475c820",
+            "bytes": 1438
         },
         "include/bedrock/protocol/types/MemoryCategory.hpp": {
             "sha256": "08415cc6d37ddf06c9a56feea97dd2d6242022acc35d8b4ceebb021db6261757",
@@ -2058,8 +2058,8 @@
             "bytes": 823
         },
         "include/bedrock/protocol/types/NoiseAlignment.hpp": {
-            "sha256": "8bc3c7df8a418215df2a9f7d752ff631cc6179c9b4f835b2964b1143e6e3b079",
-            "bytes": 1208
+            "sha256": "93aed53371f858d973cdcb4243e251a2a1c5404c8597275d36165cc283c03f1b",
+            "bytes": 1116
         },
         "include/bedrock/protocol/types/NoiseAlignmentType.hpp": {
             "sha256": "0a54edc470f6f88f747f3431cec5c7970d9fcfa13ec08be63395c1a1f2ca8d6b",
@@ -2070,12 +2070,8 @@
             "bytes": 1117
         },
         "include/bedrock/protocol/types/OverrideUpdateType.hpp": {
-            "sha256": "9f44c1971265e099e312e2b6619dfc3cd93cda4950eb8dcc4a8818f7cb885f99",
-            "bytes": 735
-        },
-        "include/bedrock/protocol/types/OverrideUpdateTypeNames.inc": {
-            "sha256": "94c6f50d13005c36e665888ddd8e9a4c8e161c2182cd8c229f275a3f6a800183",
-            "bytes": 74
+            "sha256": "190f40e75e533a8497d8d78ffff6abca822ad1cef3dd6c6082f86665d29940e0",
+            "bytes": 743
         },
         "include/bedrock/protocol/types/PackSetting.hpp": {
             "sha256": "f6192b27b3cbd1153c5dbade076f9384521a529a4e1af4404de7ea649f0534aa",
@@ -2094,8 +2090,8 @@
             "bytes": 2515
         },
         "include/bedrock/protocol/types/PassengerOfBlockData.hpp": {
-            "sha256": "f1bc1886ce3743825f46e344c1adabb61a19dffb2bd6f1707733e5d196240d0f",
-            "bytes": 1809
+            "sha256": "a3cb10c7b7ba447dbc2319dd89ca05f35e1ace47adc8f07272b161a3daaa2c61",
+            "bytes": 1735
         },
         "include/bedrock/protocol/types/PlayMode.hpp": {
             "sha256": "975eef555d3fe2bdfbf12759d3eb10f2cbbe1136c2f89239df4d4b2bce0b0cb0",
@@ -2118,8 +2114,8 @@
             "bytes": 1801
         },
         "include/bedrock/protocol/types/PlayerListEntry.hpp": {
-            "sha256": "b459212ebe58afbcf6e01c55e7dbfccaba0440979147d670706cd5a457cc46dd",
-            "bytes": 2682
+            "sha256": "157387b643ad044c12d66b033e7cd154c4e0d25d32dc9a484728224eb90c2dfc",
+            "bytes": 2555
         },
         "include/bedrock/protocol/types/PlayerLocationType.hpp": {
             "sha256": "f207851009a46d76b58e8f7cb0ecfe8e914926b49db2fb570afb1878737c7f2a",
@@ -2138,52 +2134,40 @@
             "bytes": 205
         },
         "include/bedrock/protocol/types/PresenceInfo.hpp": {
-            "sha256": "e55981af5e36d53ac3acf77fdda12332be5b9e20107e30b6c28ce45965c0b031",
-            "bytes": 922
+            "sha256": "cb8877ec4464da6a7145fe5f8dec69c9c970553b8c15ceb3a3765f09d4cd4b5d",
+            "bytes": 941
         },
         "include/bedrock/protocol/types/ResourcePackClientResponseStatus.hpp": {
-            "sha256": "ede7f40fedc0d179a57d06262fcae47888bf6ede717018630113a7f112639f23",
-            "bytes": 812
-        },
-        "include/bedrock/protocol/types/ResourcePackClientResponseStatusNames.inc": {
-            "sha256": "b0dd069b9120b8e3160a06b0670997ec4b4be18a4d87d165f6febc450a5c3474",
-            "bytes": 77
+            "sha256": "2527a71899f78ffd1b7c51002eeb4ff7b0be9d76d8aa2575355979d76d891bd7",
+            "bytes": 802
         },
         "include/bedrock/protocol/types/ScorePacketEntry.hpp": {
-            "sha256": "629d715b55d40271b21ea2ee9296f46b533005c2e97c940aca3979b207f8dcd8",
-            "bytes": 1925
+            "sha256": "a9dc2df3d9a9c7810d6e5aa4669f324627af747984f57cd4a98881f9e10b3c0b",
+            "bytes": 2000
         },
         "include/bedrock/protocol/types/ScorePacketEntryAction.hpp": {
-            "sha256": "b19b277f7b4928072d5d1e02f13adedd93eeb4013e83ea0f6ffefc7c32c33fbc",
-            "bytes": 751
-        },
-        "include/bedrock/protocol/types/ScorePacketEntryActionNames.inc": {
-            "sha256": "3c45459eae894e85e444a8bc4e15bc57fef7a86c3c0906107e4493cf109a515b",
-            "bytes": 62
+            "sha256": "efe3e52f811560e74a43ffd64dd4242c95c7e0e7ae8c100b2c744760db05bd7f",
+            "bytes": 735
         },
         "include/bedrock/protocol/types/ScoreboardIdentityPacketEntry.hpp": {
-            "sha256": "296bc8e152fc692c803299241a46cc1edf96f26ec90d237e4c531b8510fc9aac",
-            "bytes": 964
+            "sha256": "fd6d39066cd263bbdd00f1673ba5b21f15bb4a59018bf59f1b78aac42196738b",
+            "bytes": 1002
         },
         "include/bedrock/protocol/types/ScreenCloseReason.hpp": {
-            "sha256": "609493d830718551276ff25ed4764f3f9394d53dfb7b57505b3302f9e82a8854",
-            "bytes": 750
-        },
-        "include/bedrock/protocol/types/ScreenCloseReasonNames.inc": {
-            "sha256": "d47044c4727970119896892ec1906c4f00471d782c3c26a9e140d487b5ceb050",
-            "bytes": 90
+            "sha256": "61234e2461538b545b9701fc7120c6b7c0e8398ebec3456a1ebf90fd97a35f59",
+            "bytes": 827
         },
         "include/bedrock/protocol/types/SerializableVoxelCells.hpp": {
-            "sha256": "491ccbfbc5ae877f7c4abfb6fe090fa4151de3ceeb013ab11cc2b04a438ecaa8",
-            "bytes": 1456
+            "sha256": "326844d6c5dac425c19a06d902987881dc64f46e2514292e66492c204192c7fb",
+            "bytes": 1475
         },
         "include/bedrock/protocol/types/SerializableVoxelShape.hpp": {
-            "sha256": "1ee9297b87e952eb4aea060973b49eb17caec6f34681f14cedbd204099326d97",
-            "bytes": 2163
+            "sha256": "3ec2922cbc576a6bc4a6d01e2e97d8a3c410561a235d5d6a221c2f88c3327932",
+            "bytes": 2052
         },
         "include/bedrock/protocol/types/ServerJoinInformation.hpp": {
-            "sha256": "3c76f3c079765b960faa22697e29329e34981799036980c955a65553e5eb0b17",
-            "bytes": 2534
+            "sha256": "e92d6745ea0d6ff9ddb53126356cb46008f5bc923b4111e6a617d021bfc3bc74",
+            "bytes": 2255
         },
         "include/bedrock/protocol/types/ServerTelemetryData.hpp": {
             "sha256": "f5e27af7967c1ac6a686f2d3556bfec7ba4ff40d653aa0b805dba777b9a8b509",
@@ -2194,36 +2178,36 @@
             "bytes": 220
         },
         "include/bedrock/protocol/types/SpawnSettings.hpp": {
-            "sha256": "e18fd79b51ed9ffb1c4899b952d5e9005f4313b61aabe1ae147309f488b7a7e1",
-            "bytes": 1287
+            "sha256": "d7c48e3d2ca424b49d1fc9fcc03abac45115b7a2df61a9b1c5325be43f98cf2f",
+            "bytes": 1309
         },
         "include/bedrock/protocol/types/StoreEntryPointInfo.hpp": {
             "sha256": "95a5f5d95369fc2d7cce55a96c44efd3ed31d890f845a5a2cfd8f8a2b71fc868",
             "bytes": 885
         },
         "include/bedrock/protocol/types/StringArrayPackSetting.hpp": {
-            "sha256": "6da4ddd29a3063bbfaefaabd88614f7e24dede6132ff548a6e8143807e45a7a0",
-            "bytes": 1478
+            "sha256": "5c2cfd70f38ddf9ed25d840fef000baee181f7c593435499e5dbe6ed02c7cbfc",
+            "bytes": 1497
         },
         "include/bedrock/protocol/types/StringPackSetting.hpp": {
             "sha256": "a9b3de04bb8d4d435c72c77e973cd9dda1feb5b51733209a54e2449d67679d98",
             "bytes": 1292
         },
         "include/bedrock/protocol/types/StructureEditorData.hpp": {
-            "sha256": "d9003a7aaaf1c3b5e2dac17c45994aca8d7c4e0b41e0b514e68cd17214ff85ad",
-            "bytes": 2311
+            "sha256": "8164c378ca7b6ba25ba22a7e1395c4a5bbfe61cdc9129b66e8d6ca894917eecc",
+            "bytes": 2232
         },
         "include/bedrock/protocol/types/StructureSettings.hpp": {
             "sha256": "6a670968c1bc16971f48e780c97fb2f49dfb4aa3cc3e27f4750d550a6105e2ca",
             "bytes": 2435
         },
         "include/bedrock/protocol/types/SubChunkPacketEntry.hpp": {
-            "sha256": "5cbd22c0d106024a47b52739ad9f9ee03757c21e0c483e062c9d5fb9271f3652",
-            "bytes": 4008
+            "sha256": "628f6e33cd3da9293bc5794b593ae7988a6341be4c5b8ced7365b1e3015221f2",
+            "bytes": 3781
         },
         "include/bedrock/protocol/types/SubChunkPacketHeightMapInfo.hpp": {
-            "sha256": "d67e68cdf81d8910890a6e911fe653fc33f501836fe0f2ceeeb34cdd9cee4bf2",
-            "bytes": 1088
+            "sha256": "302e2ee606af035fa7f8d07e2d5e2595b0b7aa5ae2011f4a64b91262def4b1d5",
+            "bytes": 1152
         },
         "include/bedrock/protocol/types/SubChunkPacketHeightMapType.hpp": {
             "sha256": "6b9a4b7d54c1e3b4c3a001a70e474f2907a0b7589ba169c1710272b49a96f429",
@@ -2242,36 +2226,36 @@
             "bytes": 274
         },
         "include/bedrock/protocol/types/SyncWorldClockData.hpp": {
-            "sha256": "c4802a1c001067175fd84241ac6b3f6217d716fd5cd2e9a64c2bc9ded9c6cbbb",
-            "bytes": 1834
+            "sha256": "652c3bd8cdcd7547f4adc4a928a59cb096f5cb4f3128e960a163cbe0cfd77d7f",
+            "bytes": 1673
         },
         "include/bedrock/protocol/types/SyncWorldClockMarkerData.hpp": {
-            "sha256": "286b7373df2df2230abb230dd4ca8d2c003b34f6b4aa1c6bdbdbe9f58ee1a636",
-            "bytes": 1393
+            "sha256": "0445d679074ecf516eed599851dc202aa3094ea1f39a993fc9fe72f25a1dd1de",
+            "bytes": 1412
         },
         "include/bedrock/protocol/types/SyncWorldClockStateData.hpp": {
             "sha256": "41b9ceff03305f39f15593231492c87498b3e8e13cd1433c91b6a701ba3a8664",
             "bytes": 1072
         },
         "include/bedrock/protocol/types/SyncWorldClocksAddTimeMarker.hpp": {
-            "sha256": "7567772877d584bb92cf0a1e0ebc9c1b1d7df966baf46b7ea5d69940db611f37",
-            "bytes": 1685
+            "sha256": "2f9060c76cd638f9f46d68c479bb72398fef38f14a20b7d9e96ff5fd96efd100",
+            "bytes": 1524
         },
         "include/bedrock/protocol/types/SyncWorldClocksInitializeRegistry.hpp": {
-            "sha256": "b7bf9620e37d26b14dbb173632d7907e39951465e55f5f9fa4b63eea967bff1b",
-            "bytes": 1472
+            "sha256": "456f187dd32ad720d056ab4cac11d372986815877e6d7da0bb7c7dfc6808a34f",
+            "bytes": 1317
         },
         "include/bedrock/protocol/types/SyncWorldClocksPayload.hpp": {
             "sha256": "5ec9c90eb8382ed4a90145933d4aebb3175fd88410b39e6df5bde73b425d1ecc",
             "bytes": 749
         },
         "include/bedrock/protocol/types/SyncWorldClocksRemoveTimeMarker.hpp": {
-            "sha256": "98965f253e8373d83e812de970b649198500a0e8dcda3dabc50dbac362575656",
-            "bytes": 1414
+            "sha256": "678a70e41ecf20b19781a210365870b5336ef0a6f79ff22ea5b4fca65543290a",
+            "bytes": 1433
         },
         "include/bedrock/protocol/types/SyncWorldClocksSyncState.hpp": {
-            "sha256": "beb26604a874c5df17cde27fbc5239780a683012f8adf6c17cc7b83dea0318b3",
-            "bytes": 1461
+            "sha256": "55dcab20edc11a1fe51157573537d1f55955a34c5dab918226194705c28cfdc7",
+            "bytes": 1301
         },
         "include/bedrock/protocol/types/SyncWorldClocksType.hpp": {
             "sha256": "befd22a7f610d7a087793a21ed30c169deb159876af26832314b6f8bc3fb2ae5",
@@ -2330,48 +2314,48 @@
             "bytes": 929
         },
         "include/bedrock/protocol/types/biome/BiomeDefinitionData.hpp": {
-            "sha256": "ae78244fb459d20ea42c15ab4ad613d0bc2f36b81623b85d7d85439a60a0fa2e",
-            "bytes": 3398
+            "sha256": "80f5843103be9fb175ffa5a8ab525d20db9d73cea7dd5cd483dc9e587ddf6d18",
+            "bytes": 3272
         },
         "include/bedrock/protocol/types/biome/BiomeDefinitionEntry.hpp": {
-            "sha256": "1f734888cb12bd01c9611d15c18cb1fc57a63ff64ce3ef6383b9c8ecf38972fa",
-            "bytes": 3343
+            "sha256": "e8c1536099d906e3d7bcdadb008238f0233aa65eb0c995fd96f5d0ad748dbbd7",
+            "bytes": 3369
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeCappedSurfaceData.hpp": {
-            "sha256": "10eff2a4ada93c327bfab3b5b13da2a42e988b3c8b0ac6663b13521678e8f411",
-            "bytes": 2321
+            "sha256": "0d5fd289a151567b93abbeb511b7effa5e84a295adbf0154086cc74a692d6eea",
+            "bytes": 2416
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeClimateData.hpp": {
             "sha256": "9b7a8151a27774fb02775fa3c56aba3d0bb4ce4ce53e28b4c367d699355bbe65",
             "bytes": 1448
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp": {
-            "sha256": "526c2190e1ca1ecf87dbc5e3440d459e1794e2eb600c8204ea1e4f282f665f8a",
-            "bytes": 1820
+            "sha256": "6407af3271512fdb2f31d4df8b01fe6e721abc9b70487c9a2f6d8c81370a6c65",
+            "bytes": 1580
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeatureData.hpp": {
-            "sha256": "a384335f137d9cc21fd63aca49a5907b21338bfdd3e43c66c09f57522e5b4bd3",
-            "bytes": 1872
+            "sha256": "6eab78d6d6ed682db6260677c282be96f3f19eb3dd5ed6527617e1402dc9e247",
+            "bytes": 1678
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeaturesData.hpp": {
-            "sha256": "d6a049b8003f091988964532a0b87cbef2c04012bb32e1284a21cf84da9a94c7",
-            "bytes": 1351
+            "sha256": "ef79cd344cd81db79b01a27b4bf3dc757fddccdd936a7043dd3e6abf1aa1553a",
+            "bytes": 1089
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp": {
             "sha256": "f7725537ed1045c72eaecdb952d7c02839ce23395c3eef814ffa245e4bc2abdb",
             "bytes": 1978
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp": {
-            "sha256": "673901aee3f975dc172d6b32563b346154be8b5d35d7ba7c5fbe553980a37053",
-            "bytes": 8240
+            "sha256": "3ebe3991081017377af07a98242a3ff1620dbd4c4a62381e1671d61f442e22ff",
+            "bytes": 6890
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeElementData.hpp": {
-            "sha256": "8c1d73d1899ba95c31801ea660bf0d33610dc259be92d841e478f98f85c29808",
-            "bytes": 2654
+            "sha256": "5b9b51e5f5a27022a110aa26bb33a4d51503893e1e815d1fd1ebac59f67c49ba",
+            "bytes": 2462
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeLegacyWorldGenRulesData.hpp": {
-            "sha256": "bd72a8a62e6e4362b537ed19a580f51e01b58deb41e13adb60df01024c6d365a",
-            "bytes": 1422
+            "sha256": "ed0711850aa0ffbd6d81bd766c4b6fde43f35822af216aa7396ee17ad48bc0bd",
+            "bytes": 1148
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeMesaSurfaceData.hpp": {
             "sha256": "444ef1de7b4c4b27ee3ccc329bc907449f87267acf89aeac50b9ae50da8c4dd3",
@@ -2390,28 +2374,28 @@
             "bytes": 1433
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeNoiseGradientSurfaceData.hpp": {
-            "sha256": "3c46d8b20fa5f7995cb348c03e6fe8ca0bfef42067bcbcfaa69dd9c8414e951f",
-            "bytes": 2537
+            "sha256": "96856491b08880f9a55e78ddda95b802a79e1c9029a12797402e1931db8fa1d3",
+            "bytes": 2321
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeOverworldGenRulesData.hpp": {
-            "sha256": "142f674add8c798aee14a95efde9e73c5a2a89beddc3edddc5348fa2fe10f0f6",
-            "bytes": 5118
+            "sha256": "803d832811a42f78804a116b86a2624d58b591251b69c887d314f56cf4e0d8c2",
+            "bytes": 3950
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeReplacementData.hpp": {
-            "sha256": "74f9d62191f3c9ac01015a17787b46d778de63ebc42aefbfefc4d208f9fd55bf",
-            "bytes": 1714
+            "sha256": "4bea01dcaeabaa541ef200072cbca8c56e83d81af923083f9aaf64ca57c92465",
+            "bytes": 1733
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeScatterParamData.hpp": {
-            "sha256": "e81cd6d906009453ea9eaab550e5c2b8e2b264452f7cbe52031e185c2efa80ff",
-            "bytes": 2779
+            "sha256": "bcd281d4922d444230eacf3f2ea227317f0e1c2c95c352a23e6f3cc053f5f10f",
+            "bytes": 2535
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeSurfaceBuilderData.hpp": {
-            "sha256": "32d3da6ff4bd8360526776cc376647491456aaa8945d4843cc3aab15a34ee212",
-            "bytes": 4379
+            "sha256": "49ad28de7442d1a7db3e43d8552837b0a622f27793b7e17253e459d0ae7db90d",
+            "bytes": 3825
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.hpp": {
-            "sha256": "df57c9ec0a147e8d640acbab822d6a9a1647a0c033325c3dce24dfc1e5711b30",
-            "bytes": 1321
+            "sha256": "665752b2d28d66ca602ffaa0e6e3beb0651be64b6758b1d0863d79c3fb2da2b1",
+            "bytes": 1083
         },
         "include/bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp": {
             "sha256": "605428be7cad2986fa8dd71511c94e6fcad03c95118bb252ff42194fcde9b784",
@@ -2434,24 +2418,24 @@
             "bytes": 1394
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistCategory.hpp": {
-            "sha256": "a0a97b0c9dc2a3ebc614c1e298ea09df7af9131af6eb09f008043e97df565d34",
-            "bytes": 1389
+            "sha256": "8c80c2086f7b6902d8909642003eb00039338dfce3756fc7fa3814ed60c1df75",
+            "bytes": 1190
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistCategoryPriorities.hpp": {
-            "sha256": "bc374b6d209b3f2d04a92e3cd67015d6941dc07b9aa7455ae3b16a99ded06d1e",
-            "bytes": 3667
+            "sha256": "fe2eb472366b47bed87a270a6ed05d5819d8f3400fea37235bb8c3d5eff9b6d6",
+            "bytes": 3159
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistCategoryPriority.hpp": {
             "sha256": "99475cfadeaa9b45286566ff5ee99164e88ab8130e99d7a93b0030192464cc7c",
             "bytes": 978
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistPreset.hpp": {
-            "sha256": "27ac87397892da9ee6ac6f250e308deb7556b1b5f90c71fdeca2dafc993b3ad8",
-            "bytes": 3478
+            "sha256": "9a435d4e275b24ea1b9dac36a39c8797e89028317d68a9e9c5e08538e8aa176d",
+            "bytes": 3073
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistPresetExclusionDefinition.hpp": {
-            "sha256": "a3bdeb131006a46da2e6283f2dee49ab11cb6625eb9b0d7582ed3ca35998c515",
-            "bytes": 2111
+            "sha256": "60415739c544999525b201423659b9906704b2695150b704d5f7d6ecc7aeaf15",
+            "bytes": 2187
         },
         "include/bedrock/protocol/types/camera/CameraAimAssistPresetItemSettings.hpp": {
             "sha256": "10dde1250128650ba5cf6b3cb12a2a4b6d14ae2c60b3e6d392fa8ad510e4430a",
@@ -2466,8 +2450,8 @@
             "bytes": 179
         },
         "include/bedrock/protocol/types/camera/CameraFadeInstruction.hpp": {
-            "sha256": "d3f7b0f1491e8d03ec3ed1c06a497affecc1dbf9cfd071f73fb4fb3359af1b93",
-            "bytes": 1901
+            "sha256": "05b406eccd7a7e2c33c294468fbe7c1247074846d341159180a9a14faf5fd4ae",
+            "bytes": 1649
         },
         "include/bedrock/protocol/types/camera/CameraFadeInstructionColor.hpp": {
             "sha256": "f0df39037e80d910345a2a0fb829d6da9323fa385a2e2f040d989c192410d768",
@@ -2478,64 +2462,60 @@
             "bytes": 1127
         },
         "include/bedrock/protocol/types/camera/CameraFovInstruction.hpp": {
-            "sha256": "fff9c2830e1f4d3d9303a540845acb1c4a55894ca0cf540287225900c5c22cdd",
-            "bytes": 1697
+            "sha256": "f716ab36b97081d0f8710177d8cb0a2c3a34fa0d229d9e204ce5a58240e72b32",
+            "bytes": 1571
         },
         "include/bedrock/protocol/types/camera/CameraPreset.hpp": {
-            "sha256": "371ef20513584c0c201924d7c589f49540c0f0473a44baf1f315b369fd1a6a53",
-            "bytes": 9095
+            "sha256": "69efa52c81c5e56b67c8927cb15de680a58065a1a351651052e3ebe70eea01ad",
+            "bytes": 9318
         },
         "include/bedrock/protocol/types/camera/CameraPresetAimAssist.hpp": {
-            "sha256": "631b7b0c203185266a896318d0f6b18dd2b86bcb5f762d8f4875ef1f952badf5",
-            "bytes": 2257
+            "sha256": "82c88575086d86ebb844f4ecd4ca50cc0b8436bb0cffd62094d7725fb63dad88",
+            "bytes": 2221
         },
         "include/bedrock/protocol/types/camera/CameraProgressOption.hpp": {
-            "sha256": "f9831a09f44b6911a48573c58d8c2b4bc8196b48d0f5317c422b1d40330eff7f",
-            "bytes": 1430
+            "sha256": "724656eac908589e0ba9a666a472cf6c1f2a0c74429a2a0f46e51610f135b4c8",
+            "bytes": 1304
         },
         "include/bedrock/protocol/types/camera/CameraRotationOption.hpp": {
-            "sha256": "ae07da7c7b09a14167165ec87a42e6defa2d5383c2a1bf31403fa04e41289e72",
-            "bytes": 1501
+            "sha256": "e528ecc6dfe3bc807cbb8e7dad2084581cea246ba60c02265d5c7e3c1cb073c7",
+            "bytes": 1375
         },
         "include/bedrock/protocol/types/camera/CameraSetInstruction.hpp": {
-            "sha256": "738e3f8ed1f14316cac1f992ea9ad0f4abbfe7b63d2c9e9c012f5388b5bb78e5",
-            "bytes": 4099
+            "sha256": "0747b0bb127de4de7d5bb97af0d614d67e3bdd4a87902b36126d14cb7a1c90f8",
+            "bytes": 3940
         },
         "include/bedrock/protocol/types/camera/CameraSetInstructionEase.hpp": {
-            "sha256": "51e8d55fb212dd7ebfc854c1bb8e3dc211f27c8ca3f980ac3e27642324ddcdcb",
-            "bytes": 1317
+            "sha256": "719fdc37f6a74d69ba28df68b4ca52ef3907396510f14aa9aeb190ea5722db42",
+            "bytes": 1185
         },
         "include/bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp": {
-            "sha256": "cebf39b89ba8d6ad61833f8dfa6825967ff17ea6ab048f91b56b083a9e1263c1",
-            "bytes": 1335
-        },
-        "include/bedrock/protocol/types/camera/CameraSetInstructionEaseTypeNames.inc": {
-            "sha256": "6b8e60cf997f26f4b37d91a95fcd49a42a971cfbed224389a5e09789b687208d",
-            "bytes": 440
+            "sha256": "5c0ead4e96d71b1cba22e53b74c6646bffb4c9b2e0a8c832bf736a009b269fa0",
+            "bytes": 3418
         },
         "include/bedrock/protocol/types/camera/CameraSetInstructionRotation.hpp": {
             "sha256": "d4d764ef3a0af7a8772bb45a3b24896491310e4512dd8c5d90eb9f005c37af30",
             "bytes": 900
         },
         "include/bedrock/protocol/types/camera/CameraSplineDefinition.hpp": {
-            "sha256": "66f015ce4226ad882fd49302c78747f81ac6d6498ccef3c949c63aea5d9c5900",
-            "bytes": 2793
+            "sha256": "442211b616e9c4b4a1ae74caafa6d1fe30a90355be6f15705c3eb5fe190bb68c",
+            "bytes": 2468
         },
         "include/bedrock/protocol/types/camera/CameraSplineInstruction.hpp": {
-            "sha256": "96bd2b9cff26f650ccf185b6b1216895f08abf18039fe875d46475a7c34d6e5b",
-            "bytes": 3484
+            "sha256": "329dc667b34be5c642e7f273ab51ea17ddbfe7f8c2dbf1f291d9ecb9e14a74d4",
+            "bytes": 3016
         },
         "include/bedrock/protocol/types/camera/CameraSplineProgressKeyFrame.hpp": {
-            "sha256": "85302c1031a1be7245170d3a5d619cbc404d9b1739e8965167e19bedfecd5674",
-            "bytes": 1650
+            "sha256": "25614512eeea21129721882790648e0236d447d09ecda3d205f09da1f617a112",
+            "bytes": 1551
         },
         "include/bedrock/protocol/types/camera/CameraSplineRotationKeyFrame.hpp": {
-            "sha256": "87e62e0faa91ccabae424fce78932d13b421acb44d4772db24a8155af2bb897d",
-            "bytes": 1667
+            "sha256": "1c8827ae3c7e1eb7d72bfedf5224404c56186a43dbdef5d10f8cdf22e1882a94",
+            "bytes": 1568
         },
         "include/bedrock/protocol/types/camera/CameraTargetInstruction.hpp": {
-            "sha256": "f22489b495c4653165401204240773ad1371700e3affcaf5b0d0ad13c59f7f98",
-            "bytes": 1171
+            "sha256": "27f5d3418fea8240ec2988c10a86d93c8ed8ccdbe278f7d0ea7ef0513efc19cd",
+            "bytes": 1190
         },
         "include/bedrock/protocol/types/cereal/DynamicValue.hpp": {
             "sha256": "6c984d0360c7ebeb0c49ecb993eb8032033d8cfe6071c9e78e8c11a8d550c8e0",
@@ -2550,16 +2530,16 @@
             "bytes": 990
         },
         "include/bedrock/protocol/types/cereal/DynamicValueList.hpp": {
-            "sha256": "ec9711b4e876d85926fd1be8c34b46de0e6be3c5fbe3cb5bbe20122099a097af",
-            "bytes": 1364
+            "sha256": "6892a8a44d0628c37fc1d4fcd2165182834e69aaa3f23ad34122af41eaf288b4",
+            "bytes": 1377
         },
         "include/bedrock/protocol/types/cereal/DynamicValueLong.hpp": {
             "sha256": "41e6fe8dca26ad6a762544133ce04e63f9a2db55ac11aa7d6eb6c413f9eb1661",
             "bytes": 981
         },
         "include/bedrock/protocol/types/cereal/DynamicValueMap.hpp": {
-            "sha256": "ed7932a4c90e1877ca8ba76cdcbe380dfe9c5328b9d53f6a266715bdfd02098a",
-            "bytes": 1783
+            "sha256": "104241816f3d27041461695bd5790aa7b73e4b54e4b5236ede3ad217d80541fb",
+            "bytes": 1848
         },
         "include/bedrock/protocol/types/cereal/DynamicValueString.hpp": {
             "sha256": "200cdebe1b1cf6815e87b5839c8d034c8debb8bd289e254a31c00d10c859ea3f",
@@ -2570,88 +2550,84 @@
             "bytes": 238
         },
         "include/bedrock/protocol/types/command/ChainedSubCommandData.hpp": {
-            "sha256": "b03d657a9e26ee9d269c557d41f4d9ff46303fa9af0f7d4f53491e778e0e9585",
-            "bytes": 1355
+            "sha256": "329792d7225614fdf1eaef1efde30718684f59ad7e82a9b2a3b80be726185309",
+            "bytes": 1197
         },
         "include/bedrock/protocol/types/command/ChainedSubCommandValue.hpp": {
             "sha256": "bf3163b1398327c8930beb37bfb786db3f77897a360b26f7692c845efc530f92",
             "bytes": 903
         },
         "include/bedrock/protocol/types/command/CommandData.hpp": {
-            "sha256": "d88b45919c3f75b55183ceb05ea3b95835bfa1ae212efa5ccf7f2a4d401e8cc5",
-            "bytes": 3371
+            "sha256": "b0a527fad3329b00d2101251da032d25008b72252583300446adb7ae9bb43e4d",
+            "bytes": 2975
         },
         "include/bedrock/protocol/types/command/CommandHardEnum.hpp": {
-            "sha256": "a9a71fd66f0f9d0bddfc21ce3a2e3d6f45f0fc683c0f1beaf4bbc381932f2c34",
-            "bytes": 1577
+            "sha256": "17909d40673d96f8b40b059d0961b7b270cfd2ff4bac3d282483c810493bb405",
+            "bytes": 1598
         },
         "include/bedrock/protocol/types/command/CommandOriginData.hpp": {
-            "sha256": "6dd379c12d15789b037c7decae8a54dafa8df93b2219b1efd5483c57f4c9fd4e",
-            "bytes": 2382
+            "sha256": "6dbad08017caecf17d21d354e66e22ec49d76fe5930a504090c5703206bdc535",
+            "bytes": 3033
         },
         "include/bedrock/protocol/types/command/CommandOutputMessage.hpp": {
-            "sha256": "bc28c474003e684633fe41beb63058053058ae9596d10a7303bf276fcc5b358a",
-            "bytes": 1029
+            "sha256": "a29848b8c6e272c4affa7484a8b6f0c4b26c9ced0f7cc68c0edb42e19bf5f5f3",
+            "bytes": 1067
         },
         "include/bedrock/protocol/types/command/CommandOverload.hpp": {
-            "sha256": "6f0e4734418d909277b173249c4c73d9779cfd9c7d5f79d487d676a4edb89d67",
-            "bytes": 1308
+            "sha256": "44a40231b029a4c26364417ac8d6ddc37e924bd5b8a13960f4733171e9dc460f",
+            "bytes": 1156
         },
         "include/bedrock/protocol/types/command/CommandParameter.hpp": {
-            "sha256": "2f40ea411b9a54351d18c36ca1aeef3e187557ac76f939a524189f9b9f402a8c",
-            "bytes": 2523
+            "sha256": "3934749306975d7bc2bf202fac5289443d14ee17b1b78f66ce640c55aa6f017e",
+            "bytes": 2550
         },
         "include/bedrock/protocol/types/command/CommandParameterTypes.hpp": {
             "sha256": "240ebf4ae93afb8edb0c0100e7967e2bccf1b423cf031dcc9be8671642baa478",
             "bytes": 604
         },
         "include/bedrock/protocol/types/command/CommandPermissions.hpp": {
-            "sha256": "ede332e959567527e9bd41bf2e2fcae73e7b82b2376a046fabb474764d59d5a3",
-            "bytes": 746
-        },
-        "include/bedrock/protocol/types/command/CommandPermissionsNames.inc": {
-            "sha256": "84e67ea3fd7b7dde8299496792a64b6ebb4b8b5b5dd6eda03cdab006baa7a57c",
-            "bytes": 62
+            "sha256": "6647e3d06d81e676480effb5fb021c5c326d55204a9838d51cfdcae7438896e5",
+            "bytes": 801
         },
         "include/bedrock/protocol/types/command/CommandSoftEnum.hpp": {
-            "sha256": "6e0728f2c30cb601a1c3f0406e5e918750b01e2c92019f7deb56f563c9631f48",
-            "bytes": 1051
+            "sha256": "e20e19809ec974bb32695ab02130a96425189fd1a52d06c1aff343a3c1c497bb",
+            "bytes": 1070
         },
         "include/bedrock/protocol/types/command/ConstrainedEnumValue.hpp": {
-            "sha256": "40f24ff49e49f185930c2bc7aeea50824b10a88fe440f449d06e76e4c4a69ca9",
-            "bytes": 1224
+            "sha256": "a861b166871a63944a7e16f2d65a3738fd834eb8e0fdd60898b0f9626e719c21",
+            "bytes": 1262
         },
         "include/bedrock/protocol/types/command/raw/ChainedSubCommandRawData.hpp": {
-            "sha256": "4a0814ae2ee5f2acbd96dca310a4b017d1464eed4dba92137ac7be7406c3314f",
-            "bytes": 1450
+            "sha256": "b32fecf6da2245dac2ebc8a3389efc4465c42e8607dfa4a9551cc9c5cf0f0bcb",
+            "bytes": 1272
         },
         "include/bedrock/protocol/types/command/raw/ChainedSubCommandValueRawData.hpp": {
             "sha256": "96f10c505dbd782348436ba902c6fc509ba8b1b546b553b6ae7666a05e5ef8d2",
             "bytes": 975
         },
         "include/bedrock/protocol/types/command/raw/CommandEnumConstraintRawData.hpp": {
-            "sha256": "1a4b6220d98754ba6831ffccc9df6ee80c91ded8be6630f6866d1ea26da2ffae",
-            "bytes": 1443
+            "sha256": "2a318205fcb115fc0817387d02894b96d72d7acf2251230f3a463d3374a954df",
+            "bytes": 1462
         },
         "include/bedrock/protocol/types/command/raw/CommandEnumRawData.hpp": {
-            "sha256": "26d74c89f94c7349a896f89ece7e76e0c3d634d7b56986dd105e57ff241db42d",
-            "bytes": 1089
+            "sha256": "443d83facb8aee8af002ee4c7d6e9b844c0d53d8b0502616c53fceeeac92b0f4",
+            "bytes": 1108
         },
         "include/bedrock/protocol/types/command/raw/CommandOverloadRawData.hpp": {
-            "sha256": "44c41bdeb69b1edd348f61e7ca4f2230493a580cd3437b2ea9e1156a73eefe13",
-            "bytes": 1428
+            "sha256": "cb6d34078d8ae18a32498daa20d4aea7826c306eebd1e650231dfba2dbbb9961",
+            "bytes": 1256
         },
         "include/bedrock/protocol/types/command/raw/CommandParameterRawData.hpp": {
             "sha256": "7f233abdd313479ff4a5473a59bb9c25bf258ff28a407bc54734658a71a057e3",
             "bytes": 1316
         },
         "include/bedrock/protocol/types/command/raw/CommandRawData.hpp": {
-            "sha256": "fe64d29582b852f062415674d771ee33abd4d8b9cd848807b983d392daefece7",
-            "bytes": 2634
+            "sha256": "2a66d3d13bd1f30519c36d0773441041645cd48f7510f0fad5e8cad69e6976b7",
+            "bytes": 2482
         },
         "include/bedrock/protocol/types/ddui/DataStoreChange.hpp": {
-            "sha256": "4135023162b07385a9a9c33b61859c0c791c5a04676c842435903e02310a084c",
-            "bytes": 1953
+            "sha256": "1115133813ab2ae9d3e4121e9a697b80a6ec357ec719ec2a356334a9e489fe5b",
+            "bytes": 1856
         },
         "include/bedrock/protocol/types/ddui/DataStoreOperation.hpp": {
             "sha256": "e35ca6e027b577214919a46ea17f24a8f5ee2e07e726ac4be2cb2364a5aa7565",
@@ -2666,8 +2642,8 @@
             "bytes": 992
         },
         "include/bedrock/protocol/types/ddui/DataStoreUpdate.hpp": {
-            "sha256": "91a8eaf947670a98e0010f4bd2b60b2853efd4150b9215c169693b2fce464027",
-            "bytes": 2429
+            "sha256": "603d5e2071b2beb01e4da50e6394b61144dcd9567a842f98d390c2385604dae2",
+            "bytes": 2358
         },
         "include/bedrock/protocol/types/ddui/update/BoolDataStoreUpdateValue.hpp": {
             "sha256": "3654873a0d27e9e05ca3270edd1347743cac80c514015922c5038f5e6ac55c64",
@@ -2706,16 +2682,12 @@
             "bytes": 194
         },
         "include/bedrock/protocol/types/entity/EntityIds.hpp": {
-            "sha256": "685d17fa6bb45b8053140a54fe06398963ee1902080a60ee48c45b504515effe",
-            "bytes": 3352
-        },
-        "include/bedrock/protocol/types/entity/EntityIdsNames.inc": {
-            "sha256": "8f53cf7f85a406550c0b218730f0aa09aba1c936e9a49cdb64db609e35a2b52d",
-            "bytes": 3226
+            "sha256": "1f4f215ca24d4d8432dcb85814f9e46229009ff1061064e820910ecc5791bd93",
+            "bytes": 12111
         },
         "include/bedrock/protocol/types/entity/EntityLink.hpp": {
-            "sha256": "9be48c360cf77f7297a207cc3ed347874024957948157bb34476008e828e0eb5",
-            "bytes": 2073
+            "sha256": "5f676900d4cdc67e072f3e11a6d21656eb073a0f23a0afa93bc8bb212f8883a9",
+            "bytes": 2069
         },
         "include/bedrock/protocol/types/entity/EntityMetadataFlags.hpp": {
             "sha256": "52d45586f0592ff2fbc47fa4276aec033cb8429a6d310d17c00f9b0da0b65ca5",
@@ -2738,8 +2710,8 @@
             "bytes": 1647
         },
         "include/bedrock/protocol/types/entity/UpdateAttribute.hpp": {
-            "sha256": "532101006115084c14a8cae0a9c5f453e9d480d5f804cbfdc9bb46343d3d5f6a",
-            "bytes": 2402
+            "sha256": "296793d61409b61ca35a3d17e636422c416763d5bfa4a25669f3d1d0805bb951",
+            "bytes": 2178
         },
         "include/bedrock/protocol/types/furnace/FurnaceLayout.hpp": {
             "sha256": "e2739406bdbd3397af2a4e5794f405d761e1185195574a0256e5de60e2af8e88",
@@ -2750,8 +2722,8 @@
             "bytes": 253
         },
         "include/bedrock/protocol/types/furnace/FurnaceOptions.hpp": {
-            "sha256": "0d9ae60212d68356edf5ab197ce279d436a2863d1265d1644b5f000298c90ebd",
-            "bytes": 1730
+            "sha256": "fa38408ce9ff926beaed94016d228eb98c8656bf598c4605fb521c139cda4eaf",
+            "bytes": 1532
         },
         "include/bedrock/protocol/types/furnace/FurnaceType.hpp": {
             "sha256": "183d99476ca40a6d34e21d70b92b802820d107a04559b17e8f06ef2b41aeffe3",
@@ -2790,8 +2762,8 @@
             "bytes": 169
         },
         "include/bedrock/protocol/types/inventory/FullContainerName.hpp": {
-            "sha256": "bfec4d7144582a9551ea3f91d40809efc1f1023c450f1ec74b927138ebe33415",
-            "bytes": 1091
+            "sha256": "2ca44628e829920fc43508b6f32ab627f4e31ec33f19163094bbb6a114d655de",
+            "bytes": 1110
         },
         "include/bedrock/protocol/types/inventory/HandSlot.hpp": {
             "sha256": "b21a747377e8b31cd0ed018300400172f5c8a1303f27a1b8b5427d68fcf7a68c",
@@ -2810,12 +2782,12 @@
             "bytes": 205
         },
         "include/bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp": {
-            "sha256": "5c9ef98dd77b7b42bafd890966a96703947ae8e92ef0a6afbe388f90351dd09b",
-            "bytes": 1231
+            "sha256": "02a43e577e0199c32696432526e2e7d604885e9d4527a0b0fb9c7c978a39da53",
+            "bytes": 1250
         },
         "include/bedrock/protocol/types/inventory/ItemStackExtraData.hpp": {
-            "sha256": "d34d68f067e65bddd81224b58f7e7f54b31e5f13de1d76bca2b3dd20d3687c79",
-            "bytes": 1714
+            "sha256": "6bae81a4729ef9900377108d8ecfb118eead68fee8fcca6c0c780dc9b3238611",
+            "bytes": 1828
         },
         "include/bedrock/protocol/types/inventory/ItemStackExtraDataShield.hpp": {
             "sha256": "a52def92904df69260f768c05c766c9f69f44d93fedf82cfbf916a9687b6385a",
@@ -2826,8 +2798,8 @@
             "bytes": 876
         },
         "include/bedrock/protocol/types/inventory/NetworkInventoryAction.hpp": {
-            "sha256": "21ce3d7be5f0eaa8d4d75075a037c74d5c3db7d9e853f222a55060d2243d92d7",
-            "bytes": 2308
+            "sha256": "f1b8989d28665bcc7e535c9d51321e1a19b299e30d5064b46aa14570d592cc57",
+            "bytes": 2332
         },
         "include/bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp": {
             "sha256": "1cefe5880b563fb208d5016cb0b92ccd1a42f5a5b88ff90eecb92a7609d71fad",
@@ -2846,12 +2818,12 @@
             "bytes": 170
         },
         "include/bedrock/protocol/types/inventory/ReleaseItemTransactionData.hpp": {
-            "sha256": "8461c761a3b0d8f6f78e9d2dab3e8317c801ec0b1a9cc691e5a1cf296df73ac2",
-            "bytes": 1847
+            "sha256": "3db6cac848a48c8d87762c57ef152edc589e12fdf3670420d2bdb717f421269a",
+            "bytes": 1808
         },
         "include/bedrock/protocol/types/inventory/TransactionData.hpp": {
-            "sha256": "56e2e2309857490ec0addf594c7f8cd656cf9346d2530585b642f6453e2e6561",
-            "bytes": 929
+            "sha256": "28d723214989c8ba58e187ef2c7e6750134d01a7bfae88aafc852c2b732b8802",
+            "bytes": 858
         },
         "include/bedrock/protocol/types/inventory/TriggerType.hpp": {
             "sha256": "7729a19e0aee7f3abd48c23c154bd137d9f4130636512f066fd710353ee5176b",
@@ -2862,12 +2834,12 @@
             "bytes": 873
         },
         "include/bedrock/protocol/types/inventory/UseItemOnEntityTransactionData.hpp": {
-            "sha256": "7520b635825601625f1d97ee419ce58a49b5ddf3e75367894314afdfdedc6d91",
-            "bytes": 2178
+            "sha256": "d309dbd3dee4cba92a1acba77c434c20d354c6184dd9b4a555f7d20b0cb5685c",
+            "bytes": 2139
         },
         "include/bedrock/protocol/types/inventory/UseItemTransactionData.hpp": {
-            "sha256": "7e715149bd801b1b666c2700bab5f818033827890c09693dd0e9e51498ef7a17",
-            "bytes": 3469
+            "sha256": "c96b9524bd09103115921d509f76934541561b728f73f38668e3c338b65fb92c",
+            "bytes": 3226
         },
         "include/bedrock/protocol/types/inventory/WindowTypes.hpp": {
             "sha256": "6203adea34244de61665e32126b33d0acc1e8f87ed5e4303c8ad8eaf5efb39ac",
@@ -2878,8 +2850,8 @@
             "bytes": 1350
         },
         "include/bedrock/protocol/types/inventory/stackrequest/CraftRecipeAutoStackRequestAction.hpp": {
-            "sha256": "d42355fd751d01b03c8d77033845948c527a7a81f04e2a2f327b102f5fe189bf",
-            "bytes": 1843
+            "sha256": "de8b3d6c9e2420d72d1f2b4cd9157138110a87a76bc67814bb650d79e90b4699",
+            "bytes": 1754
         },
         "include/bedrock/protocol/types/inventory/stackrequest/CraftRecipeOptionalStackRequestAction.hpp": {
             "sha256": "0f144d2b3fccdd473551319628f02c638d63eb8e458df33dcf1970ca237f5770",
@@ -2894,8 +2866,8 @@
             "bytes": 1294
         },
         "include/bedrock/protocol/types/inventory/stackrequest/CraftingConsumeInputStackRequestAction.hpp": {
-            "sha256": "1342ef0390a7d68208c27e0f4c25902a7342133ecc422c1dfedf7df3614f5ea1",
-            "bytes": 1673
+            "sha256": "2bd22e981e6dad155be861f4241e61d231941767c8c404183117f8fc2c9607f5",
+            "bytes": 1456
         },
         "include/bedrock/protocol/types/inventory/stackrequest/CraftingCreateSpecificResultStackRequestAction.hpp": {
             "sha256": "830d1e001b4576a1e48424fbd999f64cfc83afc7bb750e7cc44bb4538fbaef6d",
@@ -2910,28 +2882,28 @@
             "bytes": 985
         },
         "include/bedrock/protocol/types/inventory/stackrequest/DeprecatedCraftingResultsEntry.hpp": {
-            "sha256": "2deea4d60b147a2d440fccd97171ebde2398533ab720bba01ed8821c1d4bb607",
-            "bytes": 2970
+            "sha256": "10e21b841690735c0bf2edbae9dd52a580114bb1749a8fa8027f92b24feb1e27",
+            "bytes": 2951
         },
         "include/bedrock/protocol/types/inventory/stackrequest/DeprecatedCraftingResultsStackRequestAction.hpp": {
-            "sha256": "b516d7444fe93cca52e87b538ca2067eaabfb447235ca34604e9c62efcfa02a4",
-            "bytes": 1947
+            "sha256": "c2b71b59ae6407ce1f052d365d9a68bd2af1f021c46d3ad1490c9fe48eea6c07",
+            "bytes": 1665
         },
         "include/bedrock/protocol/types/inventory/stackrequest/DestroyStackRequestAction.hpp": {
-            "sha256": "368c1ef61b4f4821202ec79b600338347c29e58dc4bc9f27da7d736235799270",
-            "bytes": 1621
+            "sha256": "8aeac2ce7bddacc870b284900c29812b73f67801b96a31cec87d60d83557f498",
+            "bytes": 1404
         },
         "include/bedrock/protocol/types/inventory/stackrequest/DropStackRequestAction.hpp": {
-            "sha256": "9d1cc1be6f75dfa60d90184eb8a509723f8ceb5081bce0e67fec11a2ef3d912b",
-            "bytes": 1818
+            "sha256": "cdf3f4ccc67afbf9ff390f63f2a4c644e57ab84257fd65c0391860b32d02bf85",
+            "bytes": 1601
         },
         "include/bedrock/protocol/types/inventory/stackrequest/GrindstoneStackRequestAction.hpp": {
             "sha256": "0955258b1a9e3f1de2a6f465054a4c4480b141b0595f18169232678da63f6d51",
             "bytes": 1458
         },
         "include/bedrock/protocol/types/inventory/stackrequest/ItemStackRequest.hpp": {
-            "sha256": "e186cb185fd60540c878231a03ea9db7307706409bc07e8c8afc5c8728906503",
-            "bytes": 3706
+            "sha256": "8e472bcb7f13d6d09b4f4f00aa7835264b1bd8dd45f46cfedfa9339cad8c42ee",
+            "bytes": 3744
         },
         "include/bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp": {
             "sha256": "24bcfa03c4223efccbf84c181fba2db6e85acb9427cd9c5d4c6897d649da3ff8",
@@ -2942,8 +2914,8 @@
             "bytes": 1360
         },
         "include/bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp": {
-            "sha256": "df1ca857158caba83af0940e19e753965e2dc70dde262409feec75b99d64b572",
-            "bytes": 1503
+            "sha256": "e94e239bbf4ccff97c361f03673b153e40260e313c024336b9fd3dbc97b0454b",
+            "bytes": 1333
         },
         "include/bedrock/protocol/types/inventory/stackrequest/LabTableCombineStackRequestAction.hpp": {
             "sha256": "ce8a28b57826a2278324288f0b44a1442e667c8aa86cb1b314e0f526c10965df",
@@ -2958,32 +2930,32 @@
             "bytes": 1465
         },
         "include/bedrock/protocol/types/inventory/stackrequest/PlaceStackRequestAction.hpp": {
-            "sha256": "4406e70b4f71299194db3d9f14161385f82dbbeb36a3ea5049965920757dcb14",
-            "bytes": 1997
+            "sha256": "25930e56c25592103d0efb0a21ca5755e132c44febcb807ca2b22e09d776a8fc",
+            "bytes": 1740
         },
         "include/bedrock/protocol/types/inventory/stackrequest/SwapStackRequestAction.hpp": {
-            "sha256": "b06963ed83c790804abd89c38a310b1a59f439f16dcf42ea1cca32454d4a49e2",
-            "bytes": 1780
+            "sha256": "eada12508b166db50fd353e47d34fdf3577287b4dcac63916d7acb0a91cb1b14",
+            "bytes": 1516
         },
         "include/bedrock/protocol/types/inventory/stackrequest/TakeStackRequestAction.hpp": {
-            "sha256": "820385383a28868ddc0d86f7d1aacd18143a89256e376fac5de2ae9958a7dacc",
-            "bytes": 1993
+            "sha256": "430dee8c9e29838ebb13329b380d64ed589156b974cf5a16c37392cd28c3774d",
+            "bytes": 1736
         },
         "include/bedrock/protocol/types/inventory/stackresponse/ItemStackResponse.hpp": {
-            "sha256": "d86219e399ad4a6760cde13f0621bcbec84f2f0f8233420db83768b82a964610",
-            "bytes": 2068
+            "sha256": "b446f9a83c7bba728fa0d56e64edd346e7d7dde1132a35260dcb2e9c5590d624",
+            "bytes": 1866
         },
         "include/bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp": {
-            "sha256": "0f5cc430824e82a6726a6276127ce346e9aa1a502111f0cfdeb1d334cecffb6c",
-            "bytes": 1893
+            "sha256": "68ba8c2aff9c7e9f3712343e6f7d58355ff87b0894542ebba5b63d6ac97ae22e",
+            "bytes": 1449
         },
         "include/bedrock/protocol/types/inventory/stackresponse/ItemStackResponseSlotInfo.hpp": {
-            "sha256": "b388e5ed9ff238aab3d0eb58b582513ad844241dccdc59d7160b01d1fb131c11",
-            "bytes": 2312
+            "sha256": "bfc397db758357448dbd5d827487d2cb130783021edaa762516b81adf419cb8a",
+            "bytes": 2350
         },
         "include/bedrock/protocol/types/login/AuthenticationInfo.hpp": {
-            "sha256": "68481020b94444dea3ac19d571a971d56560b50c181964c2d8ab388b2738b1eb",
-            "bytes": 1181
+            "sha256": "ba1769348257d20ed40d0eb053cd49bbaa9789bbaa86e3b2325c7f0820089a1f",
+            "bytes": 1140
         },
         "include/bedrock/protocol/types/login/AuthenticationType.hpp": {
             "sha256": "eb2ce24f096e267c35fe61bb70c90cc1f590f215246d5c675fc718144c899e5d",
@@ -2998,16 +2970,16 @@
             "bytes": 874
         },
         "include/bedrock/protocol/types/login/clientdata/ClientData.hpp": {
-            "sha256": "0755f8c8b569b6298ef902306c7bc7eb1b7b290d76d4e765fa867248eb71e7e3",
-            "bytes": 8743
+            "sha256": "7c159adabd4c5fd770584b9448968187e9d6b21e4fd845897566c8b2857bfa05",
+            "bytes": 8142
         },
         "include/bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp": {
             "sha256": "b521c107aa656e69c29a863bae2cdda5e49ec3d892f4466b7e471652682da0d9",
             "bytes": 1251
         },
         "include/bedrock/protocol/types/login/clientdata/ClientDataPersonaPieceTintColor.hpp": {
-            "sha256": "aab722218895bd487b0d244ad0e4c218dacf8227e47654a36167e0e7ff9129bc",
-            "bytes": 924
+            "sha256": "835a2cf404c4b5895566cd445a4b445339ca90a02048f691d2a005a9d194daf5",
+            "bytes": 962
         },
         "include/bedrock/protocol/types/login/clientdata/ClientDataPersonaSkinPiece.hpp": {
             "sha256": "90147eb283b9dc0265b430248ca0e1434edeacd272babd6bb1ac9ebb4fc4d2f0",
@@ -3018,12 +2990,12 @@
             "bytes": 1036
         },
         "include/bedrock/protocol/types/login/legacy/LegacyAuthChain.hpp": {
-            "sha256": "6431ba5449091aebba49ed34d4ebe3bb5aae59708d8d5afffd4fc70dbb02cd7e",
-            "bytes": 769
+            "sha256": "91db2dbb816a9e97e7fca0f8fb541e340b62f9736306ca5868733b9a86a09a54",
+            "bytes": 807
         },
         "include/bedrock/protocol/types/login/legacy/LegacyAuthIdentityData.hpp": {
-            "sha256": "db638c7e6f6b78063a0cf2da1e6a71f67d8525455ef2461be318445836ab9011",
-            "bytes": 1296
+            "sha256": "5adc0b100822ef6ed8ed197c0bd81eecd76c232bd51a102f6857834aab8e8c8b",
+            "bytes": 1334
         },
         "include/bedrock/protocol/types/login/legacy/LegacyAuthJwtBody.hpp": {
             "sha256": "d43d5cd336aa17b09fd9acfed9007388ad10c6d26466a80ce3fd75b2b5308483",
@@ -3054,52 +3026,40 @@
             "bytes": 715
         },
         "include/bedrock/protocol/types/login/openid/api/MinecraftServiceAuthEnvironments.hpp": {
-            "sha256": "7259f85900d77d56394c6afa3a5b17e59548fc6da4b0bbf7a7688ec0880df49d",
-            "bytes": 1009
+            "sha256": "4717b979c90ceaddcc6288db2f48a65b8d157e8fefb75221bcc9560f3b2f40a5",
+            "bytes": 865
         },
         "include/bedrock/protocol/types/login/openid/api/MinecraftServiceEnvironments.hpp": {
-            "sha256": "696d0ac936cc58ad000df45998c5a3c48c5fd5546964359a8e564eacf1d49e1a",
-            "bytes": 1005
+            "sha256": "7138117cd24adc1f471ad3380b8128af1b8efd7bfd2f2a3f14d483f89361bc11",
+            "bytes": 860
         },
         "include/bedrock/protocol/types/login/openid/api/MinecraftServicesDiscovery.hpp": {
-            "sha256": "395f5a0f7cabbc0764dfc283b86fa2641bee48f71ffe1610793ebe0091eabf63",
-            "bytes": 973
+            "sha256": "4780a27bb40bbe580c74c65da3c2e67b9a64d0d56f82c9aba58aa7ab3a59b278",
+            "bytes": 837
         },
         "include/bedrock/protocol/types/login/openid/api/MinecraftServicesResult.hpp": {
-            "sha256": "1649af4105ae722296ab05db439b78bc168aa0eb30c21cddb9dd4a6697c633fb",
-            "bytes": 1039
+            "sha256": "47b2b41e3e75e3c0ef5f8ce31d3896b229478f6f9751f81adeb86f56a493d2cb",
+            "bytes": 898
         },
         "include/bedrock/protocol/types/recipe/CraftingRecipeBlockName.hpp": {
-            "sha256": "e43a5f2ed601ec9e2c729a66da2791dfb3bdf463bb70d2845b866a7c59eb4144",
-            "bytes": 772
-        },
-        "include/bedrock/protocol/types/recipe/CraftingRecipeBlockNameNames.inc": {
-            "sha256": "30d4886717fc8c62bb78f5191cb89fcca1dfb022f04e14f74a95eff24131e7d6",
-            "bytes": 72
+            "sha256": "24d686c161617f9cc021a101230dd21939c1e5270281790525681c7eb58f109c",
+            "bytes": 766
         },
         "include/bedrock/protocol/types/recipe/FurnaceRecipeBlockName.hpp": {
-            "sha256": "6155d782e4c41ab5376ba99f4254bf1ae3e4b8f286a206dbf1a08a3c1d991072",
-            "bytes": 767
-        },
-        "include/bedrock/protocol/types/recipe/FurnaceRecipeBlockNameNames.inc": {
-            "sha256": "9b4d54df1e8b8afb2dd7ba34a0766ba6ff814da490f6e2ce7778fc667d260ec4",
-            "bytes": 67
+            "sha256": "a5bf2996774fd34ebbefea2c4c47a965a3a824a402bef9254269ec6a84556372",
+            "bytes": 794
         },
         "include/bedrock/protocol/types/recipe/ItemDescriptor.hpp": {
             "sha256": "1c1e9736331702b596c98111a9263912c4a773a880d63008ce0552451522be5c",
             "bytes": 673
         },
         "include/bedrock/protocol/types/recipe/ItemDescriptorType.hpp": {
-            "sha256": "c7183571444d499a37f2204058da3217babdb324d9fa76c66ce323e06a90109d",
-            "bytes": 710
-        },
-        "include/bedrock/protocol/types/recipe/ItemDescriptorTypeNames.inc": {
-            "sha256": "5454824aabe158369c99ae5711d96a6187c60c69aac4697fbe0af894f56afa37",
-            "bytes": 39
+            "sha256": "fbc231908209e176b775f9b99b961930b60386d0ce2ecdc57aa1e74b19a14cd6",
+            "bytes": 644
         },
         "include/bedrock/protocol/types/recipe/MaterialReducerRecipe.hpp": {
-            "sha256": "bbc95b07e3c25bc18b2b565263ca5507de1d52e3a07866287f1c6953e095af99",
-            "bytes": 1600
+            "sha256": "e768d6fb373f8b7f0fc7d25e8b03fd52f973bb9e0ecc06f9092552a344e40ab1",
+            "bytes": 1429
         },
         "include/bedrock/protocol/types/recipe/MaterialReducerRecipeOutput.hpp": {
             "sha256": "2a69fda6eb3c41330f31bc19ad03d1b6152fa7746bd4178b85c9c81f5f9cfa57",
@@ -3110,8 +3070,8 @@
             "bytes": 1166
         },
         "include/bedrock/protocol/types/recipe/MultiRecipe.hpp": {
-            "sha256": "83479b70e6f235f27548091738725bcb085d9a61c26e2308569f040d7ab47246",
-            "bytes": 2162
+            "sha256": "09f07b73291ca09f8b4c55518bc7fe3a15b23460bd46bc1ba24ecd3af61d5702",
+            "bytes": 2683
         },
         "include/bedrock/protocol/types/recipe/PotionContainerChangeRecipe.hpp": {
             "sha256": "799909e76ad69327e6789867839dd19aeb7cd82e6ee257982d6f053dcc99cbaf",
@@ -3122,32 +3082,32 @@
             "bytes": 1880
         },
         "include/bedrock/protocol/types/recipe/RecipeIngredient.hpp": {
-            "sha256": "4bf69b44f49156f981070ad43b571c92cb54aa79443e5799fd375935148d925f",
-            "bytes": 2475
+            "sha256": "c9af02c0ba5273d33bc98fc3c9fdc5bd3672a072607166ddcf68311bdf78d824",
+            "bytes": 2456
         },
         "include/bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp": {
             "sha256": "7e862858ffb5072e8e83b33af8332214a3ec5f3e552b45096c22a94464900bad",
             "bytes": 232
         },
         "include/bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp": {
-            "sha256": "b65ef505b6527c236d14291811b7d01e3dd9397cc1c7019dae49866b98333a3d",
-            "bytes": 2086
+            "sha256": "63a404a7ec6dab873cd12ddae1f4964ceda1d4bf3c7d485fd0b7b11db373ff15",
+            "bytes": 1927
         },
         "include/bedrock/protocol/types/recipe/ShapedRecipe.hpp": {
-            "sha256": "b8da94480b0dc8078f200aec6b0bdf07e2f5505d7f53155be3ee7d4997070c0c",
-            "bytes": 2530
+            "sha256": "da2f6f1424dfb188694ee071e309011dad63e293d370835d3c28b23fe0a5c582",
+            "bytes": 2398
         },
         "include/bedrock/protocol/types/recipe/ShapelessRecipe.hpp": {
-            "sha256": "605282ff877460b311cafa3827316ec17e9406188fe52cd81c20f38492add9c1",
-            "bytes": 3148
+            "sha256": "97b4f74644631acb5514adbc3835e9fae092d225d44547d60ff3109f18ea72af",
+            "bytes": 2972
         },
         "include/bedrock/protocol/types/recipe/SmithingTransformRecipe.hpp": {
-            "sha256": "9bbcefe79992787bdbafcf483ca118c3f67952d798fac37f4b6efc06e74a4d14",
-            "bytes": 2532
+            "sha256": "f20b7a07e99a44da54dc3d9436b7bebff37a6939ae0c59ac753400e5961ce13b",
+            "bytes": 2299
         },
         "include/bedrock/protocol/types/recipe/SmithingTrimRecipe.hpp": {
-            "sha256": "9cb1ae15b13747b00ba0ef7564d4256078b047ee257877b4a6afe2bf116c7336",
-            "bytes": 2250
+            "sha256": "bd7958c3aa0777ada6b5feca568dd7c454ecf728bf86b552ff0a6e5a341ae879",
+            "bytes": 2057
         },
         "include/bedrock/protocol/types/recipe/StringIdMetaItemDescriptor.hpp": {
             "sha256": "332e423ded2e14cc5b8f79feca366d0fbd88f0c20f8efea15ea9aabb953c088b",
@@ -3170,12 +3130,12 @@
             "bytes": 306
         },
         "include/bedrock/protocol/types/shape/PacketShapeData.hpp": {
-            "sha256": "d02322b5dc58215c27ac14d8caf60bf38391ca5f9fc8aa2f7b62ef66cc6b24d1",
-            "bytes": 5398
+            "sha256": "64e3c17ecba08eda4ee1666ff8b408e43419fe2d8385b398676b56afeaa88b2d",
+            "bytes": 5623
         },
         "include/bedrock/protocol/types/shape/PrimitiveShapeArrowPayload.hpp": {
-            "sha256": "4fbdb9d7fff27dbcb1713dbc0780cf70b45d8c05fad9d6d58b91c0b21b6d2d2e",
-            "bytes": 2272
+            "sha256": "2d71eb7fc1e94e5313a6bd7d6264115a369f230eb46ab4e723b18447b6a254dd",
+            "bytes": 2348
         },
         "include/bedrock/protocol/types/shape/PrimitiveShapeBoxPayload.hpp": {
             "sha256": "c11846570c02098b189a1c3f2d1221d956203dac518f910e7cece55a95725d0b",
@@ -3206,48 +3166,40 @@
             "bytes": 745
         },
         "include/bedrock/protocol/types/shape/PrimitiveShapePyramidPayload.hpp": {
-            "sha256": "7f5a3bb9289f746bfb050ac38ccc2e0ac5fdc42be32e3aab0192cd6df03cd966",
-            "bytes": 1459
+            "sha256": "976b60fecb975f5a555f977108bb0ab42ca1a8c2e37e09824c1364159c240e78",
+            "bytes": 1478
         },
         "include/bedrock/protocol/types/shape/PrimitiveShapeTextPayload.hpp": {
-            "sha256": "53135ec3749e0056507f1c9707b1faa27dfcb49be4b952f3cda4a894ba0ec923",
-            "bytes": 2458
+            "sha256": "38070571f892c9753447d614b8544b51d24ef12a1985a2e5447460a4eadd86be",
+            "bytes": 2496
         },
         "include/bedrock/protocol/types/shape/PrimitiveShapeType.hpp": {
             "sha256": "a64c32fb553a5c06916b35e7cb4187301cb4172bd17be3d6c13c577e7a3f82a1",
             "bytes": 295
         },
         "include/bedrock/protocol/types/skin/PersonaPieceTintColor.hpp": {
-            "sha256": "ec3a15385130ea21b392e4b8319e9251eadb4d93f187768a79cef222ce3ae551",
-            "bytes": 1377
+            "sha256": "59da1333f14a82f1f5122597d3a6124441be8143f564ef40bee5387d09a91d64",
+            "bytes": 1335
         },
         "include/bedrock/protocol/types/skin/PersonaSkinPiece.hpp": {
-            "sha256": "4b1cc4e643d14320320de48dd87ba77c501190d048a5c04571f7140e54446617",
-            "bytes": 1829
+            "sha256": "855d6e59d817ad2e8a3ec3fa2921d64953c8f76d96e89e1553a83a483860db2d",
+            "bytes": 1787
         },
         "include/bedrock/protocol/types/skin/PersonaSkinPieceType.hpp": {
-            "sha256": "0f6a661b0e1585f350beb507ea96ccd27e1d436a803e2121728e54dd216f9884",
-            "bytes": 1163
-        },
-        "include/bedrock/protocol/types/skin/PersonaSkinPieceTypeNames.inc": {
-            "sha256": "aaa8493b2d7a4d1c034cd8770469e0c7904ef62b8e79e808c8edeff2a9d3c75a",
-            "bytes": 307
+            "sha256": "63af793c83b23713cc404f802e92f4bb465a75ff5830905673775c0753608ae4",
+            "bytes": 2670
         },
         "include/bedrock/protocol/types/skin/SkinAnimation.hpp": {
-            "sha256": "550cf0bf8d2ff53d8e70c5b24a7664504542c6e67961edd4731f767eb57b0760",
-            "bytes": 1885
+            "sha256": "7ae597d5acd7e2612bd4e0df7134f21d3802a2a35422c3a0b382f6b3491c78d5",
+            "bytes": 1767
         },
         "include/bedrock/protocol/types/skin/SkinArmSizeType.hpp": {
-            "sha256": "cb5cec7d3c29ec091d3f36478bce8a58c090c58d5f03152f73e45d80a31f81d5",
-            "bytes": 649
-        },
-        "include/bedrock/protocol/types/skin/SkinArmSizeTypeNames.inc": {
-            "sha256": "626b87fabc4851dffca57210e566cf4204f940c7dc828022027fdd9e04b7865e",
-            "bytes": 16
+            "sha256": "05e730edf7d3cda5ec4eeae2b11450b793f69eab3996944abb4101045aad10e7",
+            "bytes": 466
         },
         "include/bedrock/protocol/types/skin/SkinData.hpp": {
-            "sha256": "5e3fb914ad1fb0972ea38e4530b89c901bbc6116a6e3981fdb8565cdfc9e9652",
-            "bytes": 7416
+            "sha256": "62aec2d6d313cfa540bcab444b8438e831e59d4e768b40bcdd4086a4b83bc7d4",
+            "bytes": 6784
         },
         "include/bedrock/protocol/types/skin/SkinImage.hpp": {
             "sha256": "1708db6a83889ed8989295ffbeb879ecc06b8a4350013d0aa2c428b3cd749b6d",
@@ -3262,16 +3214,16 @@
             "bytes": 1591
         },
         "include/bedrock/protocol/types/sound/SoundDataEvent.hpp": {
-            "sha256": "c875eded1f57d1f5dcea92113fa85803cb980621bb1d2d5e889f26e518110ecc",
-            "bytes": 2976
+            "sha256": "3e45ae2fbffe3cf8b6dd45af291800f7b0319d5e8f17032b32ee269382b70f8e",
+            "bytes": 2967
         },
         "include/bedrock/protocol/types/sound/SoundDataEventType.hpp": {
             "sha256": "cf4603444f09d785af9ddb1f565ef24395b45f105ff80337229fe732bf22cd0b",
             "bytes": 251
         },
         "metadata/codegen.json": {
-            "sha256": "ca4b8b3e41c92925d961745b2b378af47fbece2e75eef62ed53076dc4a8e9b3b",
-            "bytes": 17032
+            "sha256": "57e952206b80d6cbdca2e3380ec97b214a8df475f1222ae770e4cc1b3315dd58",
+            "bytes": 15338
         },
         "metadata/protocol.json": {
             "sha256": "d7cb9e44a9216d48ceffe22282a974c4f6f549e70f7ee379efbf9f19ab626f78",
@@ -3283,8 +3235,8 @@
         "declarations": 656,
         "enums": 92,
         "registrations": 239,
-        "unsupported": 67,
-        "changed": 7,
+        "unsupported": 60,
+        "changed": 14,
         "removed": 2,
         "cached": 0
     }

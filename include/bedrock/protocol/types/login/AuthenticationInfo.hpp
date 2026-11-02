@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/login/AuthenticationType.hpp>
-#include <bedrock/protocol/types/login/AuthenticationType.hpp>
 
 class AuthenticationInfo {
 public:
@@ -25,7 +24,9 @@ public:
     AuthenticationInfo() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        AuthenticationType = magic_enum::enum_cast<::AuthenticationType>(stream.readInt().value_or(0)).value_or(AuthenticationType::Full);
+        AuthenticationType = magic_enum::enum_cast<::AuthenticationType>(
+            stream.readInt().value_or(0)
+        ).value_or(AuthenticationType::Full);
         Certificate = stream.readString().value_or("");
         Token = stream.readString().value_or("");
     }

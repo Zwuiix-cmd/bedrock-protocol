@@ -17,14 +17,6 @@
 #include <bedrock/protocol/types/biome/chunkgen/BiomeMesaSurfaceData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeNoiseGradientSurfaceData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeCappedSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMesaSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeNoiseGradientSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeCappedSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMesaSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeNoiseGradientSurfaceData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
 
 class BiomeSurfaceBuilderData {
 public:
@@ -63,33 +55,25 @@ public:
         frozenOceanSurface = stream.readBool().value_or(false);
         theEndSurface = stream.readBool().value_or(false);
         surfaceMaterial = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeSurfaceMaterialData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeSurfaceMaterialData>();
+            value->read(stream);
+            return value;
+        });
         mesaSurface = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeMesaSurfaceData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeMesaSurfaceData>();
+            value->read(stream);
+            return value;
+        });
         cappedSurface = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeCappedSurfaceData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeCappedSurfaceData>();
+            value->read(stream);
+            return value;
+        });
         noiseGradientSurface = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeNoiseGradientSurfaceData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeNoiseGradientSurfaceData>();
+            value->read(stream);
+            return value;
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -35,17 +35,17 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         blocks = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         entities = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         blockTags = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         entityTypeFamilies = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

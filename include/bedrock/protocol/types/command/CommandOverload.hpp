@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/command/CommandParameter.hpp>
-#include <bedrock/protocol/types/command/CommandParameter.hpp>
 
 class CommandOverload {
 public:
@@ -28,19 +27,13 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         chaining = stream.readBool().value_or(false);
-        parameters = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CommandParameter>();
-	value->read(stream);
-	return value;
-	}());
-});
+        parameters = stream.readObjectList<CommandParameter>();
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeBool(chaining);
         stream.writeList(parameters, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
     }
 };

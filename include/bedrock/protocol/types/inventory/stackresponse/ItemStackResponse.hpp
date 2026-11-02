@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
 
 class ItemStackResponse {
 public:
@@ -36,23 +35,19 @@ public:
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if (((magic_enum::enum_integer(result) != magic_enum::enum_integer(Result::Ok)) && containerInfos.has_value())) {
+		if (((result != Result::Ok) && containerInfos.has_value())) {
 			throw std::exception{};
 		}
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        result = magic_enum::enum_cast<Result>(stream.readUnsignedByte().value_or(0)).value_or(Result::Ok);
+        result = magic_enum::enum_cast<Result>(
+            stream.readUnsignedByte().value_or(0)
+        ).value_or(Result::Ok);
         requestId = stream.readInt().value_or(0);
         containerInfos = stream.readOptional([&]() {
-	return stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ItemStackResponseContainerInfo>();
-	value->read(stream);
-	return value;
-	}());
-	});
-});
+            return stream.readObjectList<ItemStackResponseContainerInfo>();
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -60,7 +55,7 @@ public:
 		stream.writeInt(requestId);
 		stream.writeOptional(containerInfos, [&](const auto& list) {
 			stream.writeList(list, [&](const auto& v) {
-			v->write(stream);
+				v->write(stream);
 			});
 		});
     }

@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEase.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionRotation.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEase.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionRotation.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEase.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionRotation.hpp>
 
 class CameraSetInstruction {
 public:
@@ -58,34 +54,30 @@ public:
         preset = stream.readUnsignedInt().value_or(0);
         ignoreStartingValuesComponent = stream.readBool().value_or(false);
         ease = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraSetInstructionEase>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CameraSetInstructionEase>();
+            value->read(stream);
+            return value;
+        });
         cameraPosition = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         rotation = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraSetInstructionRotation>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<CameraSetInstructionRotation>();
+            value->read(stream);
+            return value;
+        });
         facingPosition = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         viewOffset = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
         entityOffset = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
         default_ = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

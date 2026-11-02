@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
 
 class SwapStackRequestAction : public ItemStackRequestAction {
@@ -37,16 +35,10 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        slot1 = ([&]() {
-    auto value = std::make_shared<ItemStackRequestSlotInfo>();
-    value->read(stream);
-    return value;
-}());
-        slot2 = ([&]() {
-    auto value = std::make_shared<ItemStackRequestSlotInfo>();
-    value->read(stream);
-    return value;
-}());
+        slot1 = std::make_shared<ItemStackRequestSlotInfo>();
+        slot1->read(stream);
+        slot2 = std::make_shared<ItemStackRequestSlotInfo>();
+        slot2->read(stream);
     }
 
     void write(BinaryStream& stream) const override {

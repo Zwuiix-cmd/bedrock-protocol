@@ -42,16 +42,16 @@ public:
         blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
         rawExtraData = stream.readString().value_or("");
         descriptor = ([&]() { auto value = stream.readOptional([&]() { return ([&]() {
-    auto value = std::make_shared<StringIdMetaItemDescriptor>();
-    value->read(stream);
-    return value;
-}()); }); return value ? std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{*value} : std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{std::monostate{}}; }());
+            auto value = std::make_shared<StringIdMetaItemDescriptor>();
+            value->read(stream);
+            return value;
+        }()); }); return value ? std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{*value} : std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{std::monostate{}}; }());
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedShort(count);
         stream.writeUnsignedVarInt(blockRuntimeId);
         stream.writeString(rawExtraData);
-        std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::shared_ptr<StringIdMetaItemDescriptor>>) { if (alternative) alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<TagItemDescriptor>>) { if (alternative) alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<MolangItemDescriptor>>) { if (alternative) alternative->write(stream); } }, descriptor);
+        std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::shared_ptr<StringIdMetaItemDescriptor>>) { alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<TagItemDescriptor>>) { alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<MolangItemDescriptor>>) { alternative->write(stream); } }, descriptor);
     }
 };

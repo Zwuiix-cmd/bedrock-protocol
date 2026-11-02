@@ -63,7 +63,7 @@ trait PacketEmissionMethods
             }
             $type = $this->propertyType($property, $packet, true);
             $body .= '    ' . $type . ' ' . CPPName::identifier($property['name']);
-            $default = $this->propertyInitializer($property, $packet, $type);
+            $default = $this->propertyInitializer($property, $packet, $type, $types);
             $body .= $default === null ? ";\n" : ' = ' . $default . ";\n";
         }
         $body .= "\npublic:\n    std::string_view getName() override {\n        return magic_enum::enum_name(ID);\n    }\n\n";
@@ -260,9 +260,6 @@ trait PacketEmissionMethods
         if ($computed !== []) {
             $body .= "\n";
         }
-        foreach ($strings as $name => $value) {
-            $body .= '    static constexpr std::string_view ' . CPPName::identifier($name) . ' = "' . addcslashes($value, "\\\"") . "\";\n";
-        }
         return $body;
     }
 
@@ -335,6 +332,7 @@ trait PacketEmissionMethods
         }
 
         $result = [];
+        $coveredConstants = [];
         foreach ($assignments as $prefix => $propertyName) {
             $enumName = str_contains($propertyName, '_')
                 ? CPPName::enumCase($propertyName)
@@ -344,6 +342,33 @@ trait PacketEmissionMethods
                 'cases' => $groups[$prefix]['cases'],
                 'constantNames' => $groups[$prefix]['constantNames'],
             ];
+            foreach ($groups[$prefix]['constantNames'] as $constantName) {
+                $coveredConstants[$constantName] = true;
+            }
+        }
+        $prefixes = array_keys($groups);
+        usort($prefixes, static fn (string $left, string $right): int => strlen($left) <=> strlen($right));
+        foreach ($prefixes as $prefix) {
+            if (isset($assignments[$prefix])
+                || (count($groups[$prefix]['cases']) < 2
+                    && !in_array(strtoupper($prefix), ['TYPE', 'CATEGORY'], true))) {
+                continue;
+            }
+            if (array_intersect($groups[$prefix]['constantNames'], array_keys($coveredConstants)) !== []) {
+                continue;
+            }
+            $enumName = CPPName::enumCase($prefix);
+            if (isset($result[$enumName])) {
+                continue;
+            }
+            $result[$enumName] = [
+                'prefix' => $prefix,
+                'cases' => $groups[$prefix]['cases'],
+                'constantNames' => $groups[$prefix]['constantNames'],
+            ];
+            foreach ($groups[$prefix]['constantNames'] as $constantName) {
+                $coveredConstants[$constantName] = true;
+            }
         }
         return $result;
     }
@@ -357,16 +382,16 @@ trait PacketEmissionMethods
         $owner = $this->generatedTypeName($declaration);
         $body = '';
         foreach ($definitions as $enumName => $definition) {
-            $names = $owner . $enumName . 'Names';
-            $body .= "\ninline constexpr std::array<std::string_view, " . count($definition['cases']) . '> ' . $names . " = {\n";
-            foreach ($definition['cases'] as $value) {
-                $body .= '    ' . json_encode($value, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ",\n";
-            }
-            $body .= "};\n\nnamespace magic_enum::customize {\n\n";
+            $body .= "\nnamespace magic_enum::customize {\n\n";
             $body .= 'template <> constexpr customize_t enum_name<' . $owner . '::' . $enumName . '>('
                 . $owner . '::' . $enumName . " value) noexcept {\n"
-                . '    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));' . "\n"
-                . '    return index < ' . $names . '.size() ? customize_t{' . $names . '[index]} : invalid_tag;' . "\n}\n\n}\n";
+                . "    switch (value) {\n";
+            foreach ($definition['cases'] as $case => $value) {
+                $body .= '        case ' . $owner . '::' . $enumName . '::' . CPPName::enumCase((string) $case)
+                    . ': return ' . json_encode($value, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ";\n";
+            }
+            $body .= "        default: return invalid_tag;\n"
+                . "    }\n}\n\n}\n";
         }
         return $body;
     }

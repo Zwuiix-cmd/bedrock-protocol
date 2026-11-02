@@ -2,18 +2,6 @@
     "translator": "nikic/php-parser AST",
     "unsupported": [
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeEnvironmentNoiseTransitionSettings",
-            "method": "write",
-            "line": 72,
-            "reason": "string-backed enum ordinal conversion"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeEnvironmentTransitionSettings",
-            "method": "write",
-            "line": 57,
-            "reason": "string-backed enum ordinal conversion"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
             "method": "write",
             "line": 49,
@@ -36,18 +24,6 @@
             "method": "write",
             "line": 49,
             "reason": "method is not part of the generated type interface: getA"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraSetInstructionEase",
-            "method": "write",
-            "line": 39,
-            "reason": "string-backed enum ordinal conversion"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraSplineInstruction",
-            "method": "write",
-            "line": 94,
-            "reason": "string-backed enum ordinal conversion"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\command\\CommandData",
@@ -236,12 +212,6 @@
             "reason": "serializer call requires an adapter: Byte::writeSigned"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\ResourcePackClientResponsePacket",
-            "method": "encodePayload",
-            "line": 57,
-            "reason": "string-backed enum ordinal conversion"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\AnimatePacket",
             "method": "decodePayload",
             "line": 49,
@@ -372,18 +342,6 @@
             "method": "encodePayload",
             "line": 64,
             "reason": "method is not part of the generated type interface: isComponentBased"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerUpdateEntityOverridesPacket",
-            "method": "encodePayload",
-            "line": 87,
-            "reason": "string-backed enum ordinal conversion"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMatchmakingStatePacket",
-            "method": "encodePayload",
-            "line": 54,
-            "reason": "string-backed enum ordinal conversion"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundPlayAudioContentPacket",

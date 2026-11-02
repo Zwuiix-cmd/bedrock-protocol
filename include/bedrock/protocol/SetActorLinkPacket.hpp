@@ -126,11 +126,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		link = ([&]() {
-		    auto value = std::make_shared<EntityLink>();
-		    value->read(stream);
-		    return value;
-		}());
+		link = std::make_shared<EntityLink>();
+		link->read(stream);
     }
 
     void write(BinaryStream& stream) override {

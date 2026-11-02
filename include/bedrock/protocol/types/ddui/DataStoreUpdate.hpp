@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/ddui/update/DataStoreUpdateValue.hpp>
-#include <bedrock/protocol/types/ddui/update/DataStoreUpdateValue.hpp>
 #include <bedrock/protocol/types/ddui/update/BoolDataStoreUpdateValue.hpp>
 #include <bedrock/protocol/types/ddui/update/DoubleDataStoreUpdateValue.hpp>
 #include <bedrock/protocol/types/ddui/update/StringDataStoreUpdateValue.hpp>

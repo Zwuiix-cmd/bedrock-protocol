@@ -22,24 +22,6 @@
 #include <bedrock/protocol/types/biome/chunkgen/BiomeReplacementData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceBuilderData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeClimateData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeaturesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeLegacyWorldGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMountainParamsData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMultinoiseGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeOverworldGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeReplacementData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceBuilderData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeClimateData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConsolidatedFeaturesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeLegacyWorldGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMountainParamsData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeMultinoiseGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeOverworldGenRulesData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeReplacementData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceBuilderData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.hpp>
 
 class BiomeDefinitionChunkGenData {
 public:
@@ -83,78 +65,54 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         climate = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeClimateData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeClimateData>();
+            value->read(stream);
+            return value;
+        });
         consolidatedFeatures = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeConsolidatedFeaturesData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeConsolidatedFeaturesData>();
+            value->read(stream);
+            return value;
+        });
         mountainParams = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeMountainParamsData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeMountainParamsData>();
+            value->read(stream);
+            return value;
+        });
         surfaceMaterialAdjustment = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeSurfaceMaterialAdjustmentData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeSurfaceMaterialAdjustmentData>();
+            value->read(stream);
+            return value;
+        });
         overworldGenRules = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeOverworldGenRulesData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeOverworldGenRulesData>();
+            value->read(stream);
+            return value;
+        });
         multinoiseGenRules = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeMultinoiseGenRulesData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeMultinoiseGenRulesData>();
+            value->read(stream);
+            return value;
+        });
         legacyWorldGenRules = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeLegacyWorldGenRulesData>();
-	value->read(stream);
-	return value;
-	}());
-});
-        replacementsData = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeReplacementData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeLegacyWorldGenRulesData>();
+            value->read(stream);
+            return value;
+        });
+        replacementsData = stream.readObjectList<BiomeReplacementData>();
         villageType = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         surfaceBuilderData = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeSurfaceBuilderData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeSurfaceBuilderData>();
+            value->read(stream);
+            return value;
+        });
         subSurfaceBuilderData = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeSurfaceBuilderData>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<BiomeSurfaceBuilderData>();
+            value->read(stream);
+            return value;
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

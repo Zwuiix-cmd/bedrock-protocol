@@ -19,12 +19,6 @@
 #include <bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaPieceTintColor.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaSkinPiece.hpp>
-#include <bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp>
-#include <bedrock/protocol/types/login/clientdata/ClientDataPersonaPieceTintColor.hpp>
-#include <bedrock/protocol/types/login/clientdata/ClientDataPersonaSkinPiece.hpp>
-#include <bedrock/protocol/types/BuildPlatform.hpp>
-#include <bedrock/protocol/types/UIProfile.hpp>
-#include <bedrock/protocol/types/GraphicsMode.hpp>
 
 class ClientData {
 public:
@@ -82,13 +76,7 @@ public:
     ClientData() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        AnimatedImageData = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ClientDataAnimationFrame>();
-	value->read(stream);
-	return value;
-	}());
-});
+        AnimatedImageData = stream.readObjectList<ClientDataAnimationFrame>();
         ArmSize = stream.readString().value_or("");
         CapeData = stream.readString().value_or("");
         CapeId = stream.readString().value_or("");
@@ -103,10 +91,14 @@ public:
         DefaultInputMode = stream.readInt().value_or(0);
         DeviceId = stream.readString().value_or("");
         DeviceModel = stream.readString().value_or("");
-        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
+        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(
+            stream.readInt().value_or(0)
+        ).value_or(BuildPlatform::Unknown);
         FilterProfanity = stream.readBool().value_or(false);
         GameVersion = stream.readString().value_or("");
-        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(stream.readInt().value_or(0)).value_or(GraphicsMode::Simple);
+        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(
+            stream.readInt().value_or(0)
+        ).value_or(GraphicsMode::Simple);
         GuiScale = stream.readInt().value_or(0);
         LanguageCode = stream.readString().value_or("");
         MaxViewDistance = stream.readInt().value_or(0);
@@ -115,21 +107,9 @@ public:
         OverrideSkin = stream.readBool().value_or(false);
         PartyId = stream.readString().value_or("");
         IsPartyLeader = stream.readBool().value_or(false);
-        PersonaPieces = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ClientDataPersonaSkinPiece>();
-	value->read(stream);
-	return value;
-	}());
-});
+        PersonaPieces = stream.readObjectList<ClientDataPersonaSkinPiece>();
         PersonaSkin = stream.readBool().value_or(false);
-        PieceTintColors = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ClientDataPersonaPieceTintColor>();
-	value->read(stream);
-	return value;
-	}());
-});
+        PieceTintColors = stream.readObjectList<ClientDataPersonaPieceTintColor>();
         PlatformOfflineId = stream.readString().value_or("");
         PlatformOnlineId = stream.readString().value_or("");
         PlatformType = stream.readInt().value_or(0);
@@ -149,13 +129,15 @@ public:
         SkinResourcePatch = stream.readString().value_or("");
         ThirdPartyName = stream.readString().value_or("");
         TrustedSkin = stream.readBool().value_or(false);
-        UIProfile = magic_enum::enum_cast<::UIProfile>(stream.readInt().value_or(0)).value_or(UIProfile::Classic);
+        UIProfile = magic_enum::enum_cast<::UIProfile>(
+            stream.readInt().value_or(0)
+        ).value_or(UIProfile::Classic);
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeList(AnimatedImageData, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeString(ArmSize);
         stream.writeString(CapeData);
         stream.writeString(CapeId);
@@ -183,12 +165,12 @@ public:
         stream.writeString(PartyId);
         stream.writeBool(IsPartyLeader);
         stream.writeList(PersonaPieces, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeBool(PersonaSkin);
         stream.writeList(PieceTintColors, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+            item->write(stream);
+        });
         stream.writeString(PlatformOfflineId);
         stream.writeString(PlatformOnlineId);
         stream.writeInt(PlatformType);

@@ -139,7 +139,9 @@ public:
 				values.push_back(stream.readString().value_or(""));
 		    }
 		}
-		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::Add);
+		type = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::Add);
     }
 
     void write(BinaryStream& stream) override {

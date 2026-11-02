@@ -162,7 +162,7 @@ public:
 					return;
 				});
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
-		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
+		syncedProperties.read(stream);
 		links = stream.readList([&]() {
 			return EntityLink::read(stream);
 		});

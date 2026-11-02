@@ -156,7 +156,9 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		playerRuntimeId = stream.readActorRuntimeID().value_or(0);
 		eventData = stream.readVarInt().value_or(0);
-		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::AchievementAwarded);
+		type = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::AchievementAwarded);
     }
 
     void write(BinaryStream& stream) override {

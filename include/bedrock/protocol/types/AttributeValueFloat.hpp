@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <limits>
 #include <magic_enum/magic_enum.hpp>
@@ -30,18 +29,21 @@ public:
 
     static constexpr int64_t ID = 1;
 
-    Value value;
+    float value;
     Operation operation;
 
     AttributeValueFloat() = default;
     virtual ~AttributeValueFloat() = default;
-    explicit AttributeValueFloat(const Value& valueValue, const Operation& operationValue) : value(valueValue), operation(operationValue) {}
+    explicit AttributeValueFloat(const float& valueValue, const Operation& operationValue) : value(valueValue), operation(operationValue) {}
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        value = magic_enum::enum_cast<AttributeValueFloat::Value>(std::string_view(stream.readFloat().value_or(0.0f))).value_or(AttributeValueFloat::Value::Override);
-        operation = magic_enum::enum_cast<AttributeValueFloat::Operation>(std::string_view(stream.readString().value_or(""))).value_or(AttributeValueFloat::Operation::Override);
+        value = stream.readFloat().value_or(0.0f);
+        const auto operationRaw = stream.readString().value_or("");
+        operation = magic_enum::enum_cast<Operation>(
+            std::string_view(operationRaw)
+        ).value_or(Operation::Override);
     }
 
     void write(BinaryStream& stream) const override {
@@ -50,21 +52,19 @@ public:
     }
 };
 
-inline constexpr std::array<std::string_view, 7> AttributeValueFloatOperationNames = {
-    "override",
-    "alpha_blend",
-    "add",
-    "subtract",
-    "multiply",
-    "minimum",
-    "maximum",
-};
-
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<AttributeValueFloat::Operation>(AttributeValueFloat::Operation value) noexcept {
-    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
-    return index < AttributeValueFloatOperationNames.size() ? customize_t{AttributeValueFloatOperationNames[index]} : invalid_tag;
+    switch (value) {
+        case AttributeValueFloat::Operation::Override: return "override";
+        case AttributeValueFloat::Operation::AlphaBlend: return "alpha_blend";
+        case AttributeValueFloat::Operation::Add: return "add";
+        case AttributeValueFloat::Operation::Subtract: return "subtract";
+        case AttributeValueFloat::Operation::Multiply: return "multiply";
+        case AttributeValueFloat::Operation::Minimum: return "minimum";
+        case AttributeValueFloat::Operation::Maximum: return "maximum";
+        default: return invalid_tag;
+    }
 }
 
 }

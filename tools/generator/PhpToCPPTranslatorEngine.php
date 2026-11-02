@@ -15,6 +15,7 @@ use kodiak\bedrockprotocol\generator\translation\LoopTranslationMethods;
 use kodiak\bedrockprotocol\generator\translation\PhpInteropTranslationMethods;
 use kodiak\bedrockprotocol\generator\translation\PropertyCodecInferenceMethods;
 use kodiak\bedrockprotocol\generator\translation\StatementTranslationMethods;
+use kodiak\bedrockprotocol\generator\translation\StringEnumTranslationMethods;
 use kodiak\bedrockprotocol\generator\translation\TypeTranslationMethods;
 use kodiak\bedrockprotocol\generator\translation\ValueCodecTranslationMethods;
 
@@ -37,6 +38,7 @@ final class PhpToCPPTranslatorEngine
     use PhpInteropTranslationMethods;
     use PropertyCodecInferenceMethods;
     use StatementTranslationMethods;
+    use StringEnumTranslationMethods;
     use TypeTranslationMethods;
     use ValueCodecTranslationMethods;
 

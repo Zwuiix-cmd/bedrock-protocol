@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/recipe/MaterialReducerRecipeOutput.hpp>
-#include <bedrock/protocol/types/recipe/MaterialReducerRecipeOutput.hpp>
 
 class MaterialReducerRecipe {
 public:
@@ -35,13 +34,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         inputItemId = stream.readInt().value_or(0);
         inputItemMeta = stream.readInt().value_or(0);
-        outputs = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<MaterialReducerRecipeOutput>();
-	value->read(stream);
-	return value;
-	}());
-});
+        outputs = stream.readObjectList<MaterialReducerRecipeOutput>();
     }
 
     virtual void write(BinaryStream& stream) const {

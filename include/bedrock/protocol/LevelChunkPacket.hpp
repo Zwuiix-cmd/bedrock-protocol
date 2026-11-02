@@ -135,11 +135,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		chunkPosition = ([&]() {
-		    auto value = std::make_shared<ChunkPosition>();
-		    value->read(stream);
-		    return value;
-		}());
+		chunkPosition = std::make_shared<ChunkPosition>();
+		chunkPosition->read(stream);
 		dimensionId = stream.readVarInt().value_or(0);
 		subChunkCount = stream.readUnsignedVarInt().value_or(0);
 		subChunkRequestLimit = stream.readOptional([&]() {

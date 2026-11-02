@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/SerializableVoxelCells.hpp>
-#include <bedrock/protocol/types/SerializableVoxelCells.hpp>
-#include <bedrock/protocol/types/SerializableVoxelCells.hpp>
 
 class SerializableVoxelShape {
 public:
@@ -37,20 +35,17 @@ public:
         zCoordinates(zCoordinatesValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        cells = ([&]() {
-    auto value = std::make_shared<SerializableVoxelCells>();
-    value->read(stream);
-    return value;
-}());
+        cells = std::make_shared<SerializableVoxelCells>();
+        cells->read(stream);
         xCoordinates = stream.readList([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         yCoordinates = stream.readList([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         zCoordinates = stream.readList([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

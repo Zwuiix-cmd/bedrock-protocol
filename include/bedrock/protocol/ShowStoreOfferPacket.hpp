@@ -127,7 +127,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		offerId = stream.readUUID().value_or("");
-		redirectType = magic_enum::enum_cast<ShowStoreOfferRedirectType>(stream.readUnsignedByte().value_or(0)).value_or(ShowStoreOfferRedirectType::Marketplace);
+		redirectType = magic_enum::enum_cast<ShowStoreOfferRedirectType>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(ShowStoreOfferRedirectType::Marketplace);
     }
 
     void write(BinaryStream& stream) override {

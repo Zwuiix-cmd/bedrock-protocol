@@ -15,9 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettings.hpp>
 #include <bedrock/protocol/types/AttributeEnvironment.hpp>
-#include <bedrock/protocol/types/AttributeLayerSettings.hpp>
-#include <bedrock/protocol/types/AttributeEnvironment.hpp>
-#include <bedrock/protocol/types/AttributeLayerSettings.hpp>
 
 class AttributeLayer {
 public:
@@ -41,18 +38,9 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
-        settings = ([&]() {
-    auto value = std::make_shared<AttributeLayerSettings>();
-    value->read(stream);
-    return value;
-}());
-        attributes = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<AttributeEnvironment>();
-	value->read(stream);
-	return value;
-	}());
-});
+        settings = std::make_shared<AttributeLayerSettings>();
+        settings->read(stream);
+        attributes = stream.readObjectList<AttributeEnvironment>();
     }
 
     virtual void write(BinaryStream& stream) const {

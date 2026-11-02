@@ -15,8 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSplineProgressKeyFrame.hpp>
 #include <bedrock/protocol/types/camera/CameraSplineRotationKeyFrame.hpp>
-#include <bedrock/protocol/types/camera/CameraSplineProgressKeyFrame.hpp>
-#include <bedrock/protocol/types/camera/CameraSplineRotationKeyFrame.hpp>
 
 class CameraSplineDefinition {
 public:
@@ -48,22 +46,10 @@ public:
         totalTime = stream.readFloat().value_or(0.0f);
         splineType = stream.readString().value_or("");
         controlPoints = stream.readList([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
-        progressKeyFrames = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraSplineProgressKeyFrame>();
-	value->read(stream);
-	return value;
-	}());
-});
-        rotationKeyFrames = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraSplineRotationKeyFrame>();
-	value->read(stream);
-	return value;
-	}());
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
+        progressKeyFrames = stream.readObjectList<CameraSplineProgressKeyFrame>();
+        rotationKeyFrames = stream.readObjectList<CameraSplineRotationKeyFrame>();
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
-#include <bedrock/protocol/types/skin/SkinImage.hpp>
 
 class SkinAnimation {
 public:
@@ -47,20 +46,21 @@ public:
         expressionType(expressionTypeValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = magic_enum::enum_cast<Type>(stream.readUnsignedVarInt().value_or(0)).value_or(Type::Head);
+        type = magic_enum::enum_cast<Type>(
+            stream.readUnsignedVarInt().value_or(0)
+        ).value_or(Type::Head);
         frames = stream.readFloat().value_or(0.0f);
-        expressionType = magic_enum::enum_cast<Type>(stream.readUnsignedVarInt().value_or(0)).value_or(Type::Head);
-        image = ([&]() {
-    auto value = std::make_shared<SkinImage>();
-    value->read(stream);
-    return value;
-}());
+        expressionType = magic_enum::enum_cast<Type>(
+            stream.readUnsignedVarInt().value_or(0)
+        ).value_or(Type::Head);
+        image = std::make_shared<SkinImage>();
+        image->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
+        stream.writeUnsignedVarInt(type);
         stream.writeFloat(frames);
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(expressionType));
-        if (image) image->write(stream);
+        stream.writeUnsignedVarInt(expressionType);
+        image->write(stream);
     }
 };

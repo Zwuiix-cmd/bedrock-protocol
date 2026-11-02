@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/StructureSettings.hpp>
-#include <bedrock/protocol/types/StructureSettings.hpp>
 
 class StructureEditorData {
 public:
@@ -43,16 +42,15 @@ public:
         structureDataField = stream.readString().value_or("");
         includePlayers = stream.readBool().value_or(false);
         showBoundingBox = stream.readBool().value_or(false);
-        structureBlockType = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(Type::Data);
+        structureBlockType = magic_enum::enum_cast<Type>(
+            stream.readVarInt().value_or(0)
+        ).value_or(Type::Data);
         structureRedstoneSaveMode = stream.readUnsignedByte().value_or(0);
         filteredStructureName = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
-        structureSettings = ([&]() {
-    auto value = std::make_shared<StructureSettings>();
-    value->read(stream);
-    return value;
-}());
+            return stream.readString().value_or("");
+        });
+        structureSettings = std::make_shared<StructureSettings>();
+        structureSettings->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -60,11 +58,11 @@ public:
         stream.writeString(structureDataField);
         stream.writeBool(includePlayers);
         stream.writeBool(showBoundingBox);
-        stream.writeVarInt(magic_enum::enum_integer(structureBlockType));
+        stream.writeVarInt(structureBlockType);
         stream.writeUnsignedByte(structureRedstoneSaveMode);
         stream.writeOptional(filteredStructureName, [&](const auto& optionalValue) {
-	stream.writeString(optionalValue);
-});
-        if (structureSettings) structureSettings->write(stream);
+            stream.writeString(optionalValue);
+        });
+        structureSettings->write(stream);
     }
 };

@@ -131,8 +131,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
 		propertyIndex = stream.readUnsignedVarInt().value_or(0);
-		updateType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(OverrideUpdateType::ClearOverrides);
-		auto innerType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readString().value_or(""))).value_or(OverrideUpdateType::ClearOverrides);
+		updateType = magic_enum::enum_cast<OverrideUpdateType>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(OverrideUpdateType::ClearOverrides);
+		auto innerType = magic_enum::enum_cast<OverrideUpdateType>(
+			std::string_view(stream.readString().value_or(""))
+		).value_or(OverrideUpdateType::ClearOverrides);
 		if ((magic_enum::enum_name(innerType) != magic_enum::enum_name(updateType))) {
 			throw std::exception{};
 		}
@@ -144,14 +148,20 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeActorUniqueID(actorUniqueId);
-        stream.writeUnsignedVarInt(propertyIndex);
-        stream.writeOptional(intOverrideValue, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
-        stream.writeOptional(floatOverrideValue, [&](const auto& optionalValue) {
-	stream.writeFloat(optionalValue);
-});
-        stream.writeVarInt(magic_enum::enum_integer(updateType));
+		stream.writeActorUniqueID(actorUniqueId);
+		stream.writeUnsignedVarInt(propertyIndex);
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(updateType));
+		stream.writeString(magic_enum::enum_name(updateType));
+		if ((updateType == OverrideUpdateType::SetIntOverride)) {
+			if ((!intOverrideValue)) {
+				throw std::exception{};
+			}
+			stream.writeInt(*(intOverrideValue));
+		} else if ((updateType == OverrideUpdateType::SetFloatOverride)) {
+			if ((!floatOverrideValue)) {
+				throw std::exception{};
+			}
+			stream.writeFloat(*(floatOverrideValue));
+		}
     }
 };

@@ -130,7 +130,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(Action::EnableMultiplayer);
+		action = magic_enum::enum_cast<Action>(
+			stream.readVarInt().value_or(0)
+		).value_or(Action::EnableMultiplayer);
     }
 
     void write(BinaryStream& stream) override {

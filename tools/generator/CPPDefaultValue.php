@@ -13,7 +13,7 @@ class CPPDefaultValue
             return null;
         }
         if ($enum) {
-            return 'static_cast<' . $type . '>(0)';
+            return $type . '{}';
         }
 
         return match ($type) {

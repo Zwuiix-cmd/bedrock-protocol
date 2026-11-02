@@ -108,7 +108,9 @@ public function cppPropertyType(array $property, array $declaration): string
     {
         $enumType = $this->propertyEnumType($property, $declaration);
         if ($enumType !== null) {
-            return $enumType;
+            return $this->nullableType((string) ($property['type'] ?? ''))
+                ? 'std::optional<' . $enumType . '>'
+                : $enumType;
         }
         $inferredType = $this->inferredPropertyType($declaration, $property);
         if ($inferredType !== null) {

@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp>
 
 class BiomeScatterParamData {
 public:
@@ -56,13 +54,7 @@ public:
         chanceDenominator = stream.readInt().value_or(0);
         iterationsType = stream.readVarInt().value_or(0);
         iterations = stream.readShort().value_or(0);
-        coordinates = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeCoordinateData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        coordinates = stream.readObjectList<BiomeCoordinateData>();
     }
 
     virtual void write(BinaryStream& stream) const {

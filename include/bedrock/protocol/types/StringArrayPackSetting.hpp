@@ -38,8 +38,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         value = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     void write(BinaryStream& stream) const override {

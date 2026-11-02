@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/sound/SoundDataEventType.hpp>
-#include <bedrock/protocol/types/sound/SoundDataEventType.hpp>
-#include <bedrock/protocol/types/sound/SoundDataEventType.hpp>
 
 class SoundDataEvent {
 public:
@@ -43,22 +41,24 @@ public:
         seconds(secondsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = magic_enum::enum_cast<SoundDataEventType>(stream.readVarInt().value_or(0)).value_or(SoundDataEventType::Stop);
+        type = magic_enum::enum_cast<SoundDataEventType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(SoundDataEventType::Stop);
         volume = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         pitch = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         duration = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         targetVolume = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
         seconds = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

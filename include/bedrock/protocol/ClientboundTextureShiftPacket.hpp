@@ -132,7 +132,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		actionId = magic_enum::enum_cast<TextureShiftAction>(stream.readUnsignedByte().value_or(0)).value_or(TextureShiftAction::Invalid);
+		actionId = magic_enum::enum_cast<TextureShiftAction>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(TextureShiftAction::Invalid);
 		collectionName = stream.readString().value_or("");
 		fromStep = stream.readString().value_or("");
 		toStep = stream.readString().value_or("");

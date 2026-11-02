@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentNoiseTransitionSettings.hpp>
 #include <bedrock/protocol/types/AttributeValue.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentNoiseTransitionSettings.hpp>
-#include <bedrock/protocol/types/AttributeValue.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentNoiseTransitionSettings.hpp>
-#include <bedrock/protocol/types/AttributeValue.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentPayload.hpp>
 
 class AttributeEnvironmentNoiseTransition : public AttributeEnvironmentPayload {
@@ -45,11 +41,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         fromAttribute = AttributeValue::decode(stream);
         toAttribute = AttributeValue::decode(stream);
-        settings = ([&]() {
-    auto value = std::make_shared<AttributeEnvironmentNoiseTransitionSettings>();
-    value->read(stream);
-    return value;
-}());
+        settings = std::make_shared<AttributeEnvironmentNoiseTransitionSettings>();
+        settings->read(stream);
     }
 
     void write(BinaryStream& stream) const override {

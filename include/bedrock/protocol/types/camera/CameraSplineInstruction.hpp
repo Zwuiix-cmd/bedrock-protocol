@@ -16,12 +16,6 @@
 #include <bedrock/protocol/types/camera/CameraProgressOption.hpp>
 #include <bedrock/protocol/types/camera/CameraRotationOption.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraProgressOption.hpp>
-#include <bedrock/protocol/types/camera/CameraRotationOption.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/camera/CameraProgressOption.hpp>
-#include <bedrock/protocol/types/camera/CameraRotationOption.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraSplineInstruction {
 public:
@@ -55,39 +49,32 @@ public:
         totalTime = stream.readFloat().value_or(0.0f);
         splineIdentifier = stream.readString().value_or("");
         loadFromJson = stream.readBool().value_or(false);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CameraSetInstructionEaseType::Linear);
         curve = stream.readList([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
-        progressKeyFrames = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraProgressOption>();
-	value->read(stream);
-	return value;
-	}());
-});
-        rotationOptions = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraRotationOption>();
-	value->read(stream);
-	return value;
-	}());
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
+        progressKeyFrames = stream.readObjectList<CameraProgressOption>();
+        rotationOptions = stream.readObjectList<CameraRotationOption>();
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeFloat(totalTime);
-        stream.writeString(splineIdentifier);
-        stream.writeBool(loadFromJson);
-        stream.writeVarInt(magic_enum::enum_integer(easeType));
-        stream.writeList(curve, [&](const auto& item) {
-	stream.writeVec3(item);
-});
-        stream.writeList(progressKeyFrames, [&](const auto& item) {
-	if (item) item->write(stream);
-});
-        stream.writeList(rotationOptions, [&](const auto& item) {
-	if (item) item->write(stream);
-});
+		stream.writeFloat(totalTime);
+		stream.writeUnsignedByte(magic_enum::enum_integer(easeType));
+		stream.writeUnsignedVarInt(curve.size());
+		for (const auto& point : curve) {
+			stream.writeVec3(magic_enum::enum_integer(point));
+		}
+		stream.writeUnsignedVarInt(progressKeyFrames.size());
+		for (const auto& keyFrame : progressKeyFrames) {
+			keyFrame->write(stream);
+		}
+		stream.writeUnsignedVarInt(rotationOptions.size());
+		for (const auto& option : rotationOptions) {
+			option->write(stream);
+		}
+		stream.writeString(splineIdentifier);
+		stream.writeBool(loadFromJson);
     }
 };

@@ -138,8 +138,14 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             $field = CPPName::identifier((string) $property['name']);
             $target = $read && $returnShared ? 'result->' . $field : $field;
             if ($read) {
-                if ($this->isDirectObjectProperty($property, $declaration)) {
+                $objectType = $this->objectPropertyType($property, $declaration);
+                if ($objectType !== null && !$objectType['pointer']) {
                     $lines[] = '        ' . $target . '.read(stream);';
+                    continue;
+                }
+                if ($objectType !== null) {
+                    $lines[] = '        ' . $target . ' = std::make_shared<' . $objectType['type'] . '>();';
+                    $lines[] = '        ' . $target . '->read(stream);';
                     continue;
                 }
                 $inferredValue = $this->inferredPropertyReadValue($declaration, $property);
@@ -150,26 +156,55 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 );
                 $enumType = $this->propertyEnumType($property, $declaration);
                 if ($enumType !== null) {
-                    $value = $this->stringEnumName($property, $declaration) !== null
-                        ? $this->stringEnumFromStringForProperty($property, $value, $declaration)
-                        : $this->enumReadValue($enumType, $value, $declaration);
+                    $stringEnum = $this->stringEnumName($property, $declaration);
+                    if ($stringEnum !== null) {
+                        $rawValue = $field . 'Raw';
+                        $lines[] = '        const auto ' . $rawValue . ' = ' . $value . ';';
+                        $value = $this->stringEnumFromStringForProperty(
+                            $property,
+                            $rawValue,
+                            $declaration,
+                        );
+                    } else {
+                        if (!str_contains($value, 'magic_enum::enum_cast')) {
+                            $value = $this->enumReadValue($enumType, $value, $declaration);
+                        }
+                    }
                 }
-                $lines[] = '        ' . $target . ' = ' . $value . ';';
+                $lines[] = '        ' . $target . ' = '
+                    . $this->indentExpressionContinuation($value, '        ') . ';';
             } elseif (!$returnShared) {
-                $value = $field;
                 $enumType = $this->propertyEnumType($property, $declaration);
-                if ($enumType !== null) {
-                    $value = $this->stringEnumName($property, $declaration) !== null
-                        ? $this->stringEnumToStringForProperty($property, $value, $declaration)
-                        : 'magic_enum::enum_integer(' . $value . ')';
+                $isStringEnum = $this->stringEnumName($property, $declaration) !== null
+                    || $this->stringEnumCases($property, $declaration) !== [];
+                $inferredValue = $isStringEnum
+                    ? 'magic_enum::enum_name(' . $field . ')'
+                    : $field;
+                $inferredWrite = $this->inferredPropertyWriteValue($declaration, $property, $inferredValue);
+                if ($inferredWrite !== null) {
+                    $inferredWrite = preg_replace(
+                        '/magic_enum::enum_integer\(magic_enum::enum_integer\(([^()]*)\)\)/',
+                        'magic_enum::enum_integer($1)',
+                        $inferredWrite,
+                    ) ?? $inferredWrite;
+                    $lines[] = $this->indentGeneratedStatement($inferredWrite, '        ');
+                    continue;
                 }
-                $lines[] = '        ' . ($this->inferredPropertyWriteValue($declaration, $property, $value) ??
-                    $this->fallbackWriteValue(
-                        $property['type'] ?? null,
-                        $property['doc'] ?? null,
-                        $value,
-                        $declaration,
-                    ));
+                $value = $field;
+                if ($enumType !== null) {
+                    $value = $isStringEnum
+                        ? $this->stringEnumToStringForProperty($property, $value, $declaration)
+                        : (str_contains($value, 'magic_enum::enum_integer')
+                            ? $value
+                            : 'magic_enum::enum_integer(' . $value . ')');
+                }
+                $write = $this->fallbackWriteValue(
+                    $property['type'] ?? null,
+                    $property['doc'] ?? null,
+                    $value,
+                    $declaration,
+                );
+                $lines[] = $this->indentGeneratedStatement($write, '        ');
             }
         }
 
@@ -182,7 +217,29 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
         return implode("\n", $lines);
     }
 
-    private function isDirectObjectProperty(array $property, array $declaration): bool
+    private function indentExpressionContinuation(string $value, string $prefix): string
+    {
+        $lines = explode("\n", $value);
+        $first = array_shift($lines) ?? '';
+        foreach ($lines as &$line) {
+            $line = $prefix . str_replace("\t", '    ', $line);
+        }
+        unset($line);
+        return implode("\n", [$first, ...$lines]);
+    }
+
+    private function indentGeneratedStatement(string $value, string $prefix): string
+    {
+        $lines = explode("\n", $value);
+        foreach ($lines as &$line) {
+            $line = $prefix . str_replace("\t", '    ', $line);
+        }
+        unset($line);
+        return implode("\n", $lines);
+    }
+
+    /** @return array{type: string, pointer: bool}|null */
+    private function objectPropertyType(array $property, array $declaration): ?array
     {
         $rawType = (string) ($property['type'] ?? '');
         $sourceType = ltrim($rawType, '?');
@@ -191,21 +248,27 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             || str_contains($sourceType, '|')
             || preg_match('/^(?:array|list)\s*</i', $sourceType) === 1
             || str_ends_with($sourceType, '[]')) {
-            return false;
+            return null;
         }
         $short = CPPName::type($sourceType);
         $referenced = $this->findDeclaration($short);
-        if ($referenced === null
-            || ($referenced['kind'] ?? null) === 'enum'
+        if ($referenced !== null
+            && (($referenced['kind'] ?? null) === 'enum'
             || ($referenced['abstract'] ?? false)
             || ($referenced['kind'] ?? null) === 'interface'
-            || $this->isEnumLikeDeclaration($referenced)) {
-            $referenced = null;
+            || $this->isEnumLikeDeclaration($referenced))) {
+            return null;
         }
         $cppType = $this->cppPropertyType($property, $declaration);
+        $codec = $this->catalog->typeCodec($short);
+        if (is_array($codec)
+            && is_string($codec['read'] ?? null)
+            && preg_match('/\b[A-Za-z_]\w*\s+value;\s*value\.read\(stream\)/s', $codec['read']) !== 1) {
+            return null;
+        }
         if ($cppType === ''
-            || str_contains($cppType, '<')
-            || str_starts_with($cppType, 'std::')
+            || str_starts_with($cppType, 'std::optional<')
+            || str_starts_with($cppType, 'std::variant<')
             || str_starts_with($cppType, 'glm::')
             || in_array($cppType, [
                 'bool',
@@ -223,10 +286,23 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 'std::string',
                 'std::string_view',
             ], true)) {
-            return false;
+            return null;
         }
-        return ($referenced !== null && $cppType === $short)
-            || $this->catalog->typeAlias($short) === $cppType;
+        if (preg_match('/^std::shared_ptr<([A-Za-z_]\w*)>$/', $cppType, $matches) === 1) {
+            return ['type' => $matches[1], 'pointer' => true];
+        }
+        if (!str_contains($cppType, '<')
+            && (($referenced !== null && $cppType === $short)
+                || $this->catalog->typeAlias($short) === $cppType)) {
+            return ['type' => $cppType, 'pointer' => false];
+        }
+        return null;
+    }
+
+    private function isDirectObjectProperty(array $property, array $declaration): bool
+    {
+        $objectType = $this->objectPropertyType($property, $declaration);
+        return $objectType !== null && !$objectType['pointer'];
     }
 
     private function directReadAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string
@@ -241,10 +317,15 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
         $propertyName = $assignment->var->name->toString();
         foreach ($declaration['properties'] ?? [] as $property) {
             if (($property['name'] ?? null) !== $propertyName
-                || !$this->isDirectObjectProperty($property, $declaration)) {
+                || ($objectType = $this->objectPropertyType($property, $declaration)) === null) {
                 continue;
             }
-            return $this->expression($assignment->var, $declaration, $method) . '.read(stream);';
+            $target = $this->expression($assignment->var, $declaration, $method);
+            if ($objectType['pointer']) {
+                return $target . ' = std::make_shared<' . $objectType['type'] . '>();' . "\n"
+                    . $target . '->read(stream);';
+            }
+            return $target . '.read(stream);';
         }
         return null;
     }
@@ -256,8 +337,9 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             && $expression->name instanceof Node\Identifier) {
             $class = $expression->class->getLast();
             $name = strtolower($expression->name->toString());
-            return $this->catalog->isSerializerClass($class)
-                && (str_starts_with($name, 'get') || str_starts_with($name, 'read'));
+            return str_starts_with($name, 'get')
+                || str_starts_with($name, 'read')
+                || ($this->catalog->isSerializerClass($class) && str_starts_with($name, 'decode'));
         }
         if ($expression instanceof Node\Expr\MethodCall
             && $expression->name instanceof Node\Identifier) {

@@ -181,43 +181,25 @@ public:
         blockPaletteChecksum = stream.readUnsignedLong().value_or(0);
         enableClientSideChunkGeneration = stream.readBool().value_or(false);
         blockNetworkIdsAreHashes = stream.readBool().value_or(false);
-        playerGamemode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(GameMode::Survival);
+        playerGamemode = magic_enum::enum_cast<GameMode>(
+            stream.readVarInt().value_or(0)
+        ).value_or(GameMode::Survival);
         playerActorProperties = NetworkNbtSerializer::read(stream);
-        levelSettings = ([&]() {
-    auto value = std::make_shared<LevelSettings>();
-    value->read(stream);
-    return value;
-}());
-        playerMovementSettings = ([&]() {
-    auto value = std::make_shared<PlayerMovementSettings>();
-    value->read(stream);
-    return value;
-}());
+        levelSettings = std::make_shared<LevelSettings>();
+        levelSettings->read(stream);
+        playerMovementSettings = std::make_shared<PlayerMovementSettings>();
+        playerMovementSettings->read(stream);
         worldTemplateId = stream.readUUID().value_or("");
-        networkPermissions = ([&]() {
-    auto value = std::make_shared<NetworkPermissions>();
-    value->read(stream);
-    return value;
-}());
+        networkPermissions = std::make_shared<NetworkPermissions>();
+        networkPermissions->read(stream);
         serverJoinInformation = stream.readOptional([&]() {
-	return ([&]() {
-	auto value = std::make_shared<ServerJoinInformation>();
-	value->read(stream);
-	return value;
-	}());
-});
-        serverTelemetryData = ([&]() {
-    auto value = std::make_shared<ServerTelemetryData>();
-    value->read(stream);
-    return value;
-}());
-        blockPalette = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BlockPaletteEntry>();
-	value->read(stream);
-	return value;
-	}());
-});
+            auto value = std::make_shared<ServerJoinInformation>();
+            value->read(stream);
+            return value;
+        });
+        serverTelemetryData = std::make_shared<ServerTelemetryData>();
+        serverTelemetryData->read(stream);
+        blockPalette = stream.readObjectList<BlockPaletteEntry>();
     }
 
     void write(BinaryStream& stream) override {

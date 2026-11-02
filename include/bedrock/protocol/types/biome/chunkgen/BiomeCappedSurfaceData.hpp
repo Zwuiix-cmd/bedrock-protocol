@@ -38,20 +38,20 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         floorBlocks = stream.readList([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         ceilingBlocks = stream.readList([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         seaBlock = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         foundationBlock = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
         beachBlock = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

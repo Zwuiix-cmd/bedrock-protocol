@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
 
 class CameraPresetAimAssist {
 public:
@@ -38,17 +36,19 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         presetId = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         targetMode = stream.readOptional([&]() {
-	return magic_enum::enum_cast<CameraAimAssistTargetMode>(stream.readVarInt().value_or(0)).value_or(CameraAimAssistTargetMode::Angle);
-});
+            return magic_enum::enum_cast<CameraAimAssistTargetMode>(
+                stream.readVarInt().value_or(0)
+            ).value_or(CameraAimAssistTargetMode::Angle);
+        });
         viewAngle = stream.readOptional([&]() {
-	return stream.readVec2().value_or(glm::vec2(0.0f));
-});
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
         distance = stream.readOptional([&]() {
-	return stream.readFloat().value_or(0.0f);
-});
+            return stream.readFloat().value_or(0.0f);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

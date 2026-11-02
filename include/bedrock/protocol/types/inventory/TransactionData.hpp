@@ -14,7 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/NetworkInventoryAction.hpp>
-#include <bedrock/protocol/types/inventory/NetworkInventoryAction.hpp>
 
 class TransactionData {
 public:

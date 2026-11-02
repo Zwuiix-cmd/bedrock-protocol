@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistPresetExclusionDefinition.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistPresetItemSettings.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistPresetExclusionDefinition.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistPresetItemSettings.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistPresetExclusionDefinition.hpp>
-#include <bedrock/protocol/types/camera/CameraAimAssistPresetItemSettings.hpp>
 
 class CameraAimAssistPreset {
 public:
@@ -47,27 +43,18 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         identifier = stream.readString().value_or("");
-        exclusionSettings = ([&]() {
-    auto value = std::make_shared<CameraAimAssistPresetExclusionDefinition>();
-    value->read(stream);
-    return value;
-}());
+        exclusionSettings = std::make_shared<CameraAimAssistPresetExclusionDefinition>();
+        exclusionSettings->read(stream);
         liquidTargetingList = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
-        itemSettings = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<CameraAimAssistPresetItemSettings>();
-	value->read(stream);
-	return value;
-	}());
-});
+            return stream.readString().value_or("");
+        });
+        itemSettings = stream.readObjectList<CameraAimAssistPresetItemSettings>();
         defaultItemSettings = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         defaultHandSettings = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

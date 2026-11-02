@@ -29,7 +29,9 @@ public:
     explicit SpawnSettings(const Biome& biomeTypeValue, const std::string& biomeNameValue, const int32_t& dimensionValue) : biomeType(biomeTypeValue), biomeName(biomeNameValue), dimension(dimensionValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        biomeType = magic_enum::enum_cast<Biome>(stream.readUnsignedShort().value_or(0)).value_or(Biome::TypeDefault);
+        biomeType = magic_enum::enum_cast<Biome>(
+            stream.readUnsignedShort().value_or(0)
+        ).value_or(Biome::TypeDefault);
         biomeName = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
     }

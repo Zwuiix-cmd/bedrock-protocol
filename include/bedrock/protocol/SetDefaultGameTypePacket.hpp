@@ -125,7 +125,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gamemode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(GameMode::Survival);
+		gamemode = magic_enum::enum_cast<GameMode>(
+			stream.readVarInt().value_or(0)
+		).value_or(GameMode::Survival);
     }
 
     void write(BinaryStream& stream) override {

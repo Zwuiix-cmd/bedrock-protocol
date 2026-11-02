@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <cstring>
 #include <limits>
+#include <memory>
 #include <type_traits>
 
 class ReadOnlyBinaryStream {
@@ -396,6 +397,19 @@ public:
         values.reserve(count);
         for (uint32_t index = 0; index < count; ++index) {
             values.emplace_back(std::forward<Reader>(reader)());
+        }
+        return values;
+    }
+
+    template <typename T>
+    std::vector<std::shared_ptr<T>> readObjectList() {
+        const auto count = readUnsignedVarInt().value_or(0);
+        std::vector<std::shared_ptr<T>> values;
+        values.reserve(count);
+        for (uint32_t index = 0; index < count; ++index) {
+            auto value = std::make_shared<T>();
+            value->read(*this);
+            values.emplace_back(std::move(value));
         }
         return values;
     }

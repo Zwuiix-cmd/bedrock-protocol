@@ -29,11 +29,11 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         triggeringPlayerName = stream.readOptional([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
         triggeredByLocalPlayer = stream.readOptional([&]() {
-	return stream.readBool().value_or(false);
-});
+            return stream.readBool().value_or(false);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

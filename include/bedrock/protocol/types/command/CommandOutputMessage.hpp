@@ -26,15 +26,15 @@ public:
         messageId = stream.readString().value_or("");
         isInternal = stream.readBool().value_or(false);
         parameters = stream.readList([&]() {
-	return stream.readString().value_or("");
-});
+            return stream.readString().value_or("");
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(messageId);
         stream.writeBool(isInternal);
         stream.writeList(parameters, [&](const auto& item) {
-	stream.writeString(item);
-});
+            stream.writeString(item);
+        });
     }
 };

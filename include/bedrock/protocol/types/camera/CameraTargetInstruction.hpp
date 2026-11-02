@@ -25,8 +25,8 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         actorUniqueId = stream.readLong().value_or(0);
         targetCenterOffset = stream.readOptional([&]() {
-	return stream.readVec3().value_or(glm::vec3(0.0f));
-});
+            return stream.readVec3().value_or(glm::vec3(0.0f));
+        });
     }
 
     virtual void write(BinaryStream& stream) const {

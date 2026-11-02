@@ -14,8 +14,6 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
-#include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
 
 class BiomeLegacyWorldGenRulesData {
 public:
@@ -25,13 +23,7 @@ public:
     explicit BiomeLegacyWorldGenRulesData(const std::vector<std::shared_ptr<BiomeConditionalTransformationData>>& legacyPreHillsValue) : legacyPreHills(legacyPreHillsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        legacyPreHills = stream.readList([&]() {
-	return ([&]() {
-	auto value = std::make_shared<BiomeConditionalTransformationData>();
-	value->read(stream);
-	return value;
-	}());
-});
+        legacyPreHills = stream.readObjectList<BiomeConditionalTransformationData>();
     }
 
     virtual void write(BinaryStream& stream) const {

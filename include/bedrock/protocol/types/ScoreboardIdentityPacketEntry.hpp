@@ -24,14 +24,14 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         scoreboardId = stream.readVarLong().value_or(0);
         actorUniqueId = stream.readOptional([&]() {
-	return stream.readInt().value_or(0);
-});
+            return stream.readInt().value_or(0);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeVarLong(scoreboardId);
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
-	stream.writeInt(optionalValue);
-});
+            stream.writeInt(optionalValue);
+        });
     }
 };

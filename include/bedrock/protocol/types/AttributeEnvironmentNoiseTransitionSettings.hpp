@@ -15,10 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/NoiseAlignment.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/NoiseAlignment.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/NoiseAlignment.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class AttributeEnvironmentNoiseTransitionSettings {
 public:
@@ -54,21 +50,20 @@ public:
         clockName = stream.readString().value_or("");
         localTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         noiseName = stream.readString().value_or("");
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
-        noiseAlignment = ([&]() {
-    auto value = std::make_shared<NoiseAlignment>();
-    value->read(stream);
-    return value;
-}());
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+            stream.readVarInt().value_or(0)
+        ).value_or(CameraSetInstructionEaseType::Linear);
+        noiseAlignment = std::make_shared<NoiseAlignment>();
+        noiseAlignment->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(totalTransitionTicks);
-        stream.writeUnsignedVarInt(currentTransitionTicks);
-        stream.writeString(clockName);
-        stream.writeUnsignedVarInt(localTransitionTicks);
-        stream.writeString(noiseName);
-        stream.writeVarInt(magic_enum::enum_integer(easeType));
-        if (noiseAlignment) noiseAlignment->write(stream);
+		stream.writeUnsignedVarInt(totalTransitionTicks);
+		stream.writeUnsignedVarInt(currentTransitionTicks);
+		stream.writeVarInt(magic_enum::enum_integer(easeType));
+		stream.writeString(clockName);
+		stream.writeUnsignedVarInt(localTransitionTicks);
+		stream.writeString(noiseName);
+		noiseAlignment->write(stream);
     }
 };

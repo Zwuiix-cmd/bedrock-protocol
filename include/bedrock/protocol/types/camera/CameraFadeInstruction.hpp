@@ -35,27 +35,27 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         time = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<CameraFadeInstructionTime>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<CameraFadeInstructionTime>();
+	value->read(stream);
+	return value;
+	}());
+});
         color = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<CameraFadeInstructionColor>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<CameraFadeInstructionColor>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeOptional(time, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(color, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
     }
 };

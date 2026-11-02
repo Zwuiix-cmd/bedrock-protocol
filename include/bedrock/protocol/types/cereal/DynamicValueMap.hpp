@@ -36,8 +36,8 @@ public:
     for (uint32_t i = 0; i < count; ++i) {
         auto key = stream.readString().value_or("");
         auto value = stream.readOptional([&]() {
-			return DynamicValue::decode(stream);
-		});
+	return DynamicValue::decode(stream);
+});
         result.emplace(std::move(key), std::move(value));
     }
     return result;
@@ -49,8 +49,8 @@ public:
 for (const auto& [key, item] : value) {
     stream.writeString(key);
     stream.writeOptional(item, [&](const auto& optionalValue) {
-			if (optionalValue) optionalValue->write(stream);
-		});
+	if (optionalValue) optionalValue->write(stream);
+});
 }
     }
 };

@@ -122,14 +122,14 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		loadingScreenType = static_cast<LoadingScreenType>(stream.readVarInt().value_or(0));
 		loadingScreenId = stream.readOptional([&]() {
-					return stream.readUnsignedInt().value_or(0);
-				});
+			return stream.readUnsignedInt().value_or(0);
+		});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeVarInt(magic_enum::enum_integer(loadingScreenType));
 		stream.writeOptional(loadingScreenId, [&](const auto& value) {
-					stream.writeUnsignedInt(value);
-				});
+			stream.writeUnsignedInt(value);
+		});
     }
 };

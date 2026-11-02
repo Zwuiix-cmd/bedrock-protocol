@@ -39,12 +39,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         iterations = stream.readUnsignedByte().value_or(0);
         results = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<DeprecatedCraftingResultsEntry>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<DeprecatedCraftingResultsEntry>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     void write(BinaryStream& stream) const override {

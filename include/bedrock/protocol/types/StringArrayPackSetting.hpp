@@ -30,21 +30,21 @@ public:
 
     static std::shared_ptr<StringArrayPackSetting> read(ReadOnlyBinaryStream& stream, const std::string& name) {
 		return std::make_shared<StringArrayPackSetting>(name, stream.readList([&]() {
-			return stream.readString().value_or("");
-		}));
+	return stream.readString().value_or("");
+}));
     }
 
     PackSettingType getTypeId() const override { return static_cast<PackSettingType>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
         value = stream.readList([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeList(value, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
     }
 };

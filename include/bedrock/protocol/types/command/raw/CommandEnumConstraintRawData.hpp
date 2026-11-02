@@ -34,8 +34,8 @@ public:
         affectedValueIndex = stream.readUnsignedInt().value_or(0);
         enumIndex = stream.readUnsignedInt().value_or(0);
         constraints = stream.readList([&]() {
-			return stream.readInt().value_or(0);
-		});
+	return stream.readInt().value_or(0);
+});
     }
 
     virtual void write(BinaryStream& stream) const {

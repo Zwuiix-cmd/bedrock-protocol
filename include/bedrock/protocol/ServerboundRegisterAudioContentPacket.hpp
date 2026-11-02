@@ -129,7 +129,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeList(registrations, [&](const auto& entry) {
-					entry->write(stream);
-				});
+			entry->write(stream);
+		});
     }
 };

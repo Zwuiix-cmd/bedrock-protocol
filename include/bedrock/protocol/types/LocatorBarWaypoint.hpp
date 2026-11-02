@@ -51,54 +51,54 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         updateFlag = stream.readUnsignedInt().value_or(0);
         visible = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
         worldPosition = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<WorldPosition>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<WorldPosition>();
+	value->read(stream);
+	return value;
+	}());
+});
         texturePath = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
         iconSize = stream.readOptional([&]() {
-			return stream.readVec2().value_or(glm::vec2(0.0f));
-		});
+	return stream.readVec2().value_or(glm::vec2(0.0f));
+});
         color = stream.readOptional([&]() {
-			return stream.readUnsignedInt().value_or(0);
-		});
+	return stream.readUnsignedInt().value_or(0);
+});
         clientPositionAuthority = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
         actorUniqueId = stream.readOptional([&]() {
-			return stream.readInt().value_or(0);
-		});
+	return stream.readInt().value_or(0);
+});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedInt(updateFlag);
         stream.writeOptional(visible, [&](const auto& optionalValue) {
-			stream.writeBool(optionalValue);
-		});
+	stream.writeBool(optionalValue);
+});
         stream.writeOptional(worldPosition, [&](const auto& optionalValue) {
-			if (optionalValue) optionalValue->write(stream);
-		});
+	if (optionalValue) optionalValue->write(stream);
+});
         stream.writeOptional(texturePath, [&](const auto& optionalValue) {
-			stream.writeString(optionalValue);
-		});
+	stream.writeString(optionalValue);
+});
         stream.writeOptional(iconSize, [&](const auto& optionalValue) {
-			stream.writeVec2(optionalValue);
-		});
+	stream.writeVec2(optionalValue);
+});
         stream.writeOptional(color, [&](const auto& optionalValue) {
-			stream.writeUnsignedInt(optionalValue);
-		});
+	stream.writeUnsignedInt(optionalValue);
+});
         stream.writeOptional(clientPositionAuthority, [&](const auto& optionalValue) {
-			stream.writeBool(optionalValue);
-		});
+	stream.writeBool(optionalValue);
+});
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
-			stream.writeInt(optionalValue);
-		});
+	stream.writeInt(optionalValue);
+});
     }
 };

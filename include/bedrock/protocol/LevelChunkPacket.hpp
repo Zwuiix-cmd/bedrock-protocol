@@ -137,8 +137,8 @@ public:
 		dimensionId = stream.readVarInt().value_or(0);
 		subChunkCount = stream.readUnsignedVarInt().value_or(0);
 		subChunkRequestLimit = stream.readOptional([&]() {
-					return stream.readVarInt().value_or(0);
-				});
+			return stream.readVarInt().value_or(0);
+		});
 		cacheEnabled = stream.readBool().value_or(false);
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		if ((count > MAX_BLOB_HASHES)) {
@@ -156,8 +156,8 @@ public:
 		stream.writeVarInt(dimensionId);
 		stream.writeUnsignedVarInt(subChunkCount);
 		stream.writeOptional(subChunkRequestLimit, [&](const auto& value) {
-					stream.writeVarInt(value);
-				});
+			stream.writeVarInt(value);
+		});
 		stream.writeBool(cacheEnabled);
 		stream.writeUnsignedVarInt(usedBlobHashes.size());
 		for (const auto& hash : usedBlobHashes) {

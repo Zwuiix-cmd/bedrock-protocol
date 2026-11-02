@@ -109,140 +109,140 @@ public:
         parent = stream.readString().value_or("");
         applyInheritedStartingRotation = stream.readBool().value_or(false);
         xPosition = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         yPosition = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         zPosition = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         pitch = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         yaw = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         rotationSpeed = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         snapToTarget = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
         horizontalRotationLimit = stream.readOptional([&]() {
-			return stream.readVec2().value_or(glm::vec2(0.0f));
-		});
+	return stream.readVec2().value_or(glm::vec2(0.0f));
+});
         verticalRotationLimit = stream.readOptional([&]() {
-			return stream.readVec2().value_or(glm::vec2(0.0f));
-		});
+	return stream.readVec2().value_or(glm::vec2(0.0f));
+});
         continueTargeting = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
         blockListeningRadius = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         viewOffset = stream.readOptional([&]() {
-			return stream.readVec2().value_or(glm::vec2(0.0f));
-		});
+	return stream.readVec2().value_or(glm::vec2(0.0f));
+});
         entityOffset = stream.readOptional([&]() {
-			return stream.readVec3().value_or(glm::vec3(0.0f));
-		});
+	return stream.readVec3().value_or(glm::vec3(0.0f));
+});
         radius = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         yawLimitMin = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         yawLimitMax = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         audioListenerType = static_cast<Audiolistenertype>(stream.readOptional([&]() {
-			return stream.readInt().value_or(0);
-		}));
+	return stream.readInt().value_or(0);
+}));
         playerEffects = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
         aimAssist = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<CameraPresetAimAssist>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<CameraPresetAimAssist>();
+	value->read(stream);
+	return value;
+	}());
+});
         controlScheme = stream.readOptional([&]() {
-			return static_cast<ControlScheme>(stream.readVarInt().value_or(0));
-		});
+	return static_cast<ControlScheme>(stream.readVarInt().value_or(0));
+});
         startingRotation = stream.readOptional([&]() {
-			return stream.readVec2().value_or(glm::vec2(0.0f));
-		});
+	return stream.readVec2().value_or(glm::vec2(0.0f));
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeString(name);
 		stream.writeString(parent);
 		stream.writeOptional(xPosition, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(yPosition, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(zPosition, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(pitch, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(yaw, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(rotationSpeed, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(snapToTarget, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
 		stream.writeOptional(horizontalRotationLimit, [&](const auto& value) {
-					stream.writeVec2(value);
-				});
+			stream.writeVec2(value);
+		});
 		stream.writeOptional(verticalRotationLimit, [&](const auto& value) {
-					stream.writeVec2(value);
-				});
+			stream.writeVec2(value);
+		});
 		stream.writeOptional(continueTargeting, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
 		stream.writeOptional(blockListeningRadius, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(viewOffset, [&](const auto& value) {
-					stream.writeVec2(value);
-				});
+			stream.writeVec2(value);
+		});
 		stream.writeOptional(entityOffset, [&](const auto& value) {
-					stream.writeVec3(value);
-				});
+			stream.writeVec3(value);
+		});
 		stream.writeOptional(radius, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(yawLimitMin, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(yawLimitMax, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeOptional(audioListenerType, [&](const auto& value) {
-					stream.writeUnsignedByte(value);
-				});
+			stream.writeUnsignedByte(value);
+		});
 		stream.writeOptional(playerEffects, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
 		stream.writeOptional(aimAssist, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(controlScheme, [&](const auto& v) {
-					stream.writeUnsignedByte(magic_enum::enum_integer(v));
-				});
+			stream.writeUnsignedByte(magic_enum::enum_integer(v));
+		});
 		stream.writeBool(applyInheritedStartingRotation);
 		stream.writeOptional(startingRotation, [&](const auto& value) {
-					stream.writeVec2(value);
-				});
+			stream.writeVec2(value);
+		});
     }
 };

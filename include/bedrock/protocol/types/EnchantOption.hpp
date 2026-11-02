@@ -50,26 +50,26 @@ public:
         slotFlags = stream.readUnsignedInt().value_or(0);
         name = stream.readString().value_or("");
         equipActivatedEnchantments = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<Enchant>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<Enchant>();
+	value->read(stream);
+	return value;
+	}());
+});
         heldActivatedEnchantments = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<Enchant>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<Enchant>();
+	value->read(stream);
+	return value;
+	}());
+});
         selfActivatedEnchantments = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<Enchant>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<Enchant>();
+	value->read(stream);
+	return value;
+	}());
+});
         optionId = stream.readInt().value_or(0);
     }
 
@@ -78,14 +78,14 @@ public:
         stream.writeUnsignedInt(slotFlags);
         stream.writeString(name);
         stream.writeList(equipActivatedEnchantments, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeList(heldActivatedEnchantments, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeList(selfActivatedEnchantments, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeInt(optionId);
     }
 };

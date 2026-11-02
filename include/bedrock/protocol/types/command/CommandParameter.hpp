@@ -44,8 +44,8 @@ public:
     return value;
 }()); }); return value ? std::variant<std::monostate, std::shared_ptr<CommandHardEnum>, std::shared_ptr<CommandSoftEnum>>{*value} : std::variant<std::monostate, std::shared_ptr<CommandHardEnum>, std::shared_ptr<CommandSoftEnum>>{std::monostate{}}; }());
         postfix = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -55,7 +55,7 @@ public:
         stream.writeInt(magic_enum::enum_integer(flags));
         std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::shared_ptr<CommandHardEnum>>) { if (alternative) alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<CommandSoftEnum>>) { if (alternative) alternative->write(stream); } }, enum_);
         stream.writeOptional(postfix, [&](const auto& optionalValue) {
-			stream.writeString(optionalValue);
-		});
+	stream.writeString(optionalValue);
+});
     }
 };

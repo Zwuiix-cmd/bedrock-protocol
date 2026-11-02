@@ -130,15 +130,15 @@ public:
 		action = static_cast<Action>(stream.readUnsignedByte().value_or(0));
 		targetActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		position = stream.readOptional([&]() {
-					return stream.readVec3().value_or(glm::vec3(0.0f));
-				});
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedByte(magic_enum::enum_integer(action));
 		stream.writeActorRuntimeID(targetActorRuntimeId);
 		stream.writeOptional(position, [&](const auto& value) {
-					stream.writeVec3(value);
-				});
+			stream.writeVec3(value);
+		});
     }
 };

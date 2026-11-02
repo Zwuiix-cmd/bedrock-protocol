@@ -200,8 +200,8 @@ public:
 			if (link) link->write(stream);
 		}
 		stream.writeOptional(passengerBlockData, [&](const auto& data) {
-					data->write(stream);
-				});
+			data->write(stream);
+		});
 		stream.writeString(deviceId);
 		stream.writeInt(magic_enum::enum_integer(buildPlatform));
     }

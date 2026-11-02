@@ -121,19 +121,19 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		graphicsMode = stream.readOptional([&]() {
-					return static_cast<GraphicsMode>(stream.readUnsignedByte().value_or(0));
-				});
+			return static_cast<GraphicsMode>(stream.readUnsignedByte().value_or(0));
+		});
 		filterProfanityChange = stream.readOptional([&]() {
-					return stream.readBool().value_or(false);
-				});
+			return stream.readBool().value_or(false);
+		});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(graphicsMode, [&](const auto& v) {
-					stream.writeUnsignedByte(magic_enum::enum_integer(v));
-				});
+			stream.writeUnsignedByte(magic_enum::enum_integer(v));
+		});
 		stream.writeOptional(filterProfanityChange, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
     }
 };

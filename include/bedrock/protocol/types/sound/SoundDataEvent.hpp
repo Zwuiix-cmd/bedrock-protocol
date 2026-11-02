@@ -45,20 +45,20 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         type = static_cast<SoundDataEventType>(stream.readVarInt().value_or(0));
         volume = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         pitch = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         duration = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         targetVolume = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
         seconds = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
     }
 
     virtual void write(BinaryStream& stream) const {

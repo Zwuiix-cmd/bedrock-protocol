@@ -162,15 +162,15 @@ public:
 }());
         defaultPlayerPermission = static_cast<PlayerPermissions>(stream.readVarInt().value_or(0));
         eduSharedUriResource = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<EducationUriResource>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<EducationUriResource>();
+	value->read(stream);
+	return value;
+	}());
+});
         experimentalGameplayOverride = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -228,10 +228,10 @@ for (const auto& [key, item] : gameRules) {
         if (experiments) experiments->write(stream);
         stream.writeVarInt(magic_enum::enum_integer(defaultPlayerPermission));
         stream.writeOptional(eduSharedUriResource, [&](const auto& optionalValue) {
-			if (optionalValue) optionalValue->write(stream);
-		});
+	if (optionalValue) optionalValue->write(stream);
+});
         stream.writeOptional(experimentalGameplayOverride, [&](const auto& optionalValue) {
-			stream.writeBool(optionalValue);
-		});
+	stream.writeBool(optionalValue);
+});
     }
 };

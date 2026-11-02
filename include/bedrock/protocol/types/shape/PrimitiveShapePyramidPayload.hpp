@@ -33,15 +33,15 @@ public:
         width = stream.readFloat().value_or(0.0f);
         height = stream.readFloat().value_or(0.0f);
         depth = stream.readOptional([&]() {
-			return stream.readFloat().value_or(0.0f);
-		});
+	return stream.readFloat().value_or(0.0f);
+});
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeFloat(width);
 		stream.writeOptional(depth, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeFloat(height);
     }
 };

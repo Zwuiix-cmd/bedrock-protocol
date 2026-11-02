@@ -38,12 +38,12 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         requestId = stream.readVarInt().value_or(0);
         requestChangedSlots = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<InventoryTransactionChangedSlotsHack>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<InventoryTransactionChangedSlotsHack>();
+	value->read(stream);
+	return value;
+	}());
+});
         transactionData = ([&]() {
     auto value = std::make_shared<UseItemTransactionData>();
     value->read(stream);
@@ -54,10 +54,10 @@ public:
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
 		stream.writeOptional(requestChangedSlots, [&](const auto& list) {
-					stream.writeList(list, [&](const auto& v) {
-					v->write(stream);
-					});
-				});
+			stream.writeList(list, [&](const auto& v) {
+			v->write(stream);
+			});
+		});
 		transactionData->write(stream);
     }
 };

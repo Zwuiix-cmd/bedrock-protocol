@@ -56,8 +56,8 @@ public:
         showBackface = stream.readBool().value_or(false);
         showTextBackface = stream.readBool().value_or(false);
         backgroundColor = stream.readOptional([&]() {
-			return stream.readUnsignedInt().value_or(0);
-		});
+	return stream.readUnsignedInt().value_or(0);
+});
     }
 
     void write(BinaryStream& stream) const override {
@@ -68,7 +68,7 @@ public:
         stream.writeBool(showBackface);
         stream.writeBool(showTextBackface);
         stream.writeOptional(backgroundColor, [&](const auto& optionalValue) {
-			stream.writeUnsignedInt(optionalValue);
-		});
+	stream.writeUnsignedInt(optionalValue);
+});
     }
 };

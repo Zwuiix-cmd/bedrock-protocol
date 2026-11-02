@@ -133,8 +133,8 @@ public:
 		    return value;
 		}()); });
 		storage = stream.readOptional([&]() {
-					return ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-				});
+			return ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		});
 		item = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
     }
 
@@ -142,11 +142,11 @@ public:
 		stream.writeUnsignedVarInt(windowId);
 		stream.writeUnsignedVarInt(inventorySlot);
 		stream.writeOptional(containerName, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(storage, [&](const auto& value) {
-					value.write(stream);
-				});
+			value.write(stream);
+		});
 		item.write(stream);
     }
 };

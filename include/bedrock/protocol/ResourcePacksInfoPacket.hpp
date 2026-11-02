@@ -133,12 +133,12 @@ public:
 		worldTemplateId = stream.readUUID().value_or("");
 		worldTemplateVersion = stream.readString().value_or("");
 		resourcePackEntries = stream.readList([&]() {
-					return ([&]() {
-					auto value = std::make_shared<ResourcePackInfoEntry>();
-					value->read(stream);
-					return value;
-					}());
-				});
+			return ([&]() {
+			auto value = std::make_shared<ResourcePackInfoEntry>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     void write(BinaryStream& stream) override {
@@ -149,7 +149,7 @@ public:
 		stream.writeUUID(worldTemplateId);
 		stream.writeString(worldTemplateVersion);
 		stream.writeList(resourcePackEntries, [&](const auto& entry) {
-					entry->write(stream);
-				});
+			entry->write(stream);
+		});
     }
 };

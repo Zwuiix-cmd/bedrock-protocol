@@ -41,19 +41,19 @@ public:
         repetitions = stream.readUnsignedByte().value_or(0);
         recipeId = stream.readInt().value_or(0);
         ingredients = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<RecipeIngredient>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<RecipeIngredient>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     void write(BinaryStream& stream) const override {
         stream.writeUnsignedByte(repetitions);
         stream.writeInt(recipeId);
         stream.writeList(ingredients, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
     }
 };

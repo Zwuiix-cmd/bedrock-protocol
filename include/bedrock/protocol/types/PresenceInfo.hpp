@@ -23,13 +23,13 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         richPresenceId = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeOptional(richPresenceId, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
     }
 };

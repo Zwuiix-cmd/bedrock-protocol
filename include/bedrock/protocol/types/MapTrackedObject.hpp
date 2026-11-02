@@ -31,20 +31,20 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         type = static_cast<Type>(stream.readUnsignedInt().value_or(0));
         actorUniqueId = stream.readOptional([&]() {
-			return stream.readInt().value_or(0);
-		});
+	return stream.readInt().value_or(0);
+});
         blockPosition = stream.readOptional([&]() {
-			return stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		});
+	return stream.readSignedBlockPos().value_or(glm::ivec3(0));
+});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedInt(magic_enum::enum_integer(type));
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
-			stream.writeInt(optionalValue);
-		});
+	stream.writeInt(optionalValue);
+});
         stream.writeOptional(blockPosition, [&](const auto& optionalValue) {
-			stream.writeSignedBlockPos(optionalValue);
-		});
+	stream.writeSignedBlockPos(optionalValue);
+});
     }
 };

@@ -57,12 +57,12 @@ public:
         iterationsType = stream.readVarInt().value_or(0);
         iterations = stream.readShort().value_or(0);
         coordinates = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<BiomeCoordinateData>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<BiomeCoordinateData>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {

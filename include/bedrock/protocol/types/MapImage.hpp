@@ -72,13 +72,13 @@ public:
         width = stream.readInt().value_or(0);
         height = stream.readInt().value_or(0);
         pixels = stream.readList([&]() {
-			return stream.readList([&]() {
-			return stream.readUnsignedInt().value_or(0);
-			});
-		});
+	return stream.readList([&]() {
+	return stream.readUnsignedInt().value_or(0);
+	});
+});
         encodedPixelCache = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     virtual void write(BinaryStream& stream) const {

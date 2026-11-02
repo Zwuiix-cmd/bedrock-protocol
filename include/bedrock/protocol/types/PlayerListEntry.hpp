@@ -54,8 +54,8 @@ public:
     return value;
 }());
         color = stream.readOptional([&]() {
-			return stream.readUnsignedInt().value_or(0);
-		});
+	return stream.readUnsignedInt().value_or(0);
+});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -72,7 +72,7 @@ public:
         stream.writeUUID(uuid);
         if (skinData) skinData->write(stream);
         stream.writeOptional(color, [&](const auto& optionalValue) {
-			stream.writeUnsignedInt(optionalValue);
-		});
+	stream.writeUnsignedInt(optionalValue);
+});
     }
 };

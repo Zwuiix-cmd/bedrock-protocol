@@ -137,11 +137,11 @@ public:
 		loopCount = stream.readVarInt().value_or(0);
 		bypassListenerRangeCheck = stream.readBool().value_or(false);
 		serverSoundHandle = stream.readOptional([&]() {
-					return stream.readUnsignedLong().value_or(0);
-				});
+			return stream.readUnsignedLong().value_or(0);
+		});
 		playbackPositionSeconds = stream.readOptional([&]() {
-					return stream.readFloat().value_or(0.0f);
-				});
+			return stream.readFloat().value_or(0.0f);
+		});
     }
 
     void write(BinaryStream& stream) override {
@@ -152,10 +152,10 @@ public:
 		stream.writeVarInt(loopCount);
 		stream.writeBool(bypassListenerRangeCheck);
 		stream.writeOptional(serverSoundHandle, [&](const auto& value) {
-					stream.writeUnsignedLong(value);
-				});
+			stream.writeUnsignedLong(value);
+		});
 		stream.writeOptional(playbackPositionSeconds, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
     }
 };

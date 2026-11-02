@@ -143,8 +143,8 @@ public:
 		    return value;
 		}()); });
 		codeBuilderOverrideUri = stream.readOptional([&]() {
-					return stream.readString().value_or("");
-				});
+			return stream.readString().value_or("");
+		});
 		hasQuiz = stream.readBool().value_or(false);
 		linkSettings = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<EducationSettingsExternalLinkSettings>();
@@ -161,14 +161,14 @@ public:
 		stream.writeString(postProcessFilter);
 		stream.writeString(screenshotBorderResourcePath);
 		stream.writeOptional(agentCapabilities, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(codeBuilderOverrideUri, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
 		stream.writeBool(hasQuiz);
 		stream.writeOptional(linkSettings, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
     }
 };

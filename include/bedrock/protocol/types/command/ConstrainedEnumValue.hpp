@@ -34,14 +34,14 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readString().value_or("");
         constraints = stream.readList([&]() {
-			return stream.readInt().value_or(0);
-		});
+	return stream.readInt().value_or(0);
+});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(value);
         stream.writeList(constraints, [&](const auto& item) {
-			stream.writeInt(item);
-		});
+	stream.writeInt(item);
+});
     }
 };

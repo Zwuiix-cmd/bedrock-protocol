@@ -38,12 +38,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         clockId = stream.readUnsignedVarLong().value_or(0);
         markers = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<SyncWorldClockMarkerData>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<SyncWorldClockMarkerData>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     void write(BinaryStream& stream) const override {

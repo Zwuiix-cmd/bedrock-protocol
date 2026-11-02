@@ -44,12 +44,12 @@ public:
         time = stream.readVarInt().value_or(0);
         paused = stream.readBool().value_or(false);
         markers = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<SyncWorldClockMarkerData>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<SyncWorldClockMarkerData>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {

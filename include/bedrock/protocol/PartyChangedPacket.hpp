@@ -129,7 +129,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(partyInfo, [&](const auto& info) {
-					info->write(stream);
-				});
+			info->write(stream);
+		});
     }
 };

@@ -31,12 +31,12 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         layers = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<AttributeLayer>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<AttributeLayer>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     void write(BinaryStream& stream) const override {

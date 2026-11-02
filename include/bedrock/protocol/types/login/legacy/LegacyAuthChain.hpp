@@ -22,13 +22,13 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         chain = stream.readList([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeList(chain, [&](const auto& item) {
-			stream.writeString(item);
-		});
+	stream.writeString(item);
+});
     }
 };

@@ -142,8 +142,8 @@ public:
 		    return value;
 		}()); });
 		clear = stream.readOptional([&]() {
-					return stream.readBool().value_or(false);
-				});
+			return stream.readBool().value_or(false);
+		});
 		fade = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<CameraFadeInstruction>();
 		    value->read(stream);
@@ -155,8 +155,8 @@ public:
 		    return value;
 		}()); });
 		removeTarget = stream.readOptional([&]() {
-					return stream.readBool().value_or(false);
-				});
+			return stream.readBool().value_or(false);
+		});
 		fieldOfView = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<CameraFovInstruction>();
 		    value->read(stream);
@@ -168,40 +168,40 @@ public:
 		    return value;
 		}()); });
 		attachToEntity = stream.readOptional([&]() {
-					return stream.readLong().value_or(0);
-				});
+			return stream.readLong().value_or(0);
+		});
 		detachFromEntity = stream.readOptional([&]() {
-					return stream.readBool().value_or(false);
-				});
+			return stream.readBool().value_or(false);
+		});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(set, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(clear, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
 		stream.writeOptional(fade, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(target, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(removeTarget, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
 		stream.writeOptional(fieldOfView, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(spline, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeOptional(attachToEntity, [&](const auto& value) {
-					stream.writeLong(value);
-				});
+			stream.writeLong(value);
+		});
 		stream.writeOptional(detachFromEntity, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
     }
 };

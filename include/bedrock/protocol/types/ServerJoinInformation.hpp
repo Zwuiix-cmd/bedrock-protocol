@@ -41,37 +41,37 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         gatheringJoinInfo = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<GatheringJoinInfo>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<GatheringJoinInfo>();
+	value->read(stream);
+	return value;
+	}());
+});
         storeEntryPointInfo = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<StoreEntryPointInfo>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<StoreEntryPointInfo>();
+	value->read(stream);
+	return value;
+	}());
+});
         presenceInfo = stream.readOptional([&]() {
-			return ([&]() {
-			auto value = std::make_shared<PresenceInfo>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<PresenceInfo>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeOptional(gatheringJoinInfo, [&](const auto& info) {
-					info->write(stream);
-				});
+			info->write(stream);
+		});
 		stream.writeOptional(storeEntryPointInfo, [&](const auto& info) {
-					info->write(stream);
-				});
+			info->write(stream);
+		});
 		stream.writeOptional(presenceInfo, [&](const auto& info) {
-					info->write(stream);
-				});
+			info->write(stream);
+		});
     }
 };

@@ -38,22 +38,22 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         unlockingContext = static_cast<RecipeUnlockingContext>(stream.readVarInt().value_or(0));
         unlockingIngredients = stream.readOptional([&]() {
-			return stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<RecipeIngredient>();
-			value->read(stream);
-			return value;
-			}());
-			});
-		});
+	return stream.readList([&]() {
+	return ([&]() {
+	auto value = std::make_shared<RecipeIngredient>();
+	value->read(stream);
+	return value;
+	}());
+	});
+});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeVarInt(magic_enum::enum_integer(unlockingContext));
         stream.writeOptional(unlockingIngredients, [&](const auto& optionalValue) {
-			stream.writeList(optionalValue, [&](const auto& item) {
-			if (item) item->write(stream);
-			});
-		});
+	stream.writeList(optionalValue, [&](const auto& item) {
+	if (item) item->write(stream);
+	});
+});
     }
 };

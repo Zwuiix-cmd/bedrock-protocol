@@ -127,20 +127,20 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		formId = stream.readUnsignedVarInt().value_or(0);
 		formData = stream.readOptional([&]() {
-					return stream.readString().value_or("");
-				});
+			return stream.readString().value_or("");
+		});
 		cancelReason = static_cast<Cancel>(stream.readOptional([&]() {
-					return stream.readUnsignedByte().value_or(0);
-				}));
+			return stream.readUnsignedByte().value_or(0);
+		}));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedVarInt(formId);
 		stream.writeOptional(formData, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
 		stream.writeOptional(cancelReason, [&](const auto& value) {
-					stream.writeUnsignedByte(value);
-				});
+			stream.writeUnsignedByte(value);
+		});
     }
 };

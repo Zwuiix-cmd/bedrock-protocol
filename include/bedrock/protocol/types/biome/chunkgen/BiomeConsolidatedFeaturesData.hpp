@@ -26,12 +26,12 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         features = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<BiomeConsolidatedFeatureData>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<BiomeConsolidatedFeatureData>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {

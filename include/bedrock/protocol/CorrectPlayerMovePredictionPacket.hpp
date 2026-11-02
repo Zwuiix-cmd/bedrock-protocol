@@ -134,8 +134,8 @@ public:
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
 		vehicleRotation = glm::vec2{stream.readFloat().value_or(0.0f), stream.readFloat().value_or(0.0f)};
 		vehicleAngularVelocity = stream.readOptional([&]() {
-					return stream.readFloat().value_or(0.0f);
-				});
+			return stream.readFloat().value_or(0.0f);
+		});
 		onGround = stream.readBool().value_or(false);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }
@@ -147,8 +147,8 @@ public:
 		stream.writeFloat(vehicleRotation.x);
 		stream.writeFloat(vehicleRotation.y);
 		stream.writeOptional(vehicleAngularVelocity, [&](const auto& value) {
-					stream.writeFloat(value);
-				});
+			stream.writeFloat(value);
+		});
 		stream.writeBool(onGround);
 		stream.writeUnsignedVarLong(tick);
     }

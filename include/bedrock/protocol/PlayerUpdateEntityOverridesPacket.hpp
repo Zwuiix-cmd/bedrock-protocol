@@ -141,11 +141,11 @@ public:
         stream.writeActorUniqueID(actorUniqueId);
         stream.writeUnsignedVarInt(propertyIndex);
         stream.writeOptional(intOverrideValue, [&](const auto& optionalValue) {
-			stream.writeInt(optionalValue);
-		});
+	stream.writeInt(optionalValue);
+});
         stream.writeOptional(floatOverrideValue, [&](const auto& optionalValue) {
-			stream.writeFloat(optionalValue);
-		});
+	stream.writeFloat(optionalValue);
+});
         stream.writeVarInt(magic_enum::enum_integer(updateType));
     }
 };

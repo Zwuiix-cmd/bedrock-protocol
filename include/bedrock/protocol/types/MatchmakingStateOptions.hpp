@@ -29,19 +29,19 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         triggeringPlayerName = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
         triggeredByLocalPlayer = stream.readOptional([&]() {
-			return stream.readBool().value_or(false);
-		});
+	return stream.readBool().value_or(false);
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeOptional(triggeringPlayerName, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
 		stream.writeOptional(triggeredByLocalPlayer, [&](const auto& value) {
-					stream.writeBool(value);
-				});
+			stream.writeBool(value);
+		});
     }
 };

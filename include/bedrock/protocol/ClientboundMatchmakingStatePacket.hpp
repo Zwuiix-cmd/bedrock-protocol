@@ -136,7 +136,7 @@ public:
         stream.writeString(destinationName);
         stream.writeVarInt(magic_enum::enum_integer(state));
         stream.writeOptional(options, [&](const auto& optionalValue) {
-			if (optionalValue) optionalValue->write(stream);
-		});
+	if (optionalValue) optionalValue->write(stream);
+});
     }
 };

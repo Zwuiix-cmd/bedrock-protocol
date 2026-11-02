@@ -45,23 +45,23 @@ public:
         result = static_cast<Result>(stream.readUnsignedByte().value_or(0));
         requestId = stream.readInt().value_or(0);
         containerInfos = stream.readOptional([&]() {
-			return stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<ItemStackResponseContainerInfo>();
-			value->read(stream);
-			return value;
-			}());
-			});
-		});
+	return stream.readList([&]() {
+	return ([&]() {
+	auto value = std::make_shared<ItemStackResponseContainerInfo>();
+	value->read(stream);
+	return value;
+	}());
+	});
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedByte(magic_enum::enum_integer(result));
 		stream.writeInt(requestId);
 		stream.writeOptional(containerInfos, [&](const auto& list) {
-					stream.writeList(list, [&](const auto& v) {
-					v->write(stream);
-					});
-				});
+			stream.writeList(list, [&](const auto& v) {
+			v->write(stream);
+			});
+		});
     }
 };

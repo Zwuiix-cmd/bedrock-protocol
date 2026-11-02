@@ -37,15 +37,15 @@ public:
         progress = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
         easeType = stream.readOptional([&]() {
-			return static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
-		});
+	return static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeFloat(progress);
 		stream.writeFloat(time);
 		stream.writeOptional(easeType, [&](const auto& v) {
-					stream.writeString(magic_enum::enum_name(v));
-				});
+			stream.writeString(magic_enum::enum_name(v));
+		});
     }
 };

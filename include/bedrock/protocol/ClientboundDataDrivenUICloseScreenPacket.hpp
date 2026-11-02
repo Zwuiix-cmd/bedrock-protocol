@@ -119,13 +119,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		formId = stream.readOptional([&]() {
-					return stream.readUnsignedInt().value_or(0);
-				});
+			return stream.readUnsignedInt().value_or(0);
+		});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(formId, [&](const auto& value) {
-					stream.writeUnsignedInt(value);
-				});
+			stream.writeUnsignedInt(value);
+		});
     }
 };

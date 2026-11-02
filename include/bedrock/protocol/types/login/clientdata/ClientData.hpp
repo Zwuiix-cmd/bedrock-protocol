@@ -83,12 +83,12 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         AnimatedImageData = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<ClientDataAnimationFrame>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<ClientDataAnimationFrame>();
+	value->read(stream);
+	return value;
+	}());
+});
         ArmSize = stream.readString().value_or("");
         CapeData = stream.readString().value_or("");
         CapeId = stream.readString().value_or("");
@@ -116,20 +116,20 @@ public:
         PartyId = stream.readString().value_or("");
         IsPartyLeader = stream.readBool().value_or(false);
         PersonaPieces = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<ClientDataPersonaSkinPiece>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<ClientDataPersonaSkinPiece>();
+	value->read(stream);
+	return value;
+	}());
+});
         PersonaSkin = stream.readBool().value_or(false);
         PieceTintColors = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<ClientDataPersonaPieceTintColor>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<ClientDataPersonaPieceTintColor>();
+	value->read(stream);
+	return value;
+	}());
+});
         PlatformOfflineId = stream.readString().value_or("");
         PlatformOnlineId = stream.readString().value_or("");
         PlatformType = stream.readInt().value_or(0);
@@ -154,8 +154,8 @@ public:
 
     virtual void write(BinaryStream& stream) const {
         stream.writeList(AnimatedImageData, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeString(ArmSize);
         stream.writeString(CapeData);
         stream.writeString(CapeId);
@@ -183,12 +183,12 @@ public:
         stream.writeString(PartyId);
         stream.writeBool(IsPartyLeader);
         stream.writeList(PersonaPieces, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeBool(PersonaSkin);
         stream.writeList(PieceTintColors, [&](const auto& item) {
-			if (item) item->write(stream);
-		});
+	if (item) item->write(stream);
+});
         stream.writeString(PlatformOfflineId);
         stream.writeString(PlatformOnlineId);
         stream.writeInt(PlatformType);

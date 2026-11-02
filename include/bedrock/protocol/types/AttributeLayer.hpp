@@ -47,12 +47,12 @@ public:
     return value;
 }());
         attributes = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<AttributeEnvironment>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<AttributeEnvironment>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {

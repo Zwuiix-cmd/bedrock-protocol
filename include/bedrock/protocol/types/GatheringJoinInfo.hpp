@@ -50,40 +50,40 @@ public:
         creatorId = stream.readString().value_or("");
         experienceId = stream.readUUID().value_or("");
         experienceWorldId = stream.readOptional([&]() {
-			return stream.readUUID().value_or("");
-		});
+	return stream.readUUID().value_or("");
+});
         experienceWorldName = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
         targetId = stream.readOptional([&]() {
-			return stream.readUUID().value_or("");
-		});
+	return stream.readUUID().value_or("");
+});
         scenarioId = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
         serverId = stream.readOptional([&]() {
-			return stream.readString().value_or("");
-		});
+	return stream.readString().value_or("");
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUUID(experienceId);
 		stream.writeString(experienceName);
 		stream.writeOptional(experienceWorldId, [&](const auto& value) {
-					stream.writeUUID(value);
-				});
+			stream.writeUUID(value);
+		});
 		stream.writeOptional(experienceWorldName, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
 		stream.writeString(creatorId);
 		stream.writeOptional(targetId, [&](const auto& value) {
-					stream.writeUUID(value);
-				});
+			stream.writeUUID(value);
+		});
 		stream.writeOptional(scenarioId, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
 		stream.writeOptional(serverId, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
     }
 };

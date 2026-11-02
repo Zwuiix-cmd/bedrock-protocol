@@ -205,38 +205,38 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeList(shapedRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(shapelessRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(multiRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(userDataShapelessRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(shapelessChemistryRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(shapedChemistryRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(smithingTransformRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(smithingTrimRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(potionTypeRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(potionContainerRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeList(materialReducerRecipes, [&](const auto& recipe) {
-					return recipe->write(stream);
-				});
+			return recipe->write(stream);
+		});
 		stream.writeBool(cleanRecipes);
     }
 };

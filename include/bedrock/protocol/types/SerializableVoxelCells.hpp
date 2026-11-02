@@ -38,8 +38,8 @@ public:
         ySize = stream.readUnsignedByte().value_or(0);
         zSize = stream.readUnsignedByte().value_or(0);
         storage = stream.readList([&]() {
-			return stream.readInt().value_or(0);
-		});
+	return stream.readInt().value_or(0);
+});
     }
 
     virtual void write(BinaryStream& stream) const {

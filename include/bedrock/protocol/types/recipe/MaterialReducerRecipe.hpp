@@ -36,18 +36,18 @@ public:
         inputItemId = stream.readInt().value_or(0);
         inputItemMeta = stream.readInt().value_or(0);
         outputs = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<MaterialReducerRecipeOutput>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<MaterialReducerRecipeOutput>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(((inputItemId << 16) | inputItemMeta));
 		stream.writeList(outputs, [&](const auto& output) {
-					return output->write(stream);
-				});
+			return output->write(stream);
+		});
     }
 };

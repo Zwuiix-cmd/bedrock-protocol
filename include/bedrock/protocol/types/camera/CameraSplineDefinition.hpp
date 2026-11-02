@@ -48,22 +48,22 @@ public:
         totalTime = stream.readFloat().value_or(0.0f);
         splineType = stream.readString().value_or("");
         controlPoints = stream.readList([&]() {
-			return stream.readVec3().value_or(glm::vec3(0.0f));
-		});
+	return stream.readVec3().value_or(glm::vec3(0.0f));
+});
         progressKeyFrames = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<CameraSplineProgressKeyFrame>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<CameraSplineProgressKeyFrame>();
+	value->read(stream);
+	return value;
+	}());
+});
         rotationKeyFrames = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<CameraSplineRotationKeyFrame>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<CameraSplineRotationKeyFrame>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -71,13 +71,13 @@ public:
 		stream.writeFloat(totalTime);
 		stream.writeString(splineType);
 		stream.writeList(controlPoints, [&](const auto& value) {
-					stream.writeVec3(value);
-				});
+			stream.writeVec3(value);
+		});
 		stream.writeList(progressKeyFrames, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
 		stream.writeList(rotationKeyFrames, [&](const auto& v) {
-					v->write(stream);
-				});
+			v->write(stream);
+		});
     }
 };

@@ -133,8 +133,8 @@ public:
 				auto entry = std::make_shared<ScoreboardIdentityPacketEntry>();
 				entry->scoreboardId = stream.readVarLong().value_or(0);
 				entry->actorUniqueId = stream.readOptional([&]() {
-							return stream.readActorUniqueID().value_or(0);
-						});
+					return stream.readActorUniqueID().value_or(0);
+				});
 				entries.push_back(entry);
 		    }
 		}
@@ -146,8 +146,8 @@ public:
 		for (const auto& entry : entries) {
 			stream.writeVarLong(entry->scoreboardId);
 			stream.writeOptional(entry->actorUniqueId, [&](const auto& value) {
-						stream.writeActorUniqueID(value);
-					});
+				stream.writeActorUniqueID(value);
+			});
 		}
     }
 };

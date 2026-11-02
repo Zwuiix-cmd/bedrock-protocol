@@ -189,8 +189,8 @@ public:
 		xboxUserId = stream.readString().value_or("");
 		platformChatId = stream.readString().value_or("");
 		filteredMessage = stream.readOptional([&]() {
-					return stream.readString().value_or("");
-				});
+			return stream.readString().value_or("");
+		});
     }
 
     void write(BinaryStream& stream) override {
@@ -241,7 +241,7 @@ public:
 		stream.writeString(xboxUserId);
 		stream.writeString(platformChatId);
 		stream.writeOptional(filteredMessage, [&](const auto& value) {
-					stream.writeString(value);
-				});
+			stream.writeString(value);
+		});
     }
 };

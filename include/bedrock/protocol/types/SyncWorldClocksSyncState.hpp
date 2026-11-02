@@ -31,12 +31,12 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         clockData = stream.readList([&]() {
-			return ([&]() {
-			auto value = std::make_shared<SyncWorldClockStateData>();
-			value->read(stream);
-			return value;
-			}());
-		});
+	return ([&]() {
+	auto value = std::make_shared<SyncWorldClockStateData>();
+	value->read(stream);
+	return value;
+	}());
+});
     }
 
     void write(BinaryStream& stream) const override {

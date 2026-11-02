@@ -239,12 +239,16 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
     }
 
     /** @return array{type: string, pointer: bool}|null */
-    private function objectPropertyType(array $property, array $declaration): ?array
+    private function objectPropertyType(
+        array $property,
+        array $declaration,
+        bool $allowOptional = false,
+    ): ?array
     {
         $rawType = (string) ($property['type'] ?? '');
         $sourceType = ltrim($rawType, '?');
         if ($rawType === ''
-            || str_starts_with($rawType, '?')
+            || (!$allowOptional && str_starts_with($rawType, '?'))
             || str_contains($sourceType, '|')
             || preg_match('/^(?:array|list)\s*</i', $sourceType) === 1
             || str_ends_with($sourceType, '[]')) {
@@ -260,6 +264,9 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             return null;
         }
         $cppType = $this->cppPropertyType($property, $declaration);
+        if ($allowOptional && preg_match('/^std::optional<(.+)>$/', $cppType, $optionalType) === 1) {
+            $cppType = $optionalType[1];
+        }
         $codec = $this->catalog->typeCodec($short);
         if (is_array($codec)
             && is_string($codec['read'] ?? null)
@@ -317,7 +324,7 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
         $propertyName = $assignment->var->name->toString();
         foreach ($declaration['properties'] ?? [] as $property) {
             if (($property['name'] ?? null) !== $propertyName
-                || ($objectType = $this->objectPropertyType($property, $declaration)) === null) {
+                || ($objectType = $this->objectPropertyType($property, $declaration, true)) === null) {
                 continue;
             }
             $target = $this->expression($assignment->var, $declaration, $method);

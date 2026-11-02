@@ -155,18 +155,12 @@ public:
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
 		if (inputFlags.get(InputData::PERFORM_ITEM_INTERACTION)) {
-			itemInteractionData = ([&]() {
-			    auto value = std::make_shared<ItemInteractionData>();
-			    value->read(stream);
-			    return value;
-			}());
+			itemInteractionData = std::make_shared<ItemInteractionData>();
+			itemInteractionData->read(stream);
 		}
 		if (inputFlags.get(InputData::PERFORM_ITEM_STACK_REQUEST)) {
-			itemStackRequest = ([&]() {
-			    auto value = std::make_shared<ItemStackRequest>();
-			    value->read(stream);
-			    return value;
-			}());
+			itemStackRequest = std::make_shared<ItemStackRequest>();
+			itemStackRequest->read(stream);
 		}
 		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
 			blockActions = {};
@@ -181,7 +175,7 @@ public:
 			}
 		}
 		if (inputFlags.get(InputData::IN_CLIENT_PREDICTED_VEHICLE)) {
-			vehicleInfo = ([&]() { PlayerAuthInputVehicleInfo value; value.read(stream); return value; }());
+			vehicleInfo.read(stream);
 		}
 		analogMoveVecX = stream.readFloat().value_or(0.0f);
 		analogMoveVecZ = stream.readFloat().value_or(0.0f);

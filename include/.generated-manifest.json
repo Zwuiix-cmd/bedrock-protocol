@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "a4ac44cb3728fbcd4ff7bba20f38f0e4ab7ac7b0fce736a3f598025b5f7de37f",
+    "generatorFingerprint": "3db5dfcfa7c18b458946fb933039e6d7169ddb1334beed3725ef6a4f0a8a9990",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -713,8 +713,8 @@
             "bytes": 6376
         },
         "include/bedrock/protocol/CameraInstructionPacket.hpp": {
-            "sha256": "57741eb583a69219e85ee0e7ef49faea1965f0892a0822f2efdfdd9dfef025f6",
-            "bytes": 8232
+            "sha256": "617c92a3db1655dc1ed1d01b004e4b0885109820af2c5f6b6b9ad0681a9560a4",
+            "bytes": 7742
         },
         "include/bedrock/protocol/CameraPacket.hpp": {
             "sha256": "fd33a6bef19ec9e058bba5032d6cff12f17d8d7037dc90c27e0e58aac522b01d",
@@ -797,8 +797,8 @@
             "bytes": 6281
         },
         "include/bedrock/protocol/ClientboundDebugRendererPacket.hpp": {
-            "sha256": "d0b1eac1c9d5838477009aade60e75b43822ce16b13c39a5d515e7e77b061e27",
-            "bytes": 6227
+            "sha256": "77da0bff65d577e0b717e06bf0ca0bf634d327ca3fd8f962398401f0e6cacf2b",
+            "bytes": 6127
         },
         "include/bedrock/protocol/ClientboundMapItemDataPacket.hpp": {
             "sha256": "307ab5919873f4468132fb03f75bc1c1d813a694c2acca3bc228b2201c655f7d",
@@ -897,8 +897,8 @@
             "bytes": 5305
         },
         "include/bedrock/protocol/EducationSettingsPacket.hpp": {
-            "sha256": "0ad3137c9ae44f3ff7c7174473f4d79531a08e706a418fd69d9c251bf4b380f5",
-            "bytes": 7283
+            "sha256": "763f4662d066ba4ca669b54eb942ce669a547c0c0b89263af1e45849b7fca172",
+            "bytes": 7104
         },
         "include/bedrock/protocol/EmoteListPacket.hpp": {
             "sha256": "039ca5969c11645ea8054ac9766abba7ffb70d0da29fcfe8c6f66ecc547b61b3",
@@ -1129,8 +1129,8 @@
             "bytes": 5680
         },
         "include/bedrock/protocol/PlayerAuthInputPacket.hpp": {
-            "sha256": "76dcbede2a6e653f1b662da8cf89f50eca6ecdfc0031c880de1fb62c06ffbe8f",
-            "bytes": 9824
+            "sha256": "944297ba5117f3240732da8f381fc629c5f053576102f4ee7b981330350e6118",
+            "bytes": 9652
         },
         "include/bedrock/protocol/PlayerEnchantOptionsPacket.hpp": {
             "sha256": "1866248642d04633decfc6c3dc60748c6307624dec3536871f261fb617ddd487",
@@ -2863,8 +2863,8 @@
         "enums": 72,
         "registrations": 224,
         "unsupported": 46,
-        "changed": 562,
-        "removed": 0,
+        "changed": 6,
+        "removed": 2,
         "cached": 0
     }
 }

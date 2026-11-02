@@ -123,20 +123,14 @@ public:
 		disableLegacyTitleBar = stream.readBool().value_or(false);
 		postProcessFilter = stream.readString().value_or("");
 		screenshotBorderResourcePath = stream.readString().value_or("");
-		agentCapabilities = stream.readOptional([&]() { return ([&]() {
-		    auto value = std::make_shared<EducationSettingsAgentCapabilities>();
-		    value->read(stream);
-		    return value;
-		}()); });
+		agentCapabilities = std::make_shared<EducationSettingsAgentCapabilities>();
+		agentCapabilities->read(stream);
 		codeBuilderOverrideUri = stream.readOptional([&]() {
 			return stream.readString().value_or("");
 		});
 		hasQuiz = stream.readBool().value_or(false);
-		linkSettings = stream.readOptional([&]() { return ([&]() {
-		    auto value = std::make_shared<EducationSettingsExternalLinkSettings>();
-		    value->read(stream);
-		    return value;
-		}()); });
+		linkSettings = std::make_shared<EducationSettingsExternalLinkSettings>();
+		linkSettings->read(stream);
     }
 
     void write(BinaryStream& stream) override {

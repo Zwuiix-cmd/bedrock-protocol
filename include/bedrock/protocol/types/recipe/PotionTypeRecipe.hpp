@@ -49,11 +49,11 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(inputItemId);
-		stream.writeVarInt(inputItemMeta);
-		stream.writeVarInt(ingredientItemId);
-		stream.writeVarInt(ingredientItemMeta);
-		stream.writeVarInt(outputItemId);
-		stream.writeVarInt(outputItemMeta);
+        stream.writeVarInt(inputItemId);
+        stream.writeVarInt(inputItemMeta);
+        stream.writeVarInt(ingredientItemId);
+        stream.writeVarInt(ingredientItemMeta);
+        stream.writeVarInt(outputItemId);
+        stream.writeVarInt(outputItemMeta);
     }
 };

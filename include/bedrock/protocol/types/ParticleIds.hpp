@@ -107,9 +107,4 @@ enum class ParticleIds : uint8_t {
     GreenFlame = 98,
     PauseMobGrowth = 99,
     ResetMobGrowth = 100,
-    SulfurCube = 101,
-    OrangePoplarLeaves = 102,
-    RedPoplarLeaves = 103,
-    YellowPoplarLeaves = 104,
-    IceBallBreak = 105,
 };

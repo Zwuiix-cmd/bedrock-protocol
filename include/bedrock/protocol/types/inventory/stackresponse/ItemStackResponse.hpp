@@ -24,18 +24,18 @@ public:
 
     Result result;
     int32_t requestId;
-    std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>> containerInfos;
+    std::vector<std::shared_ptr<ItemStackResponseContainerInfo>> containerInfos;
 
     ItemStackResponse() = default;
     explicit ItemStackResponse(
         const Result& resultValue,
         const int32_t& requestIdValue,
-        const std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>>& containerInfosValue
+        const std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>& containerInfosValue
     ) :
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if (((result != Result::Ok) && containerInfos.has_value())) {
+		if (((result != Result::Ok) && (containerInfos.size() != 0))) {
 			throw std::exception{};
 		}
     }
@@ -45,18 +45,17 @@ public:
             stream.readUnsignedByte().value_or(0)
         ).value_or(Result::Ok);
         requestId = stream.readInt().value_or(0);
-        containerInfos = stream.readOptional([&]() {
-            return stream.readObjectList<ItemStackResponseContainerInfo>();
-        });
+        containerInfos = stream.readObjectList<ItemStackResponseContainerInfo>();
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedByte(magic_enum::enum_integer(result));
 		stream.writeInt(requestId);
-		stream.writeOptional(containerInfos, [&](const auto& list) {
-			stream.writeList(list, [&](const auto& v) {
-				v->write(stream);
-			});
-		});
+		if ((result == Result::Ok)) {
+			stream.writeUnsignedVarInt(containerInfos.size());
+			for (const auto& containerInfo : containerInfos) {
+				containerInfo->write(stream);
+			}
+		}
     }
 };

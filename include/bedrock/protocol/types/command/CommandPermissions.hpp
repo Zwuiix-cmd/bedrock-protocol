@@ -1,29 +1,36 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 #include <magic_enum/magic_enum.hpp>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
+#include <bedrock/protocol/io/BinaryStream.hpp>
+#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <bedrock/protocol/Forward.hpp>
 
-enum class CommandPermissions : uint16_t {
-    Normal = 0,
-    Operator = 1,
-    Automation = 2,
-    Host = 3,
-    Owner = 4,
-    Internal = 5,
-};
-namespace magic_enum::customize {
+class CommandPermissions {
+public:
+    static constexpr int64_t NORMAL = 0;
+    static constexpr int64_t OPERATOR = 1;
+    static constexpr int64_t AUTOMATION = 2;
+    static constexpr int64_t HOST = 3;
+    static constexpr int64_t OWNER = 4;
+    static constexpr int64_t INTERNAL = 5;
 
-template <> constexpr customize_t enum_name<CommandPermissions>(CommandPermissions value) noexcept {
-    switch (value) {
-        case CommandPermissions::Normal: return "any";
-        case CommandPermissions::Operator: return "gamedirectors";
-        case CommandPermissions::Automation: return "admin";
-        case CommandPermissions::Host: return "host";
-        case CommandPermissions::Owner: return "owner";
-        case CommandPermissions::Internal: return "internal";
-        default: return invalid_tag;
+
+    CommandPermissions() = default;
+
+    virtual void read(ReadOnlyBinaryStream& stream) {
+        (void)stream;
     }
-}
 
-}
+    virtual void write(BinaryStream& stream) const {
+        (void)stream;
+    }
+};

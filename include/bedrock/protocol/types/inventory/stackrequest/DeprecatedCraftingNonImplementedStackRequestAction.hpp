@@ -17,7 +17,7 @@
 
 class DeprecatedCraftingNonImplementedStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 17;
+    static constexpr int64_t ID = 18;
 
 
     DeprecatedCraftingNonImplementedStackRequestAction() = default;

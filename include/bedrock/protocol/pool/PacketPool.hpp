@@ -57,5 +57,5 @@ private:
     static inline std::unordered_map<entt::id_type, Constructor> s_byType;
     static inline std::shared_mutex s_mutex;
     static inline std::once_flag s_setupFlag;
-    static constexpr size_t ExpectedPacketCount = 239;
+    static constexpr size_t ExpectedPacketCount = 224;
 };

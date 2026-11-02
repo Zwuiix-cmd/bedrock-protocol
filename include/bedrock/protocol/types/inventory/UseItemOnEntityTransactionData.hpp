@@ -13,7 +13,6 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
@@ -30,7 +29,6 @@ public:
     uint64_t actorRuntimeId;
     Action actionType;
     int32_t hotbarSlot;
-    HandSlot hand;
     NetworkItemStack itemInHand;
     glm::vec3 playerPosition;
     glm::vec3 clickPosition;
@@ -43,24 +41,20 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         actionType = magic_enum::enum_cast<Action>(
-            stream.readVarInt().value_or(0)
+            stream.readUnsignedVarInt().value_or(0)
         ).value_or(Action::Interact);
         hotbarSlot = stream.readVarInt().value_or(0);
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        hand = magic_enum::enum_cast<HandSlot>(
-            stream.readVarInt().value_or(0)
-        ).value_or(HandSlot::Mainhand);
         itemInHand.read(stream);
     }
 
     void write(BinaryStream& stream) const override {
         stream.writeActorRuntimeID(actorRuntimeId);
-        stream.writeVarInt(actionType);
+        stream.writeUnsignedVarInt(actionType);
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);
-        stream.writeVarInt(magic_enum::enum_integer(hand));
         itemInHand.write(stream);
     }
 };

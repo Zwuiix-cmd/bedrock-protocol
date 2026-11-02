@@ -44,5 +44,4 @@ enum class WindowTypes : int32_t {
     ChestBoat = 34,
     DecoratedPot = 35,
     Crafter = 36,
-    ReservedContainerType = 38,
 };

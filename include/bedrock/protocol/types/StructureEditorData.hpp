@@ -27,42 +27,38 @@ public:
     };
 
     std::string structureName;
-    std::optional<std::string> filteredStructureName;
+    std::string filteredStructureName;
     std::string structureDataField;
     bool includePlayers;
     bool showBoundingBox;
     Type structureBlockType;
     std::shared_ptr<StructureSettings> structureSettings;
-    uint8_t structureRedstoneSaveMode;
+    int32_t structureRedstoneSaveMode;
 
     StructureEditorData() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         structureName = stream.readString().value_or("");
+        filteredStructureName = stream.readString().value_or("");
         structureDataField = stream.readString().value_or("");
         includePlayers = stream.readBool().value_or(false);
         showBoundingBox = stream.readBool().value_or(false);
         structureBlockType = magic_enum::enum_cast<Type>(
             stream.readVarInt().value_or(0)
         ).value_or(Type::Data);
-        structureRedstoneSaveMode = stream.readUnsignedByte().value_or(0);
-        filteredStructureName = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+        structureRedstoneSaveMode = stream.readVarInt().value_or(0);
         structureSettings = std::make_shared<StructureSettings>();
         structureSettings->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(structureName);
+        stream.writeString(filteredStructureName);
         stream.writeString(structureDataField);
         stream.writeBool(includePlayers);
         stream.writeBool(showBoundingBox);
         stream.writeVarInt(structureBlockType);
-        stream.writeUnsignedByte(structureRedstoneSaveMode);
-        stream.writeOptional(filteredStructureName, [&](const auto& optionalValue) {
-            stream.writeString(optionalValue);
-        });
+        stream.writeVarInt(structureRedstoneSaveMode);
         structureSettings->write(stream);
     }
 };

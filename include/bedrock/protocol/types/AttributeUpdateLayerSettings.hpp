@@ -21,14 +21,14 @@ public:
     static constexpr int64_t ID = 1;
 
     std::string name;
-    int32_t dimension;
+    uint32_t dimension;
     std::shared_ptr<AttributeLayerSettings> settings;
 
     AttributeUpdateLayerSettings() = default;
     virtual ~AttributeUpdateLayerSettings() = default;
     explicit AttributeUpdateLayerSettings(
         const std::string& nameValue,
-        const int32_t& dimensionValue,
+        const uint32_t& dimensionValue,
         const std::shared_ptr<AttributeLayerSettings>& settingsValue
     ) :
         name(nameValue),
@@ -39,14 +39,14 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         name = stream.readString().value_or("");
-        dimension = stream.readVarInt().value_or(0);
+        dimension = stream.readUnsignedVarInt().value_or(0);
         settings = std::make_shared<AttributeLayerSettings>();
         settings->read(stream);
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeString(name);
-		stream.writeVarInt(dimension);
+		stream.writeUnsignedVarInt(dimension);
 		settings->write(stream);
     }
 };

@@ -13,27 +13,33 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/PlayerAuthInputVehicleInfo.hpp>
 
 class PlayerAuthInputVehicleInfo {
 public:
-    glm::vec2 vehicleRotation;
-    int32_t predictedVehicleActorUniqueId;
+    float vehicleRotationX;
+    float vehicleRotationZ;
+    int64_t predictedVehicleActorUniqueId;
 
     PlayerAuthInputVehicleInfo() = default;
     explicit PlayerAuthInputVehicleInfo(
-        const glm::vec2& vehicleRotationValue,
-        const int32_t& predictedVehicleActorUniqueIdValue
+        const float& vehicleRotationXValue,
+        const float& vehicleRotationZValue,
+        const int64_t& predictedVehicleActorUniqueIdValue
     ) :
-        vehicleRotation(vehicleRotationValue),
+        vehicleRotationX(vehicleRotationXValue),
+        vehicleRotationZ(vehicleRotationZValue),
         predictedVehicleActorUniqueId(predictedVehicleActorUniqueIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        vehicleRotation = stream.readVec2().value_or(glm::vec2(0.0f));
-        predictedVehicleActorUniqueId = stream.readInt().value_or(0);
+        vehicleRotationX = stream.readFloat().value_or(0.0f);
+        vehicleRotationZ = stream.readFloat().value_or(0.0f);
+        predictedVehicleActorUniqueId = stream.readActorUniqueID().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVec2(vehicleRotation);
-        stream.writeInt(predictedVehicleActorUniqueId);
+		stream.writeFloat(vehicleRotationX);
+		stream.writeFloat(vehicleRotationZ);
+		stream.writeActorUniqueID(predictedVehicleActorUniqueId);
     }
 };

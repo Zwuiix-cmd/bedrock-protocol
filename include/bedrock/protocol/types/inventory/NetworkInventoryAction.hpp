@@ -19,7 +19,6 @@ class NetworkInventoryAction {
 public:
     enum class Source : int64_t {
         Container = 0,
-        Global = 1,
         World = 2,
         Creative = 3,
         Todo = 99999,
@@ -43,8 +42,8 @@ public:
     };
 
     Source sourceType;
-    std::optional<int32_t> windowId;
-    std::optional<int32_t> sourceFlags;
+    int32_t windowId;
+    uint32_t sourceFlags = 0;
     uint32_t inventorySlot;
     NetworkItemStack oldItem;
     NetworkItemStack newItem;
@@ -52,28 +51,59 @@ public:
     NetworkInventoryAction() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        stream.writeUnsignedVarInt(sourceType);
-        stream.writeUnsignedVarInt(inventorySlot);
-        stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
-        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
-        oldItem.write(stream);
-        newItem.write(stream);
+		sourceType = magic_enum::enum_cast<Source>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(Source::Container);
+		switch (sourceType) {
+			case Source::Container: {
+				windowId = stream.readVarInt().value_or(0);
+				break;
+			}
+			case Source::World: {
+				sourceFlags = stream.readUnsignedVarInt().value_or(0);
+				break;
+			}
+			case Source::Creative: {
+				break;
+			}
+			case Source::Todo: {
+				windowId = stream.readVarInt().value_or(0);
+				break;
+			}
+			default: {
+				throw std::exception{};
+			}
+		}
+		inventorySlot = stream.readUnsignedVarInt().value_or(0);
+		oldItem.read(stream);
+		newItem.read(stream);
+		return;
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(sourceType);
-        stream.writeUnsignedVarInt(inventorySlot);
-        stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
-        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
-        oldItem.write(stream);
-        newItem.write(stream);
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
+		switch (sourceType) {
+			case Source::Container: {
+				stream.writeVarInt(windowId);
+				break;
+			}
+			case Source::World: {
+				stream.writeUnsignedVarInt(sourceFlags);
+				break;
+			}
+			case Source::Creative: {
+				break;
+			}
+			case Source::Todo: {
+				stream.writeVarInt(windowId);
+				break;
+			}
+			default: {
+				throw std::exception{};
+			}
+		}
+		stream.writeUnsignedVarInt(inventorySlot);
+		oldItem.write(stream);
+		newItem.write(stream);
     }
 };

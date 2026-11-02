@@ -17,7 +17,7 @@
 
 class CraftRecipeOptionalStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 13;
+    static constexpr int64_t ID = 15;
 
     int32_t recipeId;
     int32_t filterStringIndex;

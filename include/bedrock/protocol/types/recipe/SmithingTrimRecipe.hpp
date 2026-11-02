@@ -14,8 +14,9 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
+#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 
-class SmithingTrimRecipe {
+class SmithingTrimRecipe : public RecipeWithTypeId {
 public:
     std::string recipeId;
     std::shared_ptr<RecipeIngredient> template_;
@@ -25,7 +26,9 @@ public:
     int32_t recipeNetId;
 
     SmithingTrimRecipe() = default;
+    virtual ~SmithingTrimRecipe() = default;
     explicit SmithingTrimRecipe(
+        const int32_t& typeIdValue,
         const std::string& recipeIdValue,
         const std::shared_ptr<RecipeIngredient>& template_Value,
         const std::shared_ptr<RecipeIngredient>& inputValue,
@@ -33,14 +36,39 @@ public:
         const std::string& blockNameValue,
         const int32_t& recipeNetIdValue
     ) :
+        RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
         template_(template_Value),
         input(inputValue),
         addition(additionValue),
         blockName(blockNameValue),
-        recipeNetId(recipeNetIdValue) {}
+        recipeNetId(recipeNetIdValue) {
+		(void)0;
+    }
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
+    static std::shared_ptr<SmithingTrimRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
+		auto recipeId = stream.readString().value_or("");
+		auto template_ = ([&]() {
+		    auto value = std::make_shared<RecipeIngredient>();
+		    value->read(stream);
+		    return value;
+		}());
+		auto input = ([&]() {
+		    auto value = std::make_shared<RecipeIngredient>();
+		    value->read(stream);
+		    return value;
+		}());
+		auto addition = ([&]() {
+		    auto value = std::make_shared<RecipeIngredient>();
+		    value->read(stream);
+		    return value;
+		}());
+		auto blockName = stream.readString().value_or("");
+		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
+		return std::make_shared<SmithingTrimRecipe>(typeId, recipeId, template_, input, addition, blockName, recipeNetId);
+    }
+
+    void read(ReadOnlyBinaryStream& stream) override {
         recipeId = stream.readString().value_or("");
         blockName = stream.readString().value_or("");
         template_ = std::make_shared<RecipeIngredient>();
@@ -52,7 +80,7 @@ public:
         recipeNetId = stream.readInt().value_or(0);
     }
 
-    virtual void write(BinaryStream& stream) const {
+    void write(BinaryStream& stream) const override {
 		stream.writeString(recipeId);
 		if (template_) template_->write(stream);
 		if (input) input->write(stream);

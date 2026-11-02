@@ -18,8 +18,6 @@
 #include <bedrock/protocol/types/skin/SkinAnimation.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
-#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
-#include <bedrock/protocol/types/skin/SkinArmSizeType.hpp>
 
 class ClientDataToSkinDataHelper {
 public:

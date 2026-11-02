@@ -28,17 +28,21 @@ public:
 		value = valueValue;
     }
 
-    static std::shared_ptr<IntGameRule> decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable) {
-		return std::make_shared<IntGameRule>(stream.readUnsignedInt().value_or(0), isPlayerModifiable);
+    static std::shared_ptr<IntGameRule> decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
+		return std::make_shared<IntGameRule>((isStartGame ? stream.readUnsignedVarInt().value_or(0) : stream.readUnsignedInt().value_or(0)), isPlayerModifiable);
     }
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        value = stream.readUnsignedInt().value_or(0);
+        value = stream.readUnsignedVarInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
-		stream.writeUnsignedInt(value);
+    void write(BinaryStream& stream, const bool& isStartGame) const override {
+		if (isStartGame) {
+			stream.writeUnsignedVarInt(value);
+		} else {
+			stream.writeUnsignedInt(value);
+		}
     }
 };

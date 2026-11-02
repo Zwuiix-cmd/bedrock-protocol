@@ -13,41 +13,28 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 
 class RecipeUnlockingRequirement {
 public:
-    RecipeUnlockingContext unlockingContext;
     std::optional<std::vector<std::shared_ptr<RecipeIngredient>>> unlockingIngredients;
 
     RecipeUnlockingRequirement() = default;
-    explicit RecipeUnlockingRequirement(
-        const RecipeUnlockingContext& unlockingContextValue,
-        const std::optional<std::vector<std::shared_ptr<RecipeIngredient>>>& unlockingIngredientsValue
-    ) :
-        unlockingContext(unlockingContextValue),
-        unlockingIngredients(unlockingIngredientsValue) {
-		if (((unlockingContextValue != magic_enum::enum_integer(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
-			throw std::exception{};
-		}
-    }
+    explicit RecipeUnlockingRequirement(const std::optional<std::vector<std::shared_ptr<RecipeIngredient>>>& unlockingIngredientsValue) : unlockingIngredients(unlockingIngredientsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        unlockingContext = magic_enum::enum_cast<RecipeUnlockingContext>(
-            stream.readVarInt().value_or(0)
-        ).value_or(RecipeUnlockingContext::None);
         unlockingIngredients = stream.readOptional([&]() {
             return stream.readObjectList<RecipeIngredient>();
         });
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(magic_enum::enum_integer(unlockingContext));
-        stream.writeOptional(unlockingIngredients, [&](const auto& optionalValue) {
-            stream.writeList(optionalValue, [&](const auto& item) {
-                item->write(stream);
-            });
-        });
+		stream.writeBool((!unlockingIngredients));
+		if (unlockingIngredients.has_value()) {
+			stream.writeUnsignedVarInt(unlockingIngredients.value().size());
+			for (const auto& ingredient : unlockingIngredients.value()) {
+				if (magic_enum::enum_integer(ingredient)) magic_enum::enum_integer(ingredient)->write(stream);
+			}
+		}
     }
 };

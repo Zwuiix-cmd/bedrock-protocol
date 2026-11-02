@@ -18,7 +18,6 @@
 #include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeAutoStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeOptionalStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeStackRequestAction.hpp>
-#include <bedrock/protocol/types/inventory/stackrequest/CraftReservedStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CraftingConsumeInputStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CraftingCreateSpecificResultStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CreativeCreateStackRequestAction.hpp>
@@ -66,14 +65,15 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeInt(requestId);
-		stream.writeList(actions, [&](const auto& action) {
-					stream.writeUnsignedVarInt(action->getTypeId());
-					stream.writeUnsignedByte(ItemStackRequestActionType::INNER_TYPES[action->getTypeId()]);
-					action->write(stream);
-				});
-		stream.writeList(filterStrings, [&](const auto& value) {
-			stream.writeString(value);
-		});
+		stream.writeUnsignedVarInt(actions.size());
+		for (const auto& action : actions) {
+			stream.writeUnsignedByte(action->getTypeId());
+			action->write(stream);
+		}
+		stream.writeUnsignedVarInt(filterStrings.size());
+		for (const auto& string : filterStrings) {
+			stream.writeString(string);
+		}
 		stream.writeInt(filterStringCause);
     }
 };

@@ -16,15 +16,11 @@
 
 class SubChunkPacketHeightMapInfo {
 public:
-    static constexpr int64_t ROW_LENGTH = 16;
-
-    static constexpr auto TOTAL_LENGTH = (ROW_LENGTH + 2);
-
     std::vector<int32_t> heights;
 
     SubChunkPacketHeightMapInfo() = default;
     explicit SubChunkPacketHeightMapInfo(const std::vector<int32_t>& heightsValue) : heights(heightsValue) {
-		if ((heightsValue.size() != TOTAL_LENGTH)) {
+		if ((heightsValue.size() != 256)) {
 			throw std::exception{};
 		}
     }

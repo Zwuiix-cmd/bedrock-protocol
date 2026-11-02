@@ -14,96 +14,76 @@
 #include <vector>
 #include <bedrock/protocol/Packet.hpp>
 #include <bedrock/protocol/types/ActorEvent.hpp>
-#include <bedrock/protocol/types/AttributeEnvironmentPayloadType.hpp>
+#include <bedrock/protocol/types/AgentActionType.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightType.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncType.hpp>
 #include <bedrock/protocol/types/entity/AttributeModifierOperation.hpp>
 #include <bedrock/protocol/types/entity/AttributeModifierTargetOperand.hpp>
 #include <bedrock/protocol/types/AttributeValueColorType.hpp>
 #include <bedrock/protocol/types/AttributeValueType.hpp>
+#include <bedrock/protocol/types/BossBarColor.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistPresetsPacketOperation.hpp>
 #include <bedrock/protocol/types/ChatRestrictionLevel.hpp>
 #include <bedrock/protocol/types/command/CommandParameterTypes.hpp>
+#include <bedrock/protocol/types/CompressionAlgorithm.hpp>
 #include <bedrock/protocol/types/inventory/ContainerIds.hpp>
 #include <bedrock/protocol/types/inventory/ContainerUIIds.hpp>
 #include <bedrock/protocol/types/recipe/CraftingRecipeBlockName.hpp>
-#include <bedrock/protocol/types/ddui/DataStoreOperationType.hpp>
-#include <bedrock/protocol/types/ddui/update/DataStoreUpdateValueType.hpp>
+#include <bedrock/protocol/types/DataStoreType.hpp>
+#include <bedrock/protocol/types/DataStoreValueType.hpp>
 #include <bedrock/protocol/types/BuildPlatform.hpp>
 #include <bedrock/protocol/types/DimensionIds.hpp>
 #include <bedrock/protocol/types/DimensionNameIds.hpp>
-#include <bedrock/protocol/types/cereal/DynamicValueType.hpp>
-#include <bedrock/protocol/types/EditorLevelMigrationVersion.hpp>
 #include <bedrock/protocol/types/EditorWorldType.hpp>
 #include <bedrock/protocol/types/EducationEditionOffer.hpp>
 #include <bedrock/protocol/types/entity/EntityIds.hpp>
 #include <bedrock/protocol/types/entity/EntityMetadataFlags.hpp>
 #include <bedrock/protocol/types/entity/EntityMetadataProperties.hpp>
 #include <bedrock/protocol/types/recipe/FurnaceRecipeBlockName.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/GameRuleType.hpp>
 #include <bedrock/protocol/types/GeneratorType.hpp>
+#include <bedrock/protocol/types/InputMode.hpp>
+#include <bedrock/protocol/types/InteractionMode.hpp>
+#include <bedrock/protocol/types/recipe/ItemDescriptorType.hpp>
+#include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestActionType.hpp>
 #include <bedrock/protocol/types/LevelEvent.hpp>
 #include <bedrock/protocol/types/LevelSoundEvent.hpp>
 #include <bedrock/protocol/types/MemoryCategory.hpp>
 #include <bedrock/protocol/types/MultiplayerGameVisibility.hpp>
 #include <bedrock/protocol/types/ParticleIds.hpp>
+#include <bedrock/protocol/types/PlayMode.hpp>
 #include <bedrock/protocol/types/PlayerAction.hpp>
 #include <bedrock/protocol/types/entity/PlayerMetadataFlags.hpp>
+#include <bedrock/protocol/types/PlayerPermissions.hpp>
+#include <bedrock/protocol/types/resourcepacks/ResourcePackType.hpp>
 #include <bedrock/protocol/types/ScreenCloseReason.hpp>
 #include <bedrock/protocol/types/SubChunkPacketHeightMapType.hpp>
 #include <bedrock/protocol/types/SubChunkRequestResult.hpp>
 #include <bedrock/protocol/types/SyncWorldClocksType.hpp>
+#include <bedrock/protocol/types/TextureShiftAction.hpp>
 #include <bedrock/protocol/types/UIProfile.hpp>
 #include <bedrock/protocol/types/inventory/WindowTypes.hpp>
-#include <bedrock/protocol/types/AgentActionType.hpp>
 #include <bedrock/protocol/types/ArmorSlot.hpp>
-#include <bedrock/protocol/types/sound/AudioContentPlaybackType.hpp>
 #include <bedrock/protocol/types/login/AuthenticationType.hpp>
-#include <bedrock/protocol/types/BossBarColor.hpp>
-#include <bedrock/protocol/types/BossBarOverlay.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistActionType.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
-#include <bedrock/protocol/types/command/CommandPermissions.hpp>
-#include <bedrock/protocol/types/CompressionAlgorithm.hpp>
 #include <bedrock/protocol/types/ControlScheme.hpp>
-#include <bedrock/protocol/types/inventory/CursorItemDragState.hpp>
-#include <bedrock/protocol/types/EmoteType.hpp>
-#include <bedrock/protocol/types/furnace/FurnaceLayout.hpp>
-#include <bedrock/protocol/types/furnace/FurnaceLeftTab.hpp>
-#include <bedrock/protocol/types/furnace/FurnaceType.hpp>
-#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/GraphicsMode.hpp>
 #include <bedrock/protocol/types/GraphicsOverrideParameterType.hpp>
-#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/hud/HudElement.hpp>
 #include <bedrock/protocol/types/hud/HudVisibility.hpp>
-#include <bedrock/protocol/types/InputMode.hpp>
-#include <bedrock/protocol/types/InteractionMode.hpp>
 #include <bedrock/protocol/types/inventory/InventoryLayout.hpp>
 #include <bedrock/protocol/types/inventory/InventoryLeftTab.hpp>
 #include <bedrock/protocol/types/inventory/InventoryRightTab.hpp>
-#include <bedrock/protocol/types/recipe/ItemDescriptorType.hpp>
 #include <bedrock/protocol/types/hud/LoadingScreenType.hpp>
-#include <bedrock/protocol/types/MatchmakingState.hpp>
 #include <bedrock/protocol/types/MovementEffectType.hpp>
-#include <bedrock/protocol/types/NoiseAlignmentType.hpp>
 #include <bedrock/protocol/types/OverrideUpdateType.hpp>
 #include <bedrock/protocol/types/PackSettingType.hpp>
-#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
-#include <bedrock/protocol/types/PlayMode.hpp>
 #include <bedrock/protocol/types/PlayerLocationType.hpp>
-#include <bedrock/protocol/types/PlayerPermissions.hpp>
 #include <bedrock/protocol/types/inventory/PredictedResult.hpp>
-#include <bedrock/protocol/types/shape/PrimitiveShapeType.hpp>
-#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
-#include <bedrock/protocol/types/ResourcePackClientResponseStatus.hpp>
-#include <bedrock/protocol/types/resourcepacks/ResourcePackType.hpp>
-#include <bedrock/protocol/types/ScorePacketEntryAction.hpp>
+#include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
-#include <bedrock/protocol/types/skin/SkinArmSizeType.hpp>
-#include <bedrock/protocol/types/sound/SoundDataEventType.hpp>
-#include <bedrock/protocol/types/TextureShiftAction.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 
@@ -116,18 +96,26 @@ public:
     }
 
 public:
+    enum class Flag : int64_t {
+        HasX = 1,
+        HasY = 2,
+        HasZ = 4,
+        HasPitch = 8,
+        HasYaw = 16,
+        HasHeadYaw = 32,
+        Ground = 64,
+        Teleport = 128,
+        ForceMoveLocalEntity = 256,
+    };
+
     uint64_t actorRuntimeId;
-    std::optional<float> xPos;
-    std::optional<float> yPos;
-    std::optional<float> zPos;
-    std::optional<float> pitch;
-    std::optional<float> yaw;
-    std::optional<float> headYaw;
-    bool onGround = false;
-    bool teleport = false;
-    bool forceMoveLocalEntity = false;
-    bool forceCompletion = false;
-    uint64_t ticks;
+    Flag flags;
+    float xPos = 0;
+    float yPos = 0;
+    float zPos = 0;
+    float pitch = 0.0f;
+    float yaw = 0.0f;
+    float headYaw = 0.0f;
 
 public:
     std::string_view getName() override {
@@ -136,79 +124,79 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		xPos = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		flags = magic_enum::enum_cast<Flag>(
+			stream.readUnsignedShort().value_or(0)
+		).value_or(Flag{});
+		xPos = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasX) != 0)) {
 				return stream.readFloat().value_or(0.0f);
-			});
+			}
+			return 0;
 		}());
-		yPos = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		yPos = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasY) != 0)) {
 				return stream.readFloat().value_or(0.0f);
-			});
+			}
+			return 0;
 		}());
-		zPos = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		zPos = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasZ) != 0)) {
 				return stream.readFloat().value_or(0.0f);
-			});
+			}
+			return 0;
 		}());
-		pitch = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		pitch = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasPitch) != 0)) {
 				return stream.readRotationByte().value_or(0);
-			});
+			}
+			return 0;
 		}());
-		yaw = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		yaw = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasYaw) != 0)) {
 				return stream.readRotationByte().value_or(0);
-			});
+			}
+			return 0;
 		}());
-		headYaw = ([&]() -> std::optional<float> {
-			return stream.readOptional([&]() {
+		headYaw = ([&]() -> float {
+			if (((magic_enum::enum_integer(flags) & Flag::HasHeadYaw) != 0)) {
 				return stream.readRotationByte().value_or(0);
-			});
+			}
+			return 0;
 		}());
-		onGround = stream.readBool().value_or(false);
-		teleport = stream.readBool().value_or(false);
-		forceMoveLocalEntity = stream.readBool().value_or(false);
-		forceCompletion = stream.readBool().value_or(false);
-		ticks = stream.readUnsignedVarLong().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
+		stream.writeUnsignedShort(magic_enum::enum_integer(flags));
 		([&]() {
-			stream.writeOptional(xPos, [&](const auto& value) {
-				stream.writeFloat(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasX) != 0)) {
+				stream.writeFloat(xPos);
+			}
 		}());
 		([&]() {
-			stream.writeOptional(yPos, [&](const auto& value) {
-				stream.writeFloat(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasY) != 0)) {
+				stream.writeFloat(yPos);
+			}
 		}());
 		([&]() {
-			stream.writeOptional(zPos, [&](const auto& value) {
-				stream.writeFloat(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasZ) != 0)) {
+				stream.writeFloat(zPos);
+			}
 		}());
 		([&]() {
-			stream.writeOptional(pitch, [&](const auto& value) {
-				stream.writeRotationByte(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasPitch) != 0)) {
+				stream.writeRotationByte(pitch);
+			}
 		}());
 		([&]() {
-			stream.writeOptional(yaw, [&](const auto& value) {
-				stream.writeRotationByte(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasYaw) != 0)) {
+				stream.writeRotationByte(yaw);
+			}
 		}());
 		([&]() {
-			stream.writeOptional(headYaw, [&](const auto& value) {
-				stream.writeRotationByte(value);
-			});
+			if (((magic_enum::enum_integer(flags) & Flag::HasHeadYaw) != 0)) {
+				stream.writeRotationByte(headYaw);
+			}
 		}());
-		stream.writeBool(onGround);
-		stream.writeBool(teleport);
-		stream.writeBool(forceMoveLocalEntity);
-		stream.writeBool(forceCompletion);
-		stream.writeUnsignedVarLong(ticks);
     }
 };

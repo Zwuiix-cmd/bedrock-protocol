@@ -47,20 +47,20 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         type = magic_enum::enum_cast<Type>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readUnsignedInt().value_or(0)
         ).value_or(Type::Head);
         frames = stream.readFloat().value_or(0.0f);
         expressionType = magic_enum::enum_cast<Type>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readUnsignedInt().value_or(0)
         ).value_or(Type::Head);
         image = std::make_shared<SkinImage>();
         image->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(type);
+        stream.writeUnsignedInt(type);
         stream.writeFloat(frames);
-        stream.writeUnsignedVarInt(expressionType);
+        stream.writeUnsignedInt(expressionType);
         image->write(stream);
     }
 };

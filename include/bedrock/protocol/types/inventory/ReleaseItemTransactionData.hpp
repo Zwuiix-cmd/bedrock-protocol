@@ -13,7 +13,6 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
@@ -30,7 +29,6 @@ public:
     int32_t hotbarSlot;
     NetworkItemStack itemInHand;
     glm::vec3 headPosition;
-    HandSlot hand;
 
     ReleaseItemTransactionData() = default;
     virtual ~ReleaseItemTransactionData() = default;
@@ -39,21 +37,17 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actionType = magic_enum::enum_cast<Action>(
-            stream.readVarInt().value_or(0)
+            stream.readUnsignedVarInt().value_or(0)
         ).value_or(Action::Release);
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         itemInHand.read(stream);
-        hand = magic_enum::enum_cast<HandSlot>(
-            stream.readVarInt().value_or(0)
-        ).value_or(HandSlot::Mainhand);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeVarInt(actionType);
+        stream.writeUnsignedVarInt(actionType);
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(headPosition);
         itemInHand.write(stream);
-        stream.writeVarInt(magic_enum::enum_integer(hand));
     }
 };

@@ -18,72 +18,42 @@ class GatheringJoinInfo {
 public:
     std::string experienceId;
     std::string experienceName;
-    std::optional<std::string> experienceWorldId;
-    std::optional<std::string> experienceWorldName;
+    std::string experienceWorldId;
+    std::string experienceWorldName;
     std::string creatorId;
-    std::optional<std::string> targetId;
-    std::optional<std::string> scenarioId;
-    std::optional<std::string> serverId;
+    std::string storeId;
 
     GatheringJoinInfo() = default;
     explicit GatheringJoinInfo(
         const std::string& experienceIdValue,
         const std::string& experienceNameValue,
-        const std::optional<std::string>& experienceWorldIdValue,
-        const std::optional<std::string>& experienceWorldNameValue,
+        const std::string& experienceWorldIdValue,
+        const std::string& experienceWorldNameValue,
         const std::string& creatorIdValue,
-        const std::optional<std::string>& targetIdValue,
-        const std::optional<std::string>& scenarioIdValue,
-        const std::optional<std::string>& serverIdValue
+        const std::string& storeIdValue
     ) :
         experienceId(experienceIdValue),
         experienceName(experienceNameValue),
         experienceWorldId(experienceWorldIdValue),
         experienceWorldName(experienceWorldNameValue),
         creatorId(creatorIdValue),
-        targetId(targetIdValue),
-        scenarioId(scenarioIdValue),
-        serverId(serverIdValue) {}
+        storeId(storeIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        experienceId = stream.readString().value_or("");
         experienceName = stream.readString().value_or("");
+        experienceWorldId = stream.readString().value_or("");
+        experienceWorldName = stream.readString().value_or("");
         creatorId = stream.readString().value_or("");
-        experienceId = stream.readUUID().value_or("");
-        experienceWorldId = stream.readOptional([&]() {
-            return stream.readUUID().value_or("");
-        });
-        experienceWorldName = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
-        targetId = stream.readOptional([&]() {
-            return stream.readUUID().value_or("");
-        });
-        scenarioId = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
-        serverId = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+        storeId = stream.readString().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUUID(experienceId);
+		stream.writeString(experienceId);
 		stream.writeString(experienceName);
-		stream.writeOptional(experienceWorldId, [&](const auto& value) {
-			stream.writeUUID(value);
-		});
-		stream.writeOptional(experienceWorldName, [&](const auto& value) {
-			stream.writeString(value);
-		});
+		stream.writeString(experienceWorldId);
+		stream.writeString(experienceWorldName);
 		stream.writeString(creatorId);
-		stream.writeOptional(targetId, [&](const auto& value) {
-			stream.writeUUID(value);
-		});
-		stream.writeOptional(scenarioId, [&](const auto& value) {
-			stream.writeString(value);
-		});
-		stream.writeOptional(serverId, [&](const auto& value) {
-			stream.writeString(value);
-		});
+		stream.writeString(storeId);
     }
 };

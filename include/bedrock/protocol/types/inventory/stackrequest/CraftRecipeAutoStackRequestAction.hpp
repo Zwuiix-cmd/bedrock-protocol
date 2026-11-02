@@ -18,10 +18,11 @@
 
 class CraftRecipeAutoStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 11;
+    static constexpr int64_t ID = 13;
 
     int32_t recipeId;
     uint8_t repetitions;
+    uint8_t repetitions2;
     std::vector<std::shared_ptr<RecipeIngredient>> ingredients;
 
     CraftRecipeAutoStackRequestAction() = default;
@@ -29,25 +30,30 @@ public:
     explicit CraftRecipeAutoStackRequestAction(
         const int32_t& recipeIdValue,
         const uint8_t& repetitionsValue,
+        const uint8_t& repetitions2Value,
         const std::vector<std::shared_ptr<RecipeIngredient>>& ingredientsValue
     ) :
         recipeId(recipeIdValue),
         repetitions(repetitionsValue),
+        repetitions2(repetitions2Value),
         ingredients(ingredientsValue) {}
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
         repetitions = stream.readUnsignedByte().value_or(0);
+        repetitions2 = stream.readUnsignedByte().value_or(0);
         recipeId = stream.readInt().value_or(0);
         ingredients = stream.readObjectList<RecipeIngredient>();
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeUnsignedByte(repetitions);
-        stream.writeInt(recipeId);
-        stream.writeList(ingredients, [&](const auto& item) {
-            item->write(stream);
-        });
+		stream.writeUnsignedVarInt(recipeId);
+		stream.writeUnsignedByte(repetitions);
+		stream.writeUnsignedByte(repetitions2);
+		stream.writeUnsignedByte(ingredients.size());
+		for (const auto& ingredient : ingredients) {
+			if (magic_enum::enum_integer(ingredient)) magic_enum::enum_integer(ingredient)->write(stream);
+		}
     }
 };

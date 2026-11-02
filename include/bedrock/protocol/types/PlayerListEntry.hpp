@@ -18,13 +18,11 @@
 
 class PlayerListEntry {
 public:
-    uint32_t type;
     std::string uuid;
     int64_t actorUniqueId;
     std::string username;
     std::shared_ptr<SkinData> skinData;
     std::string xboxUserId;
-    std::string playFabId;
     std::string platformChatId;
     BuildPlatform buildPlatform = BuildPlatform::Unknown;
     bool isTeacher = false;
@@ -35,11 +33,9 @@ public:
     PlayerListEntry() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = stream.readUnsignedVarInt().value_or(0);
         actorUniqueId = stream.readActorUniqueID().value_or(0);
         username = stream.readString().value_or("");
         xboxUserId = stream.readString().value_or("");
-        playFabId = stream.readString().value_or("");
         platformChatId = stream.readString().value_or("");
         buildPlatform = magic_enum::enum_cast<BuildPlatform>(
             stream.readInt().value_or(0)
@@ -56,11 +52,9 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(type);
         stream.writeActorUniqueID(actorUniqueId);
         stream.writeString(username);
         stream.writeString(xboxUserId);
-        stream.writeString(playFabId);
         stream.writeString(platformChatId);
         stream.writeInt(buildPlatform);
         stream.writeBool(isTeacher);

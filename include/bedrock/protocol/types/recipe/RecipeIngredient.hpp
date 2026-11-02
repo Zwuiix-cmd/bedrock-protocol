@@ -13,35 +13,27 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <variant>
-#include <bedrock/protocol/types/recipe/MolangItemDescriptor.hpp>
-#include <bedrock/protocol/types/recipe/StringIdMetaItemDescriptor.hpp>
-#include <bedrock/protocol/types/recipe/TagItemDescriptor.hpp>
+#include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
 
 class RecipeIngredient {
 public:
-    std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>> descriptor;
-    uint16_t count;
+    std::optional<std::shared_ptr<ItemDescriptor>> descriptor;
+    int32_t count;
 
     RecipeIngredient() = default;
-    explicit RecipeIngredient(
-        const std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>& descriptorValue,
-        const uint16_t& countValue
-    ) :
-        descriptor(descriptorValue),
-        count(countValue) {}
+    explicit RecipeIngredient(const std::optional<std::shared_ptr<ItemDescriptor>>& descriptorValue, const int32_t& countValue) : descriptor(descriptorValue), count(countValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        count = stream.readUnsignedShort().value_or(0);
-        descriptor = ([&]() { auto value = stream.readOptional([&]() { return ([&]() {
-            auto value = std::make_shared<StringIdMetaItemDescriptor>();
-            value->read(stream);
-            return value;
-        }()); }); return value ? std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{*value} : std::variant<std::monostate, std::shared_ptr<StringIdMetaItemDescriptor>, std::shared_ptr<TagItemDescriptor>, std::shared_ptr<MolangItemDescriptor>>{std::monostate{}}; }());
+        count = stream.readVarInt().value_or(0);
+        descriptor = stream.readOptional([&]() {
+            return ItemDescriptor::decode(stream);
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedShort(count);
-        std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::shared_ptr<StringIdMetaItemDescriptor>>) { alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<TagItemDescriptor>>) { alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<MolangItemDescriptor>>) { alternative->write(stream); } }, descriptor);
+        stream.writeVarInt(count);
+        stream.writeOptional(descriptor, [&](const auto& optionalValue) {
+            optionalValue->write(stream);
+        });
     }
 };

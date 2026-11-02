@@ -17,24 +17,24 @@
 
 class CameraProgressOption {
 public:
+    std::string easeType;
     float value;
     float time;
-    CameraSetInstructionEaseType easeType;
 
     CameraProgressOption() = default;
-    explicit CameraProgressOption(const float& valueValue, const float& timeValue, const CameraSetInstructionEaseType& easeTypeValue) : value(valueValue), time(timeValue), easeType(easeTypeValue) {}
+    explicit CameraProgressOption(const float& valueValue, const float& timeValue, const std::string& easeTypeValue) : value(valueValue), time(timeValue), easeType(easeTypeValue) {
+
+    }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
-            stream.readVarInt().value_or(0)
-        ).value_or(CameraSetInstructionEaseType::Linear);
+        easeType = stream.readString().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeFloat(value);
 		stream.writeFloat(time);
-		stream.writeString(magic_enum::enum_name(easeType));
+		stream.writeString(easeType);
     }
 };

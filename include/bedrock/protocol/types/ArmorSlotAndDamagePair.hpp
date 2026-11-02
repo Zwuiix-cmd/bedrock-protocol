@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(magic_enum::enum_integer(slot));
+		stream.writeUnsignedByte(magic_enum::enum_integer(slot));
 		stream.writeUnsignedShort(damage);
     }
 };

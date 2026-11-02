@@ -17,7 +17,7 @@
 
 class CraftRecipeStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 10;
+    static constexpr int64_t ID = 12;
 
     int32_t recipeId;
     uint8_t repetitions;

@@ -17,36 +17,36 @@
 
 class CameraFovInstruction {
 public:
+    std::string easeType;
     float fieldOfView;
     float easeTime;
-    CameraSetInstructionEaseType easeType;
     bool clear;
 
     CameraFovInstruction() = default;
     explicit CameraFovInstruction(
         const float& fieldOfViewValue,
         const float& easeTimeValue,
-        const CameraSetInstructionEaseType& easeTypeValue,
+        const std::string& easeTypeValue,
         const bool& clearValue
     ) :
         fieldOfView(fieldOfViewValue),
         easeTime(easeTimeValue),
         easeType(easeTypeValue),
-        clear(clearValue) {}
+        clear(clearValue) {
+
+    }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         fieldOfView = stream.readFloat().value_or(0.0f);
         easeTime = stream.readFloat().value_or(0.0f);
+        easeType = stream.readString().value_or("");
         clear = stream.readBool().value_or(false);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
-            stream.readVarInt().value_or(0)
-        ).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeFloat(fieldOfView);
 		stream.writeFloat(easeTime);
-		stream.writeString(magic_enum::enum_name(easeType));
+		stream.writeString(easeType);
 		stream.writeBool(clear);
     }
 };

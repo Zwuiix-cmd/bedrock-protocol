@@ -32,15 +32,16 @@ public:
         outputs(outputsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        inputItemId = stream.readInt().value_or(0);
-        inputItemMeta = stream.readInt().value_or(0);
+        inputItemId = stream.readVarInt().value_or(0);
+        inputItemMeta = stream.readVarInt().value_or(0);
         outputs = stream.readObjectList<MaterialReducerRecipeOutput>();
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(((inputItemId << 16) | inputItemMeta));
-		stream.writeList(outputs, [&](const auto& output) {
-			return output->write(stream);
-		});
+        stream.writeVarInt(inputItemId);
+        stream.writeVarInt(inputItemMeta);
+        stream.writeList(outputs, [&](const auto& item) {
+            item->write(stream);
+        });
     }
 };

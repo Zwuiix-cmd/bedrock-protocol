@@ -13,25 +13,22 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraSetInstructionEase {
 public:
-    CameraSetInstructionEaseType type;
+    uint8_t type;
     float duration;
 
     CameraSetInstructionEase() = default;
-    explicit CameraSetInstructionEase(const CameraSetInstructionEaseType& typeValue, const float& durationValue) : type(typeValue), duration(durationValue) {}
+    explicit CameraSetInstructionEase(const uint8_t& typeValue, const float& durationValue) : type(typeValue), duration(durationValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        type = stream.readUnsignedByte().value_or(0);
         duration = stream.readFloat().value_or(0.0f);
-        type = magic_enum::enum_cast<CameraSetInstructionEaseType>(
-            stream.readVarInt().value_or(0)
-        ).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(magic_enum::enum_integer(type));
+		stream.writeUnsignedByte(type);
 		stream.writeFloat(duration);
     }
 };

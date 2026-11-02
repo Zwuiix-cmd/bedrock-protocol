@@ -174,6 +174,7 @@ private function propertyEnumType(array $property, array $declaration): ?string
             'scheme',
             'permission',
             'permissions',
+            'flag',
             'effect',
             'target',
         ];
@@ -188,19 +189,9 @@ private function propertyEnumType(array $property, array $declaration): ?string
 
 private function stringEnumName(array $property, array $declaration): ?string
     {
-        $propertyName = strtolower((string) ($property['name'] ?? ''));
-        if ($propertyName === '') {
-            return null;
-        }
-        $prefix = strtoupper($propertyName) . '_';
-        $cases = [];
-        foreach ($declaration['constants'] ?? [] as $constant) {
-            $constantName = (string) ($constant['name'] ?? '');
-            if (str_starts_with($constantName, $prefix) && is_string($constant['value'] ?? null)) {
-                $cases[] = $constantName;
-            }
-        }
-        return $cases === [] ? null : CPPName::enumCase($propertyName);
+        return $this->stringEnumCases($property, $declaration) === []
+            ? null
+            : $this->stringEnumTypeName($property);
     }
 
 private function stringEnumInfo(Node $node, array $declaration): ?array
@@ -216,7 +207,7 @@ private function stringEnumInfo(Node $node, array $declaration): ?array
                         'owner' => CPPName::type((string) $declaration['name']),
                         'property' => strtolower($name),
                         'enum' => (string) $this->stringEnumName($property, $declaration),
-                        'first' => CPPName::identifier((string) ($this->stringEnumValues($property, $declaration)[0] ?? '')),
+                        'first' => $this->stringEnumFirstCase($property, $declaration),
                     ];
                 }
             }
@@ -230,7 +221,7 @@ private function stringEnumInfo(Node $node, array $declaration): ?array
                     'owner' => CPPName::type($objectType),
                     'property' => strtolower($name),
                     'enum' => (string) $this->stringEnumName($property, $referenced),
-                    'first' => CPPName::identifier((string) ($this->stringEnumValues($property, $referenced)[0] ?? '')),
+                    'first' => $this->stringEnumFirstCase($property, $referenced),
                 ];
             }
         }
@@ -254,7 +245,7 @@ private function stringEnumToString(Node $node, string $value, array $declaratio
 private function stringEnumFromStringForProperty(array $property, string $value, array $declaration): string
     {
         $enum = $this->stringEnumName($property, $declaration);
-        $first = CPPName::identifier((string) ($this->stringEnumValues($property, $declaration)[0] ?? ''));
+        $first = $this->stringEnumFirstCase($property, $declaration);
         return 'magic_enum::enum_cast<' . CPPName::type((string) $declaration['name']) . '::' . $enum . '>(std::string_view(' . $value . ')).value_or(' . CPPName::type((string) $declaration['name']) . '::' . $enum . '::' . $first . ')';
     }
 
@@ -265,14 +256,66 @@ private function stringEnumToStringForProperty(array $property, string $value, a
 
 private function stringEnumValues(array $property, array $declaration): array
     {
-        $prefix = strtoupper((string) ($property['name'] ?? '')) . '_';
-        $values = [];
+        return array_values($this->stringEnumCases($property, $declaration));
+    }
+
+    private function stringEnumFirstCase(array $property, array $declaration): string
+    {
+        $cases = $this->stringEnumCases($property, $declaration);
+        return $cases === [] ? 'Value' : CPPName::enumCase((string) array_key_first($cases));
+    }
+
+    private function stringEnumTypeName(array $property): string
+    {
+        $name = (string) ($property['name'] ?? 'value');
+        return str_contains($name, '_')
+            ? CPPName::enumCase($name)
+            : CPPName::identifier(ucfirst($name));
+    }
+
+    /** @return array<string, string> */
+    private function stringEnumCases(array $property, array $declaration): array
+    {
+        $groups = [];
         foreach ($declaration['constants'] ?? [] as $constant) {
-            if (str_starts_with((string) ($constant['name'] ?? ''), $prefix) && is_string($constant['value'] ?? null)) {
-                $values[] = (string) $constant['value'];
+            if (!is_string($constant['value'] ?? null)) {
+                continue;
+            }
+            $constantName = (string) ($constant['name'] ?? '');
+            if (!str_contains($constantName, '_')) {
+                continue;
+            }
+            $parts = explode('_', $constantName);
+            for ($index = 1; $index < count($parts); ++$index) {
+                $prefix = implode('_', array_slice($parts, 0, $index));
+                $case = implode('_', array_slice($parts, $index));
+                $groups[$prefix][$case] = $constant['value'];
             }
         }
-        return $values;
+        if ($groups === []) {
+            return [];
+        }
+        $propertyName = strtolower((string) ($property['name'] ?? ''));
+        $bestPrefix = null;
+        foreach (array_keys($groups) as $prefix) {
+            if ($this->enumPrefixMatchesProperty($prefix, $propertyName)
+                && ($bestPrefix === null || strlen($prefix) > strlen($bestPrefix))) {
+                $bestPrefix = $prefix;
+            }
+        }
+        if ($bestPrefix !== null) {
+            return $groups[$bestPrefix];
+        }
+        if (preg_match('/^(?:type|operation|status|state|mode|value|flag|reason|category)$/i', $propertyName) === 1) {
+            $best = null;
+            foreach ($groups as $cases) {
+                if ($best === null || count($cases) > count($best)) {
+                    $best = $cases;
+                }
+            }
+            return $best ?? [];
+        }
+        return [];
     }
 
 private function classConstantType(Node $expression): ?string

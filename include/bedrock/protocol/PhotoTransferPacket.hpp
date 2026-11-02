@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <limits>
@@ -116,11 +117,14 @@ public:
     }
 
 public:
+    enum class PhotoName : uint8_t {
+        Extension = 0,
+    };
+
     static constexpr int64_t PHOTO_NAME_EXTENSION_LENGTH = 5;
     static constexpr int64_t MAX_PHOTO_DATA_SIZE = 20971520;
 
-    static constexpr std::string_view PHOTO_NAME_EXTENSION = ".jpeg";
-    std::string photoName;
+    PhotoName photoName;
     std::string photoData;
     std::string bookId;
     uint8_t type;
@@ -134,7 +138,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        photoName = stream.readString().value_or("");
+        photoName = magic_enum::enum_cast<PhotoTransferPacket::PhotoName>(std::string_view(stream.readString().value_or(""))).value_or(PhotoTransferPacket::PhotoName::Extension);
         photoData = stream.readByteArray(0).value_or("");
         bookId = stream.readString().value_or("");
         type = stream.readUnsignedByte().value_or(0);
@@ -144,12 +148,25 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeString(photoName);
+		stream.writeString(magic_enum::enum_name(photoName));
 		stream.writeString(photoData);
 		stream.writeString(bookId);
-		stream.writeUnsignedByte(type);
+		stream.writeUnsignedByte(magic_enum::enum_name(type));
 		stream.writeUnsignedByte(sourceType);
 		stream.writeLong(ownerActorUniqueId);
 		stream.writeString(newPhotoName);
     }
 };
+
+inline constexpr std::array<std::string_view, 1> PhotoTransferPacketPhotoNameNames = {
+    ".jpeg",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<PhotoTransferPacket::PhotoName>(PhotoTransferPacket::PhotoName value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < PhotoTransferPacketPhotoNameNames.size() ? customize_t{PhotoTransferPacketPhotoNameNames[index]} : invalid_tag;
+}
+
+}

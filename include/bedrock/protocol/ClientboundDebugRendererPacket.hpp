@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <limits>
@@ -119,8 +120,8 @@ public:
 
 public:
     enum class Type : uint8_t {
-        cleardebugmarkers = 0,
-        adddebugmarkercube = 1,
+        Clear = 0,
+        AddCube = 1,
     };
 
     Type type;
@@ -132,7 +133,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<ClientboundDebugRendererPacket::Type>(std::string_view(stream.readString().value_or(""))).value_or(ClientboundDebugRendererPacket::Type::cleardebugmarkers);
+		type = magic_enum::enum_cast<ClientboundDebugRendererPacket::Type>(std::string_view(stream.readString().value_or(""))).value_or(ClientboundDebugRendererPacket::Type::Clear);
 		data = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<DebugMarkerData>();
 		    value->read(stream);
@@ -147,3 +148,17 @@ public:
 		});
     }
 };
+
+inline constexpr std::array<std::string_view, 2> ClientboundDebugRendererPacketTypeNames = {
+    "cleardebugmarkers",
+    "adddebugmarkercube",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<ClientboundDebugRendererPacket::Type>(ClientboundDebugRendererPacket::Type value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < ClientboundDebugRendererPacketTypeNames.size() ? customize_t{ClientboundDebugRendererPacketTypeNames[index]} : invalid_tag;
+}
+
+}

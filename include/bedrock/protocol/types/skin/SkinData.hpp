@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <limits>
 #include <magic_enum/magic_enum.hpp>
@@ -24,10 +25,13 @@
 
 class SkinData {
 public:
+    enum class TrustedSkinFlag : uint8_t {
+        Unset = 0,
+        False = 1,
+        True = 2,
+    };
+
     static constexpr std::string_view GEOMETRY_DATA_NONE = "{}";
-    static constexpr std::string_view TRUSTED_SKIN_UNSET = "unset";
-    static constexpr std::string_view TRUSTED_SKIN_FALSE = "false";
-    static constexpr std::string_view TRUSTED_SKIN_TRUE = "true";
     uint32_t skinColor;
     std::shared_ptr<SkinImage> capeImage;
     std::string fullSkinId;
@@ -42,7 +46,7 @@ public:
     SkinArmSizeType armSize = static_cast<SkinArmSizeType>(0);
     std::vector<std::shared_ptr<PersonaSkinPiece>> personaPieces;
     std::vector<std::shared_ptr<PersonaPieceTintColor>> pieceTintColors;
-    std::string trustedSkinFlag = "true";
+    TrustedSkinFlag trustedSkinFlag = TrustedSkinFlag::Unset;
     bool premium = false;
     bool persona = false;
     bool personaCapeOnClassic = false;
@@ -66,7 +70,7 @@ public:
         const uint32_t& skinColorValue,
         const std::vector<std::shared_ptr<PersonaSkinPiece>>& personaPiecesValue,
         const std::vector<std::shared_ptr<PersonaPieceTintColor>>& pieceTintColorsValue,
-        const std::string& trustedSkinFlagValue,
+        const TrustedSkinFlag& trustedSkinFlagValue,
         const bool& premiumValue,
         const bool& personaValue,
         const bool& personaCapeOnClassicValue,
@@ -106,7 +110,7 @@ public:
         animationData = stream.readString().value_or("");
         capeId = stream.readString().value_or("");
         fullSkinId = stream.readString().value_or("");
-        trustedSkinFlag = stream.readString().value_or("");
+        trustedSkinFlag = magic_enum::enum_cast<SkinData::TrustedSkinFlag>(std::string_view(stream.readString().value_or(""))).value_or(SkinData::TrustedSkinFlag::Unset);
         premium = stream.readBool().value_or(false);
         persona = stream.readBool().value_or(false);
         personaCapeOnClassic = stream.readBool().value_or(false);
@@ -156,7 +160,7 @@ public:
         stream.writeString(animationData);
         stream.writeString(capeId);
         stream.writeString(fullSkinId);
-        stream.writeString(trustedSkinFlag);
+        stream.writeString(magic_enum::enum_name(trustedSkinFlag));
         stream.writeBool(premium);
         stream.writeBool(persona);
         stream.writeBool(personaCapeOnClassic);
@@ -178,3 +182,18 @@ public:
 });
     }
 };
+
+inline constexpr std::array<std::string_view, 3> SkinDataTrustedSkinFlagNames = {
+    "unset",
+    "false",
+    "true",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<SkinData::TrustedSkinFlag>(SkinData::TrustedSkinFlag value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < SkinDataTrustedSkinFlagNames.size() ? customize_t{SkinDataTrustedSkinFlagNames[index]} : invalid_tag;
+}
+
+}

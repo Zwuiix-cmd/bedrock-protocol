@@ -78,6 +78,10 @@ trait PacketEmissionMethods
             ? $this->translator->genericBody($packet, false)
             : $this->translator->methodBody($encode, $packet) . "\n";
         $body .= "    }\n};\n";
+        if ($this->stringEnumDefinitions($packet) !== []) {
+            $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
+        }
+        $body .= $this->stringEnumCustomizations($packet);
         $this->write($output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . $name . '.hpp', $body);
     }
 
@@ -152,7 +156,7 @@ trait PacketEmissionMethods
         $strings = [];
         $computed = [];
         $enumGroups = [];
-        $stringEnums = [];
+        $stringEnums = $this->stringEnumDefinitions($declaration);
         foreach ($declaration['constants'] as $constant) {
             if ($constant['name'] === 'NETWORK_ID') {
                 continue;
@@ -174,27 +178,16 @@ trait PacketEmissionMethods
                 }
             }
         }
-        foreach ($strings as $name => $value) {
-            if (preg_match('/^([A-Z][A-Z0-9]*)_(.+)$/', (string) $name, $matches) !== 1) {
-                continue;
-            }
-            $prefix = strtolower((string) $matches[1]);
-            foreach ($declaration['properties'] ?? [] as $property) {
-                $propertyName = strtolower((string) ($property['name'] ?? ''));
-                if ($propertyName !== $prefix) {
-                    continue;
-                }
-                $stringEnums[$prefix][(string) $matches[2]] = $value;
-                unset($strings[$name]);
-                break;
+        foreach ($stringEnums as $definition) {
+            foreach ($definition['constantNames'] as $constantName) {
+                unset($strings[$constantName]);
             }
         }
         $body = '';
-        foreach ($stringEnums as $prefix => $cases) {
-            $enumName = CPPName::enumCase($prefix);
+        foreach ($stringEnums as $enumName => $definition) {
             $body .= '    enum class ' . $enumName . " : uint8_t {\n";
-            foreach (array_values($cases) as $index => $case) {
-                $body .= '        ' . CPPName::identifier((string) $case) . ' = ' . $index . ",\n";
+            foreach (array_keys($definition['cases']) as $index => $case) {
+                $body .= '        ' . CPPName::enumCase((string) $case) . ' = ' . $index . ",\n";
             }
             $body .= "    };\n\n";
         }
@@ -273,6 +266,111 @@ trait PacketEmissionMethods
         return $body;
     }
 
+    /** @return array<string, array{prefix: string, cases: array<string, string>, constantNames: list<string>}> */
+    private function stringEnumDefinitions(array $declaration): array
+    {
+        $groups = [];
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            if (!is_string($constant['value'] ?? null)) {
+                continue;
+            }
+            $name = (string) ($constant['name'] ?? '');
+            if (!str_contains($name, '_')) {
+                continue;
+            }
+            $parts = explode('_', $name);
+            for ($index = 1; $index < count($parts); ++$index) {
+                $prefix = implode('_', array_slice($parts, 0, $index));
+                $case = implode('_', array_slice($parts, $index));
+                $groups[$prefix]['cases'][$case] = $constant['value'];
+                $groups[$prefix]['constantNames'][] = $name;
+            }
+        }
+        if ($groups === []) {
+            return [];
+        }
+
+        $stringProperties = [];
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['static'] ?? false)
+                || strtolower(ltrim((string) ($property['type'] ?? ''), '?')) !== 'string') {
+                continue;
+            }
+            $stringProperties[] = $property;
+        }
+        $assignments = [];
+        foreach ($stringProperties as $property) {
+            $propertyName = strtolower((string) ($property['name'] ?? ''));
+            $bestPrefix = null;
+            foreach (array_keys($groups) as $prefix) {
+                if ($this->enumPrefixMatchesProperty($prefix, $propertyName)
+                    && ($bestPrefix === null || strlen($prefix) > strlen($bestPrefix))) {
+                    $bestPrefix = $prefix;
+                }
+            }
+            if ($bestPrefix !== null) {
+                $assignments[$bestPrefix] = (string) ($property['name'] ?? $propertyName);
+            }
+        }
+        if ($assignments === []) {
+            $semantic = array_values(array_filter(
+                $stringProperties,
+                static fn (array $property): bool => preg_match(
+                    '/^(?:type|operation|status|state|mode|value|flag|reason|category)$/i',
+                    (string) ($property['name'] ?? ''),
+                ) === 1,
+            ));
+            if (count($semantic) === 1) {
+                $bestPrefix = array_key_first($groups);
+                foreach ($groups as $prefix => $group) {
+                    if ($bestPrefix === null
+                        || count($group['cases']) > count($groups[$bestPrefix]['cases'])) {
+                        $bestPrefix = $prefix;
+                    }
+                }
+                if ($bestPrefix !== null) {
+                    $assignments[$bestPrefix] = (string) $semantic[0]['name'];
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($assignments as $prefix => $propertyName) {
+            $enumName = str_contains($propertyName, '_')
+                ? CPPName::enumCase($propertyName)
+                : CPPName::identifier(ucfirst($propertyName));
+            $result[$enumName] = [
+                'prefix' => $prefix,
+                'cases' => $groups[$prefix]['cases'],
+                'constantNames' => $groups[$prefix]['constantNames'],
+            ];
+        }
+        return $result;
+    }
+
+    private function stringEnumCustomizations(array $declaration): string
+    {
+        $definitions = $this->stringEnumDefinitions($declaration);
+        if ($definitions === []) {
+            return '';
+        }
+        $owner = $this->generatedTypeName($declaration);
+        $body = '';
+        foreach ($definitions as $enumName => $definition) {
+            $names = $owner . $enumName . 'Names';
+            $body .= "\ninline constexpr std::array<std::string_view, " . count($definition['cases']) . '> ' . $names . " = {\n";
+            foreach ($definition['cases'] as $value) {
+                $body .= '    ' . json_encode($value, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ",\n";
+            }
+            $body .= "};\n\nnamespace magic_enum::customize {\n\n";
+            $body .= 'template <> constexpr customize_t enum_name<' . $owner . '::' . $enumName . '>('
+                . $owner . '::' . $enumName . " value) noexcept {\n"
+                . '    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));' . "\n"
+                . '    return index < ' . $names . '.size() ? customize_t{' . $names . '[index]} : invalid_tag;' . "\n}\n\n}\n";
+        }
+        return $body;
+    }
+
     private function enumPrefixMatchesProperty(string $prefix, string $propertyName): bool
     {
         $prefix = preg_replace('/[^a-z0-9]/', '', strtolower($prefix)) ?? strtolower($prefix);
@@ -308,6 +406,7 @@ trait PacketEmissionMethods
             'scheme',
             'permission',
             'permissions',
+            'flag',
             'effect',
             'target',
         ];

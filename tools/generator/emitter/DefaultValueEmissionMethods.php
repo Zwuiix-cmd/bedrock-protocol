@@ -112,13 +112,29 @@ trait DefaultValueEmissionMethods
         if (ltrim((string) ($property['type'] ?? ''), '?') !== 'string') {
             return null;
         }
-        $prefix = strtoupper((string) ($property['name'] ?? '')) . '_';
+        if (in_array($cppType, ['std::string', 'std::string_view'], true)) {
+            return null;
+        }
+        $propertyName = strtolower((string) ($property['name'] ?? ''));
+        $bestPrefix = null;
+        $bestCase = null;
         foreach ($declaration['constants'] ?? [] as $constant) {
-            if (str_starts_with((string) ($constant['name'] ?? ''), $prefix) && is_string($constant['value'] ?? null)) {
-                return $cppType . '::' . CPPName::identifier((string) $constant['value']);
+            $constantName = (string) ($constant['name'] ?? '');
+            if (!is_string($constant['value'] ?? null) || !str_contains($constantName, '_')) {
+                continue;
+            }
+            $parts = explode('_', $constantName);
+            for ($index = 1; $index < count($parts); ++$index) {
+                $prefix = strtolower(implode('', array_slice($parts, 0, $index)));
+                if (!str_starts_with($propertyName, $prefix)
+                    || ($bestPrefix !== null && strlen($prefix) <= strlen($bestPrefix))) {
+                    continue;
+                }
+                $bestPrefix = $prefix;
+                $bestCase = implode('_', array_slice($parts, $index));
             }
         }
-        return null;
+        return $bestCase === null ? null : $cppType . '::' . CPPName::enumCase($bestCase);
     }
 
     private function defaultExpression(array $property, array $declaration): string

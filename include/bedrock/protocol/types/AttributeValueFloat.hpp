@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <limits>
 #include <magic_enum/magic_enum.hpp>
@@ -18,33 +19,52 @@
 class AttributeValueFloat : public AttributeValue {
 public:
     enum class Operation : uint8_t {
-        override = 0,
-        alpha_blend = 1,
-        add = 2,
-        subtract = 3,
-        multiply = 4,
-        minimum = 5,
-        maximum = 6,
+        Override = 0,
+        AlphaBlend = 1,
+        Add = 2,
+        Subtract = 3,
+        Multiply = 4,
+        Minimum = 5,
+        Maximum = 6,
     };
 
     static constexpr int64_t ID = 1;
 
-    float value;
+    Value value;
     Operation operation;
 
     AttributeValueFloat() = default;
     virtual ~AttributeValueFloat() = default;
-    explicit AttributeValueFloat(const float& valueValue, const Operation& operationValue) : value(valueValue), operation(operationValue) {}
+    explicit AttributeValueFloat(const Value& valueValue, const Operation& operationValue) : value(valueValue), operation(operationValue) {}
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        value = stream.readFloat().value_or(0.0f);
-        operation = magic_enum::enum_cast<AttributeValueFloat::Operation>(std::string_view(stream.readString().value_or(""))).value_or(AttributeValueFloat::Operation::override);
+        value = magic_enum::enum_cast<AttributeValueFloat::Value>(std::string_view(stream.readFloat().value_or(0.0f))).value_or(AttributeValueFloat::Value::Override);
+        operation = magic_enum::enum_cast<AttributeValueFloat::Operation>(std::string_view(stream.readString().value_or(""))).value_or(AttributeValueFloat::Operation::Override);
     }
 
     void write(BinaryStream& stream) const override {
-		stream.writeFloat(value);
+		stream.writeFloat(magic_enum::enum_name(value));
 		stream.writeString(magic_enum::enum_name(operation));
     }
 };
+
+inline constexpr std::array<std::string_view, 7> AttributeValueFloatOperationNames = {
+    "override",
+    "alpha_blend",
+    "add",
+    "subtract",
+    "multiply",
+    "minimum",
+    "maximum",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<AttributeValueFloat::Operation>(AttributeValueFloat::Operation value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < AttributeValueFloatOperationNames.size() ? customize_t{AttributeValueFloatOperationNames[index]} : invalid_tag;
+}
+
+}

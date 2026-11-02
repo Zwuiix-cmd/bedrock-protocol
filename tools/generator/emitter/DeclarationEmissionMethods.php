@@ -103,6 +103,9 @@ trait DeclarationEmissionMethods
         $name = $this->generatedTypeName($declaration);
         $body = "#pragma once\n\n#include <cstdint>\n#include <limits>\n#include <memory>\n#include <optional>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <utility>\n#include <vector>\n#include <bedrock/protocol/io/BinaryStream.hpp>\n#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>\n#include <bedrock/protocol/Forward.hpp>\n";
         $body = str_replace('#include <memory>', "#include <magic_enum/magic_enum.hpp>\n#include <memory>", $body);
+        if ($this->stringEnumDefinitions($declaration) !== []) {
+            $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
+        }
         $propertyTypes = [];
         foreach ($declaration['properties'] as $property) {
             if (!($property['static'] ?? false)) {
@@ -320,6 +323,7 @@ trait DeclarationEmissionMethods
             $body .= "    }\n";
         }
         $body .= "};\n";
+        $body .= $this->stringEnumCustomizations($declaration);
         $this->write($this->typePath($output, $name, $declaration), $body);
     }
 }

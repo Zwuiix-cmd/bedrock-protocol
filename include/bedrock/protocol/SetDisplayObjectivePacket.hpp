@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <limits>
@@ -116,15 +117,18 @@ public:
     }
 
 public:
+    enum class DisplaySlot : uint8_t {
+        List = 0,
+        Sidebar = 1,
+        BelowName = 2,
+    };
+
     enum class Sort : uint8_t {
         OrderAscending = 0,
         OrderDescending = 1,
     };
 
-    static constexpr std::string_view DISPLAY_SLOT_LIST = "list";
-    static constexpr std::string_view DISPLAY_SLOT_SIDEBAR = "sidebar";
-    static constexpr std::string_view DISPLAY_SLOT_BELOW_NAME = "belowname";
-    std::string displaySlot;
+    DisplaySlot displaySlot;
     std::string objectiveName;
     std::string displayName;
     std::string criteriaName;
@@ -136,7 +140,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		displaySlot = stream.readString().value_or("");
+		displaySlot = magic_enum::enum_cast<SetDisplayObjectivePacket::DisplaySlot>(std::string_view(stream.readString().value_or(""))).value_or(SetDisplayObjectivePacket::DisplaySlot::List);
 		objectiveName = stream.readString().value_or("");
 		displayName = stream.readString().value_or("");
 		criteriaName = stream.readString().value_or("");
@@ -144,10 +148,25 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeString(displaySlot);
+		stream.writeString(magic_enum::enum_name(displaySlot));
 		stream.writeString(objectiveName);
 		stream.writeString(displayName);
 		stream.writeString(criteriaName);
 		stream.writeVarInt(magic_enum::enum_integer(sortOrder));
     }
 };
+
+inline constexpr std::array<std::string_view, 3> SetDisplayObjectivePacketDisplaySlotNames = {
+    "list",
+    "sidebar",
+    "belowname",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<SetDisplayObjectivePacket::DisplaySlot>(SetDisplayObjectivePacket::DisplaySlot value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < SetDisplayObjectivePacketDisplaySlotNames.size() ? customize_t{SetDisplayObjectivePacketDisplaySlotNames[index]} : invalid_tag;
+}
+
+}

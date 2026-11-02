@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <limits>
@@ -120,12 +121,15 @@ public:
     }
 
 public:
-    static constexpr std::string_view TYPE_LAST = "lastoutput";
-    static constexpr std::string_view TYPE_SILENT = "silent";
-    static constexpr std::string_view TYPE_ALL = "alloutput";
-    static constexpr std::string_view TYPE_DATA_SET = "dataset";
+    enum class OutputType : uint8_t {
+        Last = 0,
+        Silent = 1,
+        All = 2,
+        DataSet = 3,
+    };
+
     std::shared_ptr<CommandOriginData> originData;
-    std::string outputType;
+    OutputType outputType;
     uint32_t successCount;
     std::vector<std::shared_ptr<CommandOutputMessage>> messages;
     std::optional<std::string> data;
@@ -141,7 +145,7 @@ public:
 		    value->read(stream);
 		    return value;
 		}());
-		outputType = stream.readString().value_or("");
+		outputType = magic_enum::enum_cast<CommandOutputPacket::OutputType>(std::string_view(stream.readString().value_or(""))).value_or(CommandOutputPacket::OutputType::Last);
 		successCount = stream.readUnsignedInt().value_or(0);
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
@@ -167,7 +171,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		if (originData) originData->write(stream);
-		stream.writeString(outputType);
+		stream.writeString(magic_enum::enum_name(outputType));
 		stream.writeUnsignedInt(successCount);
 		stream.writeUnsignedVarInt(messages.size());
 		for (const auto& message : messages) {
@@ -185,3 +189,19 @@ public:
 		});
     }
 };
+
+inline constexpr std::array<std::string_view, 4> CommandOutputPacketOutputTypeNames = {
+    "lastoutput",
+    "silent",
+    "alloutput",
+    "dataset",
+};
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<CommandOutputPacket::OutputType>(CommandOutputPacket::OutputType value) noexcept {
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < CommandOutputPacketOutputTypeNames.size() ? customize_t{CommandOutputPacketOutputTypeNames[index]} : invalid_tag;
+}
+
+}

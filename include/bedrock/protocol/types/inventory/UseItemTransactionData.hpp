@@ -64,7 +64,7 @@ public:
         clientCooldownState = stream.readUnsignedByte().value_or(0);
         triggerType = static_cast<TriggerType>(stream.readVarInt().value_or(0));
         hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
-        itemInHand = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+        itemInHand.read(stream);
         clientInteractPrediction = static_cast<PredictedResult>(stream.readVarInt().value_or(0));
     }
 

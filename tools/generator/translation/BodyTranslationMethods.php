@@ -138,12 +138,16 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             $field = CPPName::identifier((string) $property['name']);
             $target = $read && $returnShared ? 'result->' . $field : $field;
             if ($read) {
-                $value = $this->inferredPropertyReadValue($declaration, $property)
-                    ?? $this->fallbackReadValue(
-                        $property['type'] ?? null,
-                        $property['doc'] ?? null,
-                        $declaration,
-                    );
+                if ($this->isDirectObjectProperty($property, $declaration)) {
+                    $lines[] = '        ' . $target . '.read(stream);';
+                    continue;
+                }
+                $inferredValue = $this->inferredPropertyReadValue($declaration, $property);
+                $value = $inferredValue ?? $this->fallbackReadValue(
+                    $property['type'] ?? null,
+                    $property['doc'] ?? null,
+                    $declaration,
+                );
                 $enumType = $this->propertyEnumType($property, $declaration);
                 if ($enumType !== null) {
                     $value = $this->stringEnumName($property, $declaration) !== null
@@ -176,6 +180,91 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             return '        (void)stream;';
         }
         return implode("\n", $lines);
+    }
+
+    private function isDirectObjectProperty(array $property, array $declaration): bool
+    {
+        $rawType = (string) ($property['type'] ?? '');
+        $sourceType = ltrim($rawType, '?');
+        if ($rawType === ''
+            || str_starts_with($rawType, '?')
+            || str_contains($sourceType, '|')
+            || preg_match('/^(?:array|list)\s*</i', $sourceType) === 1
+            || str_ends_with($sourceType, '[]')) {
+            return false;
+        }
+        $short = CPPName::type($sourceType);
+        $referenced = $this->findDeclaration($short);
+        if ($referenced === null
+            || ($referenced['kind'] ?? null) === 'enum'
+            || ($referenced['abstract'] ?? false)
+            || ($referenced['kind'] ?? null) === 'interface'
+            || $this->isEnumLikeDeclaration($referenced)) {
+            $referenced = null;
+        }
+        $cppType = $this->cppPropertyType($property, $declaration);
+        if ($cppType === ''
+            || str_contains($cppType, '<')
+            || str_starts_with($cppType, 'std::')
+            || str_starts_with($cppType, 'glm::')
+            || in_array($cppType, [
+                'bool',
+                'char',
+                'int8_t',
+                'uint8_t',
+                'int16_t',
+                'uint16_t',
+                'int32_t',
+                'uint32_t',
+                'int64_t',
+                'uint64_t',
+                'float',
+                'double',
+                'std::string',
+                'std::string_view',
+            ], true)) {
+            return false;
+        }
+        return ($referenced !== null && $cppType === $short)
+            || $this->catalog->typeAlias($short) === $cppType;
+    }
+
+    private function directReadAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string
+    {
+        if (!$assignment->var instanceof Node\Expr\PropertyFetch
+            || !$assignment->var->var instanceof Node\Expr\Variable
+            || $assignment->var->var->name !== 'this'
+            || !$assignment->var->name instanceof Node\Identifier
+            || !$this->isDeserializerExpression($assignment->expr)) {
+            return null;
+        }
+        $propertyName = $assignment->var->name->toString();
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['name'] ?? null) !== $propertyName
+                || !$this->isDirectObjectProperty($property, $declaration)) {
+                continue;
+            }
+            return $this->expression($assignment->var, $declaration, $method) . '.read(stream);';
+        }
+        return null;
+    }
+
+    private function isDeserializerExpression(Node $expression): bool
+    {
+        if ($expression instanceof Node\Expr\StaticCall
+            && $expression->class instanceof Node\Name
+            && $expression->name instanceof Node\Identifier) {
+            $class = $expression->class->getLast();
+            $name = strtolower($expression->name->toString());
+            return $this->catalog->isSerializerClass($class)
+                && (str_starts_with($name, 'get') || str_starts_with($name, 'read'));
+        }
+        if ($expression instanceof Node\Expr\MethodCall
+            && $expression->name instanceof Node\Identifier) {
+            $name = strtolower($expression->name->toString());
+            return str_starts_with($name, 'get') || str_starts_with($name, 'read');
+        }
+        return false;
     }
 
 private function sourceCodecBody(array $declaration, bool $read, bool $returnShared): ?string

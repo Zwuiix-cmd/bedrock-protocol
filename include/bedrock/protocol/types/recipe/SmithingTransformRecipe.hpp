@@ -63,7 +63,7 @@ public:
     value->read(stream);
     return value;
 }());
-        output = ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
+        output.read(stream);
         recipeNetId = stream.readInt().value_or(0);
     }
 

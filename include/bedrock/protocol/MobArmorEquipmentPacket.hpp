@@ -125,11 +125,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		head = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		chest = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		legs = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		feet = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		body = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		head.read(stream);
+		chest.read(stream);
+		legs.read(stream);
+		feet.read(stream);
+		body.read(stream);
     }
 
     void write(BinaryStream& stream) override {

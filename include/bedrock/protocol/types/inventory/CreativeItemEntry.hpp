@@ -27,7 +27,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         groupId = stream.readUnsignedVarInt().value_or(0);
         entryId = stream.readInt().value_or(0);
-        item = ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
+        item.read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

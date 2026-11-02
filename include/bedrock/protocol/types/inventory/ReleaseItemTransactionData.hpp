@@ -42,7 +42,7 @@ public:
         actionType = static_cast<Action>(stream.readVarInt().value_or(0));
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        itemInHand = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+        itemInHand.read(stream);
         hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
     }
 

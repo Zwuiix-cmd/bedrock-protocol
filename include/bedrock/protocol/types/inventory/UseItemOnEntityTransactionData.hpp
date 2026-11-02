@@ -48,7 +48,7 @@ public:
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
-        itemInHand = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+        itemInHand.read(stream);
     }
 
     void write(BinaryStream& stream) const override {

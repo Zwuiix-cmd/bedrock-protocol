@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "6e6ec746bcd0dcb196e6d5a81d987b21e09c4a612de4f39d4a41ac923189ad37",
-    "generatorFingerprint": "00b8f8a34597e3e93fb54a66abc8787ef3cbe3d7dba33542fd64c7e4b18f88a1",
+    "generatorFingerprint": "3e498f3ce20815c2ae773dd50a279623474c68765b0e4c33a6676e7e8c099a8e",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "master",
@@ -698,16 +698,16 @@
             "bytes": 6058
         },
         "include/bedrock/protocol/AddItemActorPacket.hpp": {
-            "sha256": "27397341924266b2148db33489e852d66ecb1e92a10c41d81ca23cf829e148e3",
-            "bytes": 6983
+            "sha256": "83f5edfdfa967239f4e15763d1897bcf23ffe9692e709b879c66760593db53c0",
+            "bytes": 6922
         },
         "include/bedrock/protocol/AddPaintingPacket.hpp": {
             "sha256": "91e3d08dae62936c764b93ddf230937980560c02ab4acffbfffc36c86c57c31e",
             "bytes": 6496
         },
         "include/bedrock/protocol/AddPlayerPacket.hpp": {
-            "sha256": "71b4e86ccaf14458e2c93b915a55cba2e3c5af3d4a363c78d7d00629de831540",
-            "bytes": 9384
+            "sha256": "f1d1c21aa32ff483129b11228b51bfe8c6d9ad2eec1e0bdeaf02160815fc882f",
+            "bytes": 9323
         },
         "include/bedrock/protocol/AddVolumeEntityPacket.hpp": {
             "sha256": "c848bf9b26f40052da2c1f9849db9fe06afab16aff366d90be2a13e3b8c3e611",
@@ -1030,12 +1030,12 @@
             "bytes": 6592
         },
         "include/bedrock/protocol/InventoryContentPacket.hpp": {
-            "sha256": "eba29aeb0f8642224d4d00fa9c28b2d23158fbb05e1a3f627a1c273ebd66f9d6",
-            "bytes": 6957
+            "sha256": "85a008f2596a917406d348966124a9d1572827f2999bb2d73bd8e1c668289b8d",
+            "bytes": 6896
         },
         "include/bedrock/protocol/InventorySlotPacket.hpp": {
-            "sha256": "ac3efd36885a91929e3d529d1010c2ea2ad272764063874b9bcc41fd8c35e077",
-            "bytes": 7097
+            "sha256": "e1091ed376a5abf2e7f0cfc8d3442442be11bc7126406b5cb99e68e23dcc29f6",
+            "bytes": 7036
         },
         "include/bedrock/protocol/InventoryTransactionPacket.hpp": {
             "sha256": "67b8a57e4e08d940d747cf2815e7bea3d2b539f318999489ac4882016723b61e",
@@ -1106,16 +1106,16 @@
             "bytes": 6739
         },
         "include/bedrock/protocol/MobArmorEquipmentPacket.hpp": {
-            "sha256": "98dff6869d317ebab71113c59e57f5ab5c84e050d3cda0cdb937b2745381c969",
-            "bytes": 6791
+            "sha256": "ac735e791df825e5918deaaa4f7d08da19dbe0df4fb7507d6dc24773871dc403",
+            "bytes": 6486
         },
         "include/bedrock/protocol/MobEffectPacket.hpp": {
             "sha256": "f1314b14e9c378e321b5c3f4e96bf4e86d6a54ac41fc65f6e833e62fb722e295",
             "bytes": 6933
         },
         "include/bedrock/protocol/MobEquipmentPacket.hpp": {
-            "sha256": "697a6c060783e9e91b956541ebdda49b35e15534fafeaf219017985b74afddf8",
-            "bytes": 6615
+            "sha256": "1d7e9609a761e266f1bfc3a140a2f482b04cc0c18679cc21ea105a7c7d9f5fe9",
+            "bytes": 6554
         },
         "include/bedrock/protocol/ModalFormRequestPacket.hpp": {
             "sha256": "87cd16cf4bbc75c2144e96d975d206bfff31d3604b68ba45271fb6ff7c620771",
@@ -2726,12 +2726,12 @@
             "bytes": 2001
         },
         "include/bedrock/protocol/types/inventory/CreativeGroupEntry.hpp": {
-            "sha256": "9717a2b21a8409919709e4fa0bb5d4e87955043464583dc9ab826e007fa3afb6",
-            "bytes": 1327
+            "sha256": "960550a11d0d338a8ca530cb64d712198611a658a14c866cdd18cc817bf40054",
+            "bytes": 1261
         },
         "include/bedrock/protocol/types/inventory/CreativeItemEntry.hpp": {
-            "sha256": "01d365b29bc8c8080794b5f27197ab3f02660b9138144ea80222c592090ae8dc",
-            "bytes": 1213
+            "sha256": "c9a82b04d31dc528314041eb7463d93c465c26060fadd8d7c1a6b10ba3eea5fd",
+            "bytes": 1147
         },
         "include/bedrock/protocol/types/inventory/CursorItemDragState.hpp": {
             "sha256": "5e2d9cdf4a4318eb73921cba1406c5387310465da7e23f028a52aadfdd75642d",
@@ -2794,8 +2794,8 @@
             "bytes": 133
         },
         "include/bedrock/protocol/types/inventory/ReleaseItemTransactionData.hpp": {
-            "sha256": "47522537e7f381d3dcf7d3edaccac08ae6a5e3f9bb2010e6b5d32113723c62d4",
-            "bytes": 1833
+            "sha256": "dbd7760e42b176ea62e2eae4c20d756ac56a9d1329cebabcda677785af952f43",
+            "bytes": 1772
         },
         "include/bedrock/protocol/types/inventory/TransactionData.hpp": {
             "sha256": "56e2e2309857490ec0addf594c7f8cd656cf9346d2530585b642f6453e2e6561",
@@ -2810,12 +2810,12 @@
             "bytes": 873
         },
         "include/bedrock/protocol/types/inventory/UseItemOnEntityTransactionData.hpp": {
-            "sha256": "408ffa4494ec395eb4ba92b95c436046490cb564dd9c3c7714b99a4fcd559dba",
-            "bytes": 2163
+            "sha256": "5bd9622952d011e88524fcfa42ad9bbdee6b5df19c6d5a679d5458bbf771d00f",
+            "bytes": 2102
         },
         "include/bedrock/protocol/types/inventory/UseItemTransactionData.hpp": {
-            "sha256": "2ba71e6e15cdfcfde5f99a07eb9b6fe327cc02a7909efd79b12ab39b5b05c36f",
-            "bytes": 3366
+            "sha256": "c6b7e7751d45d5d68d7bbe0923ed822c0d693442ff4279948d92b20786ee4093",
+            "bytes": 3305
         },
         "include/bedrock/protocol/types/inventory/WindowTypes.hpp": {
             "sha256": "c364888d6a795258e9fe7668d75306163a350e6c82b6828c315d5cd707c02e60",
@@ -3078,8 +3078,8 @@
             "bytes": 3148
         },
         "include/bedrock/protocol/types/recipe/SmithingTransformRecipe.hpp": {
-            "sha256": "7b4c5a28d4be25ae5a26ba3e0320c1b0409db77dec78a81ec3c9487fcea423de",
-            "bytes": 2598
+            "sha256": "9bbcefe79992787bdbafcf483ca118c3f67952d798fac37f4b6efc06e74a4d14",
+            "bytes": 2532
         },
         "include/bedrock/protocol/types/recipe/SmithingTrimRecipe.hpp": {
             "sha256": "9cb1ae15b13747b00ba0ef7564d4256078b047ee257877b4a6afe2bf116c7336",
@@ -3212,7 +3212,7 @@
         "enums": 86,
         "registrations": 239,
         "unsupported": 67,
-        "changed": 143,
+        "changed": 8,
         "removed": 2,
         "cached": 0
     }

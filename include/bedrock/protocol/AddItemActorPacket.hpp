@@ -128,7 +128,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		item = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		item.read(stream);
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		motion = stream.readVec3().value_or(glm::vec3(0.0f));
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());

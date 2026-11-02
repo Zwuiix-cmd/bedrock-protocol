@@ -154,7 +154,7 @@ public:
 		pitch = stream.readFloat().value_or(0.0f);
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		item = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		item.read(stream);
 		gameMode = static_cast<GameMode>(stream.readVarInt().value_or(0));
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
 		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());

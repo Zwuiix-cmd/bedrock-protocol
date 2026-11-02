@@ -35,6 +35,12 @@ private function statement(Node $statement, array $declaration, array $method, i
                 }
                 return '';
             }
+            if ($statement->expr instanceof Node\Expr\Assign) {
+                $directRead = $this->directReadAssignment($statement->expr, $declaration, $method);
+                if ($directRead !== null) {
+                    return $prefix . $directRead;
+                }
+            }
             if ($statement->expr instanceof Node\Expr\Assign && $statement->expr->var instanceof Node\Expr\Variable && $statement->expr->var->name !== 'this') {
                 $assigned = $statement->expr->expr;
                 if ($assigned instanceof Node\Expr\New_ && $assigned->class instanceof Node\Name) {

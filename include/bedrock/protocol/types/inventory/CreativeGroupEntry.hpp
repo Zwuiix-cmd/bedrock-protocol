@@ -34,7 +34,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         categoryId = stream.readUnsignedByte().value_or(0);
         categoryName = stream.readString().value_or("");
-        icon = ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
+        icon.read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

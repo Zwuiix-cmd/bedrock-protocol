@@ -134,7 +134,7 @@ public:
 		    value->read(stream);
 		    return value;
 		}());
-		storage = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		storage.read(stream);
     }
 
     void write(BinaryStream& stream) override {

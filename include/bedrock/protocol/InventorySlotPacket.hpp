@@ -135,7 +135,7 @@ public:
 		storage = stream.readOptional([&]() {
 			return ([&]() { NetworkItemStack value; value.read(stream); return value; }());
 		});
-		item = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+		item.read(stream);
     }
 
     void write(BinaryStream& stream) override {

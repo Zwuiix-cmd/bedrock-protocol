@@ -44,39 +44,39 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         entities = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraAimAssistCategoryPriority>();
+			value->read(stream);
+			return value;
+			}());
+		});
         blocks = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraAimAssistCategoryPriority>();
+			value->read(stream);
+			return value;
+			}());
+		});
         blockTags = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraAimAssistCategoryPriority>();
+			value->read(stream);
+			return value;
+			}());
+		});
         entityTypeFamilies = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraAimAssistCategoryPriority>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraAimAssistCategoryPriority>();
+			value->read(stream);
+			return value;
+			}());
+		});
         defaultEntityPriority = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         defaultBlockPriority = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -97,10 +97,10 @@ public:
 			family->write(stream);
 		}
 		stream.writeOptional(defaultEntityPriority, [&](const auto& value) {
-		            stream.writeInt(value);
-		        });
+					stream.writeInt(value);
+				});
 		stream.writeOptional(defaultBlockPriority, [&](const auto& value) {
-		            stream.writeInt(value);
-		        });
+					stream.writeInt(value);
+				});
     }
 };

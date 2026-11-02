@@ -129,7 +129,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(clientStoreEntrypointConfig, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
     }
 };

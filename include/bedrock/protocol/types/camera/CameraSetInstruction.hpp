@@ -58,59 +58,59 @@ public:
         preset = stream.readUnsignedInt().value_or(0);
         ignoreStartingValuesComponent = stream.readBool().value_or(false);
         ease = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraSetInstructionEase>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraSetInstructionEase>();
+			value->read(stream);
+			return value;
+			}());
+		});
         cameraPosition = stream.readOptional([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         rotation = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraSetInstructionRotation>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraSetInstructionRotation>();
+			value->read(stream);
+			return value;
+			}());
+		});
         facingPosition = stream.readOptional([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         viewOffset = stream.readOptional([&]() {
-            return stream.readVec2().value_or(glm::vec2(0.0f));
-        });
+			return stream.readVec2().value_or(glm::vec2(0.0f));
+		});
         entityOffset = stream.readOptional([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         default_ = stream.readOptional([&]() {
-            return stream.readBool().value_or(false);
-        });
+			return stream.readBool().value_or(false);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedInt(preset);
 		stream.writeOptional(ease, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeOptional(cameraPosition, [&](const auto& value) {
-		            stream.writeVec3(value);
-		        });
+					stream.writeVec3(value);
+				});
 		stream.writeOptional(rotation, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeOptional(facingPosition, [&](const auto& value) {
-		            stream.writeVec3(value);
-		        });
+					stream.writeVec3(value);
+				});
 		stream.writeOptional(viewOffset, [&](const auto& value) {
-		            stream.writeVec2(value);
-		        });
+					stream.writeVec2(value);
+				});
 		stream.writeOptional(entityOffset, [&](const auto& value) {
-		            stream.writeVec3(value);
-		        });
+					stream.writeVec3(value);
+				});
 		stream.writeOptional(default_, [&](const auto& value) {
-		            stream.writeBool(value);
-		        });
+					stream.writeBool(value);
+				});
 		stream.writeBool(ignoreStartingValuesComponent);
     }
 };

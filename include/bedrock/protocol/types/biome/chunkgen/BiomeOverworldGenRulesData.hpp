@@ -53,54 +53,54 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         hillTransformations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         mutateTransformations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         riverTransformations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         shoreTransformations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         preHillsEdges = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeConditionalTransformationData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeConditionalTransformationData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         postShoreEdges = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeConditionalTransformationData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeConditionalTransformationData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         climates = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedTemperatureData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedTemperatureData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

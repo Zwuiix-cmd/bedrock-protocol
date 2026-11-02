@@ -125,8 +125,8 @@ public:
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		respawn = stream.readBool().value_or(false);
 		loadingScreenId = stream.readOptional([&]() {
-		            return stream.readUnsignedInt().value_or(0);
-		        });
+					return stream.readUnsignedInt().value_or(0);
+				});
     }
 
     void write(BinaryStream& stream) override {
@@ -134,7 +134,7 @@ public:
 		stream.writeVec3(position);
 		stream.writeBool(respawn);
 		stream.writeOptional(loadingScreenId, [&](const auto& value) {
-		            stream.writeUnsignedInt(value);
-		        });
+					stream.writeUnsignedInt(value);
+				});
     }
 };

@@ -139,38 +139,38 @@ public:
         isLocked = stream.readBool().value_or(false);
         origin = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         parentMapIds = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         scale = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         trackedEntities = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<MapTrackedObject>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<MapTrackedObject>();
+			value->read(stream);
+			return value;
+			}());
+		});
         decorations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<MapDecoration>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<MapDecoration>();
+			value->read(stream);
+			return value;
+			}());
+		});
         xOffset = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         yOffset = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         colors = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<MapImage>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<MapImage>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     void write(BinaryStream& stream) override {
@@ -179,25 +179,25 @@ public:
         stream.writeBool(isLocked);
         stream.writeSignedBlockPos(origin);
         stream.writeList(parentMapIds, [&](const auto& item) {
-            stream.writeInt(item);
-        });
+			stream.writeInt(item);
+		});
         stream.writeOptional(scale, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeList(trackedEntities, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
         stream.writeList(decorations, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
         stream.writeOptional(xOffset, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(yOffset, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(colors, [&](const auto& optionalValue) {
-            if (optionalValue) optionalValue->write(stream);
-        });
+			if (optionalValue) optionalValue->write(stream);
+		});
     }
 };

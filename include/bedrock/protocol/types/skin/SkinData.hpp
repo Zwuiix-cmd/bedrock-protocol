@@ -125,27 +125,27 @@ public:
     return value;
 }());
         animations = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<SkinAnimation>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<SkinAnimation>();
+			value->read(stream);
+			return value;
+			}());
+		});
         armSize = static_cast<SkinArmSizeType>(stream.readVarInt().value_or(0));
         personaPieces = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<PersonaSkinPiece>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<PersonaSkinPiece>();
+			value->read(stream);
+			return value;
+			}());
+		});
         pieceTintColors = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<PersonaPieceTintColor>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<PersonaPieceTintColor>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -167,14 +167,14 @@ public:
         if (capeImage) capeImage->write(stream);
         if (skinImage) skinImage->write(stream);
         stream.writeList(animations, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
         stream.writeVarInt(static_cast<int32_t>(armSize));
         stream.writeList(personaPieces, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
         stream.writeList(pieceTintColors, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
     }
 };

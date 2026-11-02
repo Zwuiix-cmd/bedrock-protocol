@@ -68,43 +68,43 @@ public:
     return value;
 }());
         terrainData = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         heightMapData = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
+			value->read(stream);
+			return value;
+			}());
+		});
         renderHeightMapData = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
+			value->read(stream);
+			return value;
+			}());
+		});
         usedBlobHash = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
 		offset->write(stream);
 		stream.writeUnsignedByte(requestResult);
 		stream.writeOptional(terrainData, [&](const auto& value) {
-		            stream.writeString(value);
-		        });
+					stream.writeString(value);
+				});
 		stream.writeUnsignedByte(heightMapType);
 		stream.writeOptional(heightMapData, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeUnsignedByte(renderHeightMapType);
 		stream.writeOptional(renderHeightMapData, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeOptional(usedBlobHash, [&](const auto& value) {
-		            stream.writeUnsignedLong(value);
-		        });
+					stream.writeUnsignedLong(value);
+				});
     }
 };

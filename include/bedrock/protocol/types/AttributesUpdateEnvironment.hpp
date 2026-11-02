@@ -42,12 +42,12 @@ public:
         name = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
         attributes = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<AttributeEnvironment>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<AttributeEnvironment>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     void write(BinaryStream& stream) const override {

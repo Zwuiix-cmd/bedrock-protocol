@@ -136,15 +136,15 @@ public:
 			}()));
 		}
 		unknownFloat = stream.readOptional([&]() {
-		            return stream.readFloat().value_or(0.0f);
-		        });
+					return stream.readFloat().value_or(0.0f);
+				});
 		unknownVector3 = stream.readOptional([&]() {
-		            return stream.readVec3().value_or(glm::vec3(0.0f));
-		        });
+					return stream.readVec3().value_or(glm::vec3(0.0f));
+				});
 		biomeIdentifier = stream.readString().value_or("");
 		playerIdentifier = stream.readOptional([&]() {
-		            return stream.readString().value_or("");
-		        });
+					return stream.readString().value_or("");
+				});
 		parameterType = static_cast<GraphicsOverrideParameterType>(stream.readUnsignedByte().value_or(0));
 		reset = stream.readBool().value_or(false);
     }
@@ -155,15 +155,15 @@ public:
 			value->write(stream);
 		}
 		stream.writeOptional(unknownFloat, [&](const auto& value) {
-		            stream.writeFloat(value);
-		        });
+					stream.writeFloat(value);
+				});
 		stream.writeOptional(unknownVector3, [&](const auto& value) {
-		            stream.writeVec3(value);
-		        });
+					stream.writeVec3(value);
+				});
 		stream.writeString(biomeIdentifier);
 		stream.writeOptional(playerIdentifier, [&](const auto& value) {
-		            stream.writeString(value);
-		        });
+					stream.writeString(value);
+				});
 		stream.writeUnsignedByte(static_cast<std::underlying_type_t<GraphicsOverrideParameterType>>(parameterType));
 		stream.writeBool(reset);
     }

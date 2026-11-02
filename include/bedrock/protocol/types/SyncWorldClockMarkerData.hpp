@@ -38,8 +38,8 @@ public:
         name = stream.readString().value_or("");
         time = stream.readVarInt().value_or(0);
         period = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -47,7 +47,7 @@ public:
 		stream.writeString(name);
 		stream.writeVarInt(time);
 		stream.writeOptional(period, [&](const auto& value) {
-		            stream.writeInt(value);
-		        });
+					stream.writeInt(value);
+				});
     }
 };

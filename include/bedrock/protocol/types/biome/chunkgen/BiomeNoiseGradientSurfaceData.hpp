@@ -43,18 +43,18 @@ public:
         noiseSeed = stream.readString().value_or("");
         firstOctave = stream.readUnsignedInt().value_or(0);
         nonReplaceableBlocks = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         gradientBlocks = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeNoiseBlockSpecifier>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeNoiseBlockSpecifier>();
+			value->read(stream);
+			return value;
+			}());
+		});
         amplitudes = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

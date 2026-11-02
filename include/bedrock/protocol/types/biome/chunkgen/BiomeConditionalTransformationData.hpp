@@ -37,12 +37,12 @@ public:
         conditionJSON = stream.readShort().value_or(0);
         minPassingNeighbors = stream.readUnsignedInt().value_or(0);
         weightedBiomes = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeWeightedData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeWeightedData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

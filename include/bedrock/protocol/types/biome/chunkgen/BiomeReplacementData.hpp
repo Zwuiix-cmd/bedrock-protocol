@@ -42,8 +42,8 @@ public:
         amount = stream.readFloat().value_or(0.0f);
         replacementIndex = stream.readUnsignedInt().value_or(0);
         targetBiomes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

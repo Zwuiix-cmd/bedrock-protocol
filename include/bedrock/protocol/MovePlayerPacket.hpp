@@ -160,8 +160,8 @@ public:
 		stream.writeBool(onGround);
 		stream.writeActorRuntimeID(ridingActorRuntimeId);
 		stream.writeOptional(telemetryData, [&](const auto& data) {
-		            data->write(stream);
-		        });
+					data->write(stream);
+				});
 		stream.writeUnsignedVarLong(tick);
     }
 };

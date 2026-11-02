@@ -138,7 +138,7 @@ public:
 		stream.writeUnsignedShort(port);
 		stream.writeBool(reloadWorld);
 		stream.writeOptional(gatheringsConfig, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
     }
 };

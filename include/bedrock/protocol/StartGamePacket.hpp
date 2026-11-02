@@ -194,24 +194,24 @@ public:
     return value;
 }());
         serverJoinInformation = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<ServerJoinInformation>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<ServerJoinInformation>();
+			value->read(stream);
+			return value;
+			}());
+		});
         serverTelemetryData = ([&]() {
     auto value = std::make_shared<ServerTelemetryData>();
     value->read(stream);
     return value;
 }());
         blockPalette = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BlockPaletteEntry>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BlockPaletteEntry>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     void write(BinaryStream& stream) override {
@@ -244,8 +244,8 @@ public:
 		stream.writeBool(blockNetworkIdsAreHashes);
 		networkPermissions->write(stream);
 		stream.writeOptional(serverJoinInformation, [&](const auto& info) {
-		            info->write(stream);
-		        });
+					info->write(stream);
+				});
 		serverTelemetryData->write(stream);
     }
 };

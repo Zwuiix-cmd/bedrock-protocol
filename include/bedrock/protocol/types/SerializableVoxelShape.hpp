@@ -43,14 +43,14 @@ public:
     return value;
 }());
         xCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
         yCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
         zCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

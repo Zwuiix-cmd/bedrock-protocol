@@ -132,7 +132,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeActorUniqueID(actorUniqueId);
 		stream.writeOptional(passengerData, [&](const auto& data) {
-		            data->write(stream);
-		        });
+					data->write(stream);
+				});
     }
 };

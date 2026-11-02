@@ -26,12 +26,12 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         legacyPreHills = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeConditionalTransformationData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeConditionalTransformationData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

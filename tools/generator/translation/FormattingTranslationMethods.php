@@ -19,10 +19,10 @@ private function callback(string $parameters, string $body): string
     {
         $body = trim($body);
         $lines = array_map(
-            static fn (string $line): string => '            ' . ltrim($line),
+            static fn (string $line): string => "\t\t\t" . ltrim($line),
             explode("\n", $body),
         );
-        return '[&](' . $parameters . ") {\n" . implode("\n", $lines) . "\n        }";
+        return '[&](' . $parameters . ") {\n" . implode("\n", $lines) . "\n\t\t}";
     }
 
 private function escape(string $value): string

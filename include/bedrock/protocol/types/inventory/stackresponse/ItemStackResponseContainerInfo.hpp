@@ -40,12 +40,12 @@ public:
     return value;
 }());
         slots = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<ItemStackResponseSlotInfo>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<ItemStackResponseSlotInfo>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

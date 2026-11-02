@@ -136,7 +136,7 @@ public:
         stream.writeString(destinationName);
         stream.writeVarInt(static_cast<int32_t>(state));
         stream.writeOptional(options, [&](const auto& optionalValue) {
-            if (optionalValue) optionalValue->write(stream);
-        });
+			if (optionalValue) optionalValue->write(stream);
+		});
     }
 };

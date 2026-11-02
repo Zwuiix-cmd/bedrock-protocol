@@ -144,7 +144,7 @@ public:
 		stream.writeVarInt(dimension);
 		baseSubChunkPosition->write(stream);
 		stream.writeList(entries, [&](const auto& v) {
-		            v.write(stream);
-		        });
+					v.write(stream);
+				});
     }
 };

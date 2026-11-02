@@ -46,8 +46,8 @@ public:
         structureBlockType = stream.readVarInt().value_or(0);
         structureRedstoneSaveMode = stream.readUnsignedByte().value_or(0);
         filteredStructureName = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         structureSettings = ([&]() {
     auto value = std::make_shared<StructureSettings>();
     value->read(stream);
@@ -63,8 +63,8 @@ public:
         stream.writeVarInt(structureBlockType);
         stream.writeUnsignedByte(structureRedstoneSaveMode);
         stream.writeOptional(filteredStructureName, [&](const auto& optionalValue) {
-            stream.writeString(optionalValue);
-        });
+			stream.writeString(optionalValue);
+		});
         if (structureSettings) structureSettings->write(stream);
     }
 };

@@ -30,30 +30,30 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         scoreboardId = stream.readVarLong().value_or(0);
         objectiveName = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         score = stream.readInt().value_or(0);
         actorUniqueId = stream.readOptional([&]() {
-            return stream.readActorUniqueID().value_or(0);
-        });
+			return stream.readActorUniqueID().value_or(0);
+		});
         customName = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         action = static_cast<ScorePacketEntryAction>(stream.readVarInt().value_or(0));
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeVarLong(scoreboardId);
         stream.writeOptional(objectiveName, [&](const auto& optionalValue) {
-            stream.writeString(optionalValue);
-        });
+			stream.writeString(optionalValue);
+		});
         stream.writeInt(score);
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
-            stream.writeActorUniqueID(optionalValue);
-        });
+			stream.writeActorUniqueID(optionalValue);
+		});
         stream.writeOptional(customName, [&](const auto& optionalValue) {
-            stream.writeString(optionalValue);
-        });
+			stream.writeString(optionalValue);
+		});
         stream.writeVarInt(static_cast<int32_t>(action));
     }
 };

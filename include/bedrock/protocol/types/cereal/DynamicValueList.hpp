@@ -30,17 +30,17 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         values = stream.readList([&]() {
-            return stream.readOptional([&]() {
-            return DynamicValue::decode(stream);
-            });
-        });
+			return stream.readOptional([&]() {
+			return DynamicValue::decode(stream);
+			});
+		});
     }
 
     void write(BinaryStream& stream) const override {
         stream.writeList(values, [&](const auto& item) {
-            stream.writeOptional(item, [&](const auto& optionalValue) {
-            if (optionalValue) optionalValue->write(stream);
-            });
-        });
+			stream.writeOptional(item, [&](const auto& optionalValue) {
+			if (optionalValue) optionalValue->write(stream);
+			});
+		});
     }
 };

@@ -200,8 +200,8 @@ public:
 			if (link) link->write(stream);
 		}
 		stream.writeOptional(passengerBlockData, [&](const auto& data) {
-		            data->write(stream);
-		        });
+					data->write(stream);
+				});
 		stream.writeString(deviceId);
 		stream.writeInt(static_cast<std::underlying_type_t<BuildPlatform>>(buildPlatform));
     }

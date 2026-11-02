@@ -51,15 +51,15 @@ public:
         permission = stream.readString().value_or("");
         aliasEnumIndex = stream.readInt().value_or(0);
         chainedSubCommandDataIndexes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         overloads = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CommandOverloadRawData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CommandOverloadRawData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

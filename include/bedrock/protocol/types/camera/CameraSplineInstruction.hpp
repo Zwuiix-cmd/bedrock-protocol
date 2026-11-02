@@ -57,22 +57,22 @@ public:
         loadFromJson = stream.readBool().value_or(false);
         easeType = static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
         curve = stream.readList([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         progressKeyFrames = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraProgressOption>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraProgressOption>();
+			value->read(stream);
+			return value;
+			}());
+		});
         rotationOptions = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<CameraRotationOption>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<CameraRotationOption>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -81,13 +81,13 @@ public:
         stream.writeBool(loadFromJson);
         stream.writeVarInt(static_cast<int32_t>(easeType));
         stream.writeList(curve, [&](const auto& item) {
-            stream.writeVec3(item);
-        });
+			stream.writeVec3(item);
+		});
         stream.writeList(progressKeyFrames, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
         stream.writeList(rotationOptions, [&](const auto& item) {
-            if (item) item->write(stream);
-        });
+			if (item) item->write(stream);
+		});
     }
 };

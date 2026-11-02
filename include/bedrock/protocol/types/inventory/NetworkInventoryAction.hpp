@@ -50,11 +50,11 @@ public:
         stream.writeUnsignedVarInt(sourceType);
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         oldItem.write(stream);
         newItem.write(stream);
     }
@@ -63,11 +63,11 @@ public:
         stream.writeUnsignedVarInt(sourceType);
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         oldItem.write(stream);
         newItem.write(stream);
     }

@@ -40,8 +40,8 @@ public:
         name = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
         attributes = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
     }
 
     void write(BinaryStream& stream) const override {

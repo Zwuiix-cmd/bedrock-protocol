@@ -132,33 +132,33 @@ public:
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		xPos = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readFloat().value_or(0.0f);
-			        });
+						return stream.readFloat().value_or(0.0f);
+					});
 		}());
 		yPos = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readFloat().value_or(0.0f);
-			        });
+						return stream.readFloat().value_or(0.0f);
+					});
 		}());
 		zPos = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readFloat().value_or(0.0f);
-			        });
+						return stream.readFloat().value_or(0.0f);
+					});
 		}());
 		pitch = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readRotationByte().value_or(0);
-			        });
+						return stream.readRotationByte().value_or(0);
+					});
 		}());
 		yaw = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readRotationByte().value_or(0);
-			        });
+						return stream.readRotationByte().value_or(0);
+					});
 		}());
 		headYaw = ([&]() -> std::optional<float> {
 			return stream.readOptional([&]() {
-			            return stream.readRotationByte().value_or(0);
-			        });
+						return stream.readRotationByte().value_or(0);
+					});
 		}());
 		onGround = stream.readBool().value_or(false);
 		teleport = stream.readBool().value_or(false);
@@ -171,33 +171,33 @@ public:
 		stream.writeActorRuntimeID(actorRuntimeId);
 		([&]() {
 			stream.writeOptional(xPos, [&](const auto& value) {
-			            stream.writeFloat(value);
-			        });
+						stream.writeFloat(value);
+					});
 		}());
 		([&]() {
 			stream.writeOptional(yPos, [&](const auto& value) {
-			            stream.writeFloat(value);
-			        });
+						stream.writeFloat(value);
+					});
 		}());
 		([&]() {
 			stream.writeOptional(zPos, [&](const auto& value) {
-			            stream.writeFloat(value);
-			        });
+						stream.writeFloat(value);
+					});
 		}());
 		([&]() {
 			stream.writeOptional(pitch, [&](const auto& value) {
-			            stream.writeRotationByte(value);
-			        });
+						stream.writeRotationByte(value);
+					});
 		}());
 		([&]() {
 			stream.writeOptional(yaw, [&](const auto& value) {
-			            stream.writeRotationByte(value);
-			        });
+						stream.writeRotationByte(value);
+					});
 		}());
 		([&]() {
 			stream.writeOptional(headYaw, [&](const auto& value) {
-			            stream.writeRotationByte(value);
-			        });
+						stream.writeRotationByte(value);
+					});
 		}());
 		stream.writeBool(onGround);
 		stream.writeBool(teleport);

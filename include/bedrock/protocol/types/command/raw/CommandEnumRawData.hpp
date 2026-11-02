@@ -25,8 +25,8 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
         valueIndexes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

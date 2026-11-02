@@ -157,8 +157,8 @@ public:
 		headYaw = stream.readFloat().value_or(0.0f);
 		inputFlags = static_cast<PlayerAuthInputFlags>(PlayerAuthInputFlags{PlayerAuthInputFlags::Count});
 		for (const auto& flag : stream.readList([&]() {
-            return stream.readVarInt().value_or(0);
-        })) {
+			return stream.readVarInt().value_or(0);
+		})) {
 			if (inputFlags.get(flag)) {
 				throw std::exception{};
 			}
@@ -181,14 +181,14 @@ public:
 		    return value;
 		}()); });
 		blockActions = stream.readOptional([&]() {
-		            return stream.readList(([&]() { PlayerBlockAction value; value.read(stream); return value; }()));
-		        });
+					return stream.readList(([&]() { PlayerBlockAction value; value.read(stream); return value; }()));
+				});
 		auto vehicleRotation = stream.readOptional([&]() {
-		            return stream.readVec2().value_or(glm::vec2(0.0f));
-		        });
+					return stream.readVec2().value_or(glm::vec2(0.0f));
+				});
 		auto vehicleActorUniqueId = stream.readOptional([&]() {
-		            return stream.readActorUniqueID().value_or(0);
-		        });
+					return stream.readActorUniqueID().value_or(0);
+				});
 		if ((vehicleRotation.has_value() && vehicleActorUniqueId.has_value())) {
 			vehicleInfo = PlayerAuthInputVehicleInfo{*(vehicleRotation), *(vehicleActorUniqueId)};
 		} else if (((!vehicleRotation) && (!vehicleActorUniqueId))) {
@@ -216,8 +216,8 @@ public:
 			}
 		}
 		stream.writeList(flagsArray, [&](const auto& value) {
-		            stream.writeVarInt(value);
-		        });
+					stream.writeVarInt(value);
+				});
 		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<InputMode>>(inputMode));
 		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<PlayMode>>(playMode));
 		stream.writeVarInt(static_cast<std::underlying_type_t<InteractionMode>>(interactionMode));
@@ -225,22 +225,22 @@ public:
 		stream.writeUnsignedVarLong(tick);
 		stream.writeVec3(delta);
 		stream.writeOptional(itemInteractionData, [&](const auto& data) {
-		            data->write(stream);
-		        });
+					data->write(stream);
+				});
 		stream.writeOptional(itemStackRequest, [&](const auto& request) {
-		            request->write(stream);
-		        });
+					request->write(stream);
+				});
 		stream.writeOptional(blockActions, [&](const auto& array) {
-		            stream.writeList(array, [&](const auto& v) {
-		            v.write(stream);
-		            });
-		        });
+					stream.writeList(array, [&](const auto& v) {
+					v.write(stream);
+					});
+				});
 		stream.writeOptional(vehicleInfo ? std::optional{vehicleInfo->vehicleRotation} : std::nullopt, [&](const auto& value) {
-		            stream.writeVec2(value);
-		        });
+					stream.writeVec2(value);
+				});
 		stream.writeOptional(vehicleInfo ? std::optional{vehicleInfo->predictedVehicleActorUniqueId} : std::nullopt, [&](const auto& value) {
-		            stream.writeActorUniqueID(value);
-		        });
+					stream.writeActorUniqueID(value);
+				});
 		stream.writeFloat(analogMoveVecX);
 		stream.writeFloat(analogMoveVecZ);
 		stream.writeVec3(cameraOrientation);

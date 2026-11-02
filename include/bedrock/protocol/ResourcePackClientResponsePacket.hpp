@@ -139,7 +139,7 @@ public:
     void write(BinaryStream& stream) override {
         stream.writeVarInt(static_cast<int32_t>(status));
         stream.writeList(packIds, [&](const auto& item) {
-            stream.writeString(item);
-        });
+			stream.writeString(item);
+		});
     }
 };

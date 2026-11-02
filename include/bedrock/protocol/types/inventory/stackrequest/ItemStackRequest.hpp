@@ -57,11 +57,11 @@ public:
         filterStringCause = stream.readInt().value_or(0);
         requestId = stream.readInt().value_or(0);
         actions = stream.readList([&]() {
-            return ItemStackRequestAction::decode(stream);
-        });
+			return ItemStackRequestAction::decode(stream);
+		});
         filterStrings = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -72,8 +72,8 @@ public:
 		            	action->write(stream);
 		        });
 		stream.writeList(filterStrings, [&](const auto& value) {
-		            stream.writeString(value);
-		        });
+					stream.writeString(value);
+				});
 		stream.writeInt(filterStringCause);
     }
 };

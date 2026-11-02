@@ -71,68 +71,68 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         networkId = stream.readUnsignedVarLong().value_or(0);
         type = stream.readOptional([&]() {
-            return static_cast<PrimitiveShapeType>(stream.readVarInt().value_or(0));
-        });
+			return static_cast<PrimitiveShapeType>(stream.readVarInt().value_or(0));
+		});
         location = stream.readOptional([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         scale = stream.readOptional([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
         rotation = stream.readOptional([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
+			return stream.readVec3().value_or(glm::vec3(0.0f));
+		});
         totalTimeLeft = stream.readOptional([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
         maximumRenderDistance = stream.readOptional([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+			return stream.readFloat().value_or(0.0f);
+		});
         color = stream.readOptional([&]() {
-            return stream.readUnsignedInt().value_or(0);
-        });
+			return stream.readUnsignedInt().value_or(0);
+		});
         dimensionId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         attachedToEntityId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
         payload = stream.readOptional([&]() {
-            return PrimitiveShapePayload::decode(stream);
-        });
+			return PrimitiveShapePayload::decode(stream);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedVarLong(networkId);
         stream.writeOptional(type, [&](const auto& optionalValue) {
-            stream.writeVarInt(static_cast<int32_t>(optionalValue));
-        });
+			stream.writeVarInt(static_cast<int32_t>(optionalValue));
+		});
         stream.writeOptional(location, [&](const auto& optionalValue) {
-            stream.writeVec3(optionalValue);
-        });
+			stream.writeVec3(optionalValue);
+		});
         stream.writeOptional(scale, [&](const auto& optionalValue) {
-            stream.writeFloat(optionalValue);
-        });
+			stream.writeFloat(optionalValue);
+		});
         stream.writeOptional(rotation, [&](const auto& optionalValue) {
-            stream.writeVec3(optionalValue);
-        });
+			stream.writeVec3(optionalValue);
+		});
         stream.writeOptional(totalTimeLeft, [&](const auto& optionalValue) {
-            stream.writeFloat(optionalValue);
-        });
+			stream.writeFloat(optionalValue);
+		});
         stream.writeOptional(maximumRenderDistance, [&](const auto& optionalValue) {
-            stream.writeFloat(optionalValue);
-        });
+			stream.writeFloat(optionalValue);
+		});
         stream.writeOptional(color, [&](const auto& optionalValue) {
-            stream.writeUnsignedInt(optionalValue);
-        });
+			stream.writeUnsignedInt(optionalValue);
+		});
         stream.writeOptional(dimensionId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(attachedToEntityId, [&](const auto& optionalValue) {
-            stream.writeInt(optionalValue);
-        });
+			stream.writeInt(optionalValue);
+		});
         stream.writeOptional(payload, [&](const auto& optionalValue) {
-            if (optionalValue) optionalValue->write(stream);
-        });
+			if (optionalValue) optionalValue->write(stream);
+		});
     }
 };

@@ -123,15 +123,15 @@ public:
 		screenId = stream.readString().value_or("");
 		formId = stream.readUnsignedInt().value_or(0);
 		dataInstanceId = stream.readOptional([&]() {
-		            return stream.readUnsignedInt().value_or(0);
-		        });
+					return stream.readUnsignedInt().value_or(0);
+				});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeString(screenId);
 		stream.writeUnsignedInt(formId);
 		stream.writeOptional(dataInstanceId, [&](const auto& value) {
-		            stream.writeUnsignedInt(value);
-		        });
+					stream.writeUnsignedInt(value);
+				});
     }
 };

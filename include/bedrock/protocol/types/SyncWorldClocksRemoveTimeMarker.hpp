@@ -31,8 +31,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         clockId = stream.readUnsignedVarLong().value_or(0);
         markerIds = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     void write(BinaryStream& stream) const override {

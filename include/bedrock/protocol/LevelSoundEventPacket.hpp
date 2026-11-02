@@ -133,8 +133,8 @@ public:
 		disableRelativeVolume = stream.readBool().value_or(false);
 		actorUniqueId = stream.readLong().value_or(0);
 		firePosition = stream.readOptional([&]() {
-		            return stream.readVec3().value_or(glm::vec3(0.0f));
-		        });
+					return stream.readVec3().value_or(glm::vec3(0.0f));
+				});
     }
 
     void write(BinaryStream& stream) override {
@@ -146,7 +146,7 @@ public:
 		stream.writeBool(disableRelativeVolume);
 		stream.writeLong(actorUniqueId);
 		stream.writeOptional(firePosition, [&](const auto& value) {
-		            stream.writeVec3(value);
-		        });
+					stream.writeVec3(value);
+				});
     }
 };

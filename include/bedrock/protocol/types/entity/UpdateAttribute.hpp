@@ -57,12 +57,12 @@ public:
         defaultMax = stream.readFloat().value_or(0.0f);
         default_ = stream.readFloat().value_or(0.0f);
         modifiers = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<AttributeModifier>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<AttributeModifier>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

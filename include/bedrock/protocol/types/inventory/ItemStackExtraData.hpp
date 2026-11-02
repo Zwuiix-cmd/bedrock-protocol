@@ -34,25 +34,25 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         nbt = stream.readOptional([&]() {
-            return NetworkNbtSerializer::read(stream);
-        });
+			return NetworkNbtSerializer::read(stream);
+		});
         canPlaceOn = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         canDestroy = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeOptional(nbt, [&](const auto& optionalValue) {
-            NetworkNbtSerializer::write(stream, optionalValue);
-        });
+			NetworkNbtSerializer::write(stream, optionalValue);
+		});
         stream.writeList(canPlaceOn, [&](const auto& item) {
-            stream.writeString(item);
-        });
+			stream.writeString(item);
+		});
         stream.writeList(canDestroy, [&](const auto& item) {
-            stream.writeString(item);
-        });
+			stream.writeString(item);
+		});
     }
 };

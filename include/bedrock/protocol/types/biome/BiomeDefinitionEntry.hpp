@@ -67,17 +67,17 @@ public:
         mapWaterColor = stream.readUnsignedInt().value_or(0);
         rain = stream.readBool().value_or(false);
         tags = stream.readOptional([&]() {
-            return stream.readList([&]() {
-            return stream.readString().value_or("");
-            });
-        });
+			return stream.readList([&]() {
+			return stream.readString().value_or("");
+			});
+		});
         chunkGenData = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeDefinitionChunkGenData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeDefinitionChunkGenData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -91,12 +91,12 @@ public:
         stream.writeUnsignedInt(mapWaterColor);
         stream.writeBool(rain);
         stream.writeOptional(tags, [&](const auto& optionalValue) {
-            stream.writeList(optionalValue, [&](const auto& item) {
-            stream.writeString(item);
-            });
-        });
+			stream.writeList(optionalValue, [&](const auto& item) {
+			stream.writeString(item);
+			});
+		});
         stream.writeOptional(chunkGenData, [&](const auto& optionalValue) {
-            if (optionalValue) optionalValue->write(stream);
-        });
+			if (optionalValue) optionalValue->write(stream);
+		});
     }
 };

@@ -131,8 +131,8 @@ public:
 		            	entry->scoreboardId = stream.readVarLong().value_or(0);
 		            	if ((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::Remove))) {
 				entry->objectiveName = stream.readOptional([&]() {
-				            return stream.readString().value_or("");
-				        });
+							return stream.readString().value_or("");
+						});
 			} else if (((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangePlayer)) || (action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangeEntity)))) {
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
@@ -155,8 +155,8 @@ public:
 		            	stream.writeVarLong(entry->scoreboardId);
 		            	if ((entry->action == ScorePacketEntryAction::Remove)) {
 				stream.writeOptional(entry->objectiveName, [&](const auto& value) {
-				            stream.writeString(value);
-				        });
+							stream.writeString(value);
+						});
 			} else if (((entry->action == ScorePacketEntryAction::ChangePlayer) || (entry->action == ScorePacketEntryAction::ChangeEntity))) {
 				stream.writeString(*(entry->objectiveName));
 				stream.writeInt(entry->score);

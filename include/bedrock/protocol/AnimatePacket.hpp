@@ -134,8 +134,8 @@ public:
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         data = stream.readFloat().value_or(0.0f);
         swingSource = stream.readOptional([&]() {
-            return stream.readString().value_or("");
-        });
+			return stream.readString().value_or("");
+		});
         hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
     }
 
@@ -144,8 +144,8 @@ public:
         stream.writeActorRuntimeID(actorRuntimeId);
         stream.writeFloat(data);
         stream.writeOptional(swingSource, [&](const auto& optionalValue) {
-            stream.writeString(optionalValue);
-        });
+			stream.writeString(optionalValue);
+		});
         stream.writeVarInt(static_cast<int32_t>(hand));
     }
 };

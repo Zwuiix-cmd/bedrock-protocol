@@ -63,51 +63,51 @@ public:
         frozenOceanSurface = stream.readBool().value_or(false);
         theEndSurface = stream.readBool().value_or(false);
         surfaceMaterial = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeSurfaceMaterialData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeSurfaceMaterialData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         mesaSurface = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeMesaSurfaceData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeMesaSurfaceData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         cappedSurface = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeCappedSurfaceData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeCappedSurfaceData>();
+			value->read(stream);
+			return value;
+			}());
+		});
         noiseGradientSurface = stream.readOptional([&]() {
-            return ([&]() {
-            auto value = std::make_shared<BiomeNoiseGradientSurfaceData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<BiomeNoiseGradientSurfaceData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeOptional(surfaceMaterial, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeBool(defaultOverworldSurface);
 		stream.writeBool(swampSurface);
 		stream.writeBool(frozenOceanSurface);
 		stream.writeBool(theEndSurface);
 		stream.writeOptional(mesaSurface, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeOptional(cappedSurface, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
 		stream.writeOptional(noiseGradientSurface, [&](const auto& v) {
-		            v->write(stream);
-		        });
+					v->write(stream);
+				});
     }
 };

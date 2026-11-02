@@ -158,8 +158,8 @@ public:
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
 		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
 		links = stream.readList([&]() {
-		            return EntityLink::read(stream);
-		        });
+					return EntityLink::read(stream);
+				});
 		passengerBlockData = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<PassengerOfBlockData>();
 		    value->read(stream);
@@ -186,10 +186,10 @@ public:
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		stream.writeList(links, [&](const auto& value) {
-		            value->write(stream);
-		        });
+					value->write(stream);
+				});
 		stream.writeOptional(passengerBlockData, [&](const auto& data) {
-		            data->write(stream);
-		        });
+					data->write(stream);
+				});
     }
 };

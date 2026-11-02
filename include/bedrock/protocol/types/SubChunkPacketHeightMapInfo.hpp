@@ -31,13 +31,13 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         heights = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+			return stream.readInt().value_or(0);
+		});
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeList(heights, [&](const auto& item) {
-            stream.writeInt(item);
-        });
+			stream.writeInt(item);
+		});
     }
 };

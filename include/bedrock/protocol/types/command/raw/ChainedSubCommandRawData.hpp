@@ -32,12 +32,12 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
         valueData = stream.readList([&]() {
-            return ([&]() {
-            auto value = std::make_shared<ChainedSubCommandValueRawData>();
-            value->read(stream);
-            return value;
-            }());
-        });
+			return ([&]() {
+			auto value = std::make_shared<ChainedSubCommandValueRawData>();
+			value->read(stream);
+			return value;
+			}());
+		});
     }
 
     virtual void write(BinaryStream& stream) const {

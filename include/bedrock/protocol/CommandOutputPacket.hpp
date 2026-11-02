@@ -155,8 +155,8 @@ public:
 		    }
 		}
 		data = stream.readOptional([&]() {
-		            return stream.readString().value_or("");
-		        });
+					return stream.readString().value_or("");
+				});
     }
 
     void write(BinaryStream& stream) override {
@@ -175,7 +175,7 @@ public:
 			}());
 		}
 		stream.writeOptional(data, [&](const auto& value) {
-		            stream.writeString(value);
-		        });
+					stream.writeString(value);
+				});
     }
 };

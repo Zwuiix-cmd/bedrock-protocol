@@ -178,8 +178,17 @@ private function inferArrayScope(array $statements, array $declaration): array
         return $types;
     }
 
-private function emptyArrayValue(string $name): string
+private function emptyArrayValue(string $name, array $declaration = []): string
     {
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['name'] ?? null) !== $name || ($property['static'] ?? false)) {
+                continue;
+            }
+            $propertyType = $this->cppPropertyType($property, $declaration);
+            if (str_starts_with($propertyType, 'std::vector<')) {
+                return $propertyType . '()';
+            }
+        }
         for ($index = count($this->arrayScopes) - 1; $index >= 0; --$index) {
             $type = $this->arrayScopes[$index][$name] ?? null;
             if ($type !== null) {

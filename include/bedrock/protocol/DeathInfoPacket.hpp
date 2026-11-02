@@ -107,6 +107,9 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		messageTranslationKey = stream.readString().value_or("");
 		auto messageParametersCount = stream.readUnsignedVarInt().value_or(0);
+		if (messageParametersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < messageParametersCount; i++) {
 		    messageParameters.push_back(stream.readString().value_or(""));
 		}

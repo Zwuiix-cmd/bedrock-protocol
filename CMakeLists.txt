@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 project(bedrock-protocol VERSION 1.0.0 LANGUAGES CXX)
 
 include(FetchContent)
+include(CTest)
 include(GNUInstallDirs)
 
 option(BEDROCK_PROTOCOL_BUILD_POOL "Build the generated PacketPool implementation" ON)
@@ -10,6 +11,7 @@ option(BEDROCK_PROTOCOL_FETCH_DEPENDENCIES "Fetch GLM, magic_enum, and EnTT" ON)
 option(BEDROCK_PROTOCOL_FETCH_ENTT "Fetch EnTT when PacketPool is enabled" ON)
 option(BEDROCK_PROTOCOL_FETCH_GLM "Fetch GLM" ON)
 option(BEDROCK_PROTOCOL_FETCH_MAGIC_ENUM "Fetch magic_enum" ON)
+option(BEDROCK_PROTOCOL_BUILD_TESTS "Build the protocol regression tests" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -118,6 +120,15 @@ if(MSVC)
     else()
         target_compile_options(bedrock-protocol INTERFACE /bigobj)
     endif()
+endif()
+
+if(BEDROCK_PROTOCOL_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(bedrock-protocol-tests
+        tests/ProtocolTests.cpp
+    )
+    target_compile_features(bedrock-protocol-tests PRIVATE cxx_std_20)
+    target_link_libraries(bedrock-protocol-tests PRIVATE bedrock-protocol)
+    add_test(NAME bedrock-protocol-tests COMMAND bedrock-protocol-tests)
 endif()
 
 install(

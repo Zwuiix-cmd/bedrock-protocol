@@ -2,8 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -29,12 +31,27 @@ public:
         settings(settingsValue),
         attributes(attributesValue) {}
 
+    static std::shared_ptr<AttributeLayer> create(ReadOnlyBinaryStream& stream) {
+		auto name = stream.readString().value_or("");
+		auto dimension = stream.readUnsignedVarInt().value_or(0);
+		auto settings = std::make_shared<AttributeLayerSettings>();
+		settings->read(stream);
+		auto attributes = std::vector<std::shared_ptr<AttributeEnvironment>>();
+		auto attributesCount = stream.readUnsignedVarInt().value_or(0);
+		if (attributesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < attributesCount; ++i) {
+		    attributes.push_back(stream.readObject<AttributeEnvironment>());
+		}
+		return std::make_shared<AttributeLayer>(name, dimension, settings, attributes);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        name = stream.readString().value_or("");
-        dimension = stream.readUnsignedVarInt().value_or(0);
-        settings = std::make_shared<AttributeLayerSettings>();
-        settings->read(stream);
-        attributes = stream.readObjectList<AttributeEnvironment>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

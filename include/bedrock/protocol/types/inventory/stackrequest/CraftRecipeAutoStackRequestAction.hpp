@@ -2,8 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
@@ -13,7 +15,7 @@ class CraftRecipeAutoStackRequestAction : public ItemStackRequestAction {
 public:
     static constexpr int64_t ID = 13;
 
-    int32_t recipeId;
+    uint32_t recipeId;
     uint8_t repetitions;
     uint8_t repetitions2;
     std::vector<std::shared_ptr<RecipeIngredient>> ingredients;
@@ -21,7 +23,7 @@ public:
     CraftRecipeAutoStackRequestAction() = default;
     virtual ~CraftRecipeAutoStackRequestAction() = default;
     explicit CraftRecipeAutoStackRequestAction(
-        const int32_t& recipeIdValue,
+        const uint32_t& recipeIdValue,
         const uint8_t& repetitionsValue,
         const uint8_t& repetitions2Value,
         const std::vector<std::shared_ptr<RecipeIngredient>>& ingredientsValue
@@ -31,13 +33,28 @@ public:
         repetitions2(repetitions2Value),
         ingredients(ingredientsValue) {}
 
+    static std::shared_ptr<CraftRecipeAutoStackRequestAction> create(ReadOnlyBinaryStream& stream) {
+		auto recipeId = stream.readUnsignedVarInt().value_or(0);
+		auto repetitions = stream.readUnsignedByte().value_or(0);
+		auto repetitions2 = stream.readUnsignedByte().value_or(0);
+		auto ingredients = std::vector<std::shared_ptr<RecipeIngredient>>();
+		auto ingredientsCount = stream.readUnsignedByte().value_or(0);
+		if (ingredientsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < ingredientsCount; ++i) {
+		    ingredients.push_back(stream.readObject<RecipeIngredient>());
+		}
+		return std::make_shared<CraftRecipeAutoStackRequestAction>(recipeId, repetitions, repetitions2, ingredients);
+    }
+
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        recipeId = stream.readInt().value_or(0);
-        repetitions = stream.readUnsignedByte().value_or(0);
-        repetitions2 = stream.readUnsignedByte().value_or(0);
-        ingredients = stream.readObjectList<RecipeIngredient>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     void write(BinaryStream& stream) const override {

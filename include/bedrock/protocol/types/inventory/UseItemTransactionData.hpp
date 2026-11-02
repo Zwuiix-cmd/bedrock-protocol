@@ -39,36 +39,40 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
+        actions = stream.readObjectList<NetworkInventoryAction>();
         actionType = magic_enum::enum_cast<Action>(
             stream.readUnsignedVarInt().value_or(0)
         ).value_or(Action::ClickBlock);
+        triggerType = magic_enum::enum_cast<TriggerType>(
+            stream.readUnsignedVarInt().value_or(0)
+        ).value_or(TriggerType::Unknown);
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         face = stream.readVarInt().value_or(0);
         hotbarSlot = stream.readVarInt().value_or(0);
+        itemInHand = stream.readValue<NetworkItemStack>();
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
-        clientCooldownState = stream.readUnsignedByte().value_or(0);
-        triggerType = magic_enum::enum_cast<TriggerType>(
-            stream.readVarInt().value_or(0)
-        ).value_or(TriggerType::Unknown);
-        itemInHand = stream.readValue<NetworkItemStack>();
         clientInteractPrediction = magic_enum::enum_cast<PredictedResult>(
-            stream.readVarInt().value_or(0)
+            stream.readUnsignedVarInt().value_or(0)
         ).value_or(PredictedResult::Failure);
+        clientCooldownState = stream.readUnsignedByte().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeInt(magic_enum::enum_integer(actionType));
+        stream.writeList(actions, [&](const auto& item) {
+            item->write(stream);
+        });
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(actionType));
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(triggerType));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeVarInt(face);
         stream.writeVarInt(hotbarSlot);
+        itemInHand.write(stream);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);
         stream.writeUnsignedVarInt(blockRuntimeId);
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(clientInteractPrediction));
         stream.writeUnsignedByte(clientCooldownState);
-        stream.writeVarInt(magic_enum::enum_integer(triggerType));
-        itemInHand.write(stream);
-        stream.writeVarInt(magic_enum::enum_integer(clientInteractPrediction));
     }
 };

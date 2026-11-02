@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/command/raw/CommandParameterRawData.hpp>
@@ -20,9 +22,24 @@ public:
         chaining(chainingValue),
         parameters(parametersValue) {}
 
+    static std::shared_ptr<CommandOverloadRawData> create(ReadOnlyBinaryStream& stream) {
+		auto chaining = stream.readBool().value_or(false);
+		auto parameters = std::vector<std::shared_ptr<CommandParameterRawData>>();
+		auto parametersCount = stream.readUnsignedVarInt().value_or(0);
+		if (parametersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < parametersCount; i++) {
+		    parameters.push_back(stream.readObject<CommandParameterRawData>());
+		}
+		return std::make_shared<CommandOverloadRawData>(chaining, parameters);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        chaining = stream.readBool().value_or(false);
-        parameters = stream.readObjectList<CommandParameterRawData>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

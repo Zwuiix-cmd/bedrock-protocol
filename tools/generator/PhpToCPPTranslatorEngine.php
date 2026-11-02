@@ -71,6 +71,9 @@ final class PhpToCPPTranslatorEngine
     /** @var array<string, array<string, array{read: string, write: string}>> */
     private array $inferredPropertyCodecs = [];
 
+    /** @var array<string, array<string, array{type: string, read: string, write: string}>> */
+    private array $inferredPropertyElementCodecs = [];
+
     /** @var array<string, list<string>> */
     private array $inferredPropertyOrder = [];
 

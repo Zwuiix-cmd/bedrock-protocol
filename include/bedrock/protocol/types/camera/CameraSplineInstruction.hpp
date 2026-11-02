@@ -2,6 +2,7 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -38,16 +39,34 @@ public:
         splineIdentifier(splineIdentifierValue),
         loadFromJson(loadFromJsonValue) {}
 
+    static std::shared_ptr<CameraSplineInstruction> create(ReadOnlyBinaryStream& stream) {
+		auto totalTime = stream.readFloat().value_or(0.0f);
+		auto easeType = stream.readUnsignedByte().value_or(0);
+		auto curve = std::vector<glm::vec3>();
+		auto curveCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; (i < curveCount); ++i) {
+			curve.push_back(stream.readVec3().value_or(glm::vec3(0.0f)));
+		}
+		auto progressKeyFrames = std::vector<std::shared_ptr<CameraProgressOption>>();
+		auto progressKeyFrameCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; (i < progressKeyFrameCount); ++i) {
+			progressKeyFrames.push_back(stream.readObject<CameraProgressOption>());
+		}
+		auto rotationOptions = std::vector<std::shared_ptr<CameraRotationOption>>();
+		auto rotationOptionCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; (i < rotationOptionCount); ++i) {
+			rotationOptions.push_back(stream.readObject<CameraRotationOption>());
+		}
+		auto splineIdentifier = stream.readString().value_or("");
+		auto loadFromJson = stream.readBool().value_or(false);
+		return std::make_shared<CameraSplineInstruction>(totalTime, easeType, curve, progressKeyFrames, rotationOptions, splineIdentifier, loadFromJson);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        totalTime = stream.readFloat().value_or(0.0f);
-        easeType = stream.readUnsignedByte().value_or(0);
-        curve = stream.readList([&]() {
-            return stream.readVec3().value_or(glm::vec3(0.0f));
-        });
-        progressKeyFrames = stream.readObjectList<CameraProgressOption>();
-        rotationOptions = stream.readObjectList<CameraRotationOption>();
-        splineIdentifier = stream.readString().value_or("");
-        loadFromJson = stream.readBool().value_or(false);
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

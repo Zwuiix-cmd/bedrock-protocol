@@ -107,6 +107,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto shapesCount = stream.readUnsignedVarInt().value_or(0);
+		if (shapesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < shapesCount; ++i) {
 		    shapes.push_back(stream.readObject<PacketShapeData>());
 		}

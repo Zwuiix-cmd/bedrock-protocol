@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 
@@ -10,7 +12,7 @@ class BiomeReplacementData {
 public:
     int16_t biome;
     int32_t dimension;
-    std::vector<int32_t> targetBiomes;
+    std::vector<int16_t> targetBiomes;
     float amount;
     uint32_t replacementIndex;
 
@@ -18,7 +20,7 @@ public:
     explicit BiomeReplacementData(
         const int16_t& biomeValue,
         const int32_t& dimensionValue,
-        const std::vector<int32_t>& targetBiomesValue,
+        const std::vector<int16_t>& targetBiomesValue,
         const float& amountValue,
         const uint32_t& replacementIndexValue
     ) :
@@ -28,14 +30,24 @@ public:
         amount(amountValue),
         replacementIndex(replacementIndexValue) {}
 
+    static std::shared_ptr<BiomeReplacementData> create(ReadOnlyBinaryStream& stream) {
+		auto biome = stream.readShort().value_or(0);
+		auto dimension = stream.readVarInt().value_or(0);
+		auto targetBiomes = std::vector<int16_t>();
+		auto targetBiomeCount = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; (i < targetBiomeCount); ++i) {
+			targetBiomes.push_back(stream.readShort().value_or(0));
+		}
+		auto amount = stream.readFloat().value_or(0.0f);
+		auto replacementIndex = stream.readUnsignedInt().value_or(0);
+		return std::make_shared<BiomeReplacementData>(biome, dimension, targetBiomes, amount, replacementIndex);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        biome = stream.readShort().value_or(0);
-        dimension = stream.readVarInt().value_or(0);
-        targetBiomes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
-        amount = stream.readFloat().value_or(0.0f);
-        replacementIndex = stream.readUnsignedInt().value_or(0);
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

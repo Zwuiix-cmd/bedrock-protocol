@@ -116,8 +116,7 @@ public:
 		type = magic_enum::enum_cast<ClientboundDebugRendererPacket::Type>(
 			std::string_view(stream.readString().value_or(""))
 		).value_or(ClientboundDebugRendererPacket::Type::Clear);
-		data = std::make_shared<DebugMarkerData>();
-		data.value()->read(stream);
+		data = stream.readOptional([&]() { return stream.readObject<DebugMarkerData>(); });
     }
 
     void write(BinaryStream& stream) override {

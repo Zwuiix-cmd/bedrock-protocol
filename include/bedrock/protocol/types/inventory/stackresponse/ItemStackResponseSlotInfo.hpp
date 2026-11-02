@@ -38,7 +38,7 @@ public:
         slot = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readUnsignedByte().value_or(0);
         count = stream.readUnsignedByte().value_or(0);
-        itemStackId = stream.readInt().value_or(0);
+        itemStackId = stream.readVarInt().value_or(0);
         customName = stream.readString().value_or("");
         filteredCustomName = stream.readString().value_or("");
         durabilityCorrection = stream.readVarInt().value_or(0);
@@ -48,7 +48,7 @@ public:
 		stream.writeUnsignedByte(slot);
 		stream.writeUnsignedByte(hotbarSlot);
 		stream.writeUnsignedByte(count);
-		stream.writeInt(itemStackId);
+		stream.writeVarInt(itemStackId);
 		stream.writeString(customName);
 		stream.writeString(filteredCustomName);
 		stream.writeVarInt(durabilityCorrection);

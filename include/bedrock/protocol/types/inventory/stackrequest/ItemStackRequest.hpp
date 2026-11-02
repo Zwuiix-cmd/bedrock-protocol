@@ -46,19 +46,28 @@ public:
         filterStrings(filterStringsValue),
         filterStringCause(filterStringCauseValue) {}
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        requestId = stream.readInt().value_or(0);
-        actions = stream.readList([&]() {
+    static std::shared_ptr<ItemStackRequest> create(ReadOnlyBinaryStream& stream) {
+        auto result = std::make_shared<ItemStackRequest>();
+        result->requestId = stream.readVarInt().value_or(0);
+        result->actions = stream.readList([&]() {
             return ItemStackRequestAction::create(stream);
         });
-        filterStrings = stream.readList([&]() {
+        result->filterStrings = stream.readList([&]() {
             return stream.readString().value_or("");
         });
-        filterStringCause = stream.readInt().value_or(0);
+        result->filterStringCause = stream.readInt().value_or(0);
+        return result;
+    }
+
+    virtual void read(ReadOnlyBinaryStream& stream) {
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeInt(requestId);
+		stream.writeVarInt(requestId);
 		stream.writeUnsignedVarInt(actions.size());
 		for (const auto& action : actions) {
 			stream.writeUnsignedByte(action->getTypeId());

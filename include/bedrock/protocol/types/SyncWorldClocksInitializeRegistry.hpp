@@ -2,8 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClockData.hpp>
@@ -19,10 +21,25 @@ public:
     virtual ~SyncWorldClocksInitializeRegistry() = default;
     explicit SyncWorldClocksInitializeRegistry(const std::vector<std::shared_ptr<SyncWorldClockData>>& clockDataValue) : clockData(clockDataValue) {}
 
+    static std::shared_ptr<SyncWorldClocksInitializeRegistry> create(ReadOnlyBinaryStream& stream) {
+		auto clockData = std::vector<std::shared_ptr<SyncWorldClockData>>();
+		auto clockDataCount = stream.readUnsignedVarInt().value_or(0);
+		if (clockDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < clockDataCount; ++i) {
+		    clockData.push_back(stream.readObject<SyncWorldClockData>());
+		}
+		return std::make_shared<SyncWorldClocksInitializeRegistry>(clockData);
+    }
+
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        clockData = stream.readObjectList<SyncWorldClockData>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     void write(BinaryStream& stream) const override {

@@ -4,29 +4,39 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 #include <exception>
+#include <memory>
 #include <vector>
 
 
 class SubChunkPacketHeightMapInfo {
 public:
-    std::vector<int32_t> heights;
+    std::vector<int8_t> heights;
 
     SubChunkPacketHeightMapInfo() = default;
-    explicit SubChunkPacketHeightMapInfo(const std::vector<int32_t>& heightsValue) : heights(heightsValue) {
+    explicit SubChunkPacketHeightMapInfo(const std::vector<int8_t>& heightsValue) : heights(heightsValue) {
 		if (heightsValue.size() != 256) {
 			throw std::exception{};
 		}
     }
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        heights = stream.readList([&]() {
-            return stream.readInt().value_or(0);
+    static std::shared_ptr<SubChunkPacketHeightMapInfo> create(ReadOnlyBinaryStream& stream) {
+        auto result = std::make_shared<SubChunkPacketHeightMapInfo>();
+        result->heights = stream.readList([&]() {
+            return stream.readByte().value_or(0);
         });
+        return result;
+    }
+
+    virtual void read(ReadOnlyBinaryStream& stream) {
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeList(heights, [&](const auto& item) {
-            stream.writeInt(item);
+            stream.writeByte(item);
         });
     }
 };

@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SerializableVoxelCells.hpp>
@@ -26,18 +28,41 @@ public:
         yCoordinates(yCoordinatesValue),
         zCoordinates(zCoordinatesValue) {}
 
+    static std::shared_ptr<SerializableVoxelShape> create(ReadOnlyBinaryStream& stream) {
+		auto cells = std::make_shared<SerializableVoxelCells>();
+		cells->read(stream);
+		auto xCoordinates = std::vector<float>();
+		auto xCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
+		if (xCoordinatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < xCoordinatesCount; ++i) {
+		    xCoordinates.push_back(stream.readFloat().value_or(0.0f));
+		}
+		auto yCoordinates = std::vector<float>();
+		auto yCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
+		if (yCoordinatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < yCoordinatesCount; ++i) {
+		    yCoordinates.push_back(stream.readFloat().value_or(0.0f));
+		}
+		auto zCoordinates = std::vector<float>();
+		auto zCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
+		if (zCoordinatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < zCoordinatesCount; ++i) {
+		    zCoordinates.push_back(stream.readFloat().value_or(0.0f));
+		}
+		return std::make_shared<SerializableVoxelShape>(cells, xCoordinates, yCoordinates, zCoordinates);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        cells = std::make_shared<SerializableVoxelCells>();
-        cells->read(stream);
-        xCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
-        yCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
-        zCoordinates = stream.readList([&]() {
-            return stream.readFloat().value_or(0.0f);
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

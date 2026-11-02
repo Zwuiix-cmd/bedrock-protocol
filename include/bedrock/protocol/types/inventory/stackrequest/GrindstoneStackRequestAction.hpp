@@ -10,18 +10,18 @@ class GrindstoneStackRequestAction : public ItemStackRequestAction {
 public:
     static constexpr int64_t ID = 16;
 
-    int32_t recipeId;
+    uint32_t recipeId;
     int32_t repairCost;
     uint8_t repetitions;
 
     GrindstoneStackRequestAction() = default;
     virtual ~GrindstoneStackRequestAction() = default;
-    explicit GrindstoneStackRequestAction(const int32_t& recipeIdValue, const int32_t& repairCostValue, const uint8_t& repetitionsValue) : recipeId(recipeIdValue), repairCost(repairCostValue), repetitions(repetitionsValue) {}
+    explicit GrindstoneStackRequestAction(const uint32_t& recipeIdValue, const int32_t& repairCostValue, const uint8_t& repetitionsValue) : recipeId(recipeIdValue), repairCost(repairCostValue), repetitions(repetitionsValue) {}
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        recipeId = stream.readInt().value_or(0);
+        recipeId = stream.readUnsignedVarInt().value_or(0);
         repairCost = stream.readVarInt().value_or(0);
         repetitions = stream.readUnsignedByte().value_or(0);
     }

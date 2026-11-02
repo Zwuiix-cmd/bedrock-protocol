@@ -3,6 +3,7 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
+#include <exception>
 
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
@@ -17,10 +18,15 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        (void)stream;
+        actions = stream.readObjectList<NetworkInventoryAction>();
+        if (actions.size() > 0) {
+            throw std::exception{};
+        }
     }
 
     void write(BinaryStream& stream) const override {
-        (void)stream;
+        stream.writeList(actions, [&](const auto& item) {
+            item->write(stream);
+        });
     }
 };

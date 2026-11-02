@@ -108,6 +108,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto hudElementsCount = stream.readUnsignedVarInt().value_or(0);
+		if (hudElementsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < hudElementsCount; ++i) {
 		    hudElements.push_back(magic_enum::enum_cast<HudElement>(
 			stream.readVarInt().value_or(0)

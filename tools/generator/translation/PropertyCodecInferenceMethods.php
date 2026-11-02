@@ -65,6 +65,16 @@ private function collectVariableCodecs(Node $node, array &$variableCodecs, array
                 $variableCodecs[(string) $node->var->name] = $codec;
             }
         }
+        if ($node instanceof Node\Expr\Assign
+            && $node->var instanceof Node\Expr\ArrayDimFetch
+            && $node->var->dim === null
+            && $node->var->var instanceof Node\Expr\Variable) {
+            $codec = $this->codecExpression($node->expr, $variableCodecs, $declaration);
+            if ($codec !== null) {
+                $codec['list'] = true;
+                $variableCodecs[(string) $node->var->var->name] = $codec;
+            }
+        }
         foreach ($node->getSubNodeNames() as $name) {
             $child = $node->$name;
             if ($child instanceof Node) {
@@ -160,7 +170,11 @@ private function inferConstructorPropertyCodecs(Node\Expr\New_ $node, array $var
             $this->registerPropertyOrder($owner, (string) $property['name']);
             $codec = $this->codecExpression($argument->value, $variableCodecs, $declaration);
             if ($codec !== null) {
-                $this->registerPropertyCodec($owner, (string) $property['name'], $codec);
+                if (($codec['list'] ?? false) === true) {
+                    $this->registerPropertyElementCodec($owner, (string) $property['name'], $codec);
+                } else {
+                    $this->registerPropertyCodec($owner, (string) $property['name'], $codec);
+                }
             }
         }
     }
@@ -307,6 +321,13 @@ private function codecForCall(string $class, string $name): ?array
             $read = str_contains($name, 'unsigned') ? 'stream.readUnsignedByte().value_or(0)' : 'stream.readByte().value_or(0)';
             $write = str_contains($name, 'unsigned') ? 'stream.writeUnsignedByte(%VALUE%);' : 'stream.writeByte(%VALUE%);';
         } elseif ($class === 'commontypes') {
+            $mapped = $this->catalog->streamMethod('CommonTypes', $name);
+            if ($mapped !== null) {
+                $mappedCodec = $this->codecForMappedStreamMethod($mapped);
+                if ($mappedCodec !== null) {
+                    return $mappedCodec;
+                }
+            }
             $simple = str_replace(['get', 'put'], '', $name);
             if ($simple === 'vector2') {
                 return ['type' => 'glm::vec2', 'read' => 'stream.readVec2().value_or(glm::vec2(0.0f))', 'write' => 'stream.writeVec2(%VALUE%);'];
@@ -331,12 +352,91 @@ private function codecForCall(string $class, string $name): ?array
         return $type !== null && $read !== null && $write !== null ? ['type' => $type, 'read' => $read, 'write' => $write] : null;
     }
 
+    private function codecForMappedStreamMethod(string $method): ?array
+    {
+        return match ($method) {
+            'readBool' => [
+                'type' => 'bool',
+                'read' => 'stream.readBool().value_or(false)',
+                'write' => 'stream.writeBool(%VALUE%);',
+            ],
+            'writeBool' => [
+                'type' => 'bool',
+                'read' => 'stream.readBool().value_or(false)',
+                'write' => 'stream.writeBool(%VALUE%);',
+            ],
+            'readString' => [
+                'type' => 'std::string',
+                'read' => 'stream.readString().value_or("")',
+                'write' => 'stream.writeString(%VALUE%);',
+            ],
+            'writeString' => [
+                'type' => 'std::string',
+                'read' => 'stream.readString().value_or("")',
+                'write' => 'stream.writeString(%VALUE%);',
+            ],
+            'readVarInt' => [
+                'type' => 'int32_t',
+                'read' => 'stream.readVarInt().value_or(0)',
+                'write' => 'stream.writeVarInt(%VALUE%);',
+            ],
+            'writeVarInt' => [
+                'type' => 'int32_t',
+                'read' => 'stream.readVarInt().value_or(0)',
+                'write' => 'stream.writeVarInt(%VALUE%);',
+            ],
+            'readUnsignedVarInt' => [
+                'type' => 'uint32_t',
+                'read' => 'stream.readUnsignedVarInt().value_or(0)',
+                'write' => 'stream.writeUnsignedVarInt(%VALUE%);',
+            ],
+            'writeUnsignedVarInt' => [
+                'type' => 'uint32_t',
+                'read' => 'stream.readUnsignedVarInt().value_or(0)',
+                'write' => 'stream.writeUnsignedVarInt(%VALUE%);',
+            ],
+            'readVarLong' => [
+                'type' => 'int64_t',
+                'read' => 'stream.readVarLong().value_or(0)',
+                'write' => 'stream.writeVarLong(%VALUE%);',
+            ],
+            'writeVarLong' => [
+                'type' => 'int64_t',
+                'read' => 'stream.readVarLong().value_or(0)',
+                'write' => 'stream.writeVarLong(%VALUE%);',
+            ],
+            'readUnsignedVarLong' => [
+                'type' => 'uint64_t',
+                'read' => 'stream.readUnsignedVarLong().value_or(0)',
+                'write' => 'stream.writeUnsignedVarLong(%VALUE%);',
+            ],
+            'writeUnsignedVarLong' => [
+                'type' => 'uint64_t',
+                'read' => 'stream.readUnsignedVarLong().value_or(0)',
+                'write' => 'stream.writeUnsignedVarLong(%VALUE%);',
+            ],
+            default => null,
+        };
+    }
+
 private function registerPropertyCodec(string $owner, string $property, array $codec): void
     {
         $owner = CPPName::type($owner);
         $this->registerPropertyOrder($owner, $property);
         $this->inferredPropertyTypes[$owner][$property] = $codec['type'];
         $this->inferredPropertyCodecs[$owner][$property] = $codec;
+    }
+
+    private function registerPropertyElementCodec(string $owner, string $property, array $codec): void
+    {
+        $owner = CPPName::type($owner);
+        $this->registerPropertyOrder($owner, $property);
+        $this->inferredPropertyTypes[$owner][$property] = $codec['type'];
+        $this->inferredPropertyElementCodecs[$owner][$property] = [
+            'type' => $codec['type'],
+            'read' => $codec['read'],
+            'write' => $codec['write'],
+        ];
     }
 
     private function registerPropertyOrder(string $owner, string $property): void
@@ -382,8 +482,19 @@ private function inferredPropertyType(array $declaration, array $property): ?str
         return $this->inferredPropertyTypes[CPPName::type((string) ($declaration['name'] ?? ''))][(string) ($property['name'] ?? '')] ?? null;
     }
 
+    private function inferredPropertyElementCodec(array $declaration, array $property, string $operation): ?string
+    {
+        return $this->inferredPropertyElementCodecs[
+            CPPName::type((string) ($declaration['name'] ?? ''))
+        ][(string) ($property['name'] ?? '')][$operation] ?? null;
+    }
+
 private function inferredPropertyReadValue(array $declaration, array $property): ?string
     {
+        $elementCodec = $this->inferredPropertyElementCodec($declaration, $property, 'read');
+        if ($elementCodec !== null) {
+            return 'stream.readList(' . $this->callback('', 'return ' . $elementCodec . ';') . ')';
+        }
         $codec = $this->inferredPropertyCodec($declaration, $property, 'read');
         if ($codec === null) {
             return null;
@@ -401,6 +512,13 @@ private function inferredPropertyReadValue(array $declaration, array $property):
 
 private function inferredPropertyWriteValue(array $declaration, array $property, string $value): ?string
     {
+        $elementCodec = $this->inferredPropertyElementCodec($declaration, $property, 'write');
+        if ($elementCodec !== null) {
+            return 'stream.writeList(' . $value . ', ' . $this->callback(
+                'const auto& item',
+                str_replace('%VALUE%', 'item', $elementCodec),
+            ) . ');';
+        }
         $codec = $this->inferredPropertyCodec($declaration, $property, 'write');
         if ($codec === null) {
             return null;

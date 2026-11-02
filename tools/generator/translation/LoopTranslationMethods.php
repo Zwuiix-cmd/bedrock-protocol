@@ -76,13 +76,19 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         $index = CPPName::identifier((string) $indexInit->var->name);
         $incrementText = $this->expression($increment, $declaration, $method);
         $lines = [];
+        $targetAlreadyDeclared = $body->expr->var->var instanceof Node\Expr\Variable
+            && isset($this->declaredVariables[(string) $body->expr->var->var->name]);
         if (!$this->isGeneratedObjectProperty($body->expr->var->var, $declaration)
-            && !$this->isVectorExpression($body->expr->var->var, $declaration)) {
+            && !$this->isVectorExpression($body->expr->var->var, $declaration)
+            && !$targetAlreadyDeclared) {
             $lines[] = 'auto ' . $target . ' = std::vector<decltype(' . $value . ')>();';
         }
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
+        $lines[] = 'if (' . $countName . ' > ReadOnlyBinaryStream::MaxCollectionSize) {';
+        $lines[] = '    throw std::runtime_error("protocol collection is too large");';
+        $lines[] = '}';
         $counterType = $countInit instanceof Node\Expr\Assign
             ? $this->inferredCPPType($countInit->expr, $declaration)
             : ($this->expressionTypes[$sourceCountName] ?? null);

@@ -31,22 +31,26 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
+        actions = stream.readObjectList<NetworkInventoryAction>();
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         actionType = magic_enum::enum_cast<Action>(
             stream.readUnsignedVarInt().value_or(0)
         ).value_or(Action::Interact);
         hotbarSlot = stream.readVarInt().value_or(0);
+        itemInHand = stream.readValue<NetworkItemStack>();
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        itemInHand = stream.readValue<NetworkItemStack>();
     }
 
     void write(BinaryStream& stream) const override {
+        stream.writeList(actions, [&](const auto& item) {
+            item->write(stream);
+        });
         stream.writeActorRuntimeID(actorRuntimeId);
-        stream.writeInt(magic_enum::enum_integer(actionType));
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(actionType));
         stream.writeVarInt(hotbarSlot);
+        itemInHand.write(stream);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);
-        itemInHand.write(stream);
     }
 };

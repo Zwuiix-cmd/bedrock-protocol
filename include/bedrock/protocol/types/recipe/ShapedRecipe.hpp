@@ -21,7 +21,7 @@ public:
     int32_t priority;
     bool symmetric;
     std::shared_ptr<RecipeUnlockingRequirement> unlockingRequirement;
-    int32_t recipeNetId;
+    uint32_t recipeNetId;
 
     ShapedRecipe() = default;
     virtual ~ShapedRecipe() = default;
@@ -41,7 +41,7 @@ public:
         result->symmetric = stream.readBool().value_or(false);
         result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         result->unlockingRequirement->read(stream);
-        result->recipeNetId = stream.readInt().value_or(0);
+        result->recipeNetId = stream.readUnsignedVarInt().value_or(0);
         return result;
     }
 
@@ -59,7 +59,7 @@ public:
         symmetric = stream.readBool().value_or(false);
         unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         unlockingRequirement->read(stream);
-        recipeNetId = stream.readInt().value_or(0);
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
@@ -77,6 +77,6 @@ public:
         stream.writeVarInt(priority);
         stream.writeBool(symmetric);
         unlockingRequirement->write(stream);
-        stream.writeInt(recipeNetId);
+        stream.writeUnsignedVarInt(recipeNetId);
     }
 };

@@ -2,8 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -16,7 +18,7 @@ public:
     uint16_t flags;
     std::string permission;
     int32_t aliasEnumIndex;
-    std::vector<int32_t> chainedSubCommandDataIndexes;
+    std::vector<uint32_t> chainedSubCommandDataIndexes;
     std::vector<std::shared_ptr<CommandOverloadRawData>> overloads;
 
     CommandRawData() = default;
@@ -26,7 +28,7 @@ public:
         const uint16_t& flagsValue,
         const std::string& permissionValue,
         const int32_t& aliasEnumIndexValue,
-        const std::vector<int32_t>& chainedSubCommandDataIndexesValue,
+        const std::vector<uint32_t>& chainedSubCommandDataIndexesValue,
         const std::vector<std::shared_ptr<CommandOverloadRawData>>& overloadsValue
     ) :
         name(nameValue),
@@ -37,16 +39,36 @@ public:
         chainedSubCommandDataIndexes(chainedSubCommandDataIndexesValue),
         overloads(overloadsValue) {}
 
+    static std::shared_ptr<CommandRawData> create(ReadOnlyBinaryStream& stream) {
+		auto name = stream.readString().value_or("");
+		auto description = stream.readString().value_or("");
+		auto flags = stream.readUnsignedShort().value_or(0);
+		auto permission = stream.readString().value_or("");
+		auto aliasEnumIndex = stream.readInt().value_or(0);
+		auto chainedSubCommandDataIndexes = std::vector<uint32_t>();
+		auto chainedSubCommandDataIndexesCount = stream.readUnsignedVarInt().value_or(0);
+		if (chainedSubCommandDataIndexesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < chainedSubCommandDataIndexesCount; i++) {
+		    chainedSubCommandDataIndexes.push_back(stream.readUnsignedInt().value_or(0));
+		}
+		auto overloads = std::vector<std::shared_ptr<CommandOverloadRawData>>();
+		auto overloadsCount = stream.readUnsignedVarInt().value_or(0);
+		if (overloadsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < overloadsCount; i++) {
+		    overloads.push_back(stream.readObject<CommandOverloadRawData>());
+		}
+		return std::make_shared<CommandRawData>(name, description, flags, permission, aliasEnumIndex, chainedSubCommandDataIndexes, overloads);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        name = stream.readString().value_or("");
-        description = stream.readString().value_or("");
-        flags = stream.readUnsignedShort().value_or(0);
-        permission = stream.readString().value_or("");
-        aliasEnumIndex = stream.readInt().value_or(0);
-        chainedSubCommandDataIndexes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
-        overloads = stream.readObjectList<CommandOverloadRawData>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

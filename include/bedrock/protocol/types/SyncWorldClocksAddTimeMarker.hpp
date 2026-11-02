@@ -2,8 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
@@ -25,11 +27,26 @@ public:
         clockId(clockIdValue),
         markers(markersValue) {}
 
+    static std::shared_ptr<SyncWorldClocksAddTimeMarker> create(ReadOnlyBinaryStream& stream) {
+		auto clockId = stream.readUnsignedVarLong().value_or(0);
+		auto markers = std::vector<std::shared_ptr<SyncWorldClockMarkerData>>();
+		auto markersCount = stream.readUnsignedVarInt().value_or(0);
+		if (markersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < markersCount; ++i) {
+		    markers.push_back(stream.readObject<SyncWorldClockMarkerData>());
+		}
+		return std::make_shared<SyncWorldClocksAddTimeMarker>(clockId, markers);
+    }
+
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        clockId = stream.readUnsignedVarLong().value_or(0);
-        markers = stream.readObjectList<SyncWorldClockMarkerData>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     void write(BinaryStream& stream) const override {

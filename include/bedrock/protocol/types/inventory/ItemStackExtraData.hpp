@@ -31,10 +31,10 @@ public:
             return NetworkNbtSerializer::read(stream);
         });
         canPlaceOn = stream.readList([&]() {
-            return stream.readString().value_or("");
+            return stream.readByteArray(0).value_or("");
         });
         canDestroy = stream.readList([&]() {
-            return stream.readString().value_or("");
+            return stream.readByteArray(0).value_or("");
         });
     }
 
@@ -43,10 +43,10 @@ public:
             NetworkNbtSerializer::write(stream, optionalValue);
         });
         stream.writeList(canPlaceOn, [&](const auto& item) {
-            stream.writeString(item);
+            stream.writeByteArray(item);
         });
         stream.writeList(canDestroy, [&](const auto& item) {
-            stream.writeString(item);
+            stream.writeByteArray(item);
         });
     }
 };

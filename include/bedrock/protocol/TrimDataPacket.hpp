@@ -110,10 +110,16 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto trimPatternsCount = stream.readUnsignedVarInt().value_or(0);
+		if (trimPatternsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < trimPatternsCount; ++i) {
 		    trimPatterns.push_back(stream.readObject<TrimPattern>());
 		}
 		auto trimMaterialsCount = stream.readUnsignedVarInt().value_or(0);
+		if (trimMaterialsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < trimMaterialsCount; ++i) {
 		    trimMaterials.push_back(stream.readObject<TrimMaterial>());
 		}

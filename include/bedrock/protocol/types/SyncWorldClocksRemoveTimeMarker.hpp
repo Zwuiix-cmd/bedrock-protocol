@@ -2,7 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
+#include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClocksPayload.hpp>
@@ -12,19 +15,32 @@ public:
     static constexpr int64_t ID = 3;
 
     uint64_t clockId;
-    std::vector<int32_t> markerIds;
+    std::vector<uint64_t> markerIds;
 
     SyncWorldClocksRemoveTimeMarker() = default;
     virtual ~SyncWorldClocksRemoveTimeMarker() = default;
-    explicit SyncWorldClocksRemoveTimeMarker(const uint64_t& clockIdValue, const std::vector<int32_t>& markerIdsValue) : clockId(clockIdValue), markerIds(markerIdsValue) {}
+    explicit SyncWorldClocksRemoveTimeMarker(const uint64_t& clockIdValue, const std::vector<uint64_t>& markerIdsValue) : clockId(clockIdValue), markerIds(markerIdsValue) {}
+
+    static std::shared_ptr<SyncWorldClocksRemoveTimeMarker> create(ReadOnlyBinaryStream& stream) {
+		auto clockId = stream.readUnsignedVarLong().value_or(0);
+		auto markerIds = std::vector<uint64_t>();
+		auto markerIdsCount = stream.readUnsignedVarInt().value_or(0);
+		if (markerIdsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < markerIdsCount; ++i) {
+		    markerIds.push_back(stream.readUnsignedVarLong().value_or(0));
+		}
+		return std::make_shared<SyncWorldClocksRemoveTimeMarker>(clockId, markerIds);
+    }
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        clockId = stream.readUnsignedVarLong().value_or(0);
-        markerIds = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     void write(BinaryStream& stream) const override {

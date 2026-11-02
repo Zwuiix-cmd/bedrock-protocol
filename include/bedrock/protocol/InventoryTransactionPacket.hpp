@@ -118,9 +118,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		requestId = stream.readInt().value_or(0);
+		requestId = stream.readVarInt().value_or(0);
 		if (requestId != 0) {
 			auto requestChangedSlotsCount = stream.readUnsignedVarInt().value_or(0);
+			if (requestChangedSlotsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+			    throw std::runtime_error("protocol collection is too large");
+			}
 			for (std::size_t i = 0; i < requestChangedSlotsCount; ++i) {
 			    requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}
@@ -161,7 +164,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeInt(requestId);
+		stream.writeVarInt(requestId);
 		if (requestId != 0) {
 			stream.writeUnsignedVarInt(requestChangedSlots.size());
 			for (const auto& changedSlots : requestChangedSlots) {

@@ -107,6 +107,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto priorityDataCount = stream.readUnsignedVarInt().value_or(0);
+		if (priorityDataCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < priorityDataCount; ++i) {
 		    priorityData.push_back(stream.readObject<CameraAimAssistActorPriorityData>());
 		}

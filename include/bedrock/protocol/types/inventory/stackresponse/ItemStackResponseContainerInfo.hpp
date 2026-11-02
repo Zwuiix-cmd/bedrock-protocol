@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
@@ -21,10 +23,25 @@ public:
         containerName(containerNameValue),
         slots(slotsValue) {}
 
+    static std::shared_ptr<ItemStackResponseContainerInfo> create(ReadOnlyBinaryStream& stream) {
+		auto containerName = std::make_shared<FullContainerName>();
+		containerName->read(stream);
+		auto slots = std::vector<std::shared_ptr<ItemStackResponseSlotInfo>>();
+		auto slotsCount = stream.readUnsignedVarInt().value_or(0);
+		if (slotsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < slotsCount; ++i) {
+		    slots.push_back(stream.readObject<ItemStackResponseSlotInfo>());
+		}
+		return std::make_shared<ItemStackResponseContainerInfo>(containerName, slots);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        containerName = std::make_shared<FullContainerName>();
-        containerName->read(stream);
-        slots = stream.readObjectList<ItemStackResponseSlotInfo>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

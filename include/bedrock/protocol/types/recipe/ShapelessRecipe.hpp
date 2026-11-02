@@ -20,7 +20,7 @@ public:
     std::string blockName;
     int32_t priority;
     std::shared_ptr<RecipeUnlockingRequirement> unlockingRequirement;
-    int32_t recipeNetId;
+    uint32_t recipeNetId;
 
     ShapelessRecipe() = default;
     virtual ~ShapelessRecipe() = default;
@@ -33,7 +33,7 @@ public:
         const std::string& blockNameValue,
         const int32_t& priorityValue,
         const std::shared_ptr<RecipeUnlockingRequirement>& unlockingRequirementValue,
-        const int32_t& recipeNetIdValue
+        const uint32_t& recipeNetIdValue
     ) :
         RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
@@ -57,7 +57,7 @@ public:
         result->priority = stream.readVarInt().value_or(0);
         result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         result->unlockingRequirement->read(stream);
-        result->recipeNetId = stream.readInt().value_or(0);
+        result->recipeNetId = stream.readUnsignedVarInt().value_or(0);
         return result;
     }
 
@@ -72,7 +72,7 @@ public:
         priority = stream.readVarInt().value_or(0);
         unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         unlockingRequirement->read(stream);
-        recipeNetId = stream.readInt().value_or(0);
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
@@ -87,6 +87,6 @@ public:
         stream.writeString(blockName);
         stream.writeVarInt(priority);
         unlockingRequirement->write(stream);
-        stream.writeInt(recipeNetId);
+        stream.writeUnsignedVarInt(recipeNetId);
     }
 };

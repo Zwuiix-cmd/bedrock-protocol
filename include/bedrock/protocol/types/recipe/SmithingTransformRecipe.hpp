@@ -18,7 +18,7 @@ public:
     std::shared_ptr<RecipeIngredient> addition;
     NetworkItemDescriptor output;
     std::string blockName;
-    int32_t recipeNetId;
+    uint32_t recipeNetId;
 
     SmithingTransformRecipe() = default;
     virtual ~SmithingTransformRecipe() = default;
@@ -30,7 +30,7 @@ public:
         const std::shared_ptr<RecipeIngredient>& additionValue,
         const NetworkItemDescriptor& outputValue,
         const std::string& blockNameValue,
-        const int32_t& recipeNetIdValue
+        const uint32_t& recipeNetIdValue
     ) :
         RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
@@ -52,7 +52,7 @@ public:
         result->addition->read(stream);
         result->output = stream.readValue<NetworkItemDescriptor>();
         result->blockName = stream.readString().value_or("");
-        result->recipeNetId = stream.readInt().value_or(0);
+        result->recipeNetId = stream.readUnsignedVarInt().value_or(0);
         return result;
     }
 
@@ -66,7 +66,7 @@ public:
         addition->read(stream);
         output = stream.readValue<NetworkItemDescriptor>();
         blockName = stream.readString().value_or("");
-        recipeNetId = stream.readInt().value_or(0);
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
@@ -76,6 +76,6 @@ public:
         addition->write(stream);
         output.write(stream);
         stream.writeString(blockName);
-        stream.writeInt(recipeNetId);
+        stream.writeUnsignedVarInt(recipeNetId);
     }
 };

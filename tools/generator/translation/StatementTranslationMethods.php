@@ -91,7 +91,7 @@ private function statement(Node $statement, array $declaration, array $method, i
                     || $this->isOptionalExpression($assigned)
                     || $isNullAssignment;
                 $value = $assigned instanceof Node\Expr\Array_
-                    ? $this->emptyArrayValue((string) $statement->expr->var->name)
+                    ? $this->emptyArrayValue((string) $statement->expr->var->name, $declaration)
                     : $this->expression($assigned, $declaration, $method, $this->cppTypeForInferredVariable($assigned, $declaration));
                 $assignedType = $this->inferredCPPType($assigned, $declaration);
                 if (isset($this->declaredVariables[(string) $statement->expr->var->name])) {
@@ -188,12 +188,19 @@ private function statement(Node $statement, array $declaration, array $method, i
                         && count($constructorParameters) === count($statement->expr->args)
                         && $constructorParameters !== []) {
                         $arguments = [];
-                        foreach ($statement->expr->args as $argument) {
+                        foreach ($statement->expr->args as $index => $argument) {
                             if (!$argument instanceof Node\Arg) {
                                 $arguments = [];
                                 break;
                             }
-                            $arguments[] = $this->expression($argument->value, $declaration, $method);
+                            $parameterName = $constructorParameters[$index] ?? '';
+                            $property = $constructorProperties[$parameterName] ?? null;
+                            $arguments[] = $this->constructorArgumentValue(
+                                $argument,
+                                $property,
+                                $declaration,
+                                $method,
+                            );
                         }
                         if ($arguments !== []) {
                             return str_repeat("\t", $indent)
@@ -212,7 +219,8 @@ private function statement(Node $statement, array $declaration, array $method, i
                                 $property = $constructorProperties[$propertyName];
                             }
                             $target = $returnShared ? 'result->' : 'result.';
-                            $lines[] = $target . CPPName::identifier($property['name']) . ' = ' . $this->expression($argument->value, $declaration, $method) . ';';
+                            $lines[] = $target . CPPName::identifier($property['name']) . ' = '
+                                . $this->constructorArgumentValue($argument, $property, $declaration, $method) . ';';
                         }
                         ++$fieldIndex;
                     }
@@ -478,6 +486,20 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         $this->recordUnsupported($declaration, $method, 'statement ' . $statement::class);
         return $prefix . '(void)stream;';
+    }
+
+    private function constructorArgumentValue(
+        Node\Arg $argument,
+        ?array $property,
+        array $declaration,
+        array $method,
+    ): string {
+        $value = $this->expression($argument->value, $declaration, $method);
+        if ($property === null || str_contains($value, '::') || str_contains($value, 'magic_enum::')) {
+            return $value;
+        }
+        $enumType = $this->propertyEnumType($property, $declaration);
+        return $enumType === null ? $value : $this->enumReadValue($enumType, $value, $declaration);
     }
 
 private function optionalTernaryAssignment(

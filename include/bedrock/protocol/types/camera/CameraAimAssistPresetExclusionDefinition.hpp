@@ -2,6 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
+#include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -25,19 +28,47 @@ public:
         blockTags(blockTagsValue),
         entityTypeFamilies(entityTypeFamiliesValue) {}
 
+    static std::shared_ptr<CameraAimAssistPresetExclusionDefinition> create(ReadOnlyBinaryStream& stream) {
+		auto blocks = std::vector<std::string>();
+		auto blocksCount = stream.readUnsignedVarInt().value_or(0);
+		if (blocksCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < blocksCount; ++i) {
+		    blocks.push_back(stream.readString().value_or(""));
+		}
+		auto entities = std::vector<std::string>();
+		auto entitiesCount = stream.readUnsignedVarInt().value_or(0);
+		if (entitiesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < entitiesCount; ++i) {
+		    entities.push_back(stream.readString().value_or(""));
+		}
+		auto blockTags = std::vector<std::string>();
+		auto blockTagsCount = stream.readUnsignedVarInt().value_or(0);
+		if (blockTagsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < blockTagsCount; ++i) {
+		    blockTags.push_back(stream.readString().value_or(""));
+		}
+		auto entityTypeFamilies = std::vector<std::string>();
+		auto entityTypeFamiliesCount = stream.readUnsignedVarInt().value_or(0);
+		if (entityTypeFamiliesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < entityTypeFamiliesCount; ++i) {
+		    entityTypeFamilies.push_back(stream.readString().value_or(""));
+		}
+		return std::make_shared<CameraAimAssistPresetExclusionDefinition>(blocks, entities, blockTags, entityTypeFamilies);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        blocks = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
-        entities = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
-        blockTags = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
-        entityTypeFamilies = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

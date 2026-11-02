@@ -124,6 +124,11 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
             }
         }
 
+        $inheritedCodecBody = $this->inheritedSerializerBody($declaration, $read);
+        if ($inheritedCodecBody !== null) {
+            return $inheritedCodecBody;
+        }
+
         $name = CPPName::type((string) $declaration['name']);
 
         if ($read && $returnShared) {
@@ -277,6 +282,83 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
         return implode("\n", $lines);
     }
 
+    private function inheritedSerializerBody(array $declaration, bool $read): ?string
+    {
+        $parentName = CPPName::type((string) ($declaration['parent'] ?? ''));
+        if ($parentName === '') {
+            return null;
+        }
+        $parentShortName = basename(str_replace('\\', '/', $parentName));
+        $parent = $this->findDeclaration($parentShortName);
+        if ($parent === null) {
+            foreach ($this->declarations as $candidate) {
+                if (($candidate['name'] ?? null) === $parentShortName) {
+                    $parent = $candidate;
+                    break;
+                }
+            }
+        }
+        if ($parent === null) {
+            return null;
+        }
+
+        $parentMethodName = $read ? 'decode' : 'encode';
+        $childMethodName = strtolower($read ? 'decodeData' : 'encodeData');
+        $parentHasEnvelope = false;
+        foreach ($parent['methods'] ?? [] as $method) {
+            if (!$method['static'] && strtolower((string) ($method['name'] ?? '')) === $parentMethodName) {
+                $parentHasEnvelope = true;
+                break;
+            }
+        }
+        if (!$parentHasEnvelope) {
+            return null;
+        }
+
+        $childMethod = null;
+        foreach ($declaration['methods'] ?? [] as $method) {
+            if (!$method['static'] && strtolower((string) ($method['name'] ?? '')) === $childMethodName) {
+                $childMethod = $method;
+                break;
+            }
+        }
+        if ($childMethod === null) {
+            return null;
+        }
+
+        $parentBody = $this->genericBody($parent, $read);
+        $childBody = ($childMethod['body'] ?? []) === []
+            ? ''
+            : $this->methodBody($childMethod, $declaration);
+        if (str_contains($parentBody, 'std::monostate') || str_contains($childBody, 'std::monostate')) {
+            return null;
+        }
+        $normalize = static function (string $value): string {
+            $lines = explode("\n", rtrim($value));
+            $lines = array_map(static fn (string $line): string => str_replace("\t", '    ', $line), $lines);
+            $indent = null;
+            foreach ($lines as $line) {
+                if (trim($line) === '') {
+                    continue;
+                }
+                preg_match('/^( *)/', $line, $matches);
+                $current = strlen($matches[1] ?? '');
+                $indent = $indent === null ? $current : min($indent, $current);
+            }
+            $indent ??= 0;
+            return implode("\n", array_map(
+                static fn (string $line): string => substr($line, $indent),
+                $lines,
+            ));
+        };
+        $parts = [$normalize($parentBody)];
+        if (trim($childBody) !== '') {
+            $parts[] = $normalize($childBody);
+        }
+        $body = implode("\n", $parts);
+        return $this->indentGeneratedStatement($body, '        ');
+    }
+
     private function indentExpressionContinuation(string $value, string $prefix): string
     {
         $lines = explode("\n", $value);
@@ -375,6 +457,12 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
     private function directReadAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string
     {
         if ($assignment->var instanceof Node\Expr\ArrayDimFetch) {
+            return null;
+        }
+        if (($assignment->expr instanceof Node\Expr\StaticCall
+                || $assignment->expr instanceof Node\Expr\MethodCall)
+            && $assignment->expr->name instanceof Node\Identifier
+            && in_array(strtolower($assignment->expr->name->toString()), ['readoptional', 'readoptionalwhenfalse'], true)) {
             return null;
         }
         if ($assignment->expr instanceof Node\Expr\MethodCall

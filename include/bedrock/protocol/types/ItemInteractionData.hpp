@@ -2,6 +2,7 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -25,11 +26,25 @@ public:
         requestChangedSlots(requestChangedSlotsValue),
         transactionData(transactionDataValue) {}
 
+    static std::shared_ptr<ItemInteractionData> create(ReadOnlyBinaryStream& stream) {
+		auto requestId = stream.readVarInt().value_or(0);
+		auto requestChangedSlots = std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>();
+		if (requestId != 0) {
+			auto len = stream.readUnsignedVarInt().value_or(0);
+			for (std::size_t i = 0; (i < len); ++i) {
+				requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
+			}
+		}
+		auto transactionData = std::make_shared<UseItemTransactionData>();
+		transactionData->read(stream);
+		return std::make_shared<ItemInteractionData>(requestId, requestChangedSlots, transactionData);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        requestId = stream.readVarInt().value_or(0);
-        requestChangedSlots = stream.readObjectList<InventoryTransactionChangedSlotsHack>();
-        transactionData = std::make_shared<UseItemTransactionData>();
-        transactionData->read(stream);
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

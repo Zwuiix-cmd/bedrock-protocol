@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
@@ -37,14 +39,71 @@ public:
         postShoreEdges(postShoreEdgesValue),
         climates(climatesValue) {}
 
+    static std::shared_ptr<BiomeOverworldGenRulesData> create(ReadOnlyBinaryStream& stream) {
+		auto hillTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
+		auto hillTransformationsCount = stream.readUnsignedVarInt().value_or(0);
+		if (hillTransformationsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < hillTransformationsCount; ++i) {
+		    hillTransformations.push_back(stream.readObject<BiomeWeightedData>());
+		}
+		auto mutateTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
+		auto mutateTransformationsCount = stream.readUnsignedVarInt().value_or(0);
+		if (mutateTransformationsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < mutateTransformationsCount; ++i) {
+		    mutateTransformations.push_back(stream.readObject<BiomeWeightedData>());
+		}
+		auto riverTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
+		auto riverTransformationsCount = stream.readUnsignedVarInt().value_or(0);
+		if (riverTransformationsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < riverTransformationsCount; ++i) {
+		    riverTransformations.push_back(stream.readObject<BiomeWeightedData>());
+		}
+		auto shoreTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
+		auto shoreTransformationsCount = stream.readUnsignedVarInt().value_or(0);
+		if (shoreTransformationsCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < shoreTransformationsCount; ++i) {
+		    shoreTransformations.push_back(stream.readObject<BiomeWeightedData>());
+		}
+		auto preHillsEdges = std::vector<std::shared_ptr<BiomeConditionalTransformationData>>();
+		auto preHillsEdgesCount = stream.readUnsignedVarInt().value_or(0);
+		if (preHillsEdgesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < preHillsEdgesCount; ++i) {
+		    preHillsEdges.push_back(stream.readObject<BiomeConditionalTransformationData>());
+		}
+		auto postShoreEdges = std::vector<std::shared_ptr<BiomeConditionalTransformationData>>();
+		auto postShoreEdgesCount = stream.readUnsignedVarInt().value_or(0);
+		if (postShoreEdgesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < postShoreEdgesCount; ++i) {
+		    postShoreEdges.push_back(stream.readObject<BiomeConditionalTransformationData>());
+		}
+		auto climates = std::vector<std::shared_ptr<BiomeWeightedTemperatureData>>();
+		auto climatesCount = stream.readUnsignedVarInt().value_or(0);
+		if (climatesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < climatesCount; ++i) {
+		    climates.push_back(stream.readObject<BiomeWeightedTemperatureData>());
+		}
+		return std::make_shared<BiomeOverworldGenRulesData>(hillTransformations, mutateTransformations, riverTransformations, shoreTransformations, preHillsEdges, postShoreEdges, climates);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        hillTransformations = stream.readObjectList<BiomeWeightedData>();
-        mutateTransformations = stream.readObjectList<BiomeWeightedData>();
-        riverTransformations = stream.readObjectList<BiomeWeightedData>();
-        shoreTransformations = stream.readObjectList<BiomeWeightedData>();
-        preHillsEdges = stream.readObjectList<BiomeConditionalTransformationData>();
-        postShoreEdges = stream.readObjectList<BiomeConditionalTransformationData>();
-        climates = stream.readObjectList<BiomeWeightedTemperatureData>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

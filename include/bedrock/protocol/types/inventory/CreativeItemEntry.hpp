@@ -8,21 +8,21 @@
 
 class CreativeItemEntry {
 public:
-    int32_t entryId;
+    uint32_t entryId;
     NetworkItemDescriptor item;
     uint32_t groupId;
 
     CreativeItemEntry() = default;
-    explicit CreativeItemEntry(const int32_t& entryIdValue, const NetworkItemDescriptor& itemValue, const uint32_t& groupIdValue) : entryId(entryIdValue), item(itemValue), groupId(groupIdValue) {}
+    explicit CreativeItemEntry(const uint32_t& entryIdValue, const NetworkItemDescriptor& itemValue, const uint32_t& groupIdValue) : entryId(entryIdValue), item(itemValue), groupId(groupIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        entryId = stream.readInt().value_or(0);
+        entryId = stream.readUnsignedVarInt().value_or(0);
         item = stream.readValue<NetworkItemDescriptor>();
         groupId = stream.readUnsignedVarInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeInt(entryId);
+        stream.writeUnsignedVarInt(entryId);
         item.write(stream);
         stream.writeUnsignedVarInt(groupId);
     }

@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -10,16 +12,26 @@
 class CommandEnumRawData {
 public:
     std::string name;
-    std::vector<int32_t> valueIndexes;
+    std::vector<uint32_t> valueIndexes;
 
     CommandEnumRawData() = default;
-    explicit CommandEnumRawData(const std::string& nameValue, const std::vector<int32_t>& valueIndexesValue) : name(nameValue), valueIndexes(valueIndexesValue) {}
+    explicit CommandEnumRawData(const std::string& nameValue, const std::vector<uint32_t>& valueIndexesValue) : name(nameValue), valueIndexes(valueIndexesValue) {}
+
+    static std::shared_ptr<CommandEnumRawData> create(ReadOnlyBinaryStream& stream) {
+		auto name = stream.readString().value_or("");
+		auto valueIndexes = std::vector<uint32_t>();
+		auto size = stream.readUnsignedVarInt().value_or(0);
+		for (std::size_t i = 0; (i < size); i++) {
+			valueIndexes.push_back(stream.readUnsignedInt().value_or(0));
+		}
+		return std::make_shared<CommandEnumRawData>(name, valueIndexes);
+    }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        name = stream.readString().value_or("");
-        valueIndexes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

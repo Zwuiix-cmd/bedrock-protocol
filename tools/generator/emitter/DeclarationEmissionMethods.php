@@ -7,6 +7,7 @@ namespace kodiak\bedrockprotocol\generator\emitter;
 use kodiak\bedrockprotocol\generator\Configuration;
 use kodiak\bedrockprotocol\generator\CPPName;
 use kodiak\bedrockprotocol\generator\CPP\CPPDefaultValueResolver;
+use PhpParser\Node;
 use RuntimeException;
 
 trait DeclarationEmissionMethods
@@ -265,9 +266,17 @@ trait DeclarationEmissionMethods
                 continue;
             }
             $canonical = $this->canonicalMethodName((string) ($method['name'] ?? ''));
-            if (!in_array($canonical, ['read', 'write'], true)
+            if ($isAbstractType
+                || !in_array($canonical, ['read', 'write'], true)
                 || !in_array(strtolower((string) ($method['returnType'] ?? '')), ['self', 'static'], true)
-                || count($method['parameters'] ?? []) <= 1) {
+                || (count($method['parameters'] ?? []) <= 1
+                    && !($canonical === 'read'
+                        && $this->hasReadControlFlow($method)
+                        && !$this->hasReadSwitch($method)
+                        && !$this->hasReadOptional($method)
+                        && !$this->hasReadNullAssignment($method)
+                        && !$this->hasReadElse($method)
+                        && !$this->hasReadAssociativeAssignment($method)))) {
                 continue;
             }
             $staticName = 'create';
@@ -341,10 +350,28 @@ trait DeclarationEmissionMethods
             $readSignature = $read !== null && !($read['static'] ?? false) && $supportsContext
                 ? $this->serializerMethodSignature($read, 'read', true)
                 : 'void read(ReadOnlyBinaryStream& stream)';
+            $readUsesStaticFactory = $read !== null
+                && ($read['static'] ?? false)
+                && $this->canonicalMethodName((string) ($read['name'] ?? '')) === 'read'
+                && strtolower((string) ($read['returnType'] ?? '')) === 'self'
+                && count($read['parameters'] ?? []) <= 1
+                && $this->hasReadControlFlow($read)
+                && !$this->hasReadSwitch($read)
+                && !$this->hasReadOptional($read)
+                && !$this->hasReadNullAssignment($read)
+                && !$this->hasReadElse($read)
+                && !$this->hasReadAssociativeAssignment($read);
             $body .= "\n    " . ($this->hasInheritedMethod($declaration, 'read', $types) ? $readSignature . ' override' : 'virtual ' . $readSignature) . " {\n";
-            $body .= ($read === null || ($read['static'] ?? false) || $readAbstract || (!$supportsContext && count($read['parameters'] ?? []) > 1)
-                ? $this->translator->genericBody($declaration, true)
-                : $this->translator->methodBody($read, $declaration)) . "\n";
+            if ($readUsesStaticFactory) {
+                $body .= "        auto decoded = create(stream);\n"
+                    . "        if (decoded) {\n"
+                    . "            *this = *decoded;\n"
+                    . "        }\n";
+            } else {
+                $body .= ($read === null || ($read['static'] ?? false) || $readAbstract || (!$supportsContext && count($read['parameters'] ?? []) > 1)
+                    ? $this->translator->genericBody($declaration, true)
+                    : $this->translator->methodBody($read, $declaration)) . "\n";
+            }
             $body .= "    }\n\n";
             $write = $this->method($declaration, 'write');
             $writeAbstract = $write !== null && ($write['abstract'] ?? false);
@@ -365,6 +392,222 @@ trait DeclarationEmissionMethods
             $body,
         );
         $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
+    }
+
+    private function hasReadControlFlow(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadControlFlow($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadSwitch(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadSwitch($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadOptional(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadCall($statement, ['readoptional', 'readoptionalwhenfalse'])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadNullAssignment(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadNullAssignment($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadElse(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadElse($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function hasReadAssociativeAssignment(array $method): bool
+    {
+        foreach ($method['body'] ?? [] as $statement) {
+            if ($this->containsReadAssociativeAssignment($statement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function containsReadControlFlow(mixed $node): bool
+    {
+        if ($node instanceof Node\Stmt\If_
+            || $node instanceof Node\Stmt\For_
+            || $node instanceof Node\Stmt\Foreach_
+            || $node instanceof Node\Stmt\While_
+            || $node instanceof Node\Stmt\Do_
+            || $node instanceof Node\Stmt\Switch_
+            || $node instanceof Node\Expr\Match_) {
+            return true;
+        }
+        if (!$node instanceof Node) {
+            return false;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadControlFlow($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadControlFlow($item)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsReadSwitch(mixed $node): bool
+    {
+        if ($node instanceof Node\Stmt\Switch_ || $node instanceof Node\Expr\Match_) {
+            return true;
+        }
+        if (!$node instanceof Node) {
+            return false;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadSwitch($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadSwitch($item)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsReadCall(mixed $node, array $names): bool
+    {
+        if (!$node instanceof Node) {
+            return false;
+        }
+        if (($node instanceof Node\Expr\StaticCall || $node instanceof Node\Expr\MethodCall)
+            && $node->name instanceof Node\Identifier
+            && in_array(strtolower($node->name->toString()), $names, true)) {
+            return true;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadCall($child, $names)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadCall($item, $names)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsReadNullAssignment(mixed $node): bool
+    {
+        if (!$node instanceof Node) {
+            return false;
+        }
+        if ($node instanceof Node\Expr\Assign
+            && $node->expr instanceof Node\Expr\ConstFetch
+            && strtolower($node->expr->name->toString()) === 'null') {
+            return true;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadNullAssignment($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadNullAssignment($item)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsReadElse(mixed $node): bool
+    {
+        if (!$node instanceof Node) {
+            return false;
+        }
+        if ($node instanceof Node\Stmt\If_ && ($node->else !== null || $node->elseifs !== [])) {
+            return true;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadElse($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadElse($item)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsReadAssociativeAssignment(mixed $node): bool
+    {
+        if (!$node instanceof Node) {
+            return false;
+        }
+        if ($node instanceof Node\Expr\Assign
+            && $node->var instanceof Node\Expr\ArrayDimFetch
+            && $node->var->dim !== null) {
+            return true;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->containsReadAssociativeAssignment($child)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($item instanceof Node && $this->containsReadAssociativeAssignment($item)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private function standardTypeIncludes(string $body): string

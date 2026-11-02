@@ -16,7 +16,7 @@ public:
     std::shared_ptr<RecipeIngredient> input;
     std::shared_ptr<RecipeIngredient> addition;
     std::string blockName;
-    int32_t recipeNetId;
+    uint32_t recipeNetId;
 
     SmithingTrimRecipe() = default;
     virtual ~SmithingTrimRecipe() = default;
@@ -27,7 +27,7 @@ public:
         const std::shared_ptr<RecipeIngredient>& inputValue,
         const std::shared_ptr<RecipeIngredient>& additionValue,
         const std::string& blockNameValue,
-        const int32_t& recipeNetIdValue
+        const uint32_t& recipeNetIdValue
     ) :
         RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
@@ -56,7 +56,7 @@ public:
         addition = std::make_shared<RecipeIngredient>();
         addition->read(stream);
         blockName = stream.readString().value_or("");
-        recipeNetId = stream.readInt().value_or(0);
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {

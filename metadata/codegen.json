@@ -117,6 +117,12 @@
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\DeprecatedCraftingResultsStackRequestAction",
+            "method": "read",
+            "line": 48,
+            "reason": "serializer call requires an adapter: CommonTypes::getItemStackWithoutStackId"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\DeprecatedCraftingResultsStackRequestAction",
             "method": "write",
             "line": 57,
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
@@ -162,6 +168,18 @@
             "method": "write",
             "line": 50,
             "reason": "parent dispatch requires an inheritance adapter"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\ItemStackRequest",
+            "method": "read",
+            "line": 81,
+            "reason": "static call requires an adapter: ItemStackRequest::readAction"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\MismatchTransactionData",
+            "method": "decodeData",
+            "line": 29,
+            "reason": "property belongs to an omitted parent declaration: actions"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\PacketShapeData",
@@ -234,6 +252,12 @@
             "method": "read",
             "line": 43,
             "reason": "static call requires an adapter: SubChunkPacketHeightMapInfo::allTooLow"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketHeightMapInfo",
+            "method": "read",
+            "line": 42,
+            "reason": "serializer call requires an adapter: Byte::readSigned"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketHeightMapInfo",

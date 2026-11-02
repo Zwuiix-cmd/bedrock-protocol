@@ -17,7 +17,7 @@ public:
     std::vector<std::shared_ptr<Enchant>> heldActivatedEnchantments;
     std::vector<std::shared_ptr<Enchant>> selfActivatedEnchantments;
     std::string name;
-    int32_t optionId;
+    uint32_t optionId;
 
     EnchantOption() = default;
     explicit EnchantOption(
@@ -27,7 +27,7 @@ public:
         const std::vector<std::shared_ptr<Enchant>>& heldActivatedEnchantmentsValue,
         const std::vector<std::shared_ptr<Enchant>>& selfActivatedEnchantmentsValue,
         const std::string& nameValue,
-        const int32_t& optionIdValue
+        const uint32_t& optionIdValue
     ) :
         cost(costValue),
         slotFlags(slotFlagsValue),
@@ -44,7 +44,7 @@ public:
         heldActivatedEnchantments = stream.readObjectList<Enchant>();
         selfActivatedEnchantments = stream.readObjectList<Enchant>();
         name = stream.readString().value_or("");
-        optionId = stream.readInt().value_or(0);
+        optionId = stream.readUnsignedVarInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -60,6 +60,6 @@ public:
             item->write(stream);
         });
         stream.writeString(name);
-        stream.writeInt(optionId);
+        stream.writeUnsignedVarInt(optionId);
     }
 };

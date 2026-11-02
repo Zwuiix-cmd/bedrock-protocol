@@ -116,6 +116,9 @@ public:
 		if (count > MAX_SAVED_CHUNKS) {
 			throw std::exception{};
 		}
+		if (count > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < count; i++) {
 		    savedChunks.push_back(stream.readObject<ChunkPosition>());
 		}

@@ -2,6 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
+#include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -16,11 +19,24 @@ public:
 
     }
 
+    static std::shared_ptr<CommandSoftEnum> create(ReadOnlyBinaryStream& stream) {
+		auto name = stream.readString().value_or("");
+		auto values = std::vector<std::string>();
+		auto valuesCount = stream.readUnsignedVarInt().value_or(0);
+		if (valuesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < valuesCount; i++) {
+		    values.push_back(stream.readString().value_or(""));
+		}
+		return std::make_shared<CommandSoftEnum>(name, values);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        name = stream.readString().value_or("");
-        values = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

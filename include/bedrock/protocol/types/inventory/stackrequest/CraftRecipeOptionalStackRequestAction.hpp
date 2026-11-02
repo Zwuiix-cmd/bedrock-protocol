@@ -10,7 +10,7 @@ class CraftRecipeOptionalStackRequestAction : public ItemStackRequestAction {
 public:
     static constexpr int64_t ID = 15;
 
-    int32_t recipeId;
+    uint32_t recipeId;
     int32_t filterStringIndex;
 
     CraftRecipeOptionalStackRequestAction() = default;
@@ -19,7 +19,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        recipeId = stream.readInt().value_or(0);
+        recipeId = stream.readUnsignedVarInt().value_or(0);
         filterStringIndex = stream.readInt().value_or(0);
     }
 

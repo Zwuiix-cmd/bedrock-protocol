@@ -122,22 +122,17 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		set = std::make_shared<CameraSetInstruction>();
-		set.value()->read(stream);
+		set = stream.readOptional([&]() { return stream.readObject<CameraSetInstruction>(); });
 		clear = stream.readOptional([&]() {
 			return stream.readBool().value_or(false);
 		});
-		fade = std::make_shared<CameraFadeInstruction>();
-		fade.value()->read(stream);
-		target = std::make_shared<CameraTargetInstruction>();
-		target.value()->read(stream);
+		fade = stream.readOptional([&]() { return stream.readObject<CameraFadeInstruction>(); });
+		target = stream.readOptional([&]() { return stream.readObject<CameraTargetInstruction>(); });
 		removeTarget = stream.readOptional([&]() {
 			return stream.readBool().value_or(false);
 		});
-		fieldOfView = std::make_shared<CameraFovInstruction>();
-		fieldOfView.value()->read(stream);
-		spline = std::make_shared<CameraSplineInstruction>();
-		spline.value()->read(stream);
+		fieldOfView = stream.readOptional([&]() { return stream.readObject<CameraFovInstruction>(); });
+		spline = stream.readOptional([&]() { return stream.readObject<CameraSplineInstruction>(); });
 		attachToEntity = stream.readOptional([&]() {
 			return stream.readLong().value_or(0);
 		});

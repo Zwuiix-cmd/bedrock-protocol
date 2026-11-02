@@ -48,7 +48,7 @@ public:
     template<typename P>
     requires std::derived_from<P, Packet>
     static inline std::shared_ptr<P> createPacket() noexcept {
-        const entt::id_type tid = entt::type_id<P>();
+        const entt::id_type tid = entt::type_hash<P>::value();
         std::shared_lock lock(s_mutex);
         auto itType = s_byType.find(tid);
         if (itType == s_byType.end()) return nullptr;

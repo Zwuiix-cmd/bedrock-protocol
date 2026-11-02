@@ -28,6 +28,8 @@ requires std::is_enum_v<Enum>
 
 class ReadOnlyBinaryStream {
 public:
+    static constexpr uint32_t MaxCollectionSize = 1'000'000;
+
     template <typename T>
     T readValue() {
         T value;
@@ -47,6 +49,10 @@ public:
     Map readMap(KeyReader&& keyReader, ValueReader&& valueReader) {
         Map result;
         const auto count = readUnsignedInt().value_or(0);
+        if (count > MaxCollectionSize) {
+            overflowed = true;
+            return result;
+        }
         for (std::size_t index = 0; index < count; ++index) {
             result.emplace(
                 std::forward<KeyReader>(keyReader)(),
@@ -435,10 +441,16 @@ public:
     template <typename Reader>
     auto readList(Reader&& reader) {
         using Value = std::remove_cvref_t<std::invoke_result_t<Reader&>>;
-        const uint32_t count = readUnsignedVarInt().value_or(0);
+        const auto count = readUnsignedVarInt();
         std::vector<Value> values;
-        values.reserve(count);
-        for (uint32_t index = 0; index < count; ++index) {
+        if (!count || *count > MaxCollectionSize) {
+            if (count && *count > MaxCollectionSize) {
+                overflowed = true;
+            }
+            return values;
+        }
+        values.reserve(*count);
+        for (uint32_t index = 0; index < *count; ++index) {
             values.emplace_back(std::forward<Reader>(reader)());
         }
         return values;
@@ -453,10 +465,16 @@ public:
 
     template <typename T>
     std::vector<std::shared_ptr<T>> readObjectList() {
-        const auto count = readUnsignedVarInt().value_or(0);
+        const auto count = readUnsignedVarInt();
         std::vector<std::shared_ptr<T>> values;
-        values.reserve(count);
-        for (uint32_t index = 0; index < count; ++index) {
+        if (!count || *count > MaxCollectionSize) {
+            if (count && *count > MaxCollectionSize) {
+                overflowed = true;
+            }
+            return values;
+        }
+        values.reserve(*count);
+        for (uint32_t index = 0; index < *count; ++index) {
             auto value = std::make_shared<T>();
             value->read(*this);
             values.emplace_back(std::move(value));

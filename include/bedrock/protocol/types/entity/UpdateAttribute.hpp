@@ -2,7 +2,9 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -39,15 +41,30 @@ public:
         default_(default_Value),
         modifiers(modifiersValue) {}
 
+    static std::shared_ptr<UpdateAttribute> create(ReadOnlyBinaryStream& stream) {
+		auto min = stream.readFloat().value_or(0.0f);
+		auto max = stream.readFloat().value_or(0.0f);
+		auto current = stream.readFloat().value_or(0.0f);
+		auto defaultMin = stream.readFloat().value_or(0.0f);
+		auto defaultMax = stream.readFloat().value_or(0.0f);
+		auto default_ = stream.readFloat().value_or(0.0f);
+		auto id = stream.readString().value_or("");
+		auto modifiers = std::vector<std::shared_ptr<AttributeModifier>>();
+		auto modifiersCount = stream.readUnsignedVarInt().value_or(0);
+		if (modifiersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t j = 0; j < modifiersCount; j++) {
+		    modifiers.push_back(stream.readObject<AttributeModifier>());
+		}
+		return std::make_shared<UpdateAttribute>(id, min, max, current, defaultMin, defaultMax, default_, modifiers);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        id = stream.readString().value_or("");
-        min = stream.readFloat().value_or(0.0f);
-        max = stream.readFloat().value_or(0.0f);
-        current = stream.readFloat().value_or(0.0f);
-        defaultMin = stream.readFloat().value_or(0.0f);
-        defaultMax = stream.readFloat().value_or(0.0f);
-        default_ = stream.readFloat().value_or(0.0f);
-        modifiers = stream.readObjectList<AttributeModifier>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

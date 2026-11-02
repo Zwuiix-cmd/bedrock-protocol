@@ -27,11 +27,11 @@ public:
     };
 
     std::string recipeId;
-    int32_t recipeNetId;
+    uint32_t recipeNetId;
 
     MultiRecipe() = default;
     virtual ~MultiRecipe() = default;
-    explicit MultiRecipe(const int32_t& typeIdValue, const std::string& recipeIdValue, const int32_t& recipeNetIdValue) : RecipeWithTypeId(typeIdValue), recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
+    explicit MultiRecipe(const int32_t& typeIdValue, const std::string& recipeIdValue, const uint32_t& recipeNetIdValue) : RecipeWithTypeId(typeIdValue), recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
 
     static std::shared_ptr<MultiRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
 		auto uuid = stream.readUUID().value_or("");
@@ -41,7 +41,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         recipeId = stream.readUUID().value_or("");
-        recipeNetId = stream.readInt().value_or(0);
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {

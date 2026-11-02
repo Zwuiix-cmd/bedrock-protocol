@@ -107,6 +107,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto responsesCount = stream.readUnsignedVarInt().value_or(0);
+		if (responsesCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < responsesCount; ++i) {
 		    responses.push_back(stream.readObject<ItemStackResponse>());
 		}

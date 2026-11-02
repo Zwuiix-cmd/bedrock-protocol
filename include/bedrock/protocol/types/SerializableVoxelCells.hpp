@@ -2,7 +2,10 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
+#include <memory>
+#include <stdexcept>
 #include <vector>
 
 
@@ -11,27 +14,40 @@ public:
     uint8_t xSize;
     uint8_t ySize;
     uint8_t zSize;
-    std::vector<int32_t> storage;
+    std::vector<uint8_t> storage;
 
     SerializableVoxelCells() = default;
     explicit SerializableVoxelCells(
         const uint8_t& xSizeValue,
         const uint8_t& ySizeValue,
         const uint8_t& zSizeValue,
-        const std::vector<int32_t>& storageValue
+        const std::vector<uint8_t>& storageValue
     ) :
         xSize(xSizeValue),
         ySize(ySizeValue),
         zSize(zSizeValue),
         storage(storageValue) {}
 
+    static std::shared_ptr<SerializableVoxelCells> create(ReadOnlyBinaryStream& stream) {
+		auto xSize = stream.readUnsignedByte().value_or(0);
+		auto ySize = stream.readUnsignedByte().value_or(0);
+		auto zSize = stream.readUnsignedByte().value_or(0);
+		auto storage = std::vector<uint8_t>();
+		auto storageCount = stream.readUnsignedVarInt().value_or(0);
+		if (storageCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
+		for (std::size_t i = 0; i < storageCount; ++i) {
+		    storage.push_back(stream.readUnsignedByte().value_or(0));
+		}
+		return std::make_shared<SerializableVoxelCells>(xSize, ySize, zSize, storage);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        xSize = stream.readUnsignedByte().value_or(0);
-        ySize = stream.readUnsignedByte().value_or(0);
-        zSize = stream.readUnsignedByte().value_or(0);
-        storage = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {

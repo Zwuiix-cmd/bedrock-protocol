@@ -17,10 +17,12 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        (void)stream;
+        actions = stream.readObjectList<NetworkInventoryAction>();
     }
 
     void write(BinaryStream& stream) const override {
-        (void)stream;
+        stream.writeList(actions, [&](const auto& item) {
+            item->write(stream);
+        });
     }
 };

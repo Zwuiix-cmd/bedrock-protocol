@@ -105,6 +105,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto fogLayersCount = stream.readUnsignedVarInt().value_or(0);
+		if (fogLayersCount > ReadOnlyBinaryStream::MaxCollectionSize) {
+		    throw std::runtime_error("protocol collection is too large");
+		}
 		for (std::size_t i = 0; i < fogLayersCount; ++i) {
 		    fogLayers.push_back(stream.readString().value_or(""));
 		}

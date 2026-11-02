@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -12,17 +13,15 @@ enum class FurnaceRecipeBlockName : uint16_t {
     SoulCampfire = 4,
 };
 
+inline constexpr std::array<std::string_view, 5> FurnaceRecipeBlockNameNames = {
+#include <bedrock/protocol/types/recipe/FurnaceRecipeBlockNameNames.inc>
+};
+
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<FurnaceRecipeBlockName>(FurnaceRecipeBlockName value) noexcept {
-    switch (value) {
-        case FurnaceRecipeBlockName::BlastFurnace: return "blast_furnace";
-        case FurnaceRecipeBlockName::Campfire: return "campfire";
-        case FurnaceRecipeBlockName::Furnace: return "furnace";
-        case FurnaceRecipeBlockName::Smoker: return "smoker";
-        case FurnaceRecipeBlockName::SoulCampfire: return "soul_campfire";
-        default: return invalid_tag;
-    }
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < FurnaceRecipeBlockNameNames.size() ? customize_t{FurnaceRecipeBlockNameNames[index]} : invalid_tag;
 }
 
 }

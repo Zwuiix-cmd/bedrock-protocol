@@ -1,0 +1,5 @@
+"programmaticclose",
+"programmaticcloseall",
+"clientcanceled",
+"userbusy",
+"invalidform",

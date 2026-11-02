@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -16,21 +17,15 @@ enum class MatchmakingState : uint16_t {
     RequeueAsParty = 8,
 };
 
+inline constexpr std::array<std::string_view, 9> MatchmakingStateNames = {
+#include <bedrock/protocol/types/MatchmakingStateNames.inc>
+};
+
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<MatchmakingState>(MatchmakingState value) noexcept {
-    switch (value) {
-        case MatchmakingState::Idle: return "Idle";
-        case MatchmakingState::Matchmaking: return "Matchmaking";
-        case MatchmakingState::MatchFound: return "MatchFound";
-        case MatchmakingState::Canceled: return "Canceled";
-        case MatchmakingState::PlayerLeftParty: return "PlayerLeftParty";
-        case MatchmakingState::PlayerLeftServer: return "PlayerLeftServer";
-        case MatchmakingState::ServerShutdown: return "ServerShutdown";
-        case MatchmakingState::TimedOut: return "TimedOut";
-        case MatchmakingState::RequeueAsParty: return "RequeueAsParty";
-        default: return invalid_tag;
-    }
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < MatchmakingStateNames.size() ? customize_t{MatchmakingStateNames[index]} : invalid_tag;
 }
 
 }

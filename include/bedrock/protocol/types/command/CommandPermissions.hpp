@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
@@ -13,18 +14,15 @@ enum class CommandPermissions : uint16_t {
     Internal = 5,
 };
 
+inline constexpr std::array<std::string_view, 6> CommandPermissionsNames = {
+#include <bedrock/protocol/types/command/CommandPermissionsNames.inc>
+};
+
 namespace magic_enum::customize {
 
 template <> constexpr customize_t enum_name<CommandPermissions>(CommandPermissions value) noexcept {
-    switch (value) {
-        case CommandPermissions::Normal: return "any";
-        case CommandPermissions::Operator: return "gamedirectors";
-        case CommandPermissions::Automation: return "admin";
-        case CommandPermissions::Host: return "host";
-        case CommandPermissions::Owner: return "owner";
-        case CommandPermissions::Internal: return "internal";
-        default: return invalid_tag;
-    }
+    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));
+    return index < CommandPermissionsNames.size() ? customize_t{CommandPermissionsNames[index]} : invalid_tag;
 }
 
 }

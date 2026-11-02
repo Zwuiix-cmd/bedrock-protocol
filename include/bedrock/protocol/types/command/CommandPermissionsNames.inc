@@ -1,0 +1,6 @@
+"any",
+"gamedirectors",
+"admin",
+"host",
+"owner",
+"internal",

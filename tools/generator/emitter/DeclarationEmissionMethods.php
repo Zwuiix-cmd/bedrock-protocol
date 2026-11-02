@@ -45,6 +45,9 @@ trait DeclarationEmissionMethods
         $body = "#pragma once\n\n#include <cstdint>\n#include <magic_enum/magic_enum.hpp>\n#include <string_view>\n\n";
         $cases = $this->enumCases($declaration);
         $enumInclude = $this->generatedTypeInclude($declaration);
+        if ($this->isStringEnumDeclaration($declaration)) {
+            $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
+        }
         $body .= 'enum class ' . $name . ' : ' . $this->enumUnderlyingType($declaration) . " {\n";
         $caseLines = [];
         foreach ($cases as $index => $case) {
@@ -69,18 +72,28 @@ trait DeclarationEmissionMethods
         }
         $body .= "};\n";
         if ($this->isStringEnumDeclaration($declaration)) {
-            $body .= "\nnamespace magic_enum::customize {\n\n";
-            $body .= 'template <> constexpr customize_t enum_name<' . $name . '>('
-                . $name . " value) noexcept {\n    switch (value) {\n";
+            $directory = dirname($enumInclude);
+            $basename = pathinfo($enumInclude, PATHINFO_FILENAME);
+            $namesInclude = ($directory === '.' ? '' : $directory . '/') . $basename . 'Names.inc';
+            $nameLines = [];
             foreach ($cases as $case) {
                 if (!is_string($case['value'] ?? null)) {
                     continue;
                 }
-                $literal = json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
-                $body .= '        case ' . $name . '::' . CPPName::enumCase((string) $case['name'])
-                    . ': return ' . $literal . ";\n";
+                $nameLines[] = json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ",\n";
             }
-            $body .= "        default: return invalid_tag;\n    }\n}\n\n}\n";
+            $namesPath = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock'
+                . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR
+                . str_replace('/', DIRECTORY_SEPARATOR, $namesInclude);
+            $this->write($namesPath, implode('', $nameLines));
+            $body .= "\ninline constexpr std::array<std::string_view, " . count($nameLines) . '> ' . $name . "Names = {\n";
+            $body .= '#include <bedrock/protocol/' . $namesInclude . ">\n};\n\n";
+            $body .= "namespace magic_enum::customize {\n\n";
+            $body .= 'template <> constexpr customize_t enum_name<' . $name . '>('
+                . $name . " value) noexcept {\n"
+                . '    const auto index = static_cast<std::size_t>(::magic_enum::enum_integer(value));' . "\n"
+                . '    return index < ' . $name . 'Names.size() ? customize_t{' . $name . 'Names[index]} : invalid_tag;' . "\n"
+                . "}\n\n}\n";
         }
         $this->write($this->typePath($output, $name, $declaration), $body);
     }

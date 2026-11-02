@@ -88,12 +88,7 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
-#include <bedrock/protocol/types/inventory/MismatchTransactionData.hpp>
-#include <bedrock/protocol/types/inventory/NormalTransactionData.hpp>
-#include <bedrock/protocol/types/inventory/ReleaseItemTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
-#include <bedrock/protocol/types/inventory/UseItemOnEntityTransactionData.hpp>
-#include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 
 class InventoryTransactionPacket : public Packet {
@@ -115,7 +110,7 @@ public:
 
     int32_t requestId;
     std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>> requestChangedSlots;
-    std::variant<std::shared_ptr<NormalTransactionData>, std::shared_ptr<MismatchTransactionData>, std::shared_ptr<UseItemTransactionData>, std::shared_ptr<UseItemOnEntityTransactionData>, std::shared_ptr<ReleaseItemTransactionData>> trData;
+    std::shared_ptr<TransactionData> trData;
 
 public:
     std::string_view getName() override {
@@ -124,35 +119,56 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		requestId = stream.readInt().value_or(0);
-		if ((requestId != 0)) {
-			{
-			    auto len = stream.readUnsignedVarInt().value_or(0);
-			    for (std::size_t i = 0; (i < len); ++i) {
-					requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
-			    }
+		if (requestId != 0) {
+			auto requestChangedSlotsCount = stream.readUnsignedVarInt().value_or(0);
+			for (std::size_t i = 0; i < requestChangedSlotsCount; ++i) {
+			    requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}
 		}
 		auto transactionType = stream.readUnsignedVarInt().value_or(0);
-		trData = ([&]() -> std::variant<std::shared_ptr<NormalTransactionData>, std::shared_ptr<MismatchTransactionData>, std::shared_ptr<UseItemTransactionData>, std::shared_ptr<UseItemOnEntityTransactionData>, std::shared_ptr<ReleaseItemTransactionData>> {
-			if (transactionType == NormalTransactionData::ID) return std::make_shared<NormalTransactionData>();
-			if (transactionType == MismatchTransactionData::ID) return std::make_shared<MismatchTransactionData>();
-			if (transactionType == UseItemTransactionData::ID) return std::make_shared<UseItemTransactionData>();
-			if (transactionType == UseItemOnEntityTransactionData::ID) return std::make_shared<UseItemOnEntityTransactionData>();
-			if (transactionType == ReleaseItemTransactionData::ID) return std::make_shared<ReleaseItemTransactionData>();
-			throw std::exception{};
-		}());
-		std::visit([&](auto& value) { if (value) value->read(stream); }, trData);
+		switch (transactionType) {
+			case NormalTransactionData::ID:
+			{
+				trData = std::make_shared<NormalTransactionData>();
+				break;
+			}
+			case MismatchTransactionData::ID:
+			{
+				trData = std::make_shared<MismatchTransactionData>();
+				break;
+			}
+			case UseItemTransactionData::ID:
+			{
+				trData = std::make_shared<UseItemTransactionData>();
+				break;
+			}
+			case UseItemOnEntityTransactionData::ID:
+			{
+				trData = std::make_shared<UseItemOnEntityTransactionData>();
+				break;
+			}
+			case ReleaseItemTransactionData::ID:
+			{
+				trData = std::make_shared<ReleaseItemTransactionData>();
+				break;
+			}
+			default:
+			{
+				throw std::exception{};
+			}
+		}
+		trData->read(stream);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeInt(requestId);
-		if ((requestId != 0)) {
+		if (requestId != 0) {
 			stream.writeUnsignedVarInt(requestChangedSlots.size());
 			for (const auto& changedSlots : requestChangedSlots) {
 				changedSlots->write(stream);
 			}
 		}
-		stream.writeUnsignedVarInt(std::visit([&](const auto& value) -> int32_t { return value ? std::remove_cvref_t<decltype(*value)>::ID : 0; }, trData));
-		std::visit([&](auto& value) { if (value) value->write(stream); }, trData);
+		stream.writeUnsignedVarInt(trData->getTypeId());
+		trData->write(stream);
     }
 };

@@ -34,18 +34,10 @@ final class CPPTranslationCatalogDefaults
                 'ItemStackWrapper' => 'NetworkItemStack',
                 'NetworkItemDescriptor' => 'NetworkItemDescriptor',
                 'NetworkItemStack' => 'NetworkItemStack',
-                'TransactionData' => 'std::variant<std::shared_ptr<NormalTransactionData>, std::shared_ptr<MismatchTransactionData>, std::shared_ptr<UseItemTransactionData>, std::shared_ptr<UseItemOnEntityTransactionData>, std::shared_ptr<ReleaseItemTransactionData>>',
             ],
             'typeIncludes' => [
                 'EntityMetadataCollection' => [
                     'types/MetadataProperty.hpp',
-                ],
-                'TransactionData' => [
-                    'types/NormalTransactionData.hpp',
-                    'types/MismatchTransactionData.hpp',
-                    'types/UseItemTransactionData.hpp',
-                    'types/UseItemOnEntityTransactionData.hpp',
-                    'types/ReleaseItemTransactionData.hpp',
                 ],
             ],
             'typeCodecs' => [

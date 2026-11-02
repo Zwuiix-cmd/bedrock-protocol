@@ -209,10 +209,16 @@ private function codecExpression(Node $expression, array $variableCodecs, array 
                 $class = (string) $declaration['name'];
             }
             $name = $expression->name instanceof Node\Identifier ? $expression->name->toString() : '';
+            if (strtolower($name) === 'readoptional' && isset($expression->args[1])) {
+                return $this->codecExpression($expression->args[1]->value, $variableCodecs, $declaration);
+            }
             return $this->codecForCall($class, $name);
         }
         if ($expression instanceof Node\Expr\MethodCall) {
             $name = $expression->name instanceof Node\Identifier ? $expression->name->toString() : '';
+            if (strtolower($name) === 'readoptional' && isset($expression->args[0])) {
+                return $this->codecExpression($expression->args[0]->value, $variableCodecs, $declaration);
+            }
             return $this->codecForCall('stream', $name);
         }
         if ($expression instanceof Node\Expr\Cast) {
@@ -384,7 +390,11 @@ private function inferredPropertyReadValue(array $declaration, array $property):
         }
         $sourceType = (string) ($property['type'] ?? '');
         if ($this->nullableType($sourceType)) {
-            return 'stream.readOptional(' . $this->callback('', 'return ' . $codec . ';') . ')';
+            $reader = $this->optionalReadMethod(
+                $declaration,
+                (string) ($property['name'] ?? ''),
+            );
+            return 'stream.' . $reader . '(' . $this->callback('', 'return ' . $codec . ';') . ')';
         }
         return $codec;
     }
@@ -398,7 +408,11 @@ private function inferredPropertyWriteValue(array $declaration, array $property,
         $sourceType = (string) ($property['type'] ?? '');
         if ($this->nullableType($sourceType)) {
             $write = str_replace('%VALUE%', 'optionalValue', $codec);
-            return 'stream.writeOptional(' . $value . ', ' . $this->callback('const auto& optionalValue', $write) . ');';
+            $writer = $this->optionalWriteMethod(
+                $declaration,
+                (string) ($property['name'] ?? ''),
+            );
+            return 'stream.' . $writer . '(' . $value . ', ' . $this->callback('const auto& optionalValue', $write) . ');';
         }
         return str_replace('%VALUE%', $value, $codec);
     }

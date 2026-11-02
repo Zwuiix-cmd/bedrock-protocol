@@ -27,13 +27,14 @@ private function statement(Node $statement, array $declaration, array $method, i
             if ($statement->expr instanceof Node\Expr\Assign
                 && $statement->expr->var instanceof Node\Expr\PropertyFetch
                 && $statement->expr->expr instanceof Node\Expr\Array_
-                && $statement->expr->expr->items === []
-                && $this->isVectorExpression($statement->expr->var, $declaration)) {
+                && $statement->expr->expr->items === []) {
                 $target = $this->expression($statement->expr->var, $declaration, $method);
                 if ($this->isOptionalContainer($statement->expr->var, $declaration)) {
-                    $target .= '.value()';
+                    return $prefix . $target . '.emplace();';
                 }
-                return '';
+                if ($this->isVectorExpression($statement->expr->var, $declaration)) {
+                    return '';
+                }
             }
             if ($statement->expr instanceof Node\Expr\Assign) {
                 $inlinedAppend = $this->inlineObjectAppend($statement->expr, $declaration, $method, $indent);
@@ -334,6 +335,19 @@ private function statement(Node $statement, array $declaration, array $method, i
             [$init, $prefixLines] = $this->forInitializer($statement->init, $declaration, $method);
             $condition = implode(' && ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->cond));
             $loop = implode(', ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->loop));
+            if (isset($statement->cond[0])
+                && $statement->cond[0] instanceof Node\Expr\BinaryOp\Smaller
+                && $statement->cond[0]->left instanceof Node\Expr\Variable
+                && $statement->cond[0]->right instanceof Node\Expr\Variable) {
+                $indexName = (string) $statement->cond[0]->left->name;
+                $countName = (string) $statement->cond[0]->right->name;
+                $init = str_replace(
+                    'std::size_t ' . $this->variableName($indexName, $declaration) . ' = 0',
+                    'std::remove_cvref_t<decltype(' . $this->variableName($countName, $declaration) . ')> '
+                        . $this->variableName($indexName, $declaration) . ' = 0',
+                    $init,
+                );
+            }
             $hasPrefixScope = $prefixLines !== [];
             $text = $hasPrefixScope ? $prefix . "{\n" : '';
             foreach ($prefixLines as $line) {

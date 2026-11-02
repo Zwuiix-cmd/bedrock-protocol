@@ -175,6 +175,7 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     $property['type'] ?? null,
                     $property['doc'] ?? null,
                     $declaration,
+                    $field,
                 );
                 $enumType = $this->propertyEnumType($property, $declaration);
                 if ($enumType === null) {
@@ -261,6 +262,7 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     $property['doc'] ?? null,
                     $value,
                     $declaration,
+                    $field,
                 );
                 $lines[] = $this->indentGeneratedStatement($write, '        ');
             }

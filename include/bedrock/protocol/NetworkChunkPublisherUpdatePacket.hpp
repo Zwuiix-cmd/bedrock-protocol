@@ -116,7 +116,7 @@ public:
 		if (count > MAX_SAVED_CHUNKS) {
 			throw std::exception{};
 		}
-		for (std::size_t i = 0; i < count; i++) {
+		for (std::remove_cvref_t<decltype(count)> i = 0; i < count; i++) {
 		    savedChunks.push_back(stream.readObject<ChunkPosition>());
 		}
     }

@@ -13,20 +13,20 @@ public:
     uint32_t updateFlag;
     std::optional<bool> visible;
     std::optional<std::shared_ptr<WorldPosition>> worldPosition;
-    std::optional<int32_t> textureId;
+    std::optional<uint32_t> textureId;
     std::optional<uint32_t> color;
     std::optional<bool> clientPositionAuthority;
-    std::optional<int32_t> actorUniqueId;
+    std::optional<int64_t> actorUniqueId;
 
     LocatorBarWaypoint() = default;
     explicit LocatorBarWaypoint(
         const uint32_t& updateFlagValue,
         const std::optional<bool>& visibleValue,
         const std::optional<std::shared_ptr<WorldPosition>>& worldPositionValue,
-        const std::optional<int32_t>& textureIdValue,
+        const std::optional<uint32_t>& textureIdValue,
         const std::optional<uint32_t>& colorValue,
         const std::optional<bool>& clientPositionAuthorityValue,
-        const std::optional<int32_t>& actorUniqueIdValue
+        const std::optional<int64_t>& actorUniqueIdValue
     ) :
         updateFlag(updateFlagValue),
         visible(visibleValue),
@@ -45,7 +45,7 @@ public:
             return stream.readObject<WorldPosition>();
         });
         textureId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedInt().value_or(0);
         });
         color = stream.readOptional([&]() {
             return stream.readUnsignedInt().value_or(0);
@@ -54,7 +54,7 @@ public:
             return stream.readBool().value_or(false);
         });
         actorUniqueId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readActorUniqueID().value_or(0);
         });
     }
 

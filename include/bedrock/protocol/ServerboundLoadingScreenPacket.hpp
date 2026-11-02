@@ -98,7 +98,7 @@ public:
 
 public:
     LoadingScreenType loadingScreenType;
-    std::optional<int32_t> loadingScreenId;
+    std::optional<uint32_t> loadingScreenId;
 
 public:
     std::string_view getName() override {

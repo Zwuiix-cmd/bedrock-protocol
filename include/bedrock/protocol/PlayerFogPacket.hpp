@@ -105,7 +105,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto fogLayersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < fogLayersCount; ++i) {
+		for (std::remove_cvref_t<decltype(fogLayersCount)> i = 0; i < fogLayersCount; ++i) {
 		    fogLayers.push_back(stream.readString().value_or(""));
 		}
     }

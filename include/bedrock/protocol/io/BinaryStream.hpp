@@ -75,6 +75,12 @@ public:
     }
 
     template <typename T, typename Writer>
+    void writeOptionalWhenFalse(const std::optional<T>& value, Writer&& writer) {
+        writeBool(!value.has_value());
+        if (value.has_value()) std::forward<Writer>(writer)(*value);
+    }
+
+    template <typename T, typename Writer>
     void writeList(const std::vector<T>& values, Writer&& writer) {
         writeUnsignedVarInt(static_cast<uint32_t>(values.size()));
         for (const auto& value : values) {

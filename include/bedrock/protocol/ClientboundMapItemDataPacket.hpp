@@ -134,7 +134,7 @@ public:
 		origin = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		if (hasFlag(type, Bitflag::MapCreation)) {
 			auto count = stream.readUnsignedVarInt().value_or(0);
-			for (std::size_t i = 0; (i < count); ++i) {
+			for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 				parentMapIds.push_back(stream.readActorUniqueID().value_or(0));
 			}
 		}
@@ -144,7 +144,7 @@ public:
 		if (hasFlag(type, Bitflag::DecorationUpdate)) {
 			{
 			    auto count = stream.readUnsignedVarInt().value_or(0);
-			    for (std::size_t i = 0; (i < count); ++i) {
+			    for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 					auto object = std::make_shared<MapTrackedObject>();
 					object->type = magic_enum::enum_cast<MapTrackedObject::Type>(
 						stream.readUnsignedInt().value_or(0)
@@ -161,7 +161,7 @@ public:
 			}
 			{
 			    auto count = stream.readUnsignedVarInt().value_or(0);
-			    for (std::size_t i = 0; (i < count); ++i) {
+			    for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 					auto icon = stream.readUnsignedByte().value_or(0);
 					auto rotation = stream.readUnsignedByte().value_or(0);
 					auto xOffsetValue = stream.readUnsignedByte().value_or(0);

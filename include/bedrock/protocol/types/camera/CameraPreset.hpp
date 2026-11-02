@@ -36,7 +36,7 @@ public:
     std::optional<float> radius;
     std::optional<float> yawLimitMin;
     std::optional<float> yawLimitMax;
-    std::optional<int32_t> audioListenerType;
+    std::optional<uint8_t> audioListenerType;
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
@@ -61,7 +61,7 @@ public:
         const std::optional<float>& radiusValue,
         const std::optional<float>& yawLimitMinValue,
         const std::optional<float>& yawLimitMaxValue,
-        const std::optional<int32_t>& audioListenerTypeValue,
+        const std::optional<uint8_t>& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
         const std::optional<ControlScheme>& controlSchemeValue
@@ -141,7 +141,7 @@ public:
             return stream.readFloat().value_or(0.0f);
         });
         audioListenerType = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedByte().value_or(0);
         });
         playerEffects = stream.readOptional([&]() {
             return stream.readBool().value_or(false);

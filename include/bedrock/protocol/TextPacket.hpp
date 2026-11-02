@@ -168,7 +168,7 @@ public:
 				}
 				message = stream.readString().value_or("");
 				auto count = stream.readUnsignedVarInt().value_or(0);
-				for (std::size_t i = 0; (i < count); ++i) {
+				for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 					parameters.push_back(stream.readString().value_or(""));
 				}
 				break;

@@ -9,7 +9,7 @@ use kodiak\bedrockprotocol\generator\CPPName;
 
 trait ValueCodecTranslationMethods
 {
-private function fallbackReadValue(?string $type, ?string $doc, array $declaration): string
+private function fallbackReadValue(?string $type, ?string $doc, array $declaration, ?string $propertyName = null): string
     {
         $type = $this->docType($doc) ?? $type ?? 'mixed';
         $unionParts = $this->unionParts($type);
@@ -24,10 +24,11 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
         if ($this->nullableType($type)) {
             $base = $this->withoutNullType($type);
             $objectCallback = $this->readObjectCallback($base);
+            $reader = $this->optionalReadMethod($declaration, $propertyName);
             if ($objectCallback !== null) {
-                return 'stream.readOptional(' . $objectCallback . ')';
+                return 'stream.' . $reader . '(' . $objectCallback . ')';
             }
-            return 'stream.readOptional(' . $this->callback('', 'return ' . $this->fallbackReadValue($base, null, $declaration) . ';') . ')';
+            return 'stream.' . $reader . '(' . $this->callback('', 'return ' . $this->fallbackReadValue($base, null, $declaration) . ';') . ')';
         }
         $arrayParts = $this->arrayTypeParts($type, $doc);
         if ($arrayParts !== null && $arrayParts['key'] !== null) {
@@ -199,7 +200,7 @@ private function constructorArguments(Node\Expr\New_ $expression, string $classN
         return implode(', ', $arguments);
     }
 
-private function fallbackWriteValue(?string $type, ?string $doc, string $value, array $declaration): string
+private function fallbackWriteValue(?string $type, ?string $doc, string $value, array $declaration, ?string $propertyName = null): string
     {
         $type = $this->docType($doc) ?? $type ?? 'mixed';
         $unionParts = $this->unionParts($type);
@@ -214,7 +215,8 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
         }
         if ($this->nullableType($type)) {
             $base = $this->withoutNullType($type);
-            return 'stream.writeOptional(' . $value . ', ' . $this->callback('const auto& optionalValue', $this->fallbackWriteValue($base, null, 'optionalValue', $declaration)) . ');';
+            $writer = $this->optionalWriteMethod($declaration, $propertyName);
+            return 'stream.' . $writer . '(' . $value . ', ' . $this->callback('const auto& optionalValue', $this->fallbackWriteValue($base, null, 'optionalValue', $declaration)) . ');';
         }
         $arrayParts = $this->arrayTypeParts($type, $doc);
         if ($arrayParts !== null && $arrayParts['key'] !== null) {
@@ -291,6 +293,103 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
             return $value . '.write(stream);';
         }
         return '(void)(' . $value . ');';
+    }
+
+    private function optionalReadMethod(array $declaration, ?string $propertyName): string
+    {
+        return $this->hasFalsePresenceAssignment($declaration, $propertyName)
+            ? 'readOptionalWhenFalse'
+            : 'readOptional';
+    }
+
+    private function optionalWriteMethod(array $declaration, ?string $propertyName): string
+    {
+        return $this->hasFalsePresenceAssignment($declaration, $propertyName)
+            ? 'writeOptionalWhenFalse'
+            : 'writeOptional';
+    }
+
+    private function hasFalsePresenceAssignment(array $declaration, ?string $propertyName): bool
+    {
+        if ($propertyName === null) {
+            return false;
+        }
+        foreach ($declaration['methods'] ?? [] as $method) {
+            $methodName = strtolower((string) ($method['name'] ?? ''));
+            if (!($method['static'] ?? false)
+                || (!str_starts_with($methodName, 'read') && !str_starts_with($methodName, 'get'))) {
+                continue;
+            }
+            foreach ($method['body'] ?? [] as $statement) {
+                if ($this->hasFalsePresenceAssignmentInNode($statement, $propertyName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private function hasFalsePresenceAssignmentInNode(mixed $node, string $propertyName): bool
+    {
+        if (!$node instanceof Node) {
+            return false;
+        }
+        if ($node instanceof Node\Stmt\If_
+            && $node->cond instanceof Node\Expr\BooleanNot
+            && $this->containsPropertyAssignment($node->stmts, $propertyName)) {
+            return true;
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            $child = $node->{$name};
+            if ($child instanceof Node && $this->hasFalsePresenceAssignmentInNode($child, $propertyName)) {
+                return true;
+            }
+            if (is_array($child)) {
+                foreach ($child as $item) {
+                    if ($this->hasFalsePresenceAssignmentInNode($item, $propertyName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private function containsPropertyAssignment(mixed $node, string $propertyName): bool
+    {
+        if (!$node instanceof Node) {
+            if (!is_array($node)) {
+                return false;
+            }
+            foreach ($node as $item) {
+                if ($this->containsPropertyAssignment($item, $propertyName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if ($node instanceof Node\Expr\Assign) {
+            $target = $node->var;
+            if ($target instanceof Node\Expr\Variable && $target->name === $propertyName) {
+                return true;
+            }
+            if ($target instanceof Node\Expr\ArrayDimFetch
+                && $target->var instanceof Node\Expr\Variable
+                && $target->var->name === $propertyName) {
+                return true;
+            }
+            if ($target instanceof Node\Expr\PropertyFetch
+                && $target->name instanceof Node\Identifier
+                && $target->name->toString() === $propertyName) {
+                return true;
+            }
+        }
+        foreach ($node->getSubNodeNames() as $name) {
+            if ($this->containsPropertyAssignment($node->{$name}, $propertyName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function enumStorageValueForWrite(string $value): string

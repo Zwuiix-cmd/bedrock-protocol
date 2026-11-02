@@ -112,7 +112,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		windowId = stream.readUnsignedVarInt().value_or(0);
 		auto count = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < count); ++i) {
+		for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 			items.push_back(stream.readValue<NetworkItemStack>());
 		}
 		containerName = std::make_shared<FullContainerName>();

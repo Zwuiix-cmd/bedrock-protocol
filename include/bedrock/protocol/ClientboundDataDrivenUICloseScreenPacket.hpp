@@ -96,7 +96,7 @@ public:
     }
 
 public:
-    std::optional<int32_t> formId;
+    std::optional<uint32_t> formId;
 
 public:
     std::string_view getName() override {

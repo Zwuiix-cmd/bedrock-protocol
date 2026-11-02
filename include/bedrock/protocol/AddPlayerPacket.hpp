@@ -146,7 +146,7 @@ public:
 		abilitiesPacket = AbilitiesData{};
 		abilitiesPacket.read(stream);
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < linkCount); ++i) {
+		for (std::remove_cvref_t<decltype(linkCount)> i = 0; (i < linkCount); ++i) {
 			links.push_back(stream.readObject<EntityLink>());
 		}
 		deviceId = stream.readString().value_or("");

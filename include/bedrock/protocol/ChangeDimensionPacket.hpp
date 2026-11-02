@@ -99,7 +99,7 @@ public:
     int32_t dimension;
     glm::vec3 position;
     bool respawn = false;
-    std::optional<int32_t> loadingScreenId;
+    std::optional<uint32_t> loadingScreenId;
 
 public:
     std::string_view getName() override {

@@ -9,15 +9,15 @@
 class FullContainerName {
 public:
     uint8_t containerId;
-    std::optional<int32_t> dynamicId;
+    std::optional<uint32_t> dynamicId;
 
     FullContainerName() = default;
-    explicit FullContainerName(const uint8_t& containerIdValue, const std::optional<int32_t>& dynamicIdValue) : containerId(containerIdValue), dynamicId(dynamicIdValue) {}
+    explicit FullContainerName(const uint8_t& containerIdValue, const std::optional<uint32_t>& dynamicIdValue) : containerId(containerIdValue), dynamicId(dynamicIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         containerId = stream.readUnsignedByte().value_or(0);
         dynamicId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedInt().value_or(0);
         });
     }
 

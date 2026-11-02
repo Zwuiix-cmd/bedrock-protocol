@@ -115,6 +115,9 @@ public:
         limitedWorldWidth = stream.readInt().value_or(0);
         limitedWorldLength = stream.readInt().value_or(0);
         isNewNether = stream.readBool().value_or(false);
+        experimentalGameplayOverride = stream.readOptional([&]() {
+            return stream.readBool().value_or(false);
+        });
         chatRestrictionLevel = magic_enum::enum_cast<ChatRestrictionLevel>(
             stream.readUnsignedByte().value_or(0)
         ).value_or(ChatRestrictionLevel::None);
@@ -131,9 +134,6 @@ public:
         experiments->read(stream);
         eduSharedUriResource = stream.readOptional([&]() {
             return stream.readObject<EducationUriResource>();
-        });
-        experimentalGameplayOverride = stream.readOptional([&]() {
-            return stream.readBool().value_or(false);
         });
     }
 

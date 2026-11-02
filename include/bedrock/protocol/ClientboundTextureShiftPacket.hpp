@@ -116,7 +116,7 @@ public:
 		fromStep = stream.readString().value_or("");
 		toStep = stream.readString().value_or("");
 		auto allStepsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < allStepsCount; ++i) {
+		for (std::remove_cvref_t<decltype(allStepsCount)> i = 0; i < allStepsCount; ++i) {
 		    allSteps.push_back(stream.readString().value_or(""));
 		}
 		currentLengthTicks = stream.readUnsignedVarLong().value_or(0);

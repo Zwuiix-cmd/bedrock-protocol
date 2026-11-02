@@ -114,7 +114,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		enumName = stream.readString().value_or("");
 		auto valuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < valuesCount; ++i) {
+		for (std::remove_cvref_t<decltype(valuesCount)> i = 0; i < valuesCount; ++i) {
 		    values.push_back(stream.readString().value_or(""));
 		}
 		type = magic_enum::enum_cast<Type>(

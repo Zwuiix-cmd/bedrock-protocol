@@ -125,7 +125,7 @@ public:
 		avgRemainderTimePercent = stream.readFloat().value_or(0.0f);
 		avgUnaccountedTimePercent = stream.readFloat().value_or(0.0f);
 		auto memoryCategoryValuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < memoryCategoryValuesCount; i++) {
+		for (std::remove_cvref_t<decltype(memoryCategoryValuesCount)> i = 0; i < memoryCategoryValuesCount; i++) {
 		    memoryCategoryValues.push_back(stream.readObject<MemoryCategoryCounter>());
 		}
     }

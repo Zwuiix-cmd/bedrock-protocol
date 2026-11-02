@@ -117,11 +117,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto groupsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < groupsCount; ++i) {
+		for (std::remove_cvref_t<decltype(groupsCount)> i = 0; i < groupsCount; ++i) {
 		    groups.push_back(stream.readObject<CreativeGroupEntry>());
 		}
 		auto itemsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < itemsCount; ++i) {
+		for (std::remove_cvref_t<decltype(itemsCount)> i = 0; i < itemsCount; ++i) {
 		    items.push_back(stream.readObject<CreativeItemEntry>());
 		}
     }

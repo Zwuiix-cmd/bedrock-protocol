@@ -83,7 +83,7 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
-        $lines[] = 'for (std::size_t ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
+        $lines[] = 'for (std::remove_cvref_t<decltype(' . $countName . ')> ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
         if ($body->expr->expr instanceof Node\Expr\Match_) {
             $match = $this->listMatchBody(
                 $body->expr->expr,

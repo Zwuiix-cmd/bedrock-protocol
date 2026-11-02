@@ -114,7 +114,7 @@ public:
 		basePosition = std::make_shared<SubChunkPosition>();
 		basePosition->read(stream);
 		auto entriesCount = stream.readUnsignedInt().value_or(0);
-		for (std::size_t i = 0; i < entriesCount; i++) {
+		for (std::remove_cvref_t<decltype(entriesCount)> i = 0; i < entriesCount; i++) {
 		    entries.push_back(stream.readObject<SubChunkPositionOffset>());
 		}
     }

@@ -163,9 +163,9 @@ public:
 			itemStackRequest.value()->read(stream);
 		}
 		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
-			blockActions = {};
+			blockActions.emplace();
 			auto max = stream.readVarInt().value_or(0);
-			for (std::size_t i = 0; (i < max); ++i) {
+			for (std::remove_cvref_t<decltype(max)> i = 0; (i < max); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
 				if (PlayerBlockAction::isValidActionType(actionType)) {
 					blockActions.value().push_back(PlayerBlockAction::decodeWithBlockInfo(stream, actionType));

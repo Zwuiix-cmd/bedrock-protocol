@@ -16,7 +16,7 @@ public:
     explicit RecipeUnlockingRequirement(const std::optional<std::vector<std::shared_ptr<RecipeIngredient>>>& unlockingIngredientsValue) : unlockingIngredients(unlockingIngredientsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        unlockingIngredients = stream.readOptional([&]() {
+        unlockingIngredients = stream.readOptionalWhenFalse([&]() {
             return stream.readObjectList<RecipeIngredient>();
         });
     }

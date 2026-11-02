@@ -113,7 +113,7 @@ public:
     std::optional<bool> removeTarget;
     std::optional<std::shared_ptr<CameraFovInstruction>> fieldOfView;
     std::optional<std::shared_ptr<CameraSplineInstruction>> spline;
-    std::optional<int32_t> attachToEntity;
+    std::optional<int64_t> attachToEntity;
     std::optional<bool> detachFromEntity;
 
 public:

@@ -426,6 +426,13 @@ public:
     }
 
     template <typename Reader>
+    auto readOptionalWhenFalse(Reader&& reader) {
+        using Value = std::remove_cvref_t<std::invoke_result_t<Reader&>>;
+        if (readBool().value_or(false)) return std::optional<Value>{};
+        return std::optional<Value>{std::forward<Reader>(reader)()};
+    }
+
+    template <typename Reader>
     auto readList(Reader&& reader) {
         using Value = std::remove_cvref_t<std::invoke_result_t<Reader&>>;
         const uint32_t count = readUnsignedVarInt().value_or(0);

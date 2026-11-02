@@ -132,12 +132,12 @@ public:
 		}
 		auto cacheEnabled = stream.readBool().value_or(false);
 		if (cacheEnabled) {
-			usedBlobHashes = {};
+			usedBlobHashes.emplace();
 			auto count = stream.readUnsignedVarInt().value_or(0);
 			if (count > MAX_BLOB_HASHES) {
 				throw std::exception{};
 			}
-			for (std::size_t i = 0; (i < count); ++i) {
+			for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 				usedBlobHashes.value().push_back(stream.readUnsignedLong().value_or(0));
 			}
 		}

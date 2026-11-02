@@ -11,17 +11,17 @@ class BiomeCappedSurfaceData {
 public:
     std::vector<int32_t> floorBlocks;
     std::vector<int32_t> ceilingBlocks;
-    std::optional<int32_t> seaBlock;
-    std::optional<int32_t> foundationBlock;
-    std::optional<int32_t> beachBlock;
+    std::optional<uint32_t> seaBlock;
+    std::optional<uint32_t> foundationBlock;
+    std::optional<uint32_t> beachBlock;
 
     BiomeCappedSurfaceData() = default;
     explicit BiomeCappedSurfaceData(
         const std::vector<int32_t>& floorBlocksValue,
         const std::vector<int32_t>& ceilingBlocksValue,
-        const std::optional<int32_t>& seaBlockValue,
-        const std::optional<int32_t>& foundationBlockValue,
-        const std::optional<int32_t>& beachBlockValue
+        const std::optional<uint32_t>& seaBlockValue,
+        const std::optional<uint32_t>& foundationBlockValue,
+        const std::optional<uint32_t>& beachBlockValue
     ) :
         floorBlocks(floorBlocksValue),
         ceilingBlocks(ceilingBlocksValue),
@@ -37,13 +37,13 @@ public:
             return stream.readInt().value_or(0);
         });
         seaBlock = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedInt().value_or(0);
         });
         foundationBlock = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedInt().value_or(0);
         });
         beachBlock = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+            return stream.readUnsignedInt().value_or(0);
         });
     }
 

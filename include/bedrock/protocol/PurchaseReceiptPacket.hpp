@@ -105,7 +105,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto count = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < count); ++i) {
+		for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
 			entries.push_back(stream.readString().value_or(""));
 		}
     }

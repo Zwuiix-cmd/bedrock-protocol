@@ -128,12 +128,12 @@ public:
 		successCount = stream.readUnsignedInt().value_or(0);
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < size); ++i) {
+		    for (std::remove_cvref_t<decltype(size)> i = 0; (i < size); ++i) {
 				auto message = std::make_shared<CommandOutputMessage>();
 				message->messageId = stream.readString().value_or("");
 				message->isInternal = stream.readBool().value_or(false);
 				auto parametersCount = stream.readUnsignedVarInt().value_or(0);
-				for (std::size_t i = 0; i < parametersCount; ++i) {
+				for (std::remove_cvref_t<decltype(parametersCount)> i = 0; i < parametersCount; ++i) {
 				    message->parameters.push_back(stream.readString().value_or(""));
 				}
 				messages.push_back(message);

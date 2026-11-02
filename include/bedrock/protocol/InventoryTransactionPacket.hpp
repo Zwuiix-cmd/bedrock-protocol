@@ -121,7 +121,7 @@ public:
 		requestId = stream.readInt().value_or(0);
 		if (requestId != 0) {
 			auto requestChangedSlotsCount = stream.readUnsignedVarInt().value_or(0);
-			for (std::size_t i = 0; i < requestChangedSlotsCount; ++i) {
+			for (std::remove_cvref_t<decltype(requestChangedSlotsCount)> i = 0; i < requestChangedSlotsCount; ++i) {
 			    requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}
 		}

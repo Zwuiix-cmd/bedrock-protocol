@@ -107,7 +107,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto requestsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < requestsCount; ++i) {
+		for (std::remove_cvref_t<decltype(requestsCount)> i = 0; i < requestsCount; ++i) {
 		    requests.push_back(stream.readObject<ItemStackRequest>());
 		}
     }

@@ -98,7 +98,7 @@ public:
 public:
     std::string screenId;
     uint32_t formId;
-    std::optional<int32_t> dataInstanceId;
+    std::optional<uint32_t> dataInstanceId;
 
 public:
     std::string_view getName() override {

@@ -9,6 +9,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 
@@ -55,9 +56,9 @@ public:
 			throw std::exception{};
 		}
 		auto pixels = std::vector<std::vector<uint32_t>>();
-		for (std::size_t y = 0; (y < height); ++y) {
+		for (std::remove_cvref_t<decltype(height)> y = 0; (y < height); ++y) {
 			auto row = std::vector<uint32_t>();
-			for (std::size_t x = 0; (x < width); ++x) {
+			for (std::remove_cvref_t<decltype(width)> x = 0; (x < width); ++x) {
 				row.push_back(static_cast<uint32_t>(BinaryStream::flipIntEndianness(stream.readUnsignedVarInt().value_or(0))));
 			}
 			pixels.push_back(row);

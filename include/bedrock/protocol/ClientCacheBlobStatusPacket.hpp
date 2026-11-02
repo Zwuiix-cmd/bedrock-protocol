@@ -107,10 +107,10 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto missCount = stream.readUnsignedVarInt().value_or(0);
 		auto hitCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < missCount); ++i) {
+		for (std::remove_cvref_t<decltype(missCount)> i = 0; (i < missCount); ++i) {
 			missHashes.push_back(stream.readUnsignedLong().value_or(0));
 		}
-		for (std::size_t i = 0; (i < hitCount); ++i) {
+		for (std::remove_cvref_t<decltype(hitCount)> i = 0; (i < hitCount); ++i) {
 			hitHashes.push_back(stream.readUnsignedLong().value_or(0));
 		}
     }

@@ -107,7 +107,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto splinesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < splinesCount; ++i) {
+		for (std::remove_cvref_t<decltype(splinesCount)> i = 0; i < splinesCount; ++i) {
 		    splines.push_back(stream.readObject<CameraSplineDefinition>());
 		}
     }

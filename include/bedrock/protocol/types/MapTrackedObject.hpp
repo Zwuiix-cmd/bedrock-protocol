@@ -19,23 +19,32 @@ public:
     enum class Type : uint8_t {
         Entity = 0,
         Block = 1,
+        Other = 2,
     };
 
     Type type;
-    int64_t actorUniqueId;
-    glm::ivec3 blockPosition;
+    std::optional<int32_t> actorUniqueId;
+    std::optional<glm::ivec3> blockPosition;
 
     MapTrackedObject() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         type = static_cast<Type>(stream.readUnsignedInt().value_or(0));
-        blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        actorUniqueId = stream.readActorUniqueID().value_or(0);
+        actorUniqueId = stream.readOptional([&]() {
+            return stream.readInt().value_or(0);
+        });
+        blockPosition = stream.readOptional([&]() {
+            return stream.readSignedBlockPos().value_or(glm::ivec3(0));
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedInt(static_cast<std::underlying_type_t<Type>>(type));
-        stream.writeSignedBlockPos(blockPosition);
-        stream.writeActorUniqueID(actorUniqueId);
+        stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
+        stream.writeOptional(blockPosition, [&](const auto& optionalValue) {
+            stream.writeSignedBlockPos(optionalValue);
+        });
     }
 };

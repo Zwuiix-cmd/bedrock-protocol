@@ -2,6 +2,18 @@
     "translator": "nikic/php-parser AST",
     "unsupported": [
         {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeEnvironmentNoiseTransitionSettings",
+            "method": "write",
+            "line": 72,
+            "reason": "string-backed enum ordinal conversion"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeEnvironmentTransitionSettings",
+            "method": "write",
+            "line": 57,
+            "reason": "string-backed enum ordinal conversion"
+        },
+        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\AttributeValueColorArray",
             "method": "write",
             "line": 49,
@@ -26,58 +38,22 @@
             "reason": "method is not part of the generated type interface: getA"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraFovInstruction",
-            "method": "__construct",
-            "line": 28,
-            "reason": "function call requires an adapter: is_int"
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraSetInstructionEase",
+            "method": "write",
+            "line": 39,
+            "reason": "string-backed enum ordinal conversion"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraFovInstruction",
-            "method": "__construct",
-            "line": 28,
-            "reason": "static call requires an adapter: CameraSetInstructionEaseType::toName"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraProgressOption",
-            "method": "__construct",
-            "line": 28,
-            "reason": "function call requires an adapter: is_int"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraProgressOption",
-            "method": "__construct",
-            "line": 28,
-            "reason": "static call requires an adapter: CameraSetInstructionEaseType::toName"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraRotationOption",
-            "method": "__construct",
-            "line": 29,
-            "reason": "function call requires an adapter: is_int"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraRotationOption",
-            "method": "__construct",
-            "line": 29,
-            "reason": "static call requires an adapter: CameraSetInstructionEaseType::toName"
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\camera\\CameraSplineInstruction",
+            "method": "write",
+            "line": 94,
+            "reason": "string-backed enum ordinal conversion"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\command\\CommandData",
             "method": "__construct",
-            "line": 26,
+            "line": 22,
             "reason": "function call requires an adapter: "
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\command\\CommandData",
-            "method": "__construct",
-            "line": 26,
-            "reason": "function call requires an adapter: is_int"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\command\\CommandData",
-            "method": "__construct",
-            "line": 26,
-            "reason": "static call requires an adapter: CommandPermissions::toName"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\command\\CommandHardEnum",
@@ -116,40 +92,40 @@
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\DeprecatedCraftingResultsStackRequestAction",
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\ddui\\DataStoreChange",
             "method": "write",
-            "line": 57,
-            "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
+            "line": 64,
+            "reason": "nullsafe method requires an adapter: getTypeId"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\DoubleDataStoreValue",
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\ddui\\DataStoreChange",
             "method": "write",
-            "line": 34,
+            "line": 64,
+            "reason": "nullsafe method requires an adapter: write"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\DebugMarkerData",
+            "method": "write",
+            "line": 55,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\DeprecatedCraftingResultsEntry",
+            "method": "write",
+            "line": 56,
+            "reason": "serializer call requires an adapter: CommonTypes::writeItemDescriptorNormal"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\ddui\\update\\DoubleDataStoreUpdateValue",
+            "method": "write",
+            "line": 33,
             "reason": "serializer call requires an adapter: LE::writeDouble"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\EnchantOption",
             "method": "write",
-            "line": 92,
+            "line": 93,
             "reason": "static call requires an adapter: EnchantOption::writeEnchantList"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\FurnaceRecipe",
-            "method": "decode",
-            "line": 51,
-            "reason": "serializer call requires an adapter: CommonTypes::getItemStackWithoutStackId"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\FurnaceRecipe",
-            "method": "encode",
-            "line": 63,
-            "reason": "call to helper method not emitted: getTypeId"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\FurnaceRecipe",
-            "method": "encode",
-            "line": 63,
-            "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\ItemStackExtraData",
@@ -164,81 +140,87 @@
             "reason": "parent dispatch requires an inheritance adapter"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\PacketShapeData",
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\LevelSettings",
             "method": "write",
-            "line": 272,
-            "reason": "nullsafe method requires an adapter: getPayloadType"
+            "line": 157,
+            "reason": "serializer call requires an adapter: Byte::writeSigned"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\PacketShapeData",
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\LocatorBarWaypoint",
             "method": "write",
-            "line": 272,
-            "reason": "method is not part of the generated type interface: getPayloadType"
+            "line": 77,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapedRecipe",
-            "method": "decode",
-            "line": 110,
-            "reason": "serializer call requires an adapter: CommonTypes::getItemStackWithoutStackId"
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\NetworkInventoryAction",
+            "method": "read",
+            "line": 76,
+            "reason": "serializer call requires an adapter: Byte::readSigned"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\NetworkInventoryAction",
+            "method": "write",
+            "line": 92,
+            "reason": "serializer call requires an adapter: Byte::writeSigned"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PacketShapeData",
+            "method": "write",
+            "line": 284,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PacketShapeData",
+            "method": "write",
+            "line": 284,
+            "reason": "nullsafe method requires an adapter: getTypeId"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PacketShapeData",
+            "method": "write",
+            "line": 284,
+            "reason": "nullsafe method requires an adapter: write"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PrimitiveShapeTextPayload",
+            "method": "write",
+            "line": 65,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapedRecipe",
             "method": "encode",
-            "line": 136,
+            "line": 139,
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapelessRecipe",
-            "method": "decode",
-            "line": 84,
-            "reason": "serializer call requires an adapter: CommonTypes::getItemStackWithoutStackId"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapelessRecipe",
             "method": "encode",
-            "line": 104,
+            "line": 101,
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\skin\\SkinData",
             "method": "__construct",
-            "line": 33,
+            "line": 41,
             "reason": "static call requires an adapter: Uuid::uuid4"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\skin\\SkinData",
             "method": "__construct",
-            "line": 33,
+            "line": 41,
             "reason": "method is not part of the generated type interface: toString"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\SmithingTransformRecipe",
-            "method": "decode",
-            "line": 51,
-            "reason": "serializer call requires an adapter: CommonTypes::getItemStackWithoutStackId"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\SmithingTransformRecipe",
             "method": "encode",
-            "line": 72,
+            "line": 68,
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketEntryCommon",
-            "method": "read",
-            "line": 43,
-            "reason": "static call requires an adapter: SubChunkPacketHeightMapInfo::allTooHigh"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketEntryCommon",
-            "method": "read",
-            "line": 43,
-            "reason": "static call requires an adapter: SubChunkPacketHeightMapInfo::allTooLow"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketHeightMapInfo",
             "method": "write",
-            "line": 50,
+            "line": 60,
             "reason": "serializer call requires an adapter: Byte::writeSigned"
         },
         {
@@ -252,6 +234,126 @@
             "method": "write",
             "line": 54,
             "reason": "serializer call requires an adapter: Byte::writeSigned"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ResourcePackClientResponsePacket",
+            "method": "encodePayload",
+            "line": 57,
+            "reason": "string-backed enum ordinal conversion"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\AnimatePacket",
+            "method": "decodePayload",
+            "line": 49,
+            "reason": "serializer call requires an adapter: CommonTypes::readHandSlot"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\AnimatePacket",
+            "method": "encodePayload",
+            "line": 57,
+            "reason": "serializer call requires an adapter: CommonTypes::writeHandSlot"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerListPacket",
+            "method": "decodePayload",
+            "line": 56,
+            "reason": "serializer call requires an adapter: CommonTypes::readColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerListPacket",
+            "method": "encodePayload",
+            "line": 90,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "decodePayload",
+            "line": 59,
+            "reason": "serializer call requires an adapter: CommonTypes::readColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getIcon"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getRotation"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getXOffset"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getYOffset"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getLabel"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method call on unknown generated value: getColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "nullsafe method requires an adapter: getWidth"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "nullsafe method requires an adapter: getHeight"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method is not part of the generated type interface: getWidth"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
+            "method": "encodePayload",
+            "line": 110,
+            "reason": "method is not part of the generated type interface: getHeight"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\PhotoTransferPacket",
+            "method": "decodePayload",
+            "line": 99,
+            "reason": "function call requires an adapter: str_ends_with"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\PhotoTransferPacket",
+            "method": "decodePayload",
+            "line": 99,
+            "reason": "function call requires an adapter: substr"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\PhotoTransferPacket",
+            "method": "decodePayload",
+            "line": 99,
+            "reason": "static call requires an adapter: Uuid::isValid"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\UpdateBlockSyncedPacket",
@@ -272,10 +374,34 @@
             "reason": "method is not part of the generated type interface: isComponentBased"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\SubChunkPacket",
+            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerUpdateEntityOverridesPacket",
             "method": "encodePayload",
-            "line": 76,
-            "reason": "expression PhpParser\\Node\\Expr\\Instanceof_"
+            "line": 87,
+            "reason": "string-backed enum ordinal conversion"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMatchmakingStatePacket",
+            "method": "encodePayload",
+            "line": 54,
+            "reason": "string-backed enum ordinal conversion"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundPlayAudioContentPacket",
+            "method": "decodePayload",
+            "line": 59,
+            "reason": "construction of external PHP type"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundPlayAudioContentPacket",
+            "method": "decodePayload",
+            "line": 59,
+            "reason": "method call on unknown generated value: decodePayload"
+        },
+        {
+            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundPlayAudioContentPacket",
+            "method": "encodePayload",
+            "line": 67,
+            "reason": "method call on unknown generated value: encodePayload"
         }
     ],
     "notes": [

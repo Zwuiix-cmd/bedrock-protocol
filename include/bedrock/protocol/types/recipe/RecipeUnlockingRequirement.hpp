@@ -13,16 +13,30 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
+#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
+#include <bedrock/protocol/types/recipe/RecipeUnlockingContext.hpp>
 
 class RecipeUnlockingRequirement {
 public:
+    RecipeUnlockingContext unlockingContext;
     std::optional<std::vector<std::shared_ptr<RecipeIngredient>>> unlockingIngredients;
 
     RecipeUnlockingRequirement() = default;
-    explicit RecipeUnlockingRequirement(const std::optional<std::vector<std::shared_ptr<RecipeIngredient>>>& unlockingIngredientsValue) : unlockingIngredients(unlockingIngredientsValue) {}
+    explicit RecipeUnlockingRequirement(
+        const RecipeUnlockingContext& unlockingContextValue,
+        const std::optional<std::vector<std::shared_ptr<RecipeIngredient>>>& unlockingIngredientsValue
+    ) :
+        unlockingContext(unlockingContextValue),
+        unlockingIngredients(unlockingIngredientsValue) {
+		if (((unlockingContextValue != static_cast<std::underlying_type_t<decltype(RecipeUnlockingContext::None)>>(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
+			throw std::exception{};
+		}
+    }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        unlockingContext = static_cast<RecipeUnlockingContext>(stream.readVarInt().value_or(0));
         unlockingIngredients = stream.readOptional([&]() {
             return stream.readList([&]() {
             return ([&]() {
@@ -35,12 +49,11 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeBool((!unlockingIngredients));
-		if (unlockingIngredients.has_value()) {
-			stream.writeUnsignedVarInt(unlockingIngredients.value().size());
-			for (const auto& ingredient : unlockingIngredients.value()) {
-				if (ingredient) ingredient->write(stream);
-			}
-		}
+        stream.writeVarInt(static_cast<int32_t>(unlockingContext));
+        stream.writeOptional(unlockingIngredients, [&](const auto& optionalValue) {
+            stream.writeList(optionalValue, [&](const auto& item) {
+            if (item) item->write(stream);
+            });
+        });
     }
 };

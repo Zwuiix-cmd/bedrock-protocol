@@ -38,7 +38,7 @@ public:
         value = stream.readBool().value_or(false);
     }
 
-    void write(BinaryStream& stream, const bool& isStartGame) const override {
+    void write(BinaryStream& stream) const override {
 		stream.writeBool(value);
     }
 };

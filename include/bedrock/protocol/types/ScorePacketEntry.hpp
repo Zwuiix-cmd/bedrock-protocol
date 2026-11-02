@@ -13,19 +13,15 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/ScorePacketEntryAction.hpp>
+#include <bedrock/protocol/types/ScorePacketEntryAction.hpp>
 
 class ScorePacketEntry {
 public:
-    enum class Type : uint8_t {
-        Player = 1,
-        Entity = 2,
-        FakePlayer = 3,
-    };
-
     int64_t scoreboardId;
-    std::string objectiveName;
+    std::optional<std::string> objectiveName;
     int32_t score;
-    Type type;
+    ScorePacketEntryAction action;
     std::optional<int64_t> actorUniqueId;
     std::optional<std::string> customName;
 
@@ -33,27 +29,31 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         scoreboardId = stream.readVarLong().value_or(0);
-        objectiveName = stream.readString().value_or("");
+        objectiveName = stream.readOptional([&]() {
+            return stream.readString().value_or("");
+        });
         score = stream.readInt().value_or(0);
-        type = static_cast<Type>(stream.readUnsignedByte().value_or(0));
         actorUniqueId = stream.readOptional([&]() {
             return stream.readActorUniqueID().value_or(0);
         });
         customName = stream.readOptional([&]() {
             return stream.readString().value_or("");
         });
+        action = static_cast<ScorePacketEntryAction>(stream.readVarInt().value_or(0));
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeVarLong(scoreboardId);
-        stream.writeString(objectiveName);
+        stream.writeOptional(objectiveName, [&](const auto& optionalValue) {
+            stream.writeString(optionalValue);
+        });
         stream.writeInt(score);
-        stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
             stream.writeActorUniqueID(optionalValue);
         });
         stream.writeOptional(customName, [&](const auto& optionalValue) {
             stream.writeString(optionalValue);
         });
+        stream.writeVarInt(static_cast<int32_t>(action));
     }
 };

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string_view>
 
-enum class OverrideUpdateType : uint8_t {
+enum class OverrideUpdateType : uint16_t {
     ClearOverrides = 0,
     RemoveOverride = 1,
     SetIntOverride = 2,

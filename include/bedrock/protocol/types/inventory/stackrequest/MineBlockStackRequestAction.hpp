@@ -17,7 +17,7 @@
 
 class MineBlockStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 11;
+    static constexpr int64_t ID = 9;
 
     int32_t hotbarSlot;
     int32_t predictedDurability;

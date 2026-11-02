@@ -22,14 +22,14 @@
 class AttributeLayer {
 public:
     std::string name;
-    uint32_t dimension;
+    int32_t dimension;
     std::shared_ptr<AttributeLayerSettings> settings;
     std::vector<std::shared_ptr<AttributeEnvironment>> attributes;
 
     AttributeLayer() = default;
     explicit AttributeLayer(
         const std::string& nameValue,
-        const uint32_t& dimensionValue,
+        const int32_t& dimensionValue,
         const std::shared_ptr<AttributeLayerSettings>& settingsValue,
         const std::vector<std::shared_ptr<AttributeEnvironment>>& attributesValue
     ) :
@@ -40,7 +40,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
-        dimension = stream.readUnsignedVarInt().value_or(0);
+        dimension = stream.readVarInt().value_or(0);
         settings = ([&]() {
     auto value = std::make_shared<AttributeLayerSettings>();
     value->read(stream);
@@ -57,7 +57,7 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeString(name);
-		stream.writeUnsignedVarInt(dimension);
+		stream.writeVarInt(dimension);
 		settings->write(stream);
 		stream.writeUnsignedVarInt(attributes.size());
 		for (const auto& attribute : attributes) {

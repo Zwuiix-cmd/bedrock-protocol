@@ -13,73 +13,73 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/skin/PersonaPieceTintColor.hpp>
-#include <bedrock/protocol/types/skin/PersonaSkinPiece.hpp>
-#include <bedrock/protocol/types/skin/SkinAnimation.hpp>
+#include <bedrock/protocol/types/skin/SkinArmSizeType.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
 #include <bedrock/protocol/types/skin/PersonaPieceTintColor.hpp>
 #include <bedrock/protocol/types/skin/PersonaSkinPiece.hpp>
 #include <bedrock/protocol/types/skin/SkinAnimation.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
+#include <bedrock/protocol/types/skin/SkinArmSizeType.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
 
 class SkinData {
 public:
-    static constexpr std::string_view ARM_SIZE_SLIM = "slim";
-    static constexpr std::string_view ARM_SIZE_WIDE = "wide";
+    static constexpr std::string_view GEOMETRY_DATA_NONE = "{}";
+    static constexpr std::string_view TRUSTED_SKIN_UNSET = "unset";
+    static constexpr std::string_view TRUSTED_SKIN_FALSE = "false";
+    static constexpr std::string_view TRUSTED_SKIN_TRUE = "true";
+    uint32_t skinColor;
     std::shared_ptr<SkinImage> capeImage;
     std::string fullSkinId;
     std::string skinId;
-    std::string playFabId;
     std::string resourcePatch;
     std::shared_ptr<SkinImage> skinImage;
     std::vector<std::shared_ptr<SkinAnimation>> animations;
-    std::string geometryData;
-    std::string geometryDataEngineVersion = "1.26.10";
+    std::string geometryDataJson = "{}";
+    std::string geometryDataEngineVersion = "1.26.60";
     std::string animationData;
     std::string capeId;
-    std::string armSize = "wide";
-    std::string skinColor;
+    SkinArmSizeType armSize = static_cast<SkinArmSizeType>(0);
     std::vector<std::shared_ptr<PersonaSkinPiece>> personaPieces;
     std::vector<std::shared_ptr<PersonaPieceTintColor>> pieceTintColors;
-    bool isVerified = true;
+    std::string trustedSkinFlag = "true";
     bool premium = false;
     bool persona = false;
     bool personaCapeOnClassic = false;
     bool isPrimaryUser = true;
     bool override = true;
+    std::string profileHash;
 
     SkinData() = default;
     explicit SkinData(
         const std::string& skinIdValue,
-        const std::string& playFabIdValue,
         const std::string& resourcePatchValue,
         const std::shared_ptr<SkinImage>& skinImageValue,
         const std::vector<std::shared_ptr<SkinAnimation>>& animationsValue,
         const std::shared_ptr<SkinImage>& capeImageValue,
-        const std::string& geometryDataValue,
+        const std::string& geometryDataJsonValue,
         const std::string& geometryDataEngineVersionValue,
         const std::string& animationDataValue,
         const std::string& capeIdValue,
         const std::string& fullSkinIdValue,
-        const std::string& armSizeValue,
-        const std::string& skinColorValue,
+        const SkinArmSizeType& armSizeValue,
+        const uint32_t& skinColorValue,
         const std::vector<std::shared_ptr<PersonaSkinPiece>>& personaPiecesValue,
         const std::vector<std::shared_ptr<PersonaPieceTintColor>>& pieceTintColorsValue,
-        const bool& isVerifiedValue,
+        const std::string& trustedSkinFlagValue,
         const bool& premiumValue,
         const bool& personaValue,
         const bool& personaCapeOnClassicValue,
         const bool& isPrimaryUserValue,
-        const bool& overrideValue
+        const bool& overrideValue,
+        const std::string& profileHashValue
     ) :
         skinId(skinIdValue),
-        playFabId(playFabIdValue),
         resourcePatch(resourcePatchValue),
         skinImage(skinImageValue),
         animations(animationsValue),
         capeImage(capeImageValue),
-        geometryData(geometryDataValue),
+        geometryDataJson(geometryDataJsonValue),
         geometryDataEngineVersion(geometryDataEngineVersionValue),
         animationData(animationDataValue),
         capeId(capeIdValue),
@@ -88,31 +88,32 @@ public:
         skinColor(skinColorValue),
         personaPieces(personaPiecesValue),
         pieceTintColors(pieceTintColorsValue),
-        isVerified(isVerifiedValue),
+        trustedSkinFlag(trustedSkinFlagValue),
         premium(premiumValue),
         persona(personaValue),
         personaCapeOnClassic(personaCapeOnClassicValue),
         isPrimaryUser(isPrimaryUserValue),
-        override(overrideValue) {
+        override(overrideValue),
+        profileHash(profileHashValue) {
 
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         skinId = stream.readString().value_or("");
-        playFabId = stream.readString().value_or("");
         resourcePatch = stream.readString().value_or("");
-        geometryData = stream.readString().value_or("");
+        geometryDataJson = stream.readString().value_or("");
         geometryDataEngineVersion = stream.readString().value_or("");
         animationData = stream.readString().value_or("");
         capeId = stream.readString().value_or("");
         fullSkinId = stream.readString().value_or("");
-        armSize = stream.readString().value_or("");
-        skinColor = stream.readString().value_or("");
+        trustedSkinFlag = stream.readString().value_or("");
         premium = stream.readBool().value_or(false);
         persona = stream.readBool().value_or(false);
         personaCapeOnClassic = stream.readBool().value_or(false);
         isPrimaryUser = stream.readBool().value_or(false);
         override = stream.readBool().value_or(false);
+        profileHash = stream.readString().value_or("");
+        skinColor = stream.readUnsignedInt().value_or(0);
         capeImage = ([&]() {
     auto value = std::make_shared<SkinImage>();
     value->read(stream);
@@ -130,6 +131,7 @@ public:
             return value;
             }());
         });
+        armSize = static_cast<SkinArmSizeType>(stream.readVarInt().value_or(0));
         personaPieces = stream.readList([&]() {
             return ([&]() {
             auto value = std::make_shared<PersonaSkinPiece>();
@@ -144,36 +146,35 @@ public:
             return value;
             }());
         });
-        isVerified = stream.readBool().value_or(false);
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(skinId);
-        stream.writeString(playFabId);
         stream.writeString(resourcePatch);
-        stream.writeString(geometryData);
+        stream.writeString(geometryDataJson);
         stream.writeString(geometryDataEngineVersion);
         stream.writeString(animationData);
         stream.writeString(capeId);
         stream.writeString(fullSkinId);
-        stream.writeString(armSize);
-        stream.writeString(skinColor);
+        stream.writeString(trustedSkinFlag);
         stream.writeBool(premium);
         stream.writeBool(persona);
         stream.writeBool(personaCapeOnClassic);
         stream.writeBool(isPrimaryUser);
         stream.writeBool(override);
+        stream.writeString(profileHash);
+        stream.writeUnsignedInt(skinColor);
         if (capeImage) capeImage->write(stream);
         if (skinImage) skinImage->write(stream);
         stream.writeList(animations, [&](const auto& item) {
             if (item) item->write(stream);
         });
+        stream.writeVarInt(static_cast<int32_t>(armSize));
         stream.writeList(personaPieces, [&](const auto& item) {
             if (item) item->write(stream);
         });
         stream.writeList(pieceTintColors, [&](const auto& item) {
             if (item) item->write(stream);
         });
-        stream.writeBool(isVerified);
     }
 };

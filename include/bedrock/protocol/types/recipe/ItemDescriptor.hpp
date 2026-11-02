@@ -19,8 +19,6 @@ public:
 
     ItemDescriptor() = default;
     virtual ~ItemDescriptor() = default;
-
-    virtual int32_t getTypeId() const = 0;
     virtual void write(BinaryStream& stream) const = 0;
     virtual void read(ReadOnlyBinaryStream& stream) = 0;
 

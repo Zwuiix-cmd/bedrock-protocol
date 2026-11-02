@@ -17,7 +17,7 @@
 
 class BeaconPaymentStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 10;
+    static constexpr int64_t ID = 8;
 
     int32_t primaryEffectId;
     int32_t secondaryEffectId;

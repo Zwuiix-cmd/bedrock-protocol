@@ -3,10 +3,9 @@
 #include <cstdint>
 #include <string_view>
 
-enum class ItemDescriptorType : uint8_t {
-    IntIdMeta = 1,
+enum class ItemDescriptorType : uint16_t {
+    Empty = 0,
+    StringIdMeta = 1,
     Molang = 2,
     Tag = 3,
-    StringIdMeta = 4,
-    ComplexAlias = 5,
 };

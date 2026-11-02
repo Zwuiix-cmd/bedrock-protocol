@@ -18,6 +18,7 @@
 class NetworkInventoryAction {
 public:
     static constexpr int64_t SOURCE_CONTAINER = 0;
+    static constexpr int64_t SOURCE_GLOBAL = 1;
     static constexpr int64_t SOURCE_WORLD = 2;
     static constexpr int64_t SOURCE_CREATIVE = 3;
     static constexpr int64_t SOURCE_TODO = 99999;
@@ -37,8 +38,8 @@ public:
     static constexpr int64_t ACTION_MAGIC_SLOT_PICKUP_ITEM = 1;
 
     uint32_t sourceType;
-    int32_t windowId;
-    uint32_t sourceFlags = 0;
+    std::optional<int32_t> windowId;
+    std::optional<int32_t> sourceFlags;
     uint32_t inventorySlot;
     NetworkItemStack oldItem;
     NetworkItemStack newItem;
@@ -46,57 +47,28 @@ public:
     NetworkInventoryAction() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-		sourceType = stream.readUnsignedVarInt().value_or(0);
-		switch (sourceType) {
-			case SOURCE_CONTAINER: {
-				windowId = stream.readVarInt().value_or(0);
-				break;
-			}
-			case SOURCE_WORLD: {
-				sourceFlags = stream.readUnsignedVarInt().value_or(0);
-				break;
-			}
-			case SOURCE_CREATIVE: {
-				break;
-			}
-			case SOURCE_TODO: {
-				windowId = stream.readVarInt().value_or(0);
-				break;
-			}
-			default: {
-				throw std::exception{};
-			}
-		}
-		inventorySlot = stream.readUnsignedVarInt().value_or(0);
-		oldItem = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		newItem = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		return;
+        stream.writeUnsignedVarInt(sourceType);
+        stream.writeUnsignedVarInt(inventorySlot);
+        stream.writeOptional(windowId, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
+        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
+        oldItem.write(stream);
+        newItem.write(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedVarInt(sourceType);
-		switch (sourceType) {
-			case SOURCE_CONTAINER: {
-				stream.writeVarInt(windowId);
-				break;
-			}
-			case SOURCE_WORLD: {
-				stream.writeUnsignedVarInt(sourceFlags);
-				break;
-			}
-			case SOURCE_CREATIVE: {
-				break;
-			}
-			case SOURCE_TODO: {
-				stream.writeVarInt(windowId);
-				break;
-			}
-			default: {
-				throw std::exception{};
-			}
-		}
-		stream.writeUnsignedVarInt(inventorySlot);
-		oldItem.write(stream);
-		newItem.write(stream);
+        stream.writeUnsignedVarInt(sourceType);
+        stream.writeUnsignedVarInt(inventorySlot);
+        stream.writeOptional(windowId, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
+        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
+        oldItem.write(stream);
+        newItem.write(stream);
     }
 };

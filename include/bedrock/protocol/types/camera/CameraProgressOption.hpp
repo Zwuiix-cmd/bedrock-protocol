@@ -14,27 +14,27 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
+#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
+#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 
 class CameraProgressOption {
 public:
-    std::string easeType;
     float value;
     float time;
+    CameraSetInstructionEaseType easeType;
 
     CameraProgressOption() = default;
-    explicit CameraProgressOption(const float& valueValue, const float& timeValue, const std::string& easeTypeValue) : value(valueValue), time(timeValue), easeType(easeTypeValue) {
-
-    }
+    explicit CameraProgressOption(const float& valueValue, const float& timeValue, const CameraSetInstructionEaseType& easeTypeValue) : value(valueValue), time(timeValue), easeType(easeTypeValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
-        easeType = stream.readString().value_or("");
+        easeType = static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeFloat(value);
 		stream.writeFloat(time);
-		stream.writeString(easeType);
+		stream.writeString(magic_enum::enum_name(easeType));
     }
 };

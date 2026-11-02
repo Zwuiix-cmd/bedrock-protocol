@@ -22,5 +22,8 @@ enum class CommandParameterTypes : uint8_t {
     Rawtext = 70,
     JsonObject = 74,
     BlockStateArray = 84,
-    Codebuilderargs = 87,
+    ClockTimemarkerName = 86,
+    PoiTag = 87,
+    PoiType = 88,
+    Codebuilderargs = 90,
 };

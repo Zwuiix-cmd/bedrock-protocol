@@ -73,10 +73,11 @@ enum class InputData : int {
     SNEAK_RELEASED_RAW = 62,
     SNEAK_PRESSED_RAW = 63,
     SNEAK_CURRENT_RAW = 64,
+    INTERNAL_UPDATE = 65,
 };
 
 struct PlayerAuthInputFlags {
-    static constexpr std::size_t Count =        65;
+    static constexpr std::size_t Count =        66;
 
     std::bitset<Count> flags;
 

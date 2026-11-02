@@ -16,9 +16,8 @@
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 
-class SmithingTransformRecipe : public RecipeWithTypeId {
+class SmithingTransformRecipe {
 public:
     std::string recipeId;
     std::shared_ptr<RecipeIngredient> template_;
@@ -29,9 +28,7 @@ public:
     int32_t recipeNetId;
 
     SmithingTransformRecipe() = default;
-    virtual ~SmithingTransformRecipe() = default;
     explicit SmithingTransformRecipe(
-        const int32_t& typeIdValue,
         const std::string& recipeIdValue,
         const std::shared_ptr<RecipeIngredient>& template_Value,
         const std::shared_ptr<RecipeIngredient>& inputValue,
@@ -40,42 +37,15 @@ public:
         const std::string& blockNameValue,
         const int32_t& recipeNetIdValue
     ) :
-        RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
         template_(template_Value),
         input(inputValue),
         addition(additionValue),
         output(outputValue),
         blockName(blockNameValue),
-        recipeNetId(recipeNetIdValue) {
-		(void)0;
-    }
+        recipeNetId(recipeNetIdValue) {}
 
-    static std::shared_ptr<SmithingTransformRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
-        auto result = std::make_shared<SmithingTransformRecipe>();
-        result->recipeId = stream.readString().value_or("");
-        result->blockName = stream.readString().value_or("");
-        result->template_ = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        result->input = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        result->addition = ([&]() {
-    auto value = std::make_shared<RecipeIngredient>();
-    value->read(stream);
-    return value;
-}());
-        result->output = ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
-        result->recipeNetId = stream.readInt().value_or(0);
-        return result;
-    }
-
-    void read(ReadOnlyBinaryStream& stream) override {
+    virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readString().value_or("");
         blockName = stream.readString().value_or("");
         template_ = ([&]() {
@@ -97,7 +67,7 @@ public:
         recipeNetId = stream.readInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
+    virtual void write(BinaryStream& stream) const {
         stream.writeString(recipeId);
         stream.writeString(blockName);
         if (template_) template_->write(stream);

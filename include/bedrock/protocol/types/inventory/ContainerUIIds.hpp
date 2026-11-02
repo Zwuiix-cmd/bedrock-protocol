@@ -71,4 +71,8 @@ enum class ContainerUIIds : uint8_t {
     RecipeFoodContainer = 64,
     RecipeBlocksContainer = 65,
     RecipeFurnaceItemsContainer = 66,
+    ReservedContainerA = 67,
+    ReservedContainerB = 68,
+    ReservedContainerC = 69,
+    ReservedContainerD = 70,
 };

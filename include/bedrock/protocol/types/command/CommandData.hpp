@@ -16,6 +16,7 @@
 #include <bedrock/protocol/types/command/ChainedSubCommandData.hpp>
 #include <bedrock/protocol/types/command/CommandHardEnum.hpp>
 #include <bedrock/protocol/types/command/CommandOverload.hpp>
+#include <bedrock/protocol/types/command/CommandPermissions.hpp>
 #include <bedrock/protocol/types/command/ChainedSubCommandData.hpp>
 #include <bedrock/protocol/types/command/CommandHardEnum.hpp>
 #include <bedrock/protocol/types/command/CommandOverload.hpp>
@@ -23,10 +24,10 @@
 
 class CommandData {
 public:
-    std::string permission;
     std::string name;
     std::string description;
     int32_t flags;
+    CommandPermissions permission;
     std::optional<std::shared_ptr<CommandHardEnum>> aliases;
     std::vector<std::shared_ptr<CommandOverload>> overloads;
     std::vector<std::shared_ptr<ChainedSubCommandData>> chainedSubCommandData;
@@ -36,7 +37,7 @@ public:
         const std::string& nameValue,
         const std::string& descriptionValue,
         const int32_t& flagsValue,
-        const std::string& permissionValue,
+        const CommandPermissions& permissionValue,
         const std::optional<std::shared_ptr<CommandHardEnum>>& aliasesValue,
         const std::vector<std::shared_ptr<CommandOverload>>& overloadsValue,
         const std::vector<std::shared_ptr<ChainedSubCommandData>>& chainedSubCommandDataValue
@@ -52,10 +53,10 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        permission = stream.readString().value_or("");
         name = stream.readString().value_or("");
         description = stream.readString().value_or("");
         flags = stream.readInt().value_or(0);
+        permission = static_cast<CommandPermissions>(stream.readVarInt().value_or(0));
         aliases = stream.readOptional([&]() {
             return ([&]() {
             auto value = std::make_shared<CommandHardEnum>();
@@ -80,10 +81,10 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeString(permission);
         stream.writeString(name);
         stream.writeString(description);
         stream.writeInt(flags);
+        stream.writeVarInt(static_cast<int32_t>(permission));
         stream.writeOptional(aliases, [&](const auto& optionalValue) {
             if (optionalValue) optionalValue->write(stream);
         });

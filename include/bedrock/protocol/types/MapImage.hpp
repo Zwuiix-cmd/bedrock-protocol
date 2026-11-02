@@ -59,7 +59,7 @@ public:
 		for (std::size_t y = 0; (y < height); ++y) {
 			auto row = std::vector<uint32_t>();
 			for (std::size_t x = 0; (x < width); ++x) {
-				row.push_back(static_cast<uint32_t>(BinaryStream::flipIntEndianness(stream.readUnsignedVarInt().value_or(0))));
+				row.push_back(static_cast<uint32_t>(stream.readIntBE().value_or(0)));
 			}
 			pixels.push_back(row);
 		}
@@ -84,7 +84,7 @@ public:
 			auto serializer = BinaryStream();
 			for (std::size_t y = 0; (y < height); ++y) {
 				for (std::size_t x = 0; (x < width); ++x) {
-					serializer.writeUnsignedVarInt(BinaryStream::flipIntEndianness(static_cast<uint32_t>(pixels[y][x])));
+					serializer.writeIntBE(static_cast<uint32_t>(pixels[y][x]));
 				}
 			}
 			encodedPixelCache = serializer.getBuffer();

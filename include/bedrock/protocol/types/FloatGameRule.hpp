@@ -38,7 +38,7 @@ public:
         value = stream.readFloat().value_or(0.0f);
     }
 
-    void write(BinaryStream& stream, const bool& isStartGame) const override {
+    void write(BinaryStream& stream) const override {
 		stream.writeFloat(value);
     }
 };

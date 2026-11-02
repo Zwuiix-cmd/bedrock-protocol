@@ -17,7 +17,7 @@
 
 class LoomStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 17;
+    static constexpr int64_t ID = 15;
 
     std::string patternId;
     uint8_t repetitions = 1;

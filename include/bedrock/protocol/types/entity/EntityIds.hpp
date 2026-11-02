@@ -44,6 +44,7 @@ public:
     static constexpr std::string_view COW = "minecraft:cow";
     static constexpr std::string_view CREAKING = "minecraft:creaking";
     static constexpr std::string_view CREEPER = "minecraft:creeper";
+    static constexpr std::string_view CUSHION = "minecraft:cushion";
     static constexpr std::string_view DOLPHIN = "minecraft:dolphin";
     static constexpr std::string_view DONKEY = "minecraft:donkey";
     static constexpr std::string_view DRAGON_FIREBALL = "minecraft:dragon_fireball";
@@ -65,6 +66,7 @@ public:
     static constexpr std::string_view FISHING_HOOK = "minecraft:fishing_hook";
     static constexpr std::string_view FOX = "minecraft:fox";
     static constexpr std::string_view FROG = "minecraft:frog";
+    static constexpr std::string_view FROSTBITE = "minecraft:frostbite";
     static constexpr std::string_view GHAST = "minecraft:ghast";
     static constexpr std::string_view GLOW_SQUID = "minecraft:glow_squid";
     static constexpr std::string_view GOAT = "minecraft:goat";
@@ -74,6 +76,7 @@ public:
     static constexpr std::string_view HOPPER_MINECART = "minecraft:hopper_minecart";
     static constexpr std::string_view HORSE = "minecraft:horse";
     static constexpr std::string_view HUSK = "minecraft:husk";
+    static constexpr std::string_view ICE_BALL = "minecraft:ice_ball";
     static constexpr std::string_view ICE_BOMB = "minecraft:ice_bomb";
     static constexpr std::string_view IRON_GOLEM = "minecraft:iron_golem";
     static constexpr std::string_view ITEM = "minecraft:item";
@@ -121,6 +124,7 @@ public:
     static constexpr std::string_view SQUID = "minecraft:squid";
     static constexpr std::string_view STRAY = "minecraft:stray";
     static constexpr std::string_view STRIDER = "minecraft:strider";
+    static constexpr std::string_view SULFUR_CUBE = "minecraft:sulfur_cube";
     static constexpr std::string_view TADPOLE = "minecraft:tadpole";
     static constexpr std::string_view THROWN_TRIDENT = "minecraft:thrown_trident";
     static constexpr std::string_view TNT = "minecraft:tnt";

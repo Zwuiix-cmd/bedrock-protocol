@@ -206,7 +206,7 @@
 #include <bedrock/protocol/PlayerUpdateEntityOverridesPacket.hpp>
 #include <bedrock/protocol/PlayerLocationPacket.hpp>
 #include <bedrock/protocol/ClientboundControlSchemeSetPacket.hpp>
-#include <bedrock/protocol/DebugDrawerPacket.hpp>
+#include <bedrock/protocol/PrimitiveShapesPacket.hpp>
 #include <bedrock/protocol/ServerboundPackSettingChangePacket.hpp>
 #include <bedrock/protocol/ClientboundDataStorePacket.hpp>
 #include <bedrock/protocol/GraphicsOverrideParameterPacket.hpp>
@@ -224,6 +224,21 @@
 #include <bedrock/protocol/ServerboundDataDrivenScreenClosedPacket.hpp>
 #include <bedrock/protocol/SyncWorldClocksPacket.hpp>
 #include <bedrock/protocol/ClientboundAttributeLayerSyncPacket.hpp>
+#include <bedrock/protocol/ServerStoreInfoPacket.hpp>
+#include <bedrock/protocol/ServerPresenceInfoPacket.hpp>
+#include <bedrock/protocol/ClientboundUpdateSoundDataPacket.hpp>
+#include <bedrock/protocol/SendPartyDestinationCookiePacket.hpp>
+#include <bedrock/protocol/PartyDestinationCookieResponsePacket.hpp>
+#include <bedrock/protocol/SetPlayerFurnaceOptionsPacket.hpp>
+#include <bedrock/protocol/RecordStartedPacket.hpp>
+#include <bedrock/protocol/ClientboundMatchmakingStatePacket.hpp>
+#include <bedrock/protocol/ServerboundStonecutterSetRecipePacket.hpp>
+#include <bedrock/protocol/ClientboundStonecutterSetRecipePacket.hpp>
+#include <bedrock/protocol/ServerboundMatchmakingCancelPacket.hpp>
+#include <bedrock/protocol/SetPassengerOfBlockPacket.hpp>
+#include <bedrock/protocol/ServerboundCursorItemDragPacket.hpp>
+#include <bedrock/protocol/ClientboundPlayAudioContentPacket.hpp>
+#include <bedrock/protocol/ServerboundRegisterAudioContentPacket.hpp>
 
 void PacketPool::setup() noexcept {
     std::call_once(s_setupFlag, [](){
@@ -438,7 +453,7 @@ void PacketPool::setup() noexcept {
         registerPacket<PlayerUpdateEntityOverridesPacket>();
         registerPacket<PlayerLocationPacket>();
         registerPacket<ClientboundControlSchemeSetPacket>();
-        registerPacket<DebugDrawerPacket>();
+        registerPacket<PrimitiveShapesPacket>();
         registerPacket<ServerboundPackSettingChangePacket>();
         registerPacket<ClientboundDataStorePacket>();
         registerPacket<GraphicsOverrideParameterPacket>();
@@ -456,6 +471,21 @@ void PacketPool::setup() noexcept {
         registerPacket<ServerboundDataDrivenScreenClosedPacket>();
         registerPacket<SyncWorldClocksPacket>();
         registerPacket<ClientboundAttributeLayerSyncPacket>();
+        registerPacket<ServerStoreInfoPacket>();
+        registerPacket<ServerPresenceInfoPacket>();
+        registerPacket<ClientboundUpdateSoundDataPacket>();
+        registerPacket<SendPartyDestinationCookiePacket>();
+        registerPacket<PartyDestinationCookieResponsePacket>();
+        registerPacket<SetPlayerFurnaceOptionsPacket>();
+        registerPacket<RecordStartedPacket>();
+        registerPacket<ClientboundMatchmakingStatePacket>();
+        registerPacket<ServerboundStonecutterSetRecipePacket>();
+        registerPacket<ClientboundStonecutterSetRecipePacket>();
+        registerPacket<ServerboundMatchmakingCancelPacket>();
+        registerPacket<SetPassengerOfBlockPacket>();
+        registerPacket<ServerboundCursorItemDragPacket>();
+        registerPacket<ClientboundPlayAudioContentPacket>();
+        registerPacket<ServerboundRegisterAudioContentPacket>();
     });
 }
 

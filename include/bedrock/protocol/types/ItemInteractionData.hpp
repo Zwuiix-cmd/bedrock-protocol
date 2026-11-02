@@ -13,7 +13,6 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
@@ -23,13 +22,13 @@
 class ItemInteractionData {
 public:
     int32_t requestId;
-    std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>> requestChangedSlots;
+    std::optional<std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>> requestChangedSlots;
     std::shared_ptr<UseItemTransactionData> transactionData;
 
     ItemInteractionData() = default;
     explicit ItemInteractionData(
         const int32_t& requestIdValue,
-        const std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>& requestChangedSlotsValue,
+        const std::optional<std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>>& requestChangedSlotsValue,
         const std::shared_ptr<UseItemTransactionData>& transactionDataValue
     ) :
         requestId(requestIdValue),
@@ -54,12 +53,11 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
-		if ((requestId != 0)) {
-			stream.writeUnsignedVarInt(requestChangedSlots.size());
-			for (const auto& changedSlot : requestChangedSlots) {
-				changedSlot->write(stream);
-			}
-		}
+		stream.writeOptional(requestChangedSlots, [&](const auto& list) {
+		            stream.writeList(list, [&](const auto& v) {
+		            v->write(stream);
+		            });
+		        });
 		transactionData->write(stream);
     }
 };

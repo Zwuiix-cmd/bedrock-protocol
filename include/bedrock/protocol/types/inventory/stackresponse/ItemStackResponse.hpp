@@ -15,7 +15,6 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
-#include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
 
 class ItemStackResponse {
 public:
@@ -24,18 +23,18 @@ public:
 
     uint8_t result;
     int32_t requestId;
-    std::vector<std::shared_ptr<ItemStackResponseContainerInfo>> containerInfos;
+    std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>> containerInfos;
 
     ItemStackResponse() = default;
     explicit ItemStackResponse(
         const uint8_t& resultValue,
         const int32_t& requestIdValue,
-        const std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>& containerInfosValue
+        const std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>>& containerInfosValue
     ) :
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if (((result != RESULT_OK) && (containerInfos.size() != 0))) {
+		if (((result != RESULT_OK) && containerInfos.has_value())) {
 			throw std::exception{};
 		}
     }
@@ -43,23 +42,24 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         result = stream.readUnsignedByte().value_or(0);
         requestId = stream.readInt().value_or(0);
-        containerInfos = stream.readList([&]() {
+        containerInfos = stream.readOptional([&]() {
+            return stream.readList([&]() {
             return ([&]() {
             auto value = std::make_shared<ItemStackResponseContainerInfo>();
             value->read(stream);
             return value;
             }());
+            });
         });
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedByte(result);
 		stream.writeInt(requestId);
-		if ((result == RESULT_OK)) {
-			stream.writeUnsignedVarInt(containerInfos.size());
-			for (const auto& containerInfo : containerInfos) {
-				containerInfo->write(stream);
-			}
-		}
+		stream.writeOptional(containerInfos, [&](const auto& list) {
+		            stream.writeList(list, [&](const auto& v) {
+		            v->write(stream);
+		            });
+		        });
     }
 };

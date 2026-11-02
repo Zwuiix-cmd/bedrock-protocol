@@ -45,9 +45,9 @@ public:
         expressionType(expressionTypeValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = static_cast<Type>(stream.readUnsignedInt().value_or(0));
+        type = static_cast<Type>(stream.readUnsignedVarInt().value_or(0));
         frames = stream.readFloat().value_or(0.0f);
-        expressionType = stream.readUnsignedInt().value_or(0);
+        expressionType = stream.readUnsignedVarInt().value_or(0);
         image = ([&]() {
     auto value = std::make_shared<SkinImage>();
     value->read(stream);
@@ -56,9 +56,9 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedInt(static_cast<std::underlying_type_t<Type>>(type));
+        stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<Type>>(type));
         stream.writeFloat(frames);
-        stream.writeUnsignedInt(expressionType);
+        stream.writeUnsignedVarInt(expressionType);
         if (image) image->write(stream);
     }
 };

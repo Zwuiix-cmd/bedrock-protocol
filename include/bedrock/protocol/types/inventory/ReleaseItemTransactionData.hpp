@@ -13,7 +13,9 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
+#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
 class ReleaseItemTransactionData : public TransactionData {
@@ -22,10 +24,11 @@ public:
     static constexpr int64_t ACTION_RELEASE = 0;
     static constexpr int64_t ACTION_CONSUME = 1;
 
-    uint32_t actionType;
+    int32_t actionType;
     int32_t hotbarSlot;
     NetworkItemStack itemInHand;
     glm::vec3 headPosition;
+    HandSlot hand;
 
     ReleaseItemTransactionData() = default;
     virtual ~ReleaseItemTransactionData() = default;
@@ -33,16 +36,18 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actionType = stream.readUnsignedVarInt().value_or(0);
+        actionType = stream.readVarInt().value_or(0);
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         itemInHand = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
+        hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeUnsignedVarInt(actionType);
+        stream.writeVarInt(actionType);
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(headPosition);
         itemInHand.write(stream);
+        stream.writeVarInt(static_cast<int32_t>(hand));
     }
 };

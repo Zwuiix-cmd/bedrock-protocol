@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(slot)>>>(slot));
+		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(slot)>>>(slot));
 		stream.writeUnsignedShort(damage);
     }
 };

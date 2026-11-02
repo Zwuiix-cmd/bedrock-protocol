@@ -132,5 +132,9 @@ enum class EntityMetadataFlags : uint8_t {
     BodyRotationAlwaysFollowsHead = 124,
     CanUseVerticalMovementAction = 125,
     RotationLockedToVehicle = 126,
-    NumberOfFlags = 127,
+    UsesLegacyFriction = 127,
+    UsesUniformAirDrag = 128,
+    NameplateDepthTested = 129,
+    NotPickableFromInside = 130,
+    NumberOfFlags = 131,
 };

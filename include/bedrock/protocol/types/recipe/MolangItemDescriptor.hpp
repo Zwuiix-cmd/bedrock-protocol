@@ -17,24 +17,20 @@
 
 class MolangItemDescriptor : public ItemDescriptor {
 public:
-    static constexpr int64_t ID = 2;
-
     std::string molangExpression;
-    uint8_t molangVersion;
+    uint16_t molangVersion;
 
     MolangItemDescriptor() = default;
     virtual ~MolangItemDescriptor() = default;
-    explicit MolangItemDescriptor(const std::string& molangExpressionValue, const uint8_t& molangVersionValue) : molangExpression(molangExpressionValue), molangVersion(molangVersionValue) {}
-
-    int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
+    explicit MolangItemDescriptor(const std::string& molangExpressionValue, const uint16_t& molangVersionValue) : molangExpression(molangExpressionValue), molangVersion(molangVersionValue) {}
 
     void read(ReadOnlyBinaryStream& stream) override {
         molangExpression = stream.readString().value_or("");
-        molangVersion = stream.readUnsignedByte().value_or(0);
+        molangVersion = stream.readUnsignedShort().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeString(molangExpression);
-		stream.writeUnsignedByte(molangVersion);
+		stream.writeUnsignedShort(molangVersion);
     }
 };

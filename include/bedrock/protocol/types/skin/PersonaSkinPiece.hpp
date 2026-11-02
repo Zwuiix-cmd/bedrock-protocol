@@ -13,21 +13,13 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
+#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
+#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
 
 class PersonaSkinPiece {
 public:
-    static constexpr std::string_view PIECE_TYPE_PERSONA_BODY = "persona_body";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_BOTTOM = "persona_bottom";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_EYES = "persona_eyes";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_FACIAL_HAIR = "persona_facial_hair";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_FEET = "persona_feet";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_HAIR = "persona_hair";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_MOUTH = "persona_mouth";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_SKELETON = "persona_skeleton";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_SKIN = "persona_skin";
-    static constexpr std::string_view PIECE_TYPE_PERSONA_TOP = "persona_top";
     std::string pieceId;
-    std::string pieceType;
+    PersonaSkinPieceType pieceType;
     std::string packId;
     bool isDefaultPiece;
     std::string productId;
@@ -35,7 +27,7 @@ public:
     PersonaSkinPiece() = default;
     explicit PersonaSkinPiece(
         const std::string& pieceIdValue,
-        const std::string& pieceTypeValue,
+        const PersonaSkinPieceType& pieceTypeValue,
         const std::string& packIdValue,
         const bool& isDefaultPieceValue,
         const std::string& productIdValue
@@ -48,17 +40,17 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         pieceId = stream.readString().value_or("");
-        pieceType = stream.readString().value_or("");
-        packId = stream.readString().value_or("");
         isDefaultPiece = stream.readBool().value_or(false);
         productId = stream.readString().value_or("");
+        pieceType = static_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0));
+        packId = stream.readUUID().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(pieceId);
-        stream.writeString(pieceType);
-        stream.writeString(packId);
         stream.writeBool(isDefaultPiece);
         stream.writeString(productId);
+        stream.writeVarInt(static_cast<int32_t>(pieceType));
+        stream.writeUUID(packId);
     }
 };

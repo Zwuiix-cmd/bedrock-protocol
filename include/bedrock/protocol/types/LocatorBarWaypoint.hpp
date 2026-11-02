@@ -22,7 +22,8 @@ public:
     uint32_t updateFlag;
     std::optional<bool> visible;
     std::optional<std::shared_ptr<WorldPosition>> worldPosition;
-    std::optional<int32_t> textureId;
+    std::optional<std::string> texturePath;
+    std::optional<glm::vec2> iconSize;
     std::optional<uint32_t> color;
     std::optional<bool> clientPositionAuthority;
     std::optional<int32_t> actorUniqueId;
@@ -32,7 +33,8 @@ public:
         const uint32_t& updateFlagValue,
         const std::optional<bool>& visibleValue,
         const std::optional<std::shared_ptr<WorldPosition>>& worldPositionValue,
-        const std::optional<int32_t>& textureIdValue,
+        const std::optional<std::string>& texturePathValue,
+        const std::optional<glm::vec2>& iconSizeValue,
         const std::optional<uint32_t>& colorValue,
         const std::optional<bool>& clientPositionAuthorityValue,
         const std::optional<int32_t>& actorUniqueIdValue
@@ -40,7 +42,8 @@ public:
         updateFlag(updateFlagValue),
         visible(visibleValue),
         worldPosition(worldPositionValue),
-        textureId(textureIdValue),
+        texturePath(texturePathValue),
+        iconSize(iconSizeValue),
         color(colorValue),
         clientPositionAuthority(clientPositionAuthorityValue),
         actorUniqueId(actorUniqueIdValue) {}
@@ -57,8 +60,11 @@ public:
             return value;
             }());
         });
-        textureId = stream.readOptional([&]() {
-            return stream.readInt().value_or(0);
+        texturePath = stream.readOptional([&]() {
+            return stream.readString().value_or("");
+        });
+        iconSize = stream.readOptional([&]() {
+            return stream.readVec2().value_or(glm::vec2(0.0f));
         });
         color = stream.readOptional([&]() {
             return stream.readUnsignedInt().value_or(0);
@@ -72,24 +78,27 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedInt(updateFlag);
-		stream.writeOptional(visible, [&](const auto& value) {
-		            stream.writeBool(value);
-		        });
-		stream.writeOptional(worldPosition, [&](const auto& v) {
-		            v->write(stream);
-		        });
-		stream.writeOptional(textureId, [&](const auto& value) {
-		            stream.writeUnsignedInt(value);
-		        });
-		stream.writeOptional(color, [&](const auto& v) {
-		            stream.writeUnsignedInt(static_cast<uint32_t>(v));
-		        });
-		stream.writeOptional(clientPositionAuthority, [&](const auto& value) {
-		            stream.writeBool(value);
-		        });
-		stream.writeOptional(actorUniqueId, [&](const auto& value) {
-		            stream.writeActorUniqueID(value);
-		        });
+        stream.writeUnsignedInt(updateFlag);
+        stream.writeOptional(visible, [&](const auto& optionalValue) {
+            stream.writeBool(optionalValue);
+        });
+        stream.writeOptional(worldPosition, [&](const auto& optionalValue) {
+            if (optionalValue) optionalValue->write(stream);
+        });
+        stream.writeOptional(texturePath, [&](const auto& optionalValue) {
+            stream.writeString(optionalValue);
+        });
+        stream.writeOptional(iconSize, [&](const auto& optionalValue) {
+            stream.writeVec2(optionalValue);
+        });
+        stream.writeOptional(color, [&](const auto& optionalValue) {
+            stream.writeUnsignedInt(optionalValue);
+        });
+        stream.writeOptional(clientPositionAuthority, [&](const auto& optionalValue) {
+            stream.writeBool(optionalValue);
+        });
+        stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
+            stream.writeInt(optionalValue);
+        });
     }
 };

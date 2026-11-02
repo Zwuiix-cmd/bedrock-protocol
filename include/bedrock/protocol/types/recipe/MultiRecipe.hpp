@@ -13,9 +13,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 
-class MultiRecipe : public RecipeWithTypeId {
+class MultiRecipe {
 public:
     static constexpr std::string_view TYPE_REPAIR_ITEM = "00000000-0000-0000-0000-000000000001";
     static constexpr std::string_view TYPE_MAP_EXTENDING = "D392B075-4BA1-40AE-8789-AF868D56F6CE";
@@ -33,23 +32,14 @@ public:
     int32_t recipeNetId;
 
     MultiRecipe() = default;
-    virtual ~MultiRecipe() = default;
-    explicit MultiRecipe(const int32_t& typeIdValue, const std::string& recipeIdValue, const int32_t& recipeNetIdValue) : RecipeWithTypeId(typeIdValue), recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {
-		(void)0;
-    }
+    explicit MultiRecipe(const std::string& recipeIdValue, const int32_t& recipeNetIdValue) : recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
 
-    static std::shared_ptr<MultiRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
-		auto uuid = stream.readUUID().value_or("");
-		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
-		return std::make_shared<MultiRecipe>(typeId, uuid, recipeNetId);
-    }
-
-    void read(ReadOnlyBinaryStream& stream) override {
+    virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readUUID().value_or("");
         recipeNetId = stream.readInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
+    virtual void write(BinaryStream& stream) const {
 		stream.writeUUID(recipeId);
 		stream.writeUnsignedVarInt(recipeNetId);
     }

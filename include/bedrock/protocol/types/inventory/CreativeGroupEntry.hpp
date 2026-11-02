@@ -17,13 +17,13 @@
 
 class CreativeGroupEntry {
 public:
-    int32_t categoryId;
+    uint8_t categoryId;
     std::string categoryName;
     NetworkItemDescriptor icon;
 
     CreativeGroupEntry() = default;
     explicit CreativeGroupEntry(
-        const int32_t& categoryIdValue,
+        const uint8_t& categoryIdValue,
         const std::string& categoryNameValue,
         const NetworkItemDescriptor& iconValue
     ) :
@@ -32,13 +32,13 @@ public:
         icon(iconValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        categoryId = stream.readInt().value_or(0);
+        categoryId = stream.readUnsignedByte().value_or(0);
         categoryName = stream.readString().value_or("");
         icon = ([&]() { NetworkItemDescriptor value; value.read(stream); return value; }());
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeInt(categoryId);
+        stream.writeUnsignedByte(categoryId);
         stream.writeString(categoryName);
         icon.write(stream);
     }

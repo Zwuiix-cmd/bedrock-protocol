@@ -22,14 +22,14 @@ public:
     static constexpr int64_t ID = 2;
 
     std::string name;
-    uint32_t dimension;
+    int32_t dimension;
     std::vector<std::shared_ptr<AttributeEnvironment>> attributes;
 
     AttributesUpdateEnvironment() = default;
     virtual ~AttributesUpdateEnvironment() = default;
     explicit AttributesUpdateEnvironment(
         const std::string& nameValue,
-        const uint32_t& dimensionValue,
+        const int32_t& dimensionValue,
         const std::vector<std::shared_ptr<AttributeEnvironment>>& attributesValue
     ) :
         name(nameValue),
@@ -40,7 +40,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         name = stream.readString().value_or("");
-        dimension = stream.readUnsignedVarInt().value_or(0);
+        dimension = stream.readVarInt().value_or(0);
         attributes = stream.readList([&]() {
             return ([&]() {
             auto value = std::make_shared<AttributeEnvironment>();
@@ -52,7 +52,7 @@ public:
 
     void write(BinaryStream& stream) const override {
 		stream.writeString(name);
-		stream.writeUnsignedVarInt(dimension);
+		stream.writeVarInt(dimension);
 		stream.writeUnsignedVarInt(attributes.size());
 		for (const auto& attribute : attributes) {
 			attribute->write(stream);

@@ -16,19 +16,19 @@
 
 class Enchant {
 public:
-    uint8_t id;
+    uint32_t id;
     uint8_t level;
 
     Enchant() = default;
-    explicit Enchant(const uint8_t& idValue, const uint8_t& levelValue) : id(idValue), level(levelValue) {}
+    explicit Enchant(const uint32_t& idValue, const uint8_t& levelValue) : id(idValue), level(levelValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        id = stream.readUnsignedByte().value_or(0);
+        id = stream.readUnsignedVarInt().value_or(0);
         level = stream.readUnsignedByte().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(id);
+		stream.writeUnsignedVarInt(id);
 		stream.writeUnsignedByte(level);
     }
 };

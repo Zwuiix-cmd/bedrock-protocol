@@ -47,6 +47,8 @@ public:
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
+    bool applyInheritedStartingRotation;
+    std::optional<glm::vec2> startingRotation;
 
     CameraPreset() = default;
     explicit CameraPreset(
@@ -71,7 +73,9 @@ public:
         const std::optional<int32_t>& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
-        const std::optional<ControlScheme>& controlSchemeValue
+        const std::optional<ControlScheme>& controlSchemeValue,
+        const bool& applyInheritedStartingRotationValue,
+        const std::optional<glm::vec2>& startingRotationValue
     ) :
         name(nameValue),
         parent(parentValue),
@@ -94,11 +98,14 @@ public:
         audioListenerType(audioListenerTypeValue),
         playerEffects(playerEffectsValue),
         aimAssist(aimAssistValue),
-        controlScheme(controlSchemeValue) {}
+        controlScheme(controlSchemeValue),
+        applyInheritedStartingRotation(applyInheritedStartingRotationValue),
+        startingRotation(startingRotationValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
         parent = stream.readString().value_or("");
+        applyInheritedStartingRotation = stream.readBool().value_or(false);
         xPosition = stream.readOptional([&]() {
             return stream.readFloat().value_or(0.0f);
         });
@@ -162,6 +169,9 @@ public:
         });
         controlScheme = stream.readOptional([&]() {
             return static_cast<ControlScheme>(stream.readVarInt().value_or(0));
+        });
+        startingRotation = stream.readOptional([&]() {
+            return stream.readVec2().value_or(glm::vec2(0.0f));
         });
     }
 
@@ -227,6 +237,10 @@ public:
 		        });
 		stream.writeOptional(controlScheme, [&](const auto& v) {
 		            stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(v)>>>(v));
+		        });
+		stream.writeBool(applyInheritedStartingRotation);
+		stream.writeOptional(startingRotation, [&](const auto& value) {
+		            stream.writeVec2(value);
 		        });
     }
 };

@@ -28,7 +28,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(itemId);
-        stream.writeVarInt(count);
+		stream.writeVarInt(itemId);
+		stream.writeVarInt(count);
     }
 };

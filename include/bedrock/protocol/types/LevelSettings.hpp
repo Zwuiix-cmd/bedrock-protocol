@@ -15,27 +15,35 @@
 #include <bedrock/protocol/Forward.hpp>
 #include <map>
 #include <bedrock/protocol/types/ChatRestrictionLevel.hpp>
+#include <bedrock/protocol/types/EditorLevelMigrationVersion.hpp>
 #include <bedrock/protocol/types/EditorWorldType.hpp>
 #include <bedrock/protocol/types/EducationUriResource.hpp>
 #include <bedrock/protocol/types/Experiments.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/GameRule.hpp>
+#include <bedrock/protocol/types/PlayerPermissions.hpp>
 #include <bedrock/protocol/types/SpawnSettings.hpp>
 #include <bedrock/protocol/types/ChatRestrictionLevel.hpp>
+#include <bedrock/protocol/types/EditorLevelMigrationVersion.hpp>
 #include <bedrock/protocol/types/EditorWorldType.hpp>
 #include <bedrock/protocol/types/EducationUriResource.hpp>
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/GameRule.hpp>
 #include <bedrock/protocol/types/SpawnSettings.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
+#include <bedrock/protocol/types/PlayerPermissions.hpp>
 #include <bedrock/protocol/types/EducationUriResource.hpp>
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/SpawnSettings.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
+#include <bedrock/protocol/types/PlayerPermissions.hpp>
 
 class LevelSettings {
 public:
     uint64_t seed;
     std::shared_ptr<SpawnSettings> spawnSettings;
     int32_t generator = 1;
-    int32_t worldGamemode;
+    GameMode worldGamemode;
     bool hardcore = false;
     int32_t difficulty;
     glm::ivec3 spawnPosition;
@@ -43,8 +51,9 @@ public:
     EditorWorldType editorWorldType = EditorWorldType::NonEditor;
     bool createdInEditorMode = false;
     bool exportedFromEditorMode = false;
+    EditorLevelMigrationVersion editorLevelMigrationVersion = EditorLevelMigrationVersion::Legacy;
     int32_t time = -1;
-    int32_t eduEditionOffer = 0;
+    uint32_t eduEditionOffer = 0;
     bool hasEduFeaturesEnabled = false;
     std::string eduProductUUID;
     float rainLevel;
@@ -60,7 +69,7 @@ public:
     std::shared_ptr<Experiments> experiments;
     bool hasBonusChestEnabled = false;
     bool hasStartWithMapEnabled = false;
-    int32_t defaultPlayerPermission = 1;
+    PlayerPermissions defaultPlayerPermission = static_cast<PlayerPermissions>(0);
     int32_t serverChunkTickRadius = 4;
     bool hasLockedBehaviorPack = false;
     bool hasLockedResourcePack = false;
@@ -72,7 +81,7 @@ public:
     bool disablePersona = false;
     bool disableCustomSkins = false;
     bool muteEmoteAnnouncements = false;
-    std::string vanillaVersion = "1.26.10";
+    std::string vanillaVersion = "1.26.60";
     int32_t limitedWorldWidth = 0;
     int32_t limitedWorldLength = 0;
     bool isNewNether = true;
@@ -80,13 +89,14 @@ public:
     std::optional<bool> experimentalGameplayOverride;
     ChatRestrictionLevel chatRestrictionLevel = ChatRestrictionLevel::None;
     bool disablePlayerInteractions = false;
+    int32_t serverEditorConnectionPolicy = 0;
+    bool allowAnonymousBlockDropsInEditorWorlds = false;
 
     LevelSettings() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         seed = stream.readUnsignedLong().value_or(0);
         generator = stream.readVarInt().value_or(0);
-        worldGamemode = stream.readVarInt().value_or(0);
         hardcore = stream.readBool().value_or(false);
         difficulty = stream.readVarInt().value_or(0);
         spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
@@ -94,8 +104,9 @@ public:
         editorWorldType = static_cast<EditorWorldType>(stream.readVarInt().value_or(0));
         createdInEditorMode = stream.readBool().value_or(false);
         exportedFromEditorMode = stream.readBool().value_or(false);
+        editorLevelMigrationVersion = static_cast<EditorLevelMigrationVersion>(stream.readByte().value_or(0));
         time = stream.readVarInt().value_or(0);
-        eduEditionOffer = stream.readVarInt().value_or(0);
+        eduEditionOffer = stream.readUnsignedVarInt().value_or(0);
         hasEduFeaturesEnabled = stream.readBool().value_or(false);
         eduProductUUID = stream.readString().value_or("");
         rainLevel = stream.readFloat().value_or(0.0f);
@@ -109,7 +120,6 @@ public:
         isTexturePacksRequired = stream.readBool().value_or(false);
         hasBonusChestEnabled = stream.readBool().value_or(false);
         hasStartWithMapEnabled = stream.readBool().value_or(false);
-        defaultPlayerPermission = stream.readVarInt().value_or(0);
         serverChunkTickRadius = stream.readInt().value_or(0);
         hasLockedBehaviorPack = stream.readBool().value_or(false);
         hasLockedResourcePack = stream.readBool().value_or(false);
@@ -127,11 +137,14 @@ public:
         isNewNether = stream.readBool().value_or(false);
         chatRestrictionLevel = static_cast<ChatRestrictionLevel>(stream.readUnsignedByte().value_or(0));
         disablePlayerInteractions = stream.readBool().value_or(false);
+        serverEditorConnectionPolicy = stream.readVarInt().value_or(0);
+        allowAnonymousBlockDropsInEditorWorlds = stream.readBool().value_or(false);
         spawnSettings = ([&]() {
     auto value = std::make_shared<SpawnSettings>();
     value->read(stream);
     return value;
 }());
+        worldGamemode = static_cast<GameMode>(stream.readVarInt().value_or(0));
         gameRules = ([&]() {
     std::map<std::string, std::shared_ptr<GameRule>> result;
     const auto count = stream.readUnsignedInt().value_or(0);
@@ -147,6 +160,7 @@ public:
     value->read(stream);
     return value;
 }());
+        defaultPlayerPermission = static_cast<PlayerPermissions>(stream.readVarInt().value_or(0));
         eduSharedUriResource = stream.readOptional([&]() {
             return ([&]() {
             auto value = std::make_shared<EducationUriResource>();
@@ -160,55 +174,64 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedLong(seed);
-		spawnSettings->write(stream);
-		stream.writeVarInt(generator);
-		stream.writeVarInt(worldGamemode);
-		stream.writeBool(hardcore);
-		stream.writeVarInt(difficulty);
-		stream.writeSignedBlockPos(spawnPosition);
-		stream.writeBool(hasAchievementsDisabled);
-		stream.writeVarInt(static_cast<int32_t>(editorWorldType));
-		stream.writeBool(createdInEditorMode);
-		stream.writeBool(exportedFromEditorMode);
-		stream.writeVarInt(time);
-		stream.writeVarInt(eduEditionOffer);
-		stream.writeBool(hasEduFeaturesEnabled);
-		stream.writeString(eduProductUUID);
-		stream.writeFloat(rainLevel);
-		stream.writeFloat(lightningLevel);
-		stream.writeBool(hasConfirmedPlatformLockedContent);
-		stream.writeBool(isMultiplayerGame);
-		stream.writeBool(hasLANBroadcast);
-		stream.writeVarInt(xboxLiveBroadcastMode);
-		stream.writeVarInt(platformBroadcastMode);
-		stream.writeBool(commandsEnabled);
-		stream.writeBool(isTexturePacksRequired);
-		GameRule::writeRules(stream, gameRules, true);
-		experiments->write(stream);
-		stream.writeBool(hasBonusChestEnabled);
-		stream.writeBool(hasStartWithMapEnabled);
-		stream.writeVarInt(defaultPlayerPermission);
-		stream.writeInt(serverChunkTickRadius);
-		stream.writeBool(hasLockedBehaviorPack);
-		stream.writeBool(hasLockedResourcePack);
-		stream.writeBool(isFromLockedWorldTemplate);
-		stream.writeBool(useMsaGamertagsOnly);
-		stream.writeBool(isFromWorldTemplate);
-		stream.writeBool(isWorldTemplateOptionLocked);
-		stream.writeBool(onlySpawnV1Villagers);
-		stream.writeBool(disablePersona);
-		stream.writeBool(disableCustomSkins);
-		stream.writeBool(muteEmoteAnnouncements);
-		stream.writeString(vanillaVersion);
-		stream.writeInt(limitedWorldWidth);
-		stream.writeInt(limitedWorldLength);
-		stream.writeBool(isNewNether);
-		eduSharedUriResource.value_or(std::make_shared<EducationUriResource>("", ""))->write(stream);
-		stream.writeOptional(experimentalGameplayOverride, [&](const auto& value) {
-		            stream.writeBool(value);
-		        });
-		stream.writeUnsignedByte(static_cast<int32_t>(chatRestrictionLevel));
-		stream.writeBool(disablePlayerInteractions);
+        stream.writeUnsignedLong(seed);
+        stream.writeVarInt(generator);
+        stream.writeBool(hardcore);
+        stream.writeVarInt(difficulty);
+        stream.writeSignedBlockPos(spawnPosition);
+        stream.writeBool(hasAchievementsDisabled);
+        stream.writeVarInt(static_cast<std::underlying_type_t<EditorWorldType>>(editorWorldType));
+        stream.writeBool(createdInEditorMode);
+        stream.writeBool(exportedFromEditorMode);
+        stream.writeByte(static_cast<std::underlying_type_t<EditorLevelMigrationVersion>>(editorLevelMigrationVersion));
+        stream.writeVarInt(time);
+        stream.writeUnsignedVarInt(eduEditionOffer);
+        stream.writeBool(hasEduFeaturesEnabled);
+        stream.writeString(eduProductUUID);
+        stream.writeFloat(rainLevel);
+        stream.writeFloat(lightningLevel);
+        stream.writeBool(hasConfirmedPlatformLockedContent);
+        stream.writeBool(isMultiplayerGame);
+        stream.writeBool(hasLANBroadcast);
+        stream.writeVarInt(xboxLiveBroadcastMode);
+        stream.writeVarInt(platformBroadcastMode);
+        stream.writeBool(commandsEnabled);
+        stream.writeBool(isTexturePacksRequired);
+        stream.writeBool(hasBonusChestEnabled);
+        stream.writeBool(hasStartWithMapEnabled);
+        stream.writeInt(serverChunkTickRadius);
+        stream.writeBool(hasLockedBehaviorPack);
+        stream.writeBool(hasLockedResourcePack);
+        stream.writeBool(isFromLockedWorldTemplate);
+        stream.writeBool(useMsaGamertagsOnly);
+        stream.writeBool(isFromWorldTemplate);
+        stream.writeBool(isWorldTemplateOptionLocked);
+        stream.writeBool(onlySpawnV1Villagers);
+        stream.writeBool(disablePersona);
+        stream.writeBool(disableCustomSkins);
+        stream.writeBool(muteEmoteAnnouncements);
+        stream.writeString(vanillaVersion);
+        stream.writeInt(limitedWorldWidth);
+        stream.writeInt(limitedWorldLength);
+        stream.writeBool(isNewNether);
+        stream.writeUnsignedByte(static_cast<std::underlying_type_t<ChatRestrictionLevel>>(chatRestrictionLevel));
+        stream.writeBool(disablePlayerInteractions);
+        stream.writeVarInt(serverEditorConnectionPolicy);
+        stream.writeBool(allowAnonymousBlockDropsInEditorWorlds);
+        if (spawnSettings) spawnSettings->write(stream);
+        stream.writeVarInt(static_cast<int32_t>(worldGamemode));
+        stream.writeUnsignedInt(gameRules.size());
+for (const auto& [key, item] : gameRules) {
+    stream.writeString(key);
+    if (item) item->write(stream);
+}
+        if (experiments) experiments->write(stream);
+        stream.writeVarInt(static_cast<int32_t>(defaultPlayerPermission));
+        stream.writeOptional(eduSharedUriResource, [&](const auto& optionalValue) {
+            if (optionalValue) optionalValue->write(stream);
+        });
+        stream.writeOptional(experimentalGameplayOverride, [&](const auto& optionalValue) {
+            stream.writeBool(optionalValue);
+        });
     }
 };

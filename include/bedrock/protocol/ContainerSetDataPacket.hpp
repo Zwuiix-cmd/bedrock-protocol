@@ -132,7 +132,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		windowId = stream.readUnsignedByte().value_or(0);
-		property = magic_enum::enum_cast<Property>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Property>(0));
+		property = magic_enum::enum_cast<Property>(stream.readVarInt().value_or(0)).value_or(Property::FurnaceSmeltProgress);
 		value = stream.readVarInt().value_or(0);
     }
 

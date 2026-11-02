@@ -136,7 +136,7 @@ public:
 		    value->read(stream);
 		    return value;
 		}());
-		requestType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		requestType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::ExportFromSaveMode);
     }
 
     void write(BinaryStream& stream) override {

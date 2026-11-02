@@ -36,7 +36,7 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        unlockingContext = magic_enum::enum_cast<RecipeUnlockingContext>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<RecipeUnlockingContext>(0));
+        unlockingContext = magic_enum::enum_cast<RecipeUnlockingContext>(stream.readVarInt().value_or(0)).value_or(RecipeUnlockingContext::None);
         unlockingIngredients = stream.readOptional([&]() {
 	return stream.readList([&]() {
 	return ([&]() {

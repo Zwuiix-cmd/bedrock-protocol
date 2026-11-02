@@ -71,7 +71,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         networkId = stream.readUnsignedVarLong().value_or(0);
         type = stream.readOptional([&]() {
-	return magic_enum::enum_cast<PrimitiveShapeType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PrimitiveShapeType>(0));
+	return magic_enum::enum_cast<PrimitiveShapeType>(stream.readVarInt().value_or(0)).value_or(PrimitiveShapeType::Line);
 });
         location = stream.readOptional([&]() {
 	return stream.readVec3().value_or(glm::vec3(0.0f));

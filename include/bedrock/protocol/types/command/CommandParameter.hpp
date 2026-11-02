@@ -37,7 +37,7 @@ public:
         paramName = stream.readString().value_or("");
         paramType = stream.readInt().value_or(0);
         isOptional = stream.readBool().value_or(false);
-        flags = magic_enum::enum_cast<Flag>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<Flag>(0));
+        flags = magic_enum::enum_cast<Flag>(stream.readInt().value_or(0)).value_or(Flag::ForceCollapseEnum);
         enum_ = ([&]() { auto value = stream.readOptional([&]() { return ([&]() {
     auto value = std::make_shared<CommandHardEnum>();
     value->read(stream);

@@ -126,9 +126,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		actionType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		actionType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::StartCombine);
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		reactionType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		reactionType = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::StartCombine);
     }
 
     void write(BinaryStream& stream) override {

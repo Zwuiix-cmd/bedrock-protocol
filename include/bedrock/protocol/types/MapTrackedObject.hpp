@@ -29,7 +29,7 @@ public:
     MapTrackedObject() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = magic_enum::enum_cast<Type>(stream.readUnsignedInt().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+        type = magic_enum::enum_cast<Type>(stream.readUnsignedInt().value_or(0)).value_or(Type::Entity);
         actorUniqueId = stream.readOptional([&]() {
 	return stream.readInt().value_or(0);
 });

@@ -127,7 +127,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Action>(0));
+		action = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(Action::LeaveVehicle);
 		targetActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		position = stream.readOptional([&]() {
 			return stream.readVec3().value_or(glm::vec3(0.0f));

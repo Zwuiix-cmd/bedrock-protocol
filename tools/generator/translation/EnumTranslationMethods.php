@@ -332,9 +332,71 @@ private function enumStorageValue(string $value, string $enumType): string
         return 'magic_enum::enum_integer(' . $value . ')';
     }
 
-    private function enumReadValue(string $enumType, string $value): string
+private function enumReadValue(string $enumType, string $value, ?array $declaration = null): string
     {
-        return 'magic_enum::enum_cast<' . $enumType . '>(' . $value . ').value_or(magic_enum::enum_value<' . $enumType . '>(0))';
+        $default = $this->enumDefaultValue($enumType, $declaration);
+        if ($default === null) {
+            throw new \RuntimeException('Unable to resolve the first case of enum ' . $enumType);
+        }
+        return 'magic_enum::enum_cast<' . $enumType . '>(' . $value . ').value_or(' . $default . ')';
+    }
+
+    private function enumDefaultValue(string $enumType, ?array $declaration): ?string
+    {
+        $name = ltrim($enumType, ':\\');
+        $parts = explode('::', $name);
+        $caseType = (string) end($parts);
+        $outputType = $name;
+        if ($caseType === 'BuildPlatform') {
+            return 'BuildPlatform::Unknown';
+        }
+        $searchDeclaration = $declaration;
+        if (count($parts) > 1) {
+            $owner = implode('::', array_slice($parts, 0, -1));
+            $searchDeclaration = $this->findDeclaration(CPPName::type($owner)) ?? $searchDeclaration;
+        }
+        if ($searchDeclaration !== null) {
+            foreach ($searchDeclaration['constants'] ?? [] as $constant) {
+                $constantName = (string) ($constant['name'] ?? '');
+                if (!is_int($constant['value'] ?? null)
+                    && !is_bool($constant['value'] ?? null)) {
+                    continue;
+                }
+                if (!str_contains($constantName, '_')) {
+                    continue;
+                }
+                [$prefix, $case] = explode('_', $constantName, 2);
+                if (CPPName::enumCase($prefix) === $caseType) {
+                    return $outputType . '::' . CPPName::enumCase($case);
+                }
+            }
+            foreach ($searchDeclaration['properties'] ?? [] as $property) {
+                if ($this->propertyEnumType($property, $searchDeclaration) !== $caseType) {
+                    continue;
+                }
+                foreach ($searchDeclaration['constants'] ?? [] as $constant) {
+                    $constantName = (string) ($constant['name'] ?? '');
+                    if ((!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null))
+                        || !str_contains($constantName, '_')) {
+                        continue;
+                    }
+                    [, $case] = explode('_', $constantName, 2);
+                    return $outputType . '::' . CPPName::enumCase($case);
+                }
+            }
+        }
+        $referenced = $this->findDeclaration($caseType);
+        foreach ($referenced['cases'] ?? [] as $case) {
+            if (is_string($case['name'] ?? null)) {
+                return $outputType . '::' . CPPName::enumCase($case['name']);
+            }
+        }
+        foreach ($referenced['constants'] ?? [] as $constant) {
+            if (is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null)) {
+                return $outputType . '::' . CPPName::enumCase((string) $constant['name']);
+            }
+        }
+        return null;
     }
 
 private function enumStorageCast(Node $argument, string $value, array $declaration): string

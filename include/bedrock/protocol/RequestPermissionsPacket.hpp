@@ -133,7 +133,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		targetActorUniqueId = stream.readLong().value_or(0);
-		playerPermission = magic_enum::enum_cast<PlayerPermissions>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PlayerPermissions>(0));
+		playerPermission = magic_enum::enum_cast<PlayerPermissions>(stream.readVarInt().value_or(0)).value_or(PlayerPermissions::Custom);
 		customFlags = stream.readUnsignedShort().value_or(0);
     }
 

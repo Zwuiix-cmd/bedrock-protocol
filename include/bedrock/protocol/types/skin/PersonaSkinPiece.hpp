@@ -42,7 +42,7 @@ public:
         pieceId = stream.readString().value_or("");
         isDefaultPiece = stream.readBool().value_or(false);
         productId = stream.readString().value_or("");
-        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PersonaSkinPieceType>(0));
+        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0)).value_or(PersonaSkinPieceType::Unknown);
         packId = stream.readUUID().value_or("");
     }
 

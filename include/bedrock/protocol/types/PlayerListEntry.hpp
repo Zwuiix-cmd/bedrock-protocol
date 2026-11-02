@@ -43,7 +43,7 @@ public:
         xboxUserId = stream.readString().value_or("");
         playFabId = stream.readString().value_or("");
         platformChatId = stream.readString().value_or("");
-        buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<BuildPlatform>(0));
+        buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
         isTeacher = stream.readBool().value_or(false);
         isHost = stream.readBool().value_or(false);
         isSubClient = stream.readBool().value_or(false);

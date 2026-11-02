@@ -131,7 +131,7 @@ public:
 		compressedPackSize = stream.readUnsignedLong().value_or(0);
 		sha256 = stream.readString().value_or("");
 		isPremium = stream.readBool().value_or(false);
-		packType = magic_enum::enum_cast<ResourcePackType>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<ResourcePackType>(0));
+		packType = magic_enum::enum_cast<ResourcePackType>(stream.readUnsignedByte().value_or(0)).value_or(ResourcePackType::Invalid);
     }
 
     void write(BinaryStream& stream) override {

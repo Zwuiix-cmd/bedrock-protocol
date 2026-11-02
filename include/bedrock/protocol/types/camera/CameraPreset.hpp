@@ -158,7 +158,7 @@ public:
 });
         audioListenerType = magic_enum::enum_cast<Audiolistenertype>(stream.readOptional([&]() {
 	return stream.readInt().value_or(0);
-})).value_or(magic_enum::enum_value<Audiolistenertype>(0));
+})).value_or(Audiolistenertype::ListenerTypeCamera);
         playerEffects = stream.readOptional([&]() {
 	return stream.readBool().value_or(false);
 });
@@ -170,7 +170,7 @@ public:
 	}());
 });
         controlScheme = stream.readOptional([&]() {
-	return magic_enum::enum_cast<ControlScheme>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<ControlScheme>(0));
+	return magic_enum::enum_cast<ControlScheme>(stream.readVarInt().value_or(0)).value_or(ControlScheme::LockedPlayerRelativeStrafe);
 });
         startingRotation = stream.readOptional([&]() {
 	return stream.readVec2().value_or(glm::vec2(0.0f));

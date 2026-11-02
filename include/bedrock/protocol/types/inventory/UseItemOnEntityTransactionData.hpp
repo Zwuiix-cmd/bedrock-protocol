@@ -43,11 +43,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-        actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Action>(0));
+        actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(Action::Interact);
         hotbarSlot = stream.readVarInt().value_or(0);
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<HandSlot>(0));
+        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(HandSlot::Mainhand);
         itemInHand.read(stream);
     }
 

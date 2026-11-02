@@ -124,7 +124,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		eventType = magic_enum::enum_cast<Type>(stream.readUnsignedShort().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		eventType = magic_enum::enum_cast<Type>(stream.readUnsignedShort().value_or(0)).value_or(Type::EnableCommands);
     }
 
     void write(BinaryStream& stream) override {

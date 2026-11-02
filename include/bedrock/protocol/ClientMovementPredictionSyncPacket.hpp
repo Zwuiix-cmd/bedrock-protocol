@@ -135,7 +135,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		flags = magic_enum::enum_cast<PlayerAuthInputFlags>(([&]() { PlayerAuthInputFlags value; value.read(stream); return value; }())).value_or(magic_enum::enum_value<PlayerAuthInputFlags>(0));
+		flags = magic_enum::enum_cast<PlayerAuthInputFlags>(([&]() { PlayerAuthInputFlags value; value.read(stream); return value; }())).value_or(PlayerAuthInputFlags::Ascend);
 		scale = stream.readFloat().value_or(0.0f);
 		width = stream.readFloat().value_or(0.0f);
 		height = stream.readFloat().value_or(0.0f);

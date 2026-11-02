@@ -155,7 +155,7 @@ public:
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
 		item.read(stream);
-		gameMode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<GameMode>(0));
+		gameMode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(GameMode::Survival);
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
 		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
 		abilities = ([&]() {
@@ -177,7 +177,7 @@ public:
 		    return value;
 		}()); });
 		deviceId = stream.readString().value_or("");
-		buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<BuildPlatform>(0));
+		buildPlatform = magic_enum::enum_cast<BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
     }
 
     void write(BinaryStream& stream) override {

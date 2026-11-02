@@ -232,7 +232,7 @@ final class CPPTranslationCatalogDefaults
                     'putvector3nullable' => ['write' => 'stream.writeVec3(%VALUE%.value_or(glm::vec3(0.0f)))'],
                     'getentitylink' => ['read' => 'EntityLink::read(stream)'],
                     'putentitylink' => ['write' => '%VALUE%->write(stream)'],
-                    'gethandslot' => ['read' => 'magic_enum::enum_cast<HandSlot>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<HandSlot>(0))'],
+                    'gethandslot' => ['read' => 'magic_enum::enum_cast<HandSlot>(stream.readUnsignedByte().value_or(0)).value_or(HandSlot::Mainhand)'],
                     'puthandslot' => ['write' => 'stream.writeUnsignedByte(static_cast<uint8_t>(%VALUE%))'],
                     'getentitymetadata' => ['read' => '([&]() { EntityMetadataCollection value; value.read(stream); return value; }())'],
                     'putentitymetadata' => ['write' => '%VALUE%.write(stream)'],

@@ -132,7 +132,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		eventId = magic_enum::enum_cast<Event>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Event>(0));
+		eventId = magic_enum::enum_cast<Event>(stream.readUnsignedByte().value_or(0)).value_or(Event::Add);
 		effectId = stream.readVarInt().value_or(0);
 		amplifier = stream.readVarInt().value_or(0);
 		particles = stream.readBool().value_or(false);

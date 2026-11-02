@@ -137,7 +137,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		type = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(Type::ClearTitle);
 		text = stream.readString().value_or("");
 		fadeInTime = stream.readVarInt().value_or(0);
 		stayTime = stream.readVarInt().value_or(0);

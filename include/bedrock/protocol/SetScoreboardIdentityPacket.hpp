@@ -126,7 +126,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::RegisterIdentity);
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {

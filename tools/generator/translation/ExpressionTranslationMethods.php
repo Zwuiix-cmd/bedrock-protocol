@@ -361,7 +361,7 @@ public function expression(?Node $expression, array $declaration, ?array $method
                         || str_starts_with($value, 'magic_enum::enum_')
                         || str_contains($value, '::')
                         ? $value
-                        : $this->enumReadValue($enumType, $value));
+                        : $this->enumReadValue($enumType, $value, $declaration));
             }
             return $this->expression($expression->var, $declaration, $method) . ' = ' . $value;
         }

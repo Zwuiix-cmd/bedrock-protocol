@@ -133,7 +133,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		requestType = magic_enum::enum_cast<Request>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Request>(0));
+		requestType = magic_enum::enum_cast<Request>(stream.readUnsignedByte().value_or(0)).value_or(Request::SetActions);
 		commandString = stream.readString().value_or("");
 		actionIndex = stream.readUnsignedByte().value_or(0);
 		sceneName = stream.readString().value_or("");

@@ -40,7 +40,7 @@ public:
         fieldOfView = stream.readFloat().value_or(0.0f);
         easeTime = stream.readFloat().value_or(0.0f);
         clear = stream.readBool().value_or(false);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {

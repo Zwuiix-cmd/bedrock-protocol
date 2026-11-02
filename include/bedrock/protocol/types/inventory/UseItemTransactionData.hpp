@@ -54,7 +54,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Action>(0));
+        actionType = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(Action::ClickBlock);
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         face = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readVarInt().value_or(0);
@@ -62,10 +62,10 @@ public:
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
         clientCooldownState = stream.readUnsignedByte().value_or(0);
-        triggerType = magic_enum::enum_cast<TriggerType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<TriggerType>(0));
-        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<HandSlot>(0));
+        triggerType = magic_enum::enum_cast<TriggerType>(stream.readVarInt().value_or(0)).value_or(TriggerType::Unknown);
+        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(HandSlot::Mainhand);
         itemInHand.read(stream);
-        clientInteractPrediction = magic_enum::enum_cast<PredictedResult>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PredictedResult>(0));
+        clientInteractPrediction = magic_enum::enum_cast<PredictedResult>(stream.readVarInt().value_or(0)).value_or(PredictedResult::Failure);
     }
 
     void write(BinaryStream& stream) const override {

@@ -27,7 +27,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         damage = stream.readUnsignedShort().value_or(0);
-        slot = magic_enum::enum_cast<ArmorSlot>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<ArmorSlot>(0));
+        slot = magic_enum::enum_cast<ArmorSlot>(stream.readVarInt().value_or(0)).value_or(ArmorSlot::Head);
     }
 
     virtual void write(BinaryStream& stream) const {

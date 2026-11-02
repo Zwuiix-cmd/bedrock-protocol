@@ -124,7 +124,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
+		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(Type::Id);
     }
 
     void write(BinaryStream& stream) override {

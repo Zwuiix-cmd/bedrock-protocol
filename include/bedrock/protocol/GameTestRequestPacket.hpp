@@ -133,7 +133,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		maxTestsPerBatch = stream.readVarInt().value_or(0);
 		repeatCount = stream.readVarInt().value_or(0);
-		rotation = magic_enum::enum_cast<Rotation>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Rotation>(0));
+		rotation = magic_enum::enum_cast<Rotation>(stream.readUnsignedByte().value_or(0)).value_or(Rotation::_0);
 		stopOnFailure = stream.readBool().value_or(false);
 		testPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		testsPerRow = stream.readVarInt().value_or(0);

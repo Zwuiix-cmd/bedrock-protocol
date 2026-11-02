@@ -103,10 +103,10 @@ public:
         DefaultInputMode = stream.readInt().value_or(0);
         DeviceId = stream.readString().value_or("");
         DeviceModel = stream.readString().value_or("");
-        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<::BuildPlatform>(0));
+        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(stream.readInt().value_or(0)).value_or(BuildPlatform::Unknown);
         FilterProfanity = stream.readBool().value_or(false);
         GameVersion = stream.readString().value_or("");
-        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<::GraphicsMode>(0));
+        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(stream.readInt().value_or(0)).value_or(GraphicsMode::Simple);
         GuiScale = stream.readInt().value_or(0);
         LanguageCode = stream.readString().value_or("");
         MaxViewDistance = stream.readInt().value_or(0);
@@ -149,7 +149,7 @@ public:
         SkinResourcePatch = stream.readString().value_or("");
         ThirdPartyName = stream.readString().value_or("");
         TrustedSkin = stream.readBool().value_or(false);
-        UIProfile = magic_enum::enum_cast<::UIProfile>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<::UIProfile>(0));
+        UIProfile = magic_enum::enum_cast<::UIProfile>(stream.readInt().value_or(0)).value_or(UIProfile::Classic);
     }
 
     virtual void write(BinaryStream& stream) const {

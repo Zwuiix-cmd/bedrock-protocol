@@ -160,7 +160,7 @@ public:
                 stream.seek(stream.size());
                 return;
             }
-            const auto type = magic_enum::enum_cast<EntityMetadataType>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<EntityMetadataType>(0));
+            const auto type = magic_enum::enum_cast<EntityMetadataType>(stream.readUnsignedVarInt().value_or(0)).value_or(EntityMetadataType::BYTE);
             const uint8_t innerType = stream.readUnsignedByte().value_or(0);
             if (innerType != static_cast<uint8_t>(type)) {
                 stream.seek(stream.size());

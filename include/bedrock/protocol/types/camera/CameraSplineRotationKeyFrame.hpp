@@ -37,7 +37,7 @@ public:
         rotation = stream.readVec3().value_or(glm::vec3(0.0f));
         time = stream.readFloat().value_or(0.0f);
         easeType = stream.readOptional([&]() {
-	return magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
+	return magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
 });
     }
 

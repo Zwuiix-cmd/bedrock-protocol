@@ -123,7 +123,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		effectType = magic_enum::enum_cast<MovementEffectType>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<MovementEffectType>(0));
+		effectType = magic_enum::enum_cast<MovementEffectType>(stream.readUnsignedVarInt().value_or(0)).value_or(MovementEffectType::Invalid);
 		duration = stream.readUnsignedVarInt().value_or(0);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }

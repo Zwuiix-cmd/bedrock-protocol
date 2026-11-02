@@ -122,7 +122,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		requestId = stream.readString().value_or("");
-		action = magic_enum::enum_cast<AgentActionType>(stream.readUnsignedInt().value_or(0)).value_or(magic_enum::enum_value<AgentActionType>(0));
+		action = magic_enum::enum_cast<AgentActionType>(stream.readUnsignedInt().value_or(0)).value_or(AgentActionType::Attack);
 		responseJson = stream.readString().value_or("");
     }
 

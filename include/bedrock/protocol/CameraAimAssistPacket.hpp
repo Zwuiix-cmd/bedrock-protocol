@@ -128,8 +128,8 @@ public:
 		presetId = stream.readString().value_or("");
 		viewAngle = stream.readVec2().value_or(glm::vec2(0.0f));
 		distance = stream.readFloat().value_or(0.0f);
-		targetMode = magic_enum::enum_cast<CameraAimAssistTargetMode>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<CameraAimAssistTargetMode>(0));
-		actionType = magic_enum::enum_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<CameraAimAssistActionType>(0));
+		targetMode = magic_enum::enum_cast<CameraAimAssistTargetMode>(stream.readUnsignedByte().value_or(0)).value_or(CameraAimAssistTargetMode::Angle);
+		actionType = magic_enum::enum_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)).value_or(CameraAimAssistActionType::Set);
 		showDebugRender = stream.readBool().value_or(false);
     }
 

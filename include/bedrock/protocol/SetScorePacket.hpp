@@ -121,13 +121,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		entries = stream.readList([&]() {
-					auto action = magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(magic_enum::enum_value<ScorePacketEntryAction>(0));
+					auto action = magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(ScorePacketEntryAction::Remove);
 					auto innerType = stream.readString().value_or("");
-					if ((action != magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(innerType)).value_or(magic_enum::enum_value<ScorePacketEntryAction>(0)))) {
+					if ((action != magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(innerType)).value_or(ScorePacketEntryAction::Remove))) {
 				throw std::exception{};
 			}
 					auto entry = std::make_shared<ScorePacketEntry>();
-					entry->action = magic_enum::enum_cast<ScorePacketEntryAction>(action).value_or(magic_enum::enum_value<ScorePacketEntryAction>(0));
+					entry->action = magic_enum::enum_cast<ScorePacketEntryAction>(action).value_or(ScorePacketEntryAction::Remove);
 					entry->scoreboardId = stream.readVarLong().value_or(0);
 					if ((action == magic_enum::enum_integer(ScorePacketEntryAction::Remove))) {
 				entry->objectiveName = stream.readOptional([&]() {

@@ -122,7 +122,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		presetId = stream.readString().value_or("");
-		actionType = magic_enum::enum_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<CameraAimAssistActionType>(0));
+		actionType = magic_enum::enum_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)).value_or(CameraAimAssistActionType::Set);
 		allowAimAssist = stream.readBool().value_or(false);
     }
 

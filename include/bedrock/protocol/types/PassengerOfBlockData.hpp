@@ -44,7 +44,7 @@ public:
         offset = stream.readVec3().value_or(glm::vec3(0.0f));
         rotation = stream.readFloat().value_or(0.0f);
         rotationLimit = stream.readFloat().value_or(0.0f);
-        emoteType = magic_enum::enum_cast<EmoteType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<EmoteType>(0));
+        emoteType = magic_enum::enum_cast<EmoteType>(stream.readVarInt().value_or(0)).value_or(EmoteType::Standing);
     }
 
     virtual void write(BinaryStream& stream) const {

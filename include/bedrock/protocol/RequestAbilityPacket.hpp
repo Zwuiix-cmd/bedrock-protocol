@@ -129,7 +129,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		abilityId = magic_enum::enum_cast<Ability>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Ability>(0));
+		abilityId = magic_enum::enum_cast<Ability>(stream.readVarInt().value_or(0)).value_or(Ability::Flying);
 		auto valueType = stream.readUnsignedByte().value_or(0);
 		auto boolValue = stream.readBool().value_or(false);
 		auto floatValue = stream.readFloat().value_or(0.0f);

@@ -92,7 +92,7 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
         }
         $referenced = $this->findDeclaration($short);
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
-            return $this->enumReadValue($short, 'stream.readVarInt().value_or(0)');
+            return $this->enumReadValue($short, 'stream.readVarInt().value_or(0)', $declaration);
         }
         if ($referenced !== null && in_array($referenced['kind'], ['class', 'interface'], true)) {
             return $this->readObject($short);

@@ -107,11 +107,15 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
             if ($referenced !== null && $referenced['kind'] === 'enum' && $referenced['backingType'] === 'string') {
                 $value = $arguments[0] ?? '""';
                 $enumType = CPPName::type($class);
-                return 'magic_enum::enum_cast<' . $enumType . '>(std::string_view(' . $value . ')).value_or(magic_enum::enum_value<' . $enumType . '>(0))';
+                $default = $this->enumDefaultValue($enumType, $declaration);
+                if ($default === null) {
+                    throw new \RuntimeException('Unable to resolve the first case of enum ' . $enumType);
+                }
+                return 'magic_enum::enum_cast<' . $enumType . '>(std::string_view(' . $value . ')).value_or(' . $default . ')';
             }
             if ($referenced !== null
                 && (($referenced['kind'] ?? null) === 'enum' || $this->isEnumLikeDeclaration($referenced))) {
-                return $this->enumReadValue(CPPName::type($class), $arguments[0] ?? '0');
+                return $this->enumReadValue(CPPName::type($class), $arguments[0] ?? '0', $declaration);
             }
             return 'static_cast<' . CPPName::type($class) . '>(' . ($arguments[0] ?? '0') . ')';
         }

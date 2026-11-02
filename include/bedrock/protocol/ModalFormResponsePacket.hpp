@@ -131,7 +131,7 @@ public:
 		});
 		cancelReason = magic_enum::enum_cast<Cancel>(stream.readOptional([&]() {
 			return stream.readUnsignedByte().value_or(0);
-		})).value_or(magic_enum::enum_value<Cancel>(0));
+		})).value_or(Cancel::ReasonClosed);
     }
 
     void write(BinaryStream& stream) override {

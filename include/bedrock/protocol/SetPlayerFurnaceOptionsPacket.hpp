@@ -122,7 +122,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		furnaceType = magic_enum::enum_cast<FurnaceType>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<FurnaceType>(0));
+		furnaceType = magic_enum::enum_cast<FurnaceType>(stream.readUnsignedByte().value_or(0)).value_or(FurnaceType::None);
 		furnaceOptions = ([&]() {
 		    auto value = std::make_shared<FurnaceOptions>();
 		    value->read(stream);

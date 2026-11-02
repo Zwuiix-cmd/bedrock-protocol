@@ -164,9 +164,9 @@ public:
 			}
 			inputFlags.set(flag, true);
 		}
-		inputMode = magic_enum::enum_cast<InputMode>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<InputMode>(0));
-		playMode = magic_enum::enum_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<PlayMode>(0));
-		interactionMode = magic_enum::enum_cast<InteractionMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<InteractionMode>(0));
+		inputMode = magic_enum::enum_cast<InputMode>(stream.readUnsignedVarInt().value_or(0)).value_or(InputMode::Undefined);
+		playMode = magic_enum::enum_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0)).value_or(PlayMode::Normal);
+		interactionMode = magic_enum::enum_cast<InteractionMode>(stream.readVarInt().value_or(0)).value_or(InteractionMode::Touch);
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));

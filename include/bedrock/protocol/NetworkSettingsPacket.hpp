@@ -129,7 +129,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		compressionThreshold = stream.readUnsignedShort().value_or(0);
-		compressionAlgorithm = magic_enum::enum_cast<CompressionAlgorithm>(stream.readUnsignedShort().value_or(0)).value_or(magic_enum::enum_value<CompressionAlgorithm>(0));
+		compressionAlgorithm = magic_enum::enum_cast<CompressionAlgorithm>(stream.readUnsignedShort().value_or(0)).value_or(CompressionAlgorithm::Zlib);
 		enableClientThrottling = stream.readBool().value_or(false);
 		clientThrottleThreshold = stream.readUnsignedByte().value_or(0);
 		clientThrottleScalar = stream.readFloat().value_or(0.0f);

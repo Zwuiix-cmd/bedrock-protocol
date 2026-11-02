@@ -213,7 +213,7 @@ public:
     float walkSpeed = 0.0f;
 
     void read(ReadOnlyBinaryStream& stream) {
-        layerId = magic_enum::enum_cast<AbilitiesLayerId>(stream.readUnsignedShort().value_or(0)).value_or(magic_enum::enum_value<AbilitiesLayerId>(0));
+        layerId = magic_enum::enum_cast<AbilitiesLayerId>(stream.readUnsignedShort().value_or(0)).value_or(AbilitiesLayerId::Cache);
         setAbilities = stream.readUnsignedInt().value_or(0);
         setAbilityValues = stream.readUnsignedInt().value_or(0);
         flySpeed = stream.readFloat().value_or(0.0f);

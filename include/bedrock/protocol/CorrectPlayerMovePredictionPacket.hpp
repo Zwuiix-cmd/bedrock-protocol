@@ -129,7 +129,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		predictionType = magic_enum::enum_cast<Prediction>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Prediction>(0));
+		predictionType = magic_enum::enum_cast<Prediction>(stream.readUnsignedByte().value_or(0)).value_or(Prediction::TypePlayer);
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
 		vehicleRotation = glm::vec2{stream.readFloat().value_or(0.0f), stream.readFloat().value_or(0.0f)};

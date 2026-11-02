@@ -131,7 +131,7 @@ public:
 	return value;
 	}());
 });
-        armSize = magic_enum::enum_cast<SkinArmSizeType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<SkinArmSizeType>(0));
+        armSize = magic_enum::enum_cast<SkinArmSizeType>(stream.readVarInt().value_or(0)).value_or(SkinArmSizeType::Slim);
         personaPieces = stream.readList([&]() {
 	return ([&]() {
 	auto value = std::make_shared<PersonaSkinPiece>();

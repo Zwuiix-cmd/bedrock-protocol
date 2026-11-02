@@ -29,7 +29,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         value = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
-        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(CameraSetInstructionEaseType::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {

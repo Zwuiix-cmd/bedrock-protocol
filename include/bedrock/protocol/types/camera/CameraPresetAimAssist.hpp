@@ -41,7 +41,7 @@ public:
 	return stream.readString().value_or("");
 });
         targetMode = stream.readOptional([&]() {
-	return magic_enum::enum_cast<CameraAimAssistTargetMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraAimAssistTargetMode>(0));
+	return magic_enum::enum_cast<CameraAimAssistTargetMode>(stream.readVarInt().value_or(0)).value_or(CameraAimAssistTargetMode::Angle);
 });
         viewAngle = stream.readOptional([&]() {
 	return stream.readVec2().value_or(glm::vec2(0.0f));

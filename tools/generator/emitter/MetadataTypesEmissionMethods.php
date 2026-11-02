@@ -235,7 +235,7 @@ CPP;
         if ($stopActionExpression === null) {
             throw new RuntimeException('PlayerBlockActionStopBreak::getActionType has no return expression');
         }
-        
+
         $properties = array_values(array_filter(
             $declaration['properties'] ?? [],
             static fn (array $property): bool => !($property['static'] ?? false),

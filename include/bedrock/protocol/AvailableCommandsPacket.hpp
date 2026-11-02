@@ -148,35 +148,35 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto enumValuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(enumValuesCount)> i = 0; i < enumValuesCount; i++) {
+		for (std::size_t i = 0; i < enumValuesCount; i++) {
 		    enumValues.push_back(stream.readString().value_or(""));
 		}
 		auto chainedSubCommandValuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(chainedSubCommandValuesCount)> i = 0; i < chainedSubCommandValuesCount; i++) {
+		for (std::size_t i = 0; i < chainedSubCommandValuesCount; i++) {
 		    chainedSubCommandValues.push_back(stream.readString().value_or(""));
 		}
 		auto postfixesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(postfixesCount)> i = 0; i < postfixesCount; i++) {
+		for (std::size_t i = 0; i < postfixesCount; i++) {
 		    postfixes.push_back(stream.readString().value_or(""));
 		}
 		auto enumsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(enumsCount)> i = 0; i < enumsCount; i++) {
+		for (std::size_t i = 0; i < enumsCount; i++) {
 		    enums.push_back(stream.readObject<CommandEnumRawData>());
 		}
 		auto chainedSubCommandDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(chainedSubCommandDataCount)> i = 0; i < chainedSubCommandDataCount; i++) {
+		for (std::size_t i = 0; i < chainedSubCommandDataCount; i++) {
 		    chainedSubCommandData.push_back(stream.readObject<ChainedSubCommandRawData>());
 		}
 		auto commandDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(commandDataCount)> i = 0; i < commandDataCount; i++) {
+		for (std::size_t i = 0; i < commandDataCount; i++) {
 		    commandData.push_back(stream.readObject<CommandRawData>());
 		}
 		auto softEnumsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(softEnumsCount)> i = 0; i < softEnumsCount; i++) {
+		for (std::size_t i = 0; i < softEnumsCount; i++) {
 		    softEnums.push_back(stream.readObject<CommandSoftEnum>());
 		}
 		auto enumConstraintsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(enumConstraintsCount)> i = 0; i < enumConstraintsCount; i++) {
+		for (std::size_t i = 0; i < enumConstraintsCount; i++) {
 		    enumConstraints.push_back(stream.readObject<CommandEnumConstraintRawData>());
 		}
     }

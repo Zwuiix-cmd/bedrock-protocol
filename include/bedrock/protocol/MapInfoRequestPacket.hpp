@@ -112,7 +112,7 @@ public:
 		if (count > (magic_enum::enum_integer(MapImage::Max::Height) * magic_enum::enum_integer(MapImage::Max::Width))) {
 			throw std::exception{};
 		}
-		for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); i++) {
+		for (std::size_t i = 0; (i < count); i++) {
 			clientPixels.push_back(stream.readObject<MapInfoRequestPacketClientPixel>());
 		}
     }

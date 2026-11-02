@@ -341,9 +341,26 @@ private function statement(Node $statement, array $declaration, array $method, i
                 && $statement->cond[0]->right instanceof Node\Expr\Variable) {
                 $indexName = (string) $statement->cond[0]->left->name;
                 $countName = (string) $statement->cond[0]->right->name;
+                $counterType = $this->inferredCPPType($statement->cond[0]->right, $declaration);
+                if ($counterType === null) {
+                    foreach ($method['parameters'] ?? [] as $parameter) {
+                        if (($parameter['name'] ?? null) !== $countName) {
+                            continue;
+                        }
+                        $counterType = $this->cppType(
+                            (string) ($parameter['type'] ?? 'mixed'),
+                            false,
+                            $parameter['doc'] ?? null,
+                        );
+                        break;
+                    }
+                }
+                $indexType = in_array($counterType, ['int8_t', 'int16_t', 'int32_t', 'int64_t'], true)
+                    ? $counterType
+                    : 'std::size_t';
                 $init = str_replace(
                     'std::size_t ' . $this->variableName($indexName, $declaration) . ' = 0',
-                    'std::remove_cvref_t<decltype(' . $this->variableName($countName, $declaration) . ')> '
+                    $indexType . ' '
                         . $this->variableName($indexName, $declaration) . ' = 0',
                     $init,
                 );

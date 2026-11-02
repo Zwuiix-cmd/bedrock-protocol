@@ -108,7 +108,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
+		    for (std::size_t i = 0; (i < count); ++i) {
 				auto hash = stream.readUnsignedLong().value_or(0);
 				auto payload = stream.readString().value_or("");
 				blobs.push_back(std::make_shared<ChunkCacheBlob>(hash, payload));

@@ -109,7 +109,7 @@ public:
 		definitions = {};
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); i++) {
+		    for (std::size_t i = 0; (i < count); i++) {
 				auto dimensionNameId = stream.readString().value_or("");
 				auto dimensionData = std::make_shared<DimensionData>();
 				dimensionData->read(stream);

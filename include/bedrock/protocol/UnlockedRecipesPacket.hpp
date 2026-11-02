@@ -117,7 +117,7 @@ public:
 			stream.readUnsignedInt().value_or(0)
 		).value_or(Type::Empty);
 		auto recipesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(recipesCount)> i = 0; i < recipesCount; i++) {
+		for (std::size_t i = 0; i < recipesCount; i++) {
 		    recipes.push_back(stream.readString().value_or(""));
 		}
     }

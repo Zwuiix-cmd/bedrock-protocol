@@ -83,7 +83,13 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
-        $lines[] = 'for (std::remove_cvref_t<decltype(' . $countName . ')> ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
+        $counterType = $countInit instanceof Node\Expr\Assign
+            ? $this->inferredCPPType($countInit->expr, $declaration)
+            : ($this->expressionTypes[$sourceCountName] ?? null);
+        $indexType = in_array($counterType, ['int8_t', 'int16_t', 'int32_t', 'int64_t'], true)
+            ? $counterType
+            : 'std::size_t';
+        $lines[] = 'for (' . $indexType . ' ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
         if ($body->expr->expr instanceof Node\Expr\Match_) {
             $match = $this->listMatchBody(
                 $body->expr->expr,

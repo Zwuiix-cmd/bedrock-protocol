@@ -137,7 +137,7 @@ public:
 			if (count > MAX_BLOB_HASHES) {
 				throw std::exception{};
 			}
-			for (std::remove_cvref_t<decltype(count)> i = 0; (i < count); ++i) {
+			for (std::size_t i = 0; (i < count); ++i) {
 				usedBlobHashes.value().push_back(stream.readUnsignedLong().value_or(0));
 			}
 		}

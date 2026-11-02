@@ -165,7 +165,7 @@ public:
 		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
 			blockActions.emplace();
 			auto max = stream.readVarInt().value_or(0);
-			for (std::remove_cvref_t<decltype(max)> i = 0; (i < max); ++i) {
+			for (int32_t i = 0; (i < max); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
 				if (PlayerBlockAction::isValidActionType(actionType)) {
 					blockActions.value().push_back(PlayerBlockAction::decodeWithBlockInfo(stream, actionType));

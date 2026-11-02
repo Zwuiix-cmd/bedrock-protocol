@@ -107,7 +107,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		playerActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		auto emoteIdsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(emoteIdsCount)> i = 0; i < emoteIdsCount; ++i) {
+		for (std::size_t i = 0; i < emoteIdsCount; ++i) {
 		    emoteIds.push_back(stream.readUUID().value_or(""));
 		}
     }

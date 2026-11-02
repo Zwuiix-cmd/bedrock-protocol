@@ -107,7 +107,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto waypointsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::remove_cvref_t<decltype(waypointsCount)> i = 0; i < waypointsCount; ++i) {
+		for (std::size_t i = 0; i < waypointsCount; ++i) {
 		    waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
 		}
     }

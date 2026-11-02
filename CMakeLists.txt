@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(BedrockProtocol VERSION 1.0.0 LANGUAGES CXX)
+project(bedrock-protocol VERSION 1.0.0 LANGUAGES CXX)
 
 include(FetchContent)
 include(GNUInstallDirs)
@@ -76,36 +76,36 @@ elseif(TARGET EnTT)
     set(BEDROCK_PROTOCOL_ENTT_TARGET EnTT)
 endif()
 
-add_library(BedrockProtocol STATIC)
-add_library(BedrockProtocol::BedrockProtocol ALIAS BedrockProtocol)
+add_library(bedrock-protocol STATIC)
+add_library(bedrock-protocol::bedrock-protocol ALIAS bedrock-protocol)
 
 if(BEDROCK_PROTOCOL_BUILD_POOL)
     target_sources(
-        BedrockProtocol
+        bedrock-protocol
         PRIVATE
             include/bedrock/protocol/pool/PacketPool.cpp
     )
 endif()
 
-target_compile_features(BedrockProtocol PUBLIC cxx_std_20)
+target_compile_features(bedrock-protocol PUBLIC cxx_std_20)
 target_include_directories(
-    BedrockProtocol
+    bedrock-protocol
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_link_libraries(BedrockProtocol PUBLIC ${BEDROCK_PROTOCOL_MAGIC_ENUM_TARGET} glm::glm)
+target_link_libraries(bedrock-protocol PUBLIC ${BEDROCK_PROTOCOL_MAGIC_ENUM_TARGET} glm::glm)
 
 if(BEDROCK_PROTOCOL_BUILD_POOL)
-    target_link_libraries(BedrockProtocol PUBLIC ${BEDROCK_PROTOCOL_ENTT_TARGET})
+    target_link_libraries(bedrock-protocol PUBLIC ${BEDROCK_PROTOCOL_ENTT_TARGET})
 endif()
 
 if(MSVC)
-    target_compile_options(BedrockProtocol PRIVATE /bigobj)
+    target_compile_options(bedrock-protocol PRIVATE /bigobj)
 endif()
 
 install(
-    TARGETS BedrockProtocol
+    TARGETS bedrock-protocol
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

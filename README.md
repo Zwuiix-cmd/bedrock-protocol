@@ -17,7 +17,7 @@ Use it from another CMake project:
 
 ```cmake
 add_subdirectory(path/to/bedrock-protocol)
-target_link_libraries(MyApp PRIVATE BedrockProtocol::BedrockProtocol)
+target_link_libraries(MyApp PRIVATE bedrock-protocol::bedrock-protocol)
 ```
 
 To build the protocol headers without `PacketPool` or EnTT:

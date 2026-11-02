@@ -41,7 +41,7 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
             || !$condition->left instanceof Node\Expr\Variable
             || !$condition->right instanceof Node\Expr\Variable
             || $condition->left->name !== $indexInit->var->name
-            || !$increment instanceof Node\Expr\PostInc
+            || (!$increment instanceof Node\Expr\PostInc && !$increment instanceof Node\Expr\PreInc)
             || !$increment->var instanceof Node\Expr\Variable
             || $increment->var->name !== $indexInit->var->name
             || !$body instanceof Node\Stmt\Expression
@@ -50,7 +50,12 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
             || $body->expr->var->dim !== null) {
             return null;
         }
-        $countName = CPPName::identifier((string) $condition->right->name);
+        if ($body->expr->expr instanceof Node\Expr\MethodCall
+            && $body->expr->expr->var instanceof Node\Expr\Variable
+            && $body->expr->expr->var->name === 'this') {
+            return null;
+        }
+        $sourceCountName = CPPName::identifier((string) $condition->right->name);
         if ($countInit instanceof Node\Expr\Assign) {
             if (!$countInit->var instanceof Node\Expr\Variable || $countInit->var->name !== $condition->right->name) {
                 return null;
@@ -60,10 +65,13 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
                 return null;
             }
         } else {
-            $count = $countName;
+            $count = $sourceCountName;
         }
         $target = $this->expression($body->expr->var->var, $declaration, $method);
         $value = $this->expression($body->expr->expr, $declaration, $method);
+        $countName = $countInit instanceof Node\Expr\Assign
+            ? $this->loopCountName($target)
+            : $sourceCountName;
         $index = CPPName::identifier((string) $indexInit->var->name);
         $incrementText = $this->expression($increment, $declaration, $method);
         $lines = [];
@@ -71,15 +79,23 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
             && !$this->isVectorExpression($body->expr->var->var, $declaration)) {
             $lines[] = 'auto ' . $target . ' = std::vector<decltype(' . $value . ')>();';
         }
-        $lines[] = '{';
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
         $lines[] = 'for (std::size_t ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
         $lines[] = '    ' . $target . '.push_back(' . $value . ');';
         $lines[] = '}';
-        $lines[] = '}';
         return implode("\n", $lines);
+    }
+
+private function loopCountName(string $target): string
+    {
+        $parts = array_values(array_filter(
+            preg_split('/[^A-Za-z0-9_]+/', $target) ?: [],
+            static fn (string $part): bool => $part !== '',
+        ));
+        $base = $parts === [] ? 'count' : (string) end($parts);
+        return CPPName::identifier($base . 'Count');
     }
 
 private function forInitializer(array $expressions, array $declaration, array $method): array

@@ -256,11 +256,44 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
 
 private function enumStorageValue(string $value, string $enumType): string
     {
-        return 'magic_enum::enum_integer(' . $value . ')';
+        return str_contains($value, 'magic_enum::enum_integer')
+            ? $value
+            : 'magic_enum::enum_integer(' . $value . ')';
+    }
+
+    private function enumStorageClassConstant(
+        Node\Expr\ClassConstFetch $fetch,
+        string $value,
+        array $declaration,
+    ): string {
+        if (str_contains($value, 'magic_enum::enum_integer')) {
+            return $value;
+        }
+        $class = $fetch->class instanceof Node\Name ? $fetch->class->getLast() : '';
+        $name = $fetch->name instanceof Node\Identifier ? $fetch->name->toString() : '';
+        $owner = $class === 'self' || $class === 'static'
+            ? ($this->findDeclaration($declaration['name']) ?? $declaration)
+            : $this->findDeclaration($class);
+        if ($owner !== null && $this->isEnumLikeDeclaration($owner)) {
+            return 'magic_enum::enum_integer(' . $value . ')';
+        }
+        foreach ($owner['constants'] ?? [] as $constant) {
+            if (($constant['name'] ?? null) !== $name
+                || (!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null))) {
+                continue;
+            }
+            if (str_contains($name, '_') && $this->constantEnumCase($owner, $name) !== null) {
+                return 'magic_enum::enum_integer(' . $value . ')';
+            }
+        }
+        return $value;
     }
 
 private function enumReadValue(string $enumType, string $value, ?array $declaration = null): string
     {
+        if ($this->isBitmaskEnum($enumType, $declaration)) {
+            return 'static_cast<' . $enumType . '>(' . $value . ')';
+        }
         $default = $this->enumDefaultValue($enumType, $declaration);
         if ($default === null) {
             throw new \RuntimeException('Unable to resolve the first case of enum ' . $enumType);
@@ -371,6 +404,45 @@ private function enumReadValue(string $enumType, string $value, ?array $declarat
             }
         }
         return $outputType . '{}';
+    }
+
+    private function isBitmaskEnum(string $enumType, ?array $declaration): bool
+    {
+        $name = ltrim($enumType, ':\\');
+        $parts = explode('::', $name);
+        $caseType = (string) end($parts);
+        $values = [];
+
+        if ($declaration !== null) {
+            foreach ($declaration['constants'] ?? [] as $constant) {
+                $constantName = (string) ($constant['name'] ?? '');
+                if ((!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null))
+                    || !str_contains($constantName, '_')) {
+                    continue;
+                }
+                [$prefix] = explode('_', $constantName, 2);
+                if (CPPName::enumCase($prefix) === $caseType) {
+                    $values[] = (int) $constant['value'];
+                }
+            }
+        }
+
+        if ($values === []) {
+            $referenced = $this->findDeclaration($caseType);
+            foreach ($referenced['cases'] ?? [] as $case) {
+                if (is_int($case['value'] ?? null) || is_bool($case['value'] ?? null)) {
+                    $values[] = (int) $case['value'];
+                }
+            }
+        }
+
+        return count($values) >= 2
+            && !in_array(0, $values, true)
+            && array_reduce(
+                $values,
+                static fn (bool $valid, int $value): bool => $valid && $value > 0 && (($value & ($value - 1)) === 0),
+                true,
+            );
     }
 
 private function enumStorageCast(Node $argument, string $value, array $declaration): string

@@ -167,11 +167,18 @@ private function isVoidExpression(Node\Expr $expression): bool
 
 private function isVectorExpression(Node $node, array $declaration): bool
     {
-        if (!$node instanceof Node\Expr\PropertyFetch || !$node->var instanceof Node\Expr\Variable || $node->var->name !== 'this') {
+        if (!$node instanceof Node\Expr\PropertyFetch || !$node->var instanceof Node\Expr\Variable) {
             return false;
         }
         $name = $node->name instanceof Node\Identifier ? $node->name->toString() : '';
-        foreach ($declaration['properties'] as $property) {
+        if ($node->var->name === 'this') {
+            $properties = $declaration['properties'] ?? [];
+        } else {
+            $objectType = $this->expressionTypes[(string) $node->var->name] ?? null;
+            $referenced = $objectType === null ? null : $this->findDeclaration(CPPName::type($objectType));
+            $properties = $referenced['properties'] ?? [];
+        }
+        foreach ($properties as $property) {
             if (($property['name'] ?? null) !== $name) {
                 continue;
             }

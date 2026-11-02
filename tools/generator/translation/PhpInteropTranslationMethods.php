@@ -343,6 +343,30 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
         if (!str_contains($name, '_')) {
             return null;
         }
+        $parts = explode('_', $name);
+        if (count($parts) >= 3) {
+            $outerPrefix = (string) $parts[0];
+            $nestedPrefix = (string) $parts[1];
+            $nestedCount = 0;
+            foreach ($declaration['constants'] ?? [] as $constant) {
+                $constantName = (string) ($constant['name'] ?? '');
+                if (str_starts_with($constantName, $outerPrefix . '_' . $nestedPrefix . '_')
+                    && (is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null))) {
+                    ++$nestedCount;
+                }
+            }
+            if ($nestedCount >= 2) {
+                foreach ($declaration['properties'] ?? [] as $property) {
+                    if (($property['static'] ?? false)) {
+                        continue;
+                    }
+                    if ($this->constantPrefixMatchesProperty($outerPrefix, strtolower((string) ($property['name'] ?? '')))) {
+                        return CPPName::enumCase($nestedPrefix) . '::'
+                            . CPPName::enumCase(implode('_', array_slice($parts, 2)));
+                    }
+                }
+            }
+        }
         [$prefix, $case] = explode('_', $name, 2);
         $count = 0;
         foreach ($declaration['constants'] ?? [] as $constant) {

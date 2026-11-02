@@ -183,6 +183,7 @@ trait PacketEmissionMethods
                 unset($strings[$constantName]);
             }
         }
+        $enumGroups = $this->normalizeNestedEnumGroups($enumGroups, $declaration);
         $body = '';
         foreach ($stringEnums as $enumName => $definition) {
             $body .= '    enum class ' . $enumName . " : uint8_t {\n";
@@ -261,6 +262,51 @@ trait PacketEmissionMethods
             $body .= "\n";
         }
         return $body;
+    }
+
+    private function normalizeNestedEnumGroups(array $groups, array $declaration): array
+    {
+        $normalized = [];
+        foreach ($groups as $prefix => $cases) {
+            $nestedPrefixes = [];
+            foreach (array_keys($cases) as $case) {
+                if (!str_contains((string) $case, '_')) {
+                    continue;
+                }
+                [$nested] = explode('_', (string) $case, 2);
+                $nestedPrefixes[$nested] = true;
+            }
+            if (count($nestedPrefixes) !== 1
+                || !$this->enumPrefixMatchesDeclarationProperty((string) $prefix, $declaration)) {
+                $normalized[$prefix] = $cases;
+                continue;
+            }
+            $nestedPrefix = (string) array_key_first($nestedPrefixes);
+            $nestedCases = [];
+            foreach ($cases as $case => $value) {
+                $nestedName = $nestedPrefix . '_';
+                if (!str_starts_with((string) $case, $nestedName)) {
+                    $nestedCases = [];
+                    break;
+                }
+                $nestedCases[substr((string) $case, strlen($nestedName))] = $value;
+            }
+            $normalized[$nestedCases === [] ? $prefix : $nestedPrefix] = $nestedCases === [] ? $cases : $nestedCases;
+        }
+        return $normalized;
+    }
+
+    private function enumPrefixMatchesDeclarationProperty(string $prefix, array $declaration): bool
+    {
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['static'] ?? false)) {
+                continue;
+            }
+            if ($this->enumPrefixMatchesProperty($prefix, strtolower((string) ($property['name'] ?? '')))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** @return array<string, array{prefix: string, cases: array<string, string>, constantNames: list<string>}> */

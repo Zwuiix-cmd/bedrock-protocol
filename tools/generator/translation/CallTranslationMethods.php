@@ -246,6 +246,44 @@ private function encodedValueWrite(Node\Expr\MethodCall $call, array $declaratio
 
 private function inlineMethodCall(Node\Expr\MethodCall $call, array $declaration, ?array $method): ?string
     {
+        $translated = $this->withInlinedMethodContext(
+            $call,
+            $declaration,
+            $method,
+            function (array $helper) use ($declaration): ?array {
+                $lines = [];
+                foreach ($helper['body'] ?? [] as $statement) {
+                    $translated = $this->statement($statement, $declaration, $helper, 1);
+                    if ($translated !== '') {
+                        $lines[] = $translated;
+                    }
+                }
+                return [$helper, $lines];
+            },
+        );
+        if (!is_array($translated) || !isset($translated[0], $translated[1]) || $translated[1] === []) {
+            return null;
+        }
+        /** @var array<string, mixed> $helper */
+        $helper = $translated[0];
+        /** @var list<string> $lines */
+        $lines = $translated[1];
+        $returnType = (string) ($helper['returnType'] ?? 'void');
+        $cppReturnType = $returnType === '' || $returnType === 'void'
+            ? 'void'
+            : $this->cppType($returnType, false, $helper['doc'] ?? null);
+        $body = implode("\n", $lines);
+        return $cppReturnType === 'void'
+            ? "([&]() {\n" . $body . "\n}())"
+            : '([&]() -> ' . $cppReturnType . " {\n" . $body . "\n}())";
+    }
+
+private function withInlinedMethodContext(
+        Node\Expr\MethodCall $call,
+        array $declaration,
+        ?array $method,
+        callable $callback,
+    ): mixed {
         $name = $call->name instanceof Node\Identifier ? $call->name->toString() : '';
         if ($name === '' || isset($this->inlinedMethods[$name])) {
             return null;
@@ -266,47 +304,28 @@ private function inlineMethodCall(Node\Expr\MethodCall $call, array $declaration
         $previousAliases = $this->expressionAliases;
         $previousOptionals = $this->expressionOptionals;
         $this->inlinedMethods[$name] = true;
-
-        foreach ($helper['parameters'] as $index => $parameter) {
-            $parameterName = (string) ($parameter['name'] ?? '');
-            $argument = $call->args[$index] ?? null;
-            if ($parameterName === '' || !$argument instanceof Node\Arg) {
-                unset($this->inlinedMethods[$name]);
-                $this->expressionTypes = $previousTypes;
-                $this->expressionAliases = $previousAliases;
-                $this->expressionOptionals = $previousOptionals;
-                return null;
+        try {
+            foreach ($helper['parameters'] as $index => $parameter) {
+                $parameterName = (string) ($parameter['name'] ?? '');
+                $argument = $call->args[$index] ?? null;
+                if ($parameterName === '' || !$argument instanceof Node\Arg) {
+                    return null;
+                }
+                $this->expressionAliases[$parameterName] = $this->expression($argument->value, $declaration, $method);
+                $type = (string) ($parameter['type'] ?? '');
+                if ($type !== '') {
+                    $this->expressionTypes[$parameterName] = $type;
+                }
+                $this->expressionOptionals[$parameterName] = (bool) ($parameter['nullable'] ?? false)
+                    || $this->nullableType($type);
             }
-            $this->expressionAliases[$parameterName] = $this->expression($argument->value, $declaration, $method);
-            $type = (string) ($parameter['type'] ?? '');
-            if ($type !== '') {
-                $this->expressionTypes[$parameterName] = $type;
-            }
-            $this->expressionOptionals[$parameterName] = (bool) ($parameter['nullable'] ?? false) || $this->nullableType($type);
+            return $callback($helper);
+        } finally {
+            unset($this->inlinedMethods[$name]);
+            $this->expressionTypes = $previousTypes;
+            $this->expressionAliases = $previousAliases;
+            $this->expressionOptionals = $previousOptionals;
         }
-
-        $lines = [];
-        foreach ($helper['body'] ?? [] as $statement) {
-            $translated = $this->statement($statement, $declaration, $helper, 1);
-            if ($translated !== '') {
-                $lines[] = $translated;
-            }
-        }
-
-        unset($this->inlinedMethods[$name]);
-        $this->expressionTypes = $previousTypes;
-        $this->expressionAliases = $previousAliases;
-        $this->expressionOptionals = $previousOptionals;
-
-        if ($lines === []) {
-            return null;
-        }
-        $returnType = (string) ($helper['returnType'] ?? 'void');
-        $cppReturnType = $returnType === '' || $returnType === 'void' ? 'void' : $this->cppType($returnType, false, $helper['doc'] ?? null);
-        $body = implode("\n", $lines);
-        return $cppReturnType === 'void'
-            ? "([&]() {\n" . $body . "\n}())"
-            : '([&]() -> ' . $cppReturnType . " {\n" . $body . "\n}())";
     }
 
 private function nullsafeMethodCall(Node\Expr\NullsafeMethodCall $call, array $declaration, ?array $method): string

@@ -18,6 +18,13 @@
 #include <memory>
 #include <type_traits>
 
+template <typename Enum>
+requires std::is_enum_v<Enum>
+[[nodiscard]] constexpr bool hasFlag(Enum value, Enum flag) noexcept {
+    using Underlying = std::underlying_type_t<Enum>;
+    return (static_cast<Underlying>(value) & static_cast<Underlying>(flag)) != 0;
+}
+
 class ReadOnlyBinaryStream {
 public:
     // -- constructors --

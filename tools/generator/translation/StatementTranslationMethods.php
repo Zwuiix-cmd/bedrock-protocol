@@ -36,6 +36,10 @@ private function statement(Node $statement, array $declaration, array $method, i
                 return '';
             }
             if ($statement->expr instanceof Node\Expr\Assign) {
+                $inlinedAppend = $this->inlineObjectAppend($statement->expr, $declaration, $method, $indent);
+                if ($inlinedAppend !== null) {
+                    return $inlinedAppend;
+                }
                 $directRead = $this->directReadAssignment($statement->expr, $declaration, $method);
                 if ($directRead !== null) {
                     if ($statement->expr->var instanceof Node\Expr\Variable
@@ -48,6 +52,18 @@ private function statement(Node $statement, array $declaration, array $method, i
                         }
                     }
                     return $prefix . str_replace("\n", "\n" . $prefix, $directRead);
+                }
+                $matchAssignment = $this->matchAssignment($statement->expr, $declaration, $method);
+                if ($matchAssignment !== null) {
+                    return $prefix . str_replace("\n", "\n" . $prefix, $matchAssignment);
+                }
+                $optionalAssignment = $this->optionalTernaryAssignment($statement->expr, $declaration, $method);
+                if ($optionalAssignment !== null) {
+                    return $prefix . str_replace("\n", "\n" . $prefix, $optionalAssignment);
+                }
+                $inlinedAssignment = $this->inlineMethodAssignment($statement->expr, $declaration, $method);
+                if ($inlinedAssignment !== null) {
+                    return $prefix . str_replace("\n", "\n" . $prefix, $inlinedAssignment);
                 }
             }
             if ($statement->expr instanceof Node\Expr\Assign && $statement->expr->var instanceof Node\Expr\Variable && $statement->expr->var->name !== 'this') {
@@ -99,6 +115,17 @@ private function statement(Node $statement, array $declaration, array $method, i
                     return $prefix . 'std::optional<std::size_t> ' . $this->variableName((string) $statement->expr->var->name, $declaration) . ';';
                 }
                 return $prefix . 'auto ' . $this->variableName((string) $statement->expr->var->name, $declaration) . ' = ' . str_replace("\n", "\n" . $prefix, $value) . ';';
+            }
+            if ($statement->expr instanceof Node\Expr\MethodCall) {
+                $inlinedStatement = $this->inlineVoidMethodStatement(
+                    $statement->expr,
+                    $declaration,
+                    $method,
+                    $indent,
+                );
+                if ($inlinedStatement !== null) {
+                    return $inlinedStatement;
+                }
             }
             $expression = $this->expression($statement->expr, $declaration, $method);
             return $prefix . str_replace("\n", "\n" . $prefix, $expression) . ';';
@@ -199,7 +226,7 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         if ($statement instanceof Node\Stmt\If_) {
             $previousDeclaredVariables = $this->declaredVariables;
-            $text = $prefix . 'if (' . $this->expression($statement->cond, $declaration, $method) . ") {\n";
+            $text = $prefix . 'if (' . $this->conditionExpression($statement->cond, $declaration, $method) . ") {\n";
             $this->arrayScopes[] = $this->inferArrayScope($statement->stmts, $declaration);
             foreach ($statement->stmts as $child) {
                 $text .= $this->statement($child, $declaration, $method, $indent + 1) . "\n";
@@ -208,7 +235,7 @@ private function statement(Node $statement, array $declaration, array $method, i
             $this->declaredVariables = $previousDeclaredVariables;
             $text .= $prefix . '}';
             foreach ($statement->elseifs as $elseif) {
-                $text .= ' else if (' . $this->expression($elseif->cond, $declaration, $method) . ") {\n";
+                $text .= ' else if (' . $this->conditionExpression($elseif->cond, $declaration, $method) . ") {\n";
                 $this->declaredVariables = $previousDeclaredVariables;
                 $this->arrayScopes[] = $this->inferArrayScope($elseif->stmts, $declaration);
                 foreach ($elseif->stmts as $child) {
@@ -270,7 +297,7 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         if ($statement instanceof Node\Stmt\While_) {
             $previousDeclaredVariables = $this->declaredVariables;
-            $text = $prefix . 'while (' . $this->expression($statement->cond, $declaration, $method) . ") {\n";
+            $text = $prefix . 'while (' . $this->conditionExpression($statement->cond, $declaration, $method) . ") {\n";
             foreach ($statement->stmts as $child) {
                 $text .= $this->statement($child, $declaration, $method, $indent + 1) . "\n";
             }
@@ -385,6 +412,380 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         $this->recordUnsupported($declaration, $method, 'statement ' . $statement::class);
         return $prefix . '(void)stream;';
+    }
+
+private function optionalTernaryAssignment(
+        Node\Expr\Assign $assignment,
+        array $declaration,
+        ?array $method,
+    ): ?string {
+        if (!$assignment->expr instanceof Node\Expr\Ternary
+            || (!$this->isOptionalProperty($assignment->var, $declaration)
+                && !($assignment->var instanceof Node\Expr\Variable
+                    && ($this->expressionOptionals[(string) $assignment->var->name] ?? false)))) {
+            return null;
+        }
+        $ternary = $assignment->expr;
+        $ifIsNull = $this->isNullExpression($ternary->if);
+        $elseIsNull = $this->isNullExpression($ternary->else);
+        if ($ifIsNull === $elseIsNull) {
+            return null;
+        }
+        $condition = $this->conditionExpression($ternary->cond, $declaration, $method);
+        $value = $this->expression(
+            $ifIsNull ? $ternary->else : ($ternary->if ?? $ternary->cond),
+            $declaration,
+            $method,
+        );
+        $target = $this->expression($assignment->var, $declaration, $method);
+        $readCondition = $ifIsNull ? $this->negateCondition($condition) : $condition;
+        return 'if (' . $readCondition . ") {\n"
+            . "\t" . $target . ' = ' . $value . ";\n"
+            . '}';
+    }
+
+private function negateCondition(string $condition): string
+    {
+        return preg_match('/^[A-Za-z_]\\w*(?:[.\\-]\\w+)*$/', $condition) === 1
+            ? '!' . $condition
+            : '!(' . $condition . ')';
+    }
+
+private function inlineObjectAppend(
+        Node\Expr\Assign $assignment,
+        array $declaration,
+        ?array $method,
+        int $indent,
+    ): ?string {
+        if (!$assignment->var instanceof Node\Expr\ArrayDimFetch
+            || $assignment->var->dim !== null
+            || !$assignment->expr instanceof Node\Expr\MethodCall
+            || !$assignment->expr->var instanceof Node\Expr\Variable
+            || $assignment->expr->var->name !== 'this') {
+            return null;
+        }
+
+        $target = $this->expression($assignment->var->var, $declaration, $method);
+        $translated = $this->withInlinedMethodContext(
+            $assignment->expr,
+            $declaration,
+            $method,
+            function (array $helper) use ($declaration, $method, $indent, $target): ?string {
+                $returnType = (string) ($helper['returnType'] ?? 'void');
+                if ($returnType === '' || $returnType === 'void') {
+                    return null;
+                }
+                $body = array_values(array_filter(
+                    $helper['body'] ?? [],
+                    static fn (mixed $statement): bool => $statement instanceof Node\Stmt,
+                ));
+                $return = array_pop($body);
+                if (!$return instanceof Node\Stmt\Return_ || $return->expr === null) {
+                    return null;
+                }
+                $lines = [];
+                foreach ($body as $statement) {
+                    $translated = $this->statement($statement, $declaration, $helper, $indent);
+                    if ($translated !== '') {
+                        $lines[] = $translated;
+                    }
+                }
+                $value = $this->expression($return->expr, $declaration, $helper);
+                $lines[] = str_repeat("\t", $indent) . $target . '.push_back(' . $value . ');';
+                return implode("\n", $lines);
+            },
+        );
+        return is_string($translated) ? $translated : null;
+    }
+
+private function matchAssignment(
+        Node\Expr\Assign $assignment,
+        array $declaration,
+        ?array $method,
+    ): ?string {
+        if (!$assignment->expr instanceof Node\Expr\Match_) {
+            return null;
+        }
+
+        $match = $assignment->expr;
+        $target = $this->expression($assignment->var, $declaration, $method);
+        $targetType = $this->classConstantType($match)
+            ?? $this->assignmentCPPType($assignment->var, $declaration);
+        $localName = $assignment->var instanceof Node\Expr\Variable
+            && $assignment->var->name !== 'this'
+            ? (string) $assignment->var->name
+            : null;
+        if ($targetType === null) {
+            foreach ($match->arms as $arm) {
+                if ($arm->body instanceof Node\Expr\Throw_) {
+                    continue;
+                }
+                $targetType = $this->classConstantType($arm->body)
+                    ?? $this->inferredCPPType($arm->body, $declaration);
+                if ($targetType !== null) {
+                    break;
+                }
+            }
+        }
+        if ($targetType === null) {
+            return null;
+        }
+        if ($targetType === 'bool' && $this->isBooleanMatch($match)) {
+            $subject = $match->cond instanceof Node\Expr\Assign
+                ? $match->cond->expr
+                : $match->cond;
+            return $target . ' = ' . $this->expression($subject, $declaration, $method) . ' != 0;';
+        }
+
+        $matchEnumType = $this->matchEnumType($match, $declaration);
+        $subjectType = $this->enumPropertyType($match->cond, $declaration)
+            ?? $this->enumExpressionType($match->cond, $declaration)
+            ?? $this->expressionType($match->cond, $declaration);
+        $subjectSetup = [];
+        if ($match->cond instanceof Node\Expr\Assign
+            && $match->cond->var instanceof Node\Expr\Variable
+            && $match->cond->var->name !== 'this') {
+            $subjectName = $this->variableName((string) $match->cond->var->name, $declaration);
+            $subject = $subjectName;
+            $subjectValue = $this->expression($match->cond->expr, $declaration, $method);
+            if ($matchEnumType !== null && $subjectType !== $matchEnumType) {
+                $subjectValue = 'static_cast<' . $matchEnumType . '>(' . $subjectValue . ')';
+                $subjectType = $matchEnumType;
+            }
+            $subjectSetup[] = 'auto ' . $subjectName . ' = ' . $subjectValue . ';';
+            $subjectType = $this->enumPropertyType($match->cond->expr, $declaration)
+                ?? $this->enumExpressionType($match->cond->expr, $declaration)
+                ?? $this->expressionType($match->cond->expr, $declaration)
+                ?? $subjectType;
+        } elseif ($this->simpleMatchSubject($match->cond)) {
+            $subject = $this->expression($match->cond, $declaration, $method);
+            if ($matchEnumType !== null && $subjectType !== $matchEnumType) {
+                $subject = 'static_cast<' . $matchEnumType . '>(' . $subject . ')';
+                $subjectType = $matchEnumType;
+            }
+        } else {
+            $subject = 'matchSubject';
+            $subjectSetup[] = 'auto ' . $subject . ' = '
+                . $this->expression($match->cond, $declaration, $method) . ';';
+            $subjectType = $this->enumPropertyType($match->cond, $declaration)
+                ?? $this->enumExpressionType($match->cond, $declaration)
+                ?? $this->expressionType($match->cond, $declaration)
+                ?? $subjectType;
+        }
+
+        $lines = $subjectSetup;
+        $isDeclared = $localName !== null && isset($this->declaredVariables[$localName]);
+        if ($localName !== null && !$isDeclared) {
+            $lines[] = 'auto ' . $target . ' = ' . $targetType . '{};';
+            $this->declaredVariables[$localName] = true;
+            $this->expressionTypes[$localName] = $targetType;
+        }
+        $lines[] = 'switch (' . $subject . ') {';
+        foreach ($match->arms as $arm) {
+            $labels = [];
+            foreach ($arm->conds ?? [] as $condition) {
+                $conditionValue = $this->expression($condition, $declaration, $method);
+                $conditionEnum = $this->enumExpressionType($condition, $declaration);
+                if ($conditionEnum !== null
+                    && $condition instanceof Node\Expr\ClassConstFetch
+                    && ($subjectType === null || CPPName::type($subjectType) !== CPPName::type($conditionEnum))) {
+                    $conditionValue = $this->enumStorageValue($conditionValue, $conditionEnum);
+                }
+                $labels[] = 'case ' . $conditionValue . ':';
+            }
+            $body = $this->expression($arm->body, $declaration, $method, $targetType);
+            if ($arm->conds === null) {
+                $labels[] = 'default:';
+            }
+            if ($labels === []) {
+                continue;
+            }
+            foreach ($labels as $label) {
+                $lines[] = "\t" . $label;
+            }
+            $lines[] = "\t{";
+            if (str_starts_with(ltrim($body), 'throw ')) {
+                $lines[] = "\t\t" . $body;
+            } else {
+                $lines[] = "\t\t" . $target . ' = ' . $body . ';';
+                $lines[] = "\t\tbreak;";
+            }
+            $lines[] = "\t}";
+        }
+        $lines[] = '}';
+        return implode("\n", $lines);
+    }
+
+private function matchEnumType(Node\Expr\Match_ $match, array $declaration): ?string
+    {
+        foreach ($match->arms as $arm) {
+            foreach ($arm->conds ?? [] as $condition) {
+                $type = $this->enumExpressionType($condition, $declaration);
+                if ($type !== null) {
+                    return $type;
+                }
+            }
+        }
+        return null;
+    }
+
+private function isBooleanMatch(Node\Expr\Match_ $match): bool
+    {
+        $hasFalse = false;
+        $hasTrue = false;
+        $hasDefaultThrow = false;
+        foreach ($match->arms as $arm) {
+            if ($arm->conds === null) {
+                $hasDefaultThrow = $arm->body instanceof Node\Expr\Throw_;
+                continue;
+            }
+            if (count($arm->conds) !== 1 || !$arm->conds[0] instanceof Node\Scalar\Int_) {
+                return false;
+            }
+            $value = (int) $arm->conds[0]->value;
+            $isTrue = $arm->body instanceof Node\Expr\ConstFetch
+                && strtolower($arm->body->name->toString()) === 'true';
+            $isFalse = $arm->body instanceof Node\Expr\ConstFetch
+                && strtolower($arm->body->name->toString()) === 'false';
+            if ($value === 0 && $isFalse) {
+                $hasFalse = true;
+            } elseif ($value === 1 && $isTrue) {
+                $hasTrue = true;
+            } else {
+                return false;
+            }
+        }
+        return $hasFalse && $hasTrue && $hasDefaultThrow;
+    }
+
+private function simpleMatchSubject(Node\Expr $expression): bool
+    {
+        return $expression instanceof Node\Expr\Variable
+            || $expression instanceof Node\Expr\PropertyFetch
+            || $expression instanceof Node\Expr\ClassConstFetch;
+    }
+
+private function conditionExpression(Node\Expr $condition, array $declaration, ?array $method): string
+    {
+        $value = trim($this->expression($condition, $declaration, $method));
+        while ($this->hasOuterParentheses($value)) {
+            $value = trim(substr($value, 1, -1));
+        }
+        return $value;
+    }
+
+private function hasOuterParentheses(string $value): bool
+    {
+        if (strlen($value) < 2 || $value[0] !== '(' || $value[-1] !== ')') {
+            return false;
+        }
+        $depth = 0;
+        $length = strlen($value);
+        for ($index = 0; $index < $length; ++$index) {
+            if ($value[$index] === '(') {
+                ++$depth;
+            } elseif ($value[$index] === ')') {
+                --$depth;
+                if ($depth === 0 && $index < $length - 1) {
+                    return false;
+                }
+            }
+            if ($depth < 0) {
+                return false;
+            }
+        }
+        return $depth === 0;
+    }
+
+private function inlineMethodAssignment(
+        Node\Expr\Assign $assignment,
+        array $declaration,
+        ?array $method,
+    ): ?string {
+        if (!$assignment->expr instanceof Node\Expr\MethodCall
+            || !$assignment->expr->var instanceof Node\Expr\Variable
+            || $assignment->expr->var->name !== 'this') {
+            return null;
+        }
+
+        $target = $this->expression($assignment->var, $declaration, $method);
+        $translated = $this->withInlinedMethodContext(
+            $assignment->expr,
+            $declaration,
+            $method,
+            function (array $helper) use ($declaration, $target): ?string {
+                $body = array_values(array_filter(
+                    $helper['body'] ?? [],
+                    static fn (mixed $statement): bool => $statement instanceof Node\Stmt,
+                ));
+                if (count($body) !== 2
+                    || !$body[0] instanceof Node\Stmt\If_
+                    || !$body[1] instanceof Node\Stmt\Return_
+                    || $body[0]->elseifs !== []
+                    || $body[0]->else !== null
+                    || count($body[0]->stmts) !== 1
+                    || !$body[0]->stmts[0] instanceof Node\Stmt\Return_
+                    || $body[0]->stmts[0]->expr === null
+                    || $body[1]->expr === null) {
+                    return null;
+                }
+                $condition = $this->conditionExpression($body[0]->cond, $declaration, $helper);
+                $whenTrue = $this->expression($body[0]->stmts[0]->expr, $declaration, $helper);
+                $whenFalse = $this->expression($body[1]->expr, $declaration, $helper);
+                if ($this->isDefaultReturnExpression($body[1]->expr)) {
+                    return 'if (' . $condition . ") {\n"
+                        . "\t" . $target . ' = ' . $whenTrue . ";\n"
+                        . '}';
+                }
+                return 'if (' . $condition . ") {\n"
+                    . "\t" . $target . ' = ' . $whenTrue . ";\n"
+                    . "} else {\n"
+                    . "\t" . $target . ' = ' . $whenFalse . ";\n"
+                    . '}';
+            },
+        );
+        return is_string($translated) ? $translated : null;
+    }
+
+private function isDefaultReturnExpression(Node\Expr $expression): bool
+    {
+        if ($expression instanceof Node\Scalar\Int_ || $expression instanceof Node\Scalar\Float_) {
+            return (float) $expression->value === 0.0;
+        }
+        return $expression instanceof Node\Expr\ConstFetch
+            && in_array(strtolower($expression->name->toString()), ['false', 'null'], true);
+    }
+
+private function inlineVoidMethodStatement(
+        Node\Expr\MethodCall $call,
+        array $declaration,
+        ?array $method,
+        int $indent,
+    ): ?string {
+        if (!$call->var instanceof Node\Expr\Variable || $call->var->name !== 'this') {
+            return null;
+        }
+
+        $translated = $this->withInlinedMethodContext(
+            $call,
+            $declaration,
+            $method,
+            function (array $helper) use ($declaration, $indent): ?string {
+                $returnType = (string) ($helper['returnType'] ?? 'void');
+                if ($returnType !== '' && $returnType !== 'void') {
+                    return null;
+                }
+                $lines = [];
+                foreach ($helper['body'] ?? [] as $statement) {
+                    $translated = $this->statement($statement, $declaration, $helper, $indent);
+                    if ($translated !== '') {
+                        $lines[] = $translated;
+                    }
+                }
+                return $lines === [] ? null : implode("\n", $lines);
+            },
+        );
+        return is_string($translated) ? $translated : null;
     }
 
 private function destructuringAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string

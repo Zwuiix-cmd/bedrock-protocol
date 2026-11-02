@@ -1,0 +1,7 @@
+{
+    "source": {
+        "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
+        "ref": "56.1.0+bedrock-1.26.10"
+    },
+    "output": "."
+}

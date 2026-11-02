@@ -1,6 +1,10 @@
+# PHP dependencies and local generator state
+/vendor/
+/.cache/
+/build/
+/cmake-build-*/
+
+# Local PHP tooling
+/.phpunit.result.cache
 __pycache__/
 *.py[cod]
-.pytest_cache/
-.mypy_cache/
-.venv/
-venv/

@@ -1,0 +1,33 @@
+BEDROCK PROTOCOL NON-APPROPRIATION LICENSE
+
+Copyright (c) 2026 slq. All rights reserved.
+
+This license applies to the original work in this repository, including the
+generator, CMake files, runtime support files, documentation, and project
+configuration. Protocol files derived from the upstream project are covered
+by the upstream license identified in LICENSE-UPSTREAM-LGPL-3.0.txt.
+
+Permission is granted to:
+
+1. inspect, compile, link, and use the original work as a library dependency;
+2. use an unmodified build of the library in personal or commercial software;
+3. make private modifications for personal or internal use.
+
+The following are not permitted without prior written permission from the
+copyright holder:
+
+1. claiming authorship, ownership, or exclusive rights over the original work;
+2. removing or changing copyright, license, or attribution notices;
+3. publishing, selling, sublicensing, relicensing, or redistributing the
+   original source or a modified version of the original source;
+4. presenting the original work as an independently authored or proprietary
+   work.
+
+Applications may be distributed in compiled form when they link to an
+unmodified build of the original library, provided that this notice remains
+available with the distribution. No ownership of the original work is
+transferred by this permission.
+
+THE ORIGINAL WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGE, OR OTHER LIABILITY ARISING FROM THE USE OF THE ORIGINAL WORK.

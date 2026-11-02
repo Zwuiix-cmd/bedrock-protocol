@@ -1,40 +1,84 @@
-# Kodiak Bedrock Protocol
+# Bedrock Protocol
 
-Local source repository for keeping a reproducible Bedrock protocol snapshot
-and generating the C++ metadata that Kodiak can consume later.
+A C++20 library for the Minecraft Bedrock network protocol, generated from
+the PHP definitions in [axolotl-pm/BedrockProtocol](https://github.com/axolotl-pm/BedrockProtocol).
 
-The upstream PHP implementation is kept as a Git submodule at
-`upstream/BedrockProtocol`. The parent repository owns the parser, snapshots,
-and C++ generation; the upstream files are never modified by the generator.
+## Build
 
-## Bootstrap
-
-```powershell
-git submodule update --init --recursive
-python tools/generate_protocol.py --strict
-python -m unittest discover -s tests -v
-```
-
-The generator records the upstream commit, commit date, protocol versions,
-packet IDs, packet declarations, and `PacketPool` registration order in
-`generated/metadata/protocol.json`. It also emits preview-only C++ headers in
-`generated/cpp/`:
-
-- `PacketIds.hpp` contains the protocol ID enum and ID metadata.
-- `PacketPool.hpp` contains the ordered registration descriptors.
-
-These generated headers are deliberately not copied into the client yet. The
-future integration step will map the generated model onto
-`client/src/kodiak/sdk/custom/packet` and `client/src/kodiak/sdk/network`.
-
-## Reproducibility
-
-The source commit is part of every generated artifact. To check whether the
-checked-in output matches the current submodule revision, run:
+The project provides a CMake library target. GLM, magic_enum, and EnTT for
+`PacketPool` are fetched automatically.
 
 ```powershell
-python tools/generate_protocol.py --strict --check
+cmake -S . -B build
+cmake --build build --config Release
 ```
 
-The current upstream project is LGPL-3.0; its license and attribution remain
-inside the submodule.
+Use it from another CMake project:
+
+```cmake
+add_subdirectory(path/to/bedrock-protocol)
+target_link_libraries(MyApp PRIVATE BedrockProtocol::BedrockProtocol)
+```
+
+To build the protocol headers without `PacketPool` or EnTT:
+
+```powershell
+cmake -S . -B build -DBEDROCK_PROTOCOL_BUILD_POOL=OFF
+```
+
+When Kodiak already provides the dependencies, disable their fetch separately:
+
+```powershell
+cmake -S . -B build `
+    -DBEDROCK_PROTOCOL_FETCH_ENTT=OFF `
+    -DBEDROCK_PROTOCOL_FETCH_GLM=OFF `
+    -DBEDROCK_PROTOCOL_FETCH_MAGIC_ENUM=OFF
+```
+
+## Using a packet
+
+```cpp
+#include <bedrock/protocol/SetTimePacket.hpp>
+#include <bedrock/protocol/io/BinaryStream.hpp>
+#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+
+BinaryStream encoded;
+SetTimePacket packet;
+packet.time = 42;
+packet.write(encoded);
+
+ReadOnlyBinaryStream input(encoded.getBuffer());
+SetTimePacket decoded;
+decoded.read(input);
+```
+
+`PacketPool` creates a packet from its `PacketIds` value:
+
+```cpp
+#include <bedrock/protocol/pool/PacketPool.hpp>
+
+PacketPool::setup();
+auto packet = PacketPool::createPacket(PacketIds::SetTime);
+```
+
+## Regenerating the protocol
+
+Generated C++ files are already included in `include/`.
+
+```powershell
+composer install
+composer generate
+composer clean
+```
+
+The source version is configured in [`generator.json`](generator.json). The
+generator produces packets, types, enums, `PacketIds`, and `PacketPool`.
+
+## License
+
+The original code in this repository is covered by [`LICENSE`](LICENSE). It
+may be used as a library, but nobody may claim, relicense, sell, or
+redistribute the original source as their own.
+
+Protocol files derived from upstream remain subject to the upstream LGPL-3.0
+license: [`LICENSE-UPSTREAM-LGPL-3.0.txt`](LICENSE-UPSTREAM-LGPL-3.0.txt).

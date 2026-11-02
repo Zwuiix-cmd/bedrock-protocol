@@ -1,9 +1,0 @@
-[project]
-name = "kodiak-bedrock-protocol"
-version = "0.1.0"
-description = "Reproducible Bedrock protocol snapshots and Kodiak C++ code generation"
-requires-python = ">=3.10"
-dependencies = []
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]

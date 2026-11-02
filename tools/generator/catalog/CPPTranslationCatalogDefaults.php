@@ -1,0 +1,358 @@
+<?php
+
+declare(strict_types=1);
+
+namespace kodiak\bedrockprotocol\generator\catalog;
+
+/** Immutable built-in C++ translation rules. */
+final class CPPTranslationCatalogDefaults
+{
+    public static function values(): array
+    {
+        return [
+            'typeAliases' => [
+                'Vector2' => 'glm::vec2',
+                'Vector3' => 'glm::vec3',
+                'BlockPosition' => 'glm::ivec3',
+                'UuidInterface' => 'std::string',
+                'UUID' => 'std::string',
+                'Color' => 'uint32_t',
+                'DeviceOS' => 'BuildPlatform',
+                'BuildPlatform' => 'BuildPlatform',
+                'UpdateAbilitiesPacket' => 'AbilitiesData',
+                'PropertySyncData' => 'PropertySyncData',
+                'Tag' => 'std::shared_ptr<CompoundTag>',
+                'CompoundTag' => 'std::shared_ptr<CompoundTag>',
+                'BitSet' => 'PlayerAuthInputFlags',
+                'PlayerAuthInputFlags' => 'PlayerAuthInputFlags',
+                'PlayerAuthInputVehicleInfo' => 'PlayerAuthInputVehicleInfo',
+                'PlayerBlockAction' => 'PlayerBlockAction',
+                'EntityMetadataCollection' => 'EntityMetadataCollection',
+                'CacheableNbt' => 'std::shared_ptr<CompoundTag>',
+                'MetadataProperty' => 'MetadataProperty',
+                'ItemStack' => 'NetworkItemDescriptor',
+                'ItemStackWrapper' => 'NetworkItemStack',
+                'NetworkItemDescriptor' => 'NetworkItemDescriptor',
+                'NetworkItemStack' => 'NetworkItemStack',
+                'TransactionData' => 'std::variant<std::shared_ptr<NormalTransactionData>, std::shared_ptr<MismatchTransactionData>, std::shared_ptr<UseItemTransactionData>, std::shared_ptr<UseItemOnEntityTransactionData>, std::shared_ptr<ReleaseItemTransactionData>>',
+            ],
+            'typeIncludes' => [
+                'EntityMetadataCollection' => [
+                    'types/MetadataProperty.hpp',
+                ],
+                'TransactionData' => [
+                    'types/NormalTransactionData.hpp',
+                    'types/MismatchTransactionData.hpp',
+                    'types/UseItemTransactionData.hpp',
+                    'types/UseItemOnEntityTransactionData.hpp',
+                    'types/ReleaseItemTransactionData.hpp',
+                ],
+            ],
+            'typeCodecs' => [
+                'Vector2' => [
+                    'read' => 'stream.readVec2().value_or(glm::vec2(0.0f))',
+                    'write' => 'stream.writeVec2(%VALUE%);',
+                    'value' => true,
+                ],
+                'Vector3' => [
+                    'read' => 'stream.readVec3().value_or(glm::vec3(0.0f))',
+                    'write' => 'stream.writeVec3(%VALUE%);',
+                    'value' => true,
+                ],
+                'BlockPosition' => [
+                    'read' => 'stream.readSignedBlockPos().value_or(glm::ivec3(0))',
+                    'write' => 'stream.writeSignedBlockPos(%VALUE%);',
+                    'value' => true,
+                ],
+                'UUID' => [
+                    'read' => 'stream.readUUID().value_or("")',
+                    'write' => 'stream.writeUUID(%VALUE%);',
+                    'value' => true,
+                ],
+                'UuidInterface' => [
+                    'read' => 'stream.readUUID().value_or("")',
+                    'write' => 'stream.writeUUID(%VALUE%);',
+                    'value' => true,
+                ],
+                'Color' => [
+                    'read' => 'stream.readUnsignedInt().value_or(0)',
+                    'write' => 'stream.writeUnsignedInt(%VALUE%);',
+                    'value' => true,
+                ],
+                'UpdateAbilitiesPacket' => [
+                    'value' => true,
+                ],
+                'PropertySyncData' => [
+                    'read' => '([&]() { PropertySyncData value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'PlayerAuthInputFlags' => [
+                    'read' => '([&]() { PlayerAuthInputFlags value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'BitSet' => [
+                    'read' => '([&]() { PlayerAuthInputFlags value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'PlayerAuthInputVehicleInfo' => [
+                    'read' => '([&]() { PlayerAuthInputVehicleInfo value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'PlayerBlockAction' => [
+                    'read' => '([&]() { PlayerBlockAction value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'PlayerBlockActionStopBreak' => [
+                    'value' => true,
+                ],
+                'EntityMetadataCollection' => [
+                    'read' => '([&]() { EntityMetadataCollection value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'CacheableNbt' => [
+                    'read' => 'NetworkNbtSerializer::read(stream)',
+                    'write' => 'NetworkNbtSerializer::write(stream, %VALUE%);',
+                    'value' => true,
+                ],
+                'CompoundTag' => [
+                    'read' => 'NetworkNbtSerializer::read(stream)',
+                    'write' => 'NetworkNbtSerializer::write(stream, %VALUE%);',
+                    'value' => true,
+                ],
+                'ItemStack' => [
+                    'read' => '([&]() { NetworkItemDescriptor value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+                'ItemStackWrapper' => [
+                    'read' => '([&]() { NetworkItemStack value; value.read(stream); return value; }())',
+                    'write' => '%VALUE%.write(stream);',
+                    'value' => true,
+                ],
+            ],
+            'runtimeDeclarations' => [
+                'DataPacket',
+                'PacketPool',
+                'ProtocolInfo',
+                'Packet',
+                'PacketHandlerInterface',
+                'ClientboundPacket',
+                'ServerboundPacket',
+                'BlockPosition',
+                'Vector2',
+                'Vector3',
+                'UUID',
+                'MetadataProperty',
+                'EntityMetadataCollection',
+                'ItemStack',
+                'ItemStackWrapper',
+                'PlayerAuthInputFlags',
+                'PlayerBlockAction',
+                'PropertySyncData',
+                'EntityMetadataTypes',
+                'ByteMetadataProperty',
+                'ShortMetadataProperty',
+                'IntMetadataProperty',
+                'FloatMetadataProperty',
+                'StringMetadataProperty',
+                'CompoundTagMetadataProperty',
+                'BlockPosMetadataProperty',
+                'LongMetadataProperty',
+                'Vec3MetadataProperty',
+                'CacheableNbt',
+            ],
+            'knownValueTypes' => ['Vector2', 'Vector3', 'BlockPosition', 'UUID', 'UuidInterface', 'Color', 'DeviceOS', 'BuildPlatform', 'PropertySyncData', 'Tag', 'CompoundTag'],
+            'serializerClasses' => ['CommonTypes', 'Byte', 'LE', 'BE', 'VarInt'],
+            'streamMethods' => [
+                'CommonTypes' => [
+                    'getbool' => 'readBool',
+                    'putbool' => 'writeBool',
+                    'getstring' => 'readString',
+                    'putstring' => 'writeString',
+                    'getvector2' => 'readVec2',
+                    'putvector2' => 'writeVec2',
+                    'getvector3' => 'readVec3',
+                    'putvector3' => 'writeVec3',
+                    'getblockposition' => 'readSignedBlockPos',
+                    'putblockposition' => 'writeSignedBlockPos',
+                    'getuuid' => 'readUUID',
+                    'putuuid' => 'writeUUID',
+                    'getactoruniqueid' => 'readActorUniqueID',
+                    'putactoruniqueid' => 'writeActorUniqueID',
+                    'getactorruntimeid' => 'readActorRuntimeID',
+                    'putactorruntimeid' => 'writeActorRuntimeID',
+                    'getrotationbyte' => 'readRotationByte',
+                    'putrotationbyte' => 'writeRotationByte',
+                    'readrecipenetid' => 'readUnsignedVarInt',
+                    'writerecipenetid' => 'writeUnsignedVarInt',
+                    'readcreativeitemnetid' => 'readUnsignedVarInt',
+                    'writecreativeitemnetid' => 'writeUnsignedVarInt',
+                    'readitemstacknetidvariant' => 'readInt',
+                    'writeitemstacknetidvariant' => 'writeInt',
+                    'readitemstackrequestid' => 'readInt',
+                    'writeitemstackrequestid' => 'writeInt',
+                    'readlegacyitemstackrequestid' => 'readInt',
+                    'writelegacyitemstackrequestid' => 'writeInt',
+                    'readserveritemstackid' => 'readInt',
+                    'writeserveritemstackid' => 'writeInt',
+                ],
+                'Byte' => [
+                    'readunsigned' => 'readUnsignedByte',
+                    'writeunsigned' => 'writeUnsignedByte',
+                    'read' => 'readByte',
+                    'write' => 'writeByte',
+                ],
+                'BE' => [
+                    'readunsignedshort' => 'readUnsignedShortBE',
+                    'writeunsignedshort' => 'writeUnsignedShortBE',
+                    'readsignedshort' => 'readShortBE',
+                    'writesignedshort' => 'writeShortBE',
+                    'readunsignedint' => 'readUnsignedIntBE',
+                    'writeunsignedint' => 'writeUnsignedIntBE',
+                    'readsignedint' => 'readIntBE',
+                    'writesignedint' => 'writeIntBE',
+                    'readunsignedlong' => 'readUnsignedLongBE',
+                    'writeunsignedlong' => 'writeUnsignedLongBE',
+                    'readsignedlong' => 'readLongBE',
+                    'writesignedlong' => 'writeLongBE',
+                    'readfloat' => 'readFloatBE',
+                    'writefloat' => 'writeFloatBE',
+                    'readdouble' => 'readDoubleBE',
+                    'writedouble' => 'writeDoubleBE',
+                ],
+            ],
+            'specialCodecs' => [
+                'CommonTypes' => [
+                    'putvector3nullable' => ['write' => 'stream.writeVec3(%VALUE%.value_or(glm::vec3(0.0f)))'],
+                    'getentitylink' => ['read' => 'EntityLink::read(stream)'],
+                    'putentitylink' => ['write' => '%VALUE%->write(stream)'],
+                    'gethandslot' => ['read' => 'static_cast<HandSlot>(stream.readUnsignedByte().value_or(0))'],
+                    'puthandslot' => ['write' => 'stream.writeUnsignedByte(static_cast<uint8_t>(%VALUE%))'],
+                    'getentitymetadata' => ['read' => '([&]() { EntityMetadataCollection value; value.read(stream); return value; }())'],
+                    'putentitymetadata' => ['write' => '%VALUE%.write(stream)'],
+                    'getskin' => ['read' => 'SkinData::read(stream)'],
+                    'putskin' => ['write' => '%VALUE%->write(stream)'],
+                    'getitemstackwrapper' => ['read' => '([&]() { NetworkItemStack value; value.read(stream); return value; }())'],
+                    'putitemstackwrapper' => ['write' => '%VALUE%.write(stream)'],
+                    'getnbtcompoundroot' => ['read' => 'NetworkNbtSerializer::read(stream)'],
+                    'putnbtcompoundroot' => ['write' => 'NetworkNbtSerializer::write(stream, %VALUE%)'],
+                    'getgamerules' => ['read' => 'GameRule::readRules(stream, %ARG1%)'],
+                    'putgamerules' => ['write' => 'GameRule::writeRules(stream, %VALUE%, %ARG2%)'],
+                ],
+            ],
+            'constructors' => [
+                'BitSet' => 'PlayerAuthInputFlags',
+                'PlayerAuthInputFlags' => 'PlayerAuthInputFlags',
+                'PlayerAuthInputVehicleInfo' => 'PlayerAuthInputVehicleInfo',
+                'PlayerBlockAction' => 'PlayerBlockAction',
+                'PlayerBlockActionStopBreak' => 'PlayerBlockAction',
+                'ItemStack' => 'NetworkItemDescriptor',
+                'ItemStackWrapper' => 'NetworkItemStack',
+                'UpdateAbilitiesPacket' => 'AbilitiesData',
+            ],
+            'constantAliases' => [
+                'Limits' => [
+                    'UINT32_MAX' => 'UINT32_MAX',
+                ],
+                'NBT' => [
+                    'TAG_Compound' => 'NbtTagType::Compound',
+                ],
+                'Nbt' => [
+                    'TAG_Compound' => 'NbtTagType::Compound',
+                ],
+                'PlayerAuthInputFlags' => [
+                    'NUMBER_OF_FLAGS' => 'PlayerAuthInputFlags::Count',
+                ],
+                'DeviceOS' => [
+                    'UNKNOWN' => 'BuildPlatform::Unknown',
+                    'ANDROID' => 'BuildPlatform::Android',
+                    'IOS' => 'BuildPlatform::IOS',
+                    'OSX' => 'BuildPlatform::OSX',
+                    'AMAZON' => 'BuildPlatform::Amazon',
+                    'GEAR_VR' => 'BuildPlatform::GearVR',
+                    'HOLOLENS' => 'BuildPlatform::HoloLens',
+                    'WINDOWS_10' => 'BuildPlatform::Windows10',
+                    'WIN32' => 'BuildPlatform::Win32',
+                    'DEDICATED' => 'BuildPlatform::Dedicated',
+                    'TVOS' => 'BuildPlatform::TVOS',
+                    'PLAYSTATION' => 'BuildPlatform::PlayStation',
+                    'NINTENDO' => 'BuildPlatform::Nintendo',
+                    'XBOX' => 'BuildPlatform::Xbox',
+                    'WINDOWS_PHONE' => 'BuildPlatform::WindowsPhone',
+                    'LINUX' => 'BuildPlatform::Linux',
+                ],
+            ],
+            'getterAliases' => [
+                'ItemStack' => [
+                    'getid' => 'id',
+                    'getmeta' => 'meta',
+                    'getcount' => 'count',
+                    'getblockruntimeid' => 'blockRuntimeId',
+                    'getrawextradata' => 'rawExtraData',
+                ],
+                'ItemStackWrapper' => [
+                    'getstackid' => 'stackId',
+                    'getitemstack' => 'descriptor',
+                ],
+                'PlayerAuthInputVehicleInfo' => [
+                    'getvehiclerotation' => 'vehicleRotation',
+                    'getpredictedvehicleactoruniqueid' => 'predictedVehicleActorUniqueId',
+                ],
+                'PlayerBlockAction' => [
+                    'getactiontype' => 'actionType',
+                ],
+            ],
+            'methodAliases' => [
+                'Vector2' => [
+                    'getx' => 'x',
+                    'gety' => 'y',
+                ],
+                'BlockPosition' => [
+                    'getx' => 'x',
+                    'gety' => 'y',
+                    'getz' => 'z',
+                ],
+                'BitSet' => [
+                    'get' => 'get',
+                    'set' => 'set',
+                ],
+                'PlayerAuthInputFlags' => [
+                    'get' => 'get',
+                    'set' => 'set',
+                ],
+                'UpdateAbilitiesPacket' => [
+                    'decodepayload' => 'read',
+                    'encodepayload' => 'write',
+                ],
+            ],
+            'staticCallAliases' => [
+                'PlayerBlockActionWithBlockInfo' => [
+                    'isvalidactiontype' => 'PlayerBlockAction::isValidActionType(%ARG0%)',
+                    'read' => 'PlayerBlockAction::decodeWithBlockInfo(%ARG0%, %ARG1%)',
+                ],
+                'Color' => [
+                    'fromargb' => 'static_cast<uint32_t>(%VALUE%)',
+                    'fromrgba' => 'static_cast<uint32_t>(%VALUE%)',
+                ],
+                'Binary' => [
+                    'flipintendianness' => 'BinaryStream::flipIntEndianness(%ARG0%)',
+                ],
+                'NetworkNbtSerializer' => [
+                    'readheadless' => 'NetworkNbtSerializer::readHeadless(%ARG0%, %ARG1%, %ARG2%)',
+                    'writeheadless' => 'NetworkNbtSerializer::writeHeadless(%ARG0%)',
+                ],
+            ],
+            'valueWriters' => [
+                'CacheableNbt' => [
+                    'getencodednbt' => 'NetworkNbtSerializer::write(stream, %VALUE%)',
+                ],
+            ],
+        ];
+    }
+}

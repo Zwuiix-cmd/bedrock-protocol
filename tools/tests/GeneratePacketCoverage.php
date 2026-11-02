@@ -36,7 +36,6 @@ $lines = [
     '#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>',
     '#include <bedrock/protocol/pool/PacketPool.hpp>',
 
-    '#include <magic_enum/magic_enum.hpp>',
     '',
     'namespace generated_packet_tests {',
     '',

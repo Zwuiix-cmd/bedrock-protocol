@@ -11,8 +11,13 @@
         }
     },
     "scripts": {
-        "generate": "php tools/generate.php",
-        "clean": "php tools/clean.php"
+        "generate": [
+            "php tools/generate.php",
+            "php tools/tests/GeneratePacketCoverage.php"
+        ],
+        "clean": "php tools/clean.php",
+        "generate-tests": "php tools/tests/GeneratePacketCoverage.php",
+        "parity": "php tools/tests/ProtocolParity.php"
     },
     "minimum-stability": "stable",
     "prefer-stable": true

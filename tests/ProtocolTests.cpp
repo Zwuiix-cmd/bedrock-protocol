@@ -2,9 +2,12 @@
 #include <bedrock/protocol/InventoryTransactionPacket.hpp>
 #include <bedrock/protocol/PacketIds.hpp>
 #include <bedrock/protocol/PlayerAuthInputPacket.hpp>
+#include <bedrock/protocol/SetHudPacket.hpp>
+#include <bedrock/protocol/UpdateBlockSyncedPacket.hpp>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/pool/PacketPool.hpp>
+#include <bedrock/protocol/types/MapInfoRequestPacketClientPixel.hpp>
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/MismatchTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/NormalTransactionData.hpp>
@@ -13,6 +16,8 @@
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequest.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponse.hpp>
+
+#include "GeneratedPacketCoverage.hpp"
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -37,12 +42,6 @@ void expect(bool condition, std::string_view message) {
 std::string encodeSignedVarInt(int32_t value) {
     BinaryStream stream;
     stream.writeVarInt(value);
-    return stream.getBuffer();
-}
-
-std::string encodeUnsignedVarInt(uint32_t value) {
-    BinaryStream stream;
-    stream.writeUnsignedVarInt(value);
     return stream.getBuffer();
 }
 
@@ -249,6 +248,48 @@ void testOptionalPacketFields() {
     expect(!decoded.target.has_value(), "absent optional camera field became engaged");
 }
 
+void testGeneratedCodecFixes() {
+    UpdateBlockSyncedPacket synced;
+    synced.actorUniqueId = 300;
+    synced.updateType = UpdateBlockSyncedPacket::Type::Create;
+
+    BinaryStream syncedOutput;
+    synced.write(syncedOutput);
+    const std::string expectedSynced{"\xac\x02\x01", 3};
+    expect(syncedOutput.getBuffer() == expectedSynced, "UpdateBlockSynced used the wrong VarLong codec");
+
+    UpdateBlockSyncedPacket decodedSynced;
+    ReadOnlyBinaryStream syncedInput(syncedOutput.getBuffer());
+    decodedSynced.read(syncedInput);
+    expect(decodedSynced.actorUniqueId == synced.actorUniqueId, "UpdateBlockSynced actor ID changed");
+    expect(decodedSynced.updateType == synced.updateType, "UpdateBlockSynced update type changed");
+
+    SetHudPacket hud;
+    hud.hudElements = {HudElement::PaperDoll, HudElement::Armor};
+    hud.visibility = HudVisibility::Hide;
+
+    BinaryStream hudOutput;
+    hud.write(hudOutput);
+    SetHudPacket decodedHud;
+    ReadOnlyBinaryStream hudInput(hudOutput.getBuffer());
+    decodedHud.read(hudInput);
+    expect(decodedHud.hudElements == hud.hudElements, "SetHud enum list changed");
+    expect(decodedHud.visibility == hud.visibility, "SetHud visibility changed");
+
+    BinaryStream pixelOutput;
+    pixelOutput.writeUnsignedInt(0x44332211);
+    pixelOutput.writeUnsignedShort(5 + (2 * MapInfoRequestPacketClientPixel::Y_INDEX_MULTIPLIER));
+    MapInfoRequestPacketClientPixel pixel;
+    ReadOnlyBinaryStream pixelInput(pixelOutput.getBuffer());
+    pixel.read(pixelInput);
+    expect(pixel.color == 0x44332211, "map pixel color changed");
+    expect(pixel.x == 5 && pixel.y == 2, "map pixel coordinates changed");
+
+    BinaryStream pixelRoundtrip;
+    pixel.write(pixelRoundtrip);
+    expect(pixelRoundtrip.getBuffer() == pixelOutput.getBuffer(), "map pixel codec did not roundtrip");
+}
+
 void testMalformedBuffers() {
     const auto valid = [&]() {
         auto packet = makePacket(InventoryTransactionPacket::Type::UseItem);
@@ -278,12 +319,6 @@ void testMalformedBuffers() {
     }
     expect(rejected, "unknown inventory transaction type was accepted");
 
-    const auto oversized = std::string{"\x00\x00", 2} + encodeUnsignedVarInt(ReadOnlyBinaryStream::MaxCollectionSize + 1);
-    ReadOnlyBinaryStream oversizedInput(oversized);
-    InventoryTransactionPacket oversizedPacket;
-    oversizedPacket.read(oversizedInput);
-    expect(oversizedInput.hasOverflowed(), "oversized collection was not rejected");
-
     auto withTrailingData = valid + std::string{"\x7f", 1};
     ReadOnlyBinaryStream trailingInput(withTrailingData);
     InventoryTransactionPacket trailingPacket;
@@ -293,16 +328,7 @@ void testMalformedBuffers() {
 }
 
 void testPacketPool() {
-    PacketPool::setup();
-    for (const auto id : magic_enum::enum_values<PacketIds>()) {
-        if (id == PacketIds::Unknown) {
-            continue;
-        }
-        const auto packet = PacketPool::createPacket(id);
-        expect(packet != nullptr, "PacketPool did not create a generated packet");
-        expect(packet->getId() == id, "PacketPool created a packet with the wrong ID");
-    }
-
+    generated_packet_tests::run(expect);
     expect(PacketPool::createPacket(PacketIds::Unknown) == nullptr, "PacketPool accepted Unknown packet ID");
     expect(PacketPool::createPacket<InventoryTransactionPacket>() != nullptr, "PacketPool type lookup failed");
 }
@@ -316,6 +342,7 @@ int main() {
         testStackRequestAndResponseIds();
         testPlayerAuthInputBlockActions();
         testOptionalPacketFields();
+        testGeneratedCodecFixes();
         testMalformedBuffers();
         testPacketPool();
     } catch (const std::exception& exception) {

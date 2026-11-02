@@ -154,39 +154,29 @@ public:
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
-		if (inputFlags.get(InputData::PERFORM_ITEM_INTERACTION)) {
+		if (inputFlags.get(PlayerAuthInputFlags::PerformItemInteraction)) {
 			itemInteractionData = std::make_shared<ItemInteractionData>();
 			itemInteractionData->read(stream);
 		}
-		if (inputFlags.get(InputData::PERFORM_ITEM_STACK_REQUEST)) {
+		if (inputFlags.get(PlayerAuthInputFlags::PerformItemStackRequest)) {
 			itemStackRequest = std::make_shared<ItemStackRequest>();
 			itemStackRequest->read(stream);
 		}
-		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
+		if (inputFlags.get(PlayerAuthInputFlags::PerformBlockActions)) {
 			blockActions = {};
 			auto max = stream.readVarInt().value_or(0);
 			for (std::size_t i = 0; (i < max); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
-				auto matchSubject = true;
-				switch (matchSubject) {
-					case PlayerBlockAction::isValidActionType(actionType):
-					{
-						blockActions = PlayerBlockAction::decodeWithBlockInfo(stream, actionType);
-						break;
-					}
-					case (actionType == magic_enum::enum_integer(PlayerAction::Stop::Break)):
-					{
-						blockActions = PlayerBlockAction{};
-						break;
-					}
-					default:
-					{
-						throw std::exception{};
-					}
+				if (PlayerBlockAction::isValidActionType(actionType)) {
+					blockActions.value().push_back(PlayerBlockAction::decodeWithBlockInfo(stream, actionType));
+				} else if (actionType == magic_enum::enum_integer(PlayerAction::StopBreak)) {
+					blockActions.value().push_back(PlayerBlockAction{});
+				} else {
+					throw std::exception{};
 				}
 			}
 		}
-		if (inputFlags.get(InputData::IN_CLIENT_PREDICTED_VEHICLE)) {
+		if (inputFlags.get(PlayerAuthInputFlags::InClientPredictedVehicle)) {
 			vehicleInfo.read(stream);
 		}
 		analogMoveVecX = stream.readFloat().value_or(0.0f);

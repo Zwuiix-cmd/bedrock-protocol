@@ -536,6 +536,9 @@ private function matchAssignment(
                 : $match->cond;
             return $target . ' = ' . $this->expression($subject, $declaration, $method) . ' != 0;';
         }
+        if ($this->isTrueMatch($match)) {
+            return $this->booleanMatchAssignment($assignment, $match, $targetType, $declaration, $method);
+        }
 
         $matchEnumType = $this->matchEnumType($match, $declaration);
         $subjectType = $this->enumPropertyType($match->cond, $declaration)
@@ -613,6 +616,55 @@ private function matchAssignment(
             $lines[] = "\t}";
         }
         $lines[] = '}';
+        return implode("\n", $lines);
+    }
+
+private function isTrueMatch(Node\Expr\Match_ $match): bool
+    {
+        return $match->cond instanceof Node\Expr\ConstFetch
+            && strtolower($match->cond->name->toString()) === 'true';
+    }
+
+private function booleanMatchAssignment(
+        Node\Expr\Assign $assignment,
+        Node\Expr\Match_ $match,
+        ?string $targetType,
+        array $declaration,
+        ?array $method,
+    ): string {
+        $append = $assignment->var instanceof Node\Expr\ArrayDimFetch
+            && $assignment->var->dim === null;
+        $target = $this->expression($append ? $assignment->var->var : $assignment->var, $declaration, $method);
+        if ($append && $this->isOptionalContainer($assignment->var->var, $declaration)) {
+            $target .= '.value()';
+        }
+        $lines = [];
+        $armIndex = 0;
+        foreach ($match->arms as $arm) {
+            $body = $this->expression($arm->body, $declaration, $method, $targetType);
+            $isDefault = $arm->conds === null;
+            if ($isDefault) {
+                $lines[] = '} else {';
+            } else {
+                $conditions = array_map(
+                    fn (Node\Expr $condition): string => $this->conditionExpression($condition, $declaration, $method),
+                    $arm->conds,
+                );
+                $condition = count($conditions) === 1 ? $conditions[0] : '(' . implode(' || ', $conditions) . ')';
+                $lines[] = ($armIndex === 0 ? 'if' : '} else if') . ' (' . $condition . ') {';
+            }
+            if (str_starts_with(ltrim($body), 'throw ')) {
+                $lines[] = "\t" . $body;
+            } elseif ($append) {
+                $lines[] = "\t" . $target . '.push_back(' . $body . ');';
+            } else {
+                $lines[] = "\t" . $target . ' = ' . $body . ';';
+            }
+            ++$armIndex;
+        }
+        if ($armIndex > 0 && !str_ends_with(end($lines) ?: '', '}')) {
+            $lines[] = '}';
+        }
         return implode("\n", $lines);
     }
 

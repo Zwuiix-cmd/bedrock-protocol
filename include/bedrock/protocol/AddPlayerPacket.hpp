@@ -120,7 +120,7 @@ public:
     AbilitiesData abilitiesPacket;
     std::vector<std::shared_ptr<EntityLink>> links;
     std::string deviceId;
-    BuildPlatform buildPlatform = BuildPlatform::Unknown;
+    BuildPlatform buildPlatform = DeviceOS::Unknown;
 
 public:
     std::string_view getName() override {

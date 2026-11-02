@@ -236,6 +236,9 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
             }
             $referenced = $this->findDeclaration($class);
             if ($referenced !== null) {
+                if ($this->isEnumLikeDeclaration($referenced)) {
+                    return CPPName::type($class);
+                }
                 $enumCase = $this->constantEnumCase($referenced, $name);
                 if ($enumCase !== null) {
                     return explode('::', $enumCase, 2)[0];

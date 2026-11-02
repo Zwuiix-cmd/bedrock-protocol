@@ -293,6 +293,9 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             return CPPName::identifier($name);
         }
         $referenced = $this->findDeclaration($class);
+        if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
+            return CPPName::type($class) . '::' . CPPName::enumCase($name);
+        }
         $alias = $this->catalog->constantAlias($class, $name);
         if ($alias !== null) {
             return $alias;

@@ -24,7 +24,7 @@ public:
     std::shared_ptr<SkinData> skinData;
     std::string xboxUserId;
     std::string platformChatId;
-    BuildPlatform buildPlatform = BuildPlatform::Unknown;
+    BuildPlatform buildPlatform = DeviceOS::Unknown;
     bool isTeacher = false;
     bool isHost = false;
     bool isSubClient = false;

@@ -235,11 +235,7 @@ CPP;
         if ($stopActionExpression === null) {
             throw new RuntimeException('PlayerBlockActionStopBreak::getActionType has no return expression');
         }
-        $stopActionExpression = 'static_cast<int32_t>(' . $stopActionExpression . ')';
-        $validActionExpressions = array_map(
-            static fn (string $expression): string => 'static_cast<int32_t>(' . $expression . ')',
-            $validActionExpressions,
-        );
+        
         $properties = array_values(array_filter(
             $declaration['properties'] ?? [],
             static fn (array $property): bool => !($property['static'] ?? false),
@@ -257,7 +253,7 @@ CPP;
 
 struct PlayerBlockAction {
 CPP;
-        $body .= "\n    int32_t actionType = " . $stopActionExpression . ";\n    glm::ivec3 blockPosition = glm::ivec3(0);\n    int32_t face = 0;\n\n";
+        $body .= "\n    PlayerAction actionType = " . $stopActionExpression . ";\n    glm::ivec3 blockPosition = glm::ivec3(0);\n    int32_t face = 0;\n\n";
         foreach ($properties as $property) {
             $name = CPPName::identifier((string) $property['name']);
             $type = $this->runtimePropertyType($property);
@@ -287,14 +283,18 @@ CPP;
             $body .= '        ' . $name . ' = ' . $this->runtimeReadExpression($property, true) . ";\n";
         }
         $body .= "        if (actionType != " . $stopActionExpression . " && isValidActionType(actionType)) {\n            blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));\n            face = stream.readVarInt().value_or(0);\n        }\n";
-        $body .= "    }\n\n    static bool isValidActionType(int32_t value) noexcept {\n";
+        $body .= "    }\n\n    static bool isValidActionType(PlayerAction value) noexcept {\n";
         $body .= '        return ' . implode(' || ', array_map(static fn (string $value): string => 'value == ' . $value, $validActionExpressions)) . ";\n    }\n\n";
+        $body .= "    static bool isValidActionType(int32_t value) noexcept {\n        return isValidActionType(static_cast<PlayerAction>(value));\n    }\n\n";
         $body .= <<<'CPP'
-    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
+    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, PlayerAction value) {
         PlayerBlockAction result;
         result.actionType = value;
         result.read(stream);
         return result;
+    }
+    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
+        return decodeWithBlockInfo(stream, static_cast<PlayerAction>(value));
     }
 };
 CPP;

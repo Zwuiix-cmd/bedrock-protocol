@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <memory>
+
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
 
 class SkinAnimation {
@@ -31,14 +24,14 @@ public:
     std::shared_ptr<SkinImage> image;
     Type type;
     float frames;
-    Type expressionType;
+    Expression expressionType;
 
     SkinAnimation() = default;
     explicit SkinAnimation(
         const std::shared_ptr<SkinImage>& imageValue,
         const Type& typeValue,
         const float& framesValue,
-        const Type& expressionTypeValue
+        const Expression& expressionTypeValue
     ) :
         image(imageValue),
         type(typeValue),
@@ -50,17 +43,17 @@ public:
             stream.readUnsignedInt().value_or(0)
         ).value_or(Type::Head);
         frames = stream.readFloat().value_or(0.0f);
-        expressionType = magic_enum::enum_cast<Type>(
+        expressionType = magic_enum::enum_cast<Expression>(
             stream.readUnsignedInt().value_or(0)
-        ).value_or(Type::Head);
+        ).value_or(Expression::Linear);
         image = std::make_shared<SkinImage>();
         image->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedInt(type);
+        stream.writeInt(magic_enum::enum_integer(type));
         stream.writeFloat(frames);
-        stream.writeUnsignedInt(expressionType);
+        stream.writeInt(magic_enum::enum_integer(expressionType));
         image->write(stream);
     }
 };

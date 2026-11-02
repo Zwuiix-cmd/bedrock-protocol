@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/BeaconPaymentStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/CraftRecipeAutoStackRequestAction.hpp>
@@ -56,7 +50,7 @@ public:
         filterStringCause = stream.readInt().value_or(0);
         requestId = stream.readInt().value_or(0);
         actions = stream.readList([&]() {
-            return ItemStackRequestAction::decode(stream);
+            return ItemStackRequestAction::create(stream);
         });
         filterStrings = stream.readList([&]() {
             return stream.readString().value_or("");

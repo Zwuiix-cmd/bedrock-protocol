@@ -88,7 +88,6 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/AbilitiesData.hpp>
 #include <bedrock/protocol/types/BuildPlatform.hpp>
-#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/entity/EntityLink.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/entity/PropertySyncData.hpp>
@@ -114,13 +113,13 @@ public:
     float yaw = 0.0f;
     float headYaw = 0.0f;
     NetworkItemStack item;
-    GameMode gameMode;
+    int32_t gameMode;
     EntityMetadataCollection metadata;
     PropertySyncData syncedProperties;
     AbilitiesData abilitiesPacket;
     std::vector<std::shared_ptr<EntityLink>> links;
     std::string deviceId;
-    BuildPlatform buildPlatform = DeviceOS::Unknown;
+    BuildPlatform buildPlatform = BuildPlatform::Unknown;
 
 public:
     std::string_view getName() override {
@@ -137,12 +136,10 @@ public:
 		pitch = stream.readFloat().value_or(0.0f);
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		item.read(stream);
-		gameMode = magic_enum::enum_cast<GameMode>(
-			stream.readVarInt().value_or(0)
-		).value_or(GameMode::Survival);
+		item = stream.readValue<NetworkItemStack>();
+		gameMode = stream.readVarInt().value_or(0);
 		metadata.read(stream);
-		syncedProperties.read(stream);
+		syncedProperties = stream.readValue<PropertySyncData>();
 		abilitiesPacket = AbilitiesData{};
 		abilitiesPacket.read(stream);
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
@@ -166,13 +163,13 @@ public:
 		stream.writeFloat(yaw);
 		stream.writeFloat(headYaw);
 		item.write(stream);
-		stream.writeVarInt(magic_enum::enum_integer(gameMode));
+		stream.writeVarInt(gameMode);
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		abilitiesPacket.write(stream);
 		stream.writeUnsignedVarInt(links.size());
 		for (const auto& link : links) {
-			if (magic_enum::enum_integer(link)) magic_enum::enum_integer(link)->write(stream);
+			if (link) link->write(stream);
 		}
 		stream.writeString(deviceId);
 		stream.writeInt(magic_enum::enum_integer(buildPlatform));

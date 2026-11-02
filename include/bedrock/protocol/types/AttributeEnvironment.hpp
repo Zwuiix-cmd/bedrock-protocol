@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/AttributeValue.hpp>
 
 class AttributeEnvironment {
@@ -49,11 +43,11 @@ public:
         totalTransitionTicks = stream.readUnsignedInt().value_or(0);
         easeType = stream.readString().value_or("");
         fromAttribute = stream.readOptional([&]() {
-            return AttributeValue::decode(stream);
+            return AttributeValue::create(stream);
         });
-        attribute = AttributeValue::decode(stream);
+        attribute = AttributeValue::create(stream);
         toAttribute = stream.readOptional([&]() {
-            return AttributeValue::decode(stream);
+            return AttributeValue::create(stream);
         });
     }
 

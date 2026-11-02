@@ -117,7 +117,7 @@ public:
 			std::string_view(stream.readString().value_or(""))
 		).value_or(ClientboundDebugRendererPacket::Type::Clear);
 		data = std::make_shared<DebugMarkerData>();
-		data->read(stream);
+		data.value()->read(stream);
     }
 
     void write(BinaryStream& stream) override {

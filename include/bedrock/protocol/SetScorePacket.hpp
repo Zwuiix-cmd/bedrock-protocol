@@ -122,17 +122,17 @@ public:
 				entry->scoreboardId = stream.readVarLong().value_or(0);
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
-				if (type != magic_enum::enum_integer(Type::Remove)) {
+				if (type != Type::Remove) {
 					entry->type = magic_enum::enum_cast<ScorePacketEntry::Type>(
 						stream.readUnsignedByte().value_or(0)
 					).value_or(ScorePacketEntry::Type::Player);
 					switch (entry->type) {
-						case magic_enum::enum_integer(ScorePacketEntry::Type::Player):
-						case magic_enum::enum_integer(ScorePacketEntry::Type::Entity): {
+						case ScorePacketEntry::Type::Player:
+						case ScorePacketEntry::Type::Entity: {
 							entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
 							break;
 						}
-						case magic_enum::enum_integer(ScorePacketEntry::Type::FakePlayer): {
+						case ScorePacketEntry::Type::FakePlayer: {
 							entry->customName = stream.readString().value_or("");
 							break;
 						}
@@ -153,15 +153,15 @@ public:
 			stream.writeVarLong(entry->scoreboardId);
 			stream.writeString(entry->objectiveName);
 			stream.writeInt(entry->score);
-			if (type != magic_enum::enum_integer(Type::Remove)) {
+			if (type != Type::Remove) {
 				stream.writeUnsignedByte(magic_enum::enum_integer(entry->type));
 				switch (entry->type) {
-					case magic_enum::enum_integer(ScorePacketEntry::Type::Player):
-					case magic_enum::enum_integer(ScorePacketEntry::Type::Entity): {
+					case ScorePacketEntry::Type::Player:
+					case ScorePacketEntry::Type::Entity: {
 						stream.writeActorUniqueID(*(entry->actorUniqueId));
 						break;
 					}
-					case magic_enum::enum_integer(ScorePacketEntry::Type::FakePlayer): {
+					case ScorePacketEntry::Type::FakePlayer: {
 						stream.writeString(*(entry->customName));
 						break;
 					}

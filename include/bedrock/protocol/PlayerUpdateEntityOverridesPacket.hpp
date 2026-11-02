@@ -114,9 +114,9 @@ public:
 		updateType = magic_enum::enum_cast<OverrideUpdateType>(
 			stream.readUnsignedByte().value_or(0)
 		).value_or(OverrideUpdateType::ClearOverrides);
-		if (updateType == magic_enum::enum_integer(OverrideUpdateType::SetIntOverride)) {
+		if (updateType == OverrideUpdateType::SetIntOverride) {
 			intOverrideValue = stream.readInt().value_or(0);
-		} else if (updateType == magic_enum::enum_integer(OverrideUpdateType::SetFloatOverride)) {
+		} else if (updateType == OverrideUpdateType::SetFloatOverride) {
 			floatOverrideValue = stream.readFloat().value_or(0.0f);
 		}
     }
@@ -125,12 +125,12 @@ public:
 		stream.writeActorRuntimeID(actorRuntimeId);
 		stream.writeUnsignedVarInt(propertyIndex);
 		stream.writeUnsignedByte(magic_enum::enum_integer(updateType));
-		if (updateType == magic_enum::enum_integer(OverrideUpdateType::SetIntOverride)) {
+		if (updateType == OverrideUpdateType::SetIntOverride) {
 			if (!intOverrideValue) {
 				throw std::exception{};
 			}
 			stream.writeInt(*(intOverrideValue));
-		} else if (updateType == magic_enum::enum_integer(OverrideUpdateType::SetFloatOverride)) {
+		} else if (updateType == OverrideUpdateType::SetFloatOverride) {
 			if (!floatOverrideValue) {
 				throw std::exception{};
 			}

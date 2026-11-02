@@ -96,11 +96,9 @@ public:
     }
 
 public:
-    enum class Action : uint8_t {
-        Query = 0,
-    };
+    static constexpr int64_t ACTION_QUERY = 0;
 
-    Action action;
+    uint8_t action;
     int32_t trackingId;
 
 public:
@@ -109,14 +107,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = magic_enum::enum_cast<Action>(
-			stream.readUnsignedByte().value_or(0)
-		).value_or(Action::Query);
+		action = stream.readUnsignedByte().value_or(0);
 		trackingId = stream.readVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(magic_enum::enum_integer(action));
+		stream.writeUnsignedByte(action);
 		stream.writeVarInt(trackingId);
     }
 };

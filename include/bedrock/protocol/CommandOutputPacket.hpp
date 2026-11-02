@@ -154,7 +154,7 @@ public:
 			stream.writeBool(message->isInternal);
 			stream.writeUnsignedVarInt(message->parameters.size());
 			for (const auto& parameter : message->parameters) {
-				stream.writeString(magic_enum::enum_integer(parameter));
+				stream.writeString(parameter);
 			}
 		}
 		stream.writeOptional(data, [&](const auto& value) {

@@ -131,7 +131,7 @@ public:
 		).value_or(Mode::Normal);
 		onGround = stream.readBool().value_or(false);
 		ridingActorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		if (magic_enum::enum_integer(mode) == magic_enum::enum_integer(MovePlayerPacket::MODE_TELEPORT)) {
+		if (magic_enum::enum_integer(mode) == magic_enum::enum_integer(MovePlayerPacket::Mode::Teleport)) {
 			teleportCause = stream.readInt().value_or(0);
 			teleportItem = stream.readInt().value_or(0);
 		}
@@ -147,7 +147,7 @@ public:
 		stream.writeUnsignedByte(magic_enum::enum_integer(mode));
 		stream.writeBool(onGround);
 		stream.writeActorRuntimeID(ridingActorRuntimeId);
-		if (magic_enum::enum_integer(mode) == magic_enum::enum_integer(MovePlayerPacket::MODE_TELEPORT)) {
+		if (magic_enum::enum_integer(mode) == magic_enum::enum_integer(MovePlayerPacket::Mode::Teleport)) {
 			stream.writeInt(teleportCause);
 			stream.writeInt(teleportItem);
 		}

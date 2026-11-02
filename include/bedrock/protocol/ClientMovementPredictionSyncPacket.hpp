@@ -118,7 +118,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		flags.read(stream);
+		flags = stream.readValue<PlayerAuthInputFlags>();
 		scale = stream.readFloat().value_or(0.0f);
 		width = stream.readFloat().value_or(0.0f);
 		height = stream.readFloat().value_or(0.0f);

@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <optional>
+#include <string>
+
 
 class ScorePacketEntry {
 public:
@@ -50,7 +44,7 @@ public:
         stream.writeVarLong(scoreboardId);
         stream.writeString(objectiveName);
         stream.writeInt(score);
-        stream.writeUnsignedByte(type);
+        stream.writeInt(magic_enum::enum_integer(type));
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
             stream.writeActorUniqueID(optionalValue);
         });

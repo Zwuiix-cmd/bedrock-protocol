@@ -1,18 +1,10 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 
@@ -41,11 +33,11 @@ public:
         ).value_or(Action::Release);
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        itemInHand.read(stream);
+        itemInHand = stream.readValue<NetworkItemStack>();
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeUnsignedVarInt(actionType);
+        stream.writeInt(magic_enum::enum_integer(actionType));
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(headPosition);
         itemInHand.write(stream);

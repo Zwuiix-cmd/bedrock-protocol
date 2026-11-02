@@ -1,18 +1,13 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/BuildPlatform.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
 
@@ -24,7 +19,7 @@ public:
     std::shared_ptr<SkinData> skinData;
     std::string xboxUserId;
     std::string platformChatId;
-    BuildPlatform buildPlatform = DeviceOS::Unknown;
+    BuildPlatform buildPlatform = BuildPlatform::Unknown;
     bool isTeacher = false;
     bool isHost = false;
     bool isSubClient = false;
@@ -56,7 +51,7 @@ public:
         stream.writeString(username);
         stream.writeString(xboxUserId);
         stream.writeString(platformChatId);
-        stream.writeInt(buildPlatform);
+        stream.writeInt(magic_enum::enum_integer(buildPlatform));
         stream.writeBool(isTeacher);
         stream.writeBool(isHost);
         stream.writeBool(isSubClient);

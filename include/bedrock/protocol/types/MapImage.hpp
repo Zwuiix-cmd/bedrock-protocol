@@ -1,18 +1,16 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <exception>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
 
 class MapImage {
 public:
@@ -50,7 +48,7 @@ public:
 		pixels = pixelsValue;
     }
 
-    static std::shared_ptr<MapImage> decode(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
+    static std::shared_ptr<MapImage> create(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
 		if (width > magic_enum::enum_integer(Max::Width)) {
 			throw std::exception{};
 		}

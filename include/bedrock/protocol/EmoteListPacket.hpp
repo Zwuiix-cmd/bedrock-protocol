@@ -116,7 +116,7 @@ public:
 		stream.writeActorRuntimeID(playerActorRuntimeId);
 		stream.writeUnsignedVarInt(emoteIds.size());
 		for (const auto& emoteId : emoteIds) {
-			stream.writeUUID(magic_enum::enum_integer(emoteId));
+			stream.writeUUID(emoteId);
 		}
     }
 };

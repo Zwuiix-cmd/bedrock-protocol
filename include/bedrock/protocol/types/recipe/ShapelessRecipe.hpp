@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
@@ -53,16 +47,14 @@ public:
 		(void)0;
     }
 
-    static std::shared_ptr<ShapelessRecipe> decode(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
+    static std::shared_ptr<ShapelessRecipe> create(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<ShapelessRecipe>();
         result->recipeId = stream.readString().value_or("");
         result->blockName = stream.readString().value_or("");
         result->priority = stream.readVarInt().value_or(0);
         result->inputs = stream.readObjectList<RecipeIngredient>();
         result->outputs = stream.readList([&]() {
-            NetworkItemDescriptor value;
-            value.read(stream);
-            return value;
+            return stream.readValue<NetworkItemDescriptor>();
         });
         result->uuid = stream.readUUID().value_or("");
         result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
@@ -77,9 +69,7 @@ public:
         priority = stream.readVarInt().value_or(0);
         inputs = stream.readObjectList<RecipeIngredient>();
         outputs = stream.readList([&]() {
-            NetworkItemDescriptor value;
-            value.read(stream);
-            return value;
+            return stream.readValue<NetworkItemDescriptor>();
         });
         uuid = stream.readUUID().value_or("");
         unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();

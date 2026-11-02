@@ -88,10 +88,7 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
-#include <bedrock/protocol/types/InputMode.hpp>
-#include <bedrock/protocol/types/InteractionMode.hpp>
 #include <bedrock/protocol/types/ItemInteractionData.hpp>
-#include <bedrock/protocol/types/PlayMode.hpp>
 #include <bedrock/protocol/types/PlayerAuthInputFlags.hpp>
 #include <bedrock/protocol/types/PlayerAuthInputVehicleInfo.hpp>
 #include <bedrock/protocol/types/PlayerBlockAction.hpp>
@@ -114,9 +111,9 @@ public:
     float moveVecX;
     float moveVecZ;
     PlayerAuthInputFlags inputFlags;
-    InputMode inputMode;
-    PlayMode playMode;
-    InteractionMode interactionMode;
+    uint32_t inputMode;
+    uint32_t playMode;
+    uint32_t interactionMode;
     glm::vec2 interactRotation;
     uint64_t tick;
     glm::vec3 delta;
@@ -141,28 +138,22 @@ public:
 		moveVecX = stream.readFloat().value_or(0.0f);
 		moveVecZ = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		inputFlags.read(stream);
-		inputMode = magic_enum::enum_cast<InputMode>(
-			stream.readUnsignedVarInt().value_or(0)
-		).value_or(InputMode::MouseKeyboard);
-		playMode = magic_enum::enum_cast<PlayMode>(
-			stream.readUnsignedVarInt().value_or(0)
-		).value_or(PlayMode::Normal);
-		interactionMode = magic_enum::enum_cast<InteractionMode>(
-			stream.readUnsignedVarInt().value_or(0)
-		).value_or(InteractionMode::Touch);
+		inputFlags = stream.readValue<PlayerAuthInputFlags>();
+		inputMode = stream.readUnsignedVarInt().value_or(0);
+		playMode = stream.readUnsignedVarInt().value_or(0);
+		interactionMode = stream.readUnsignedVarInt().value_or(0);
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
-		if (inputFlags.get(PlayerAuthInputFlags::PerformItemInteraction)) {
+		if (inputFlags.get(InputData::PERFORM_ITEM_INTERACTION)) {
 			itemInteractionData = std::make_shared<ItemInteractionData>();
-			itemInteractionData->read(stream);
+			itemInteractionData.value()->read(stream);
 		}
-		if (inputFlags.get(PlayerAuthInputFlags::PerformItemStackRequest)) {
+		if (inputFlags.get(InputData::PERFORM_ITEM_STACK_REQUEST)) {
 			itemStackRequest = std::make_shared<ItemStackRequest>();
-			itemStackRequest->read(stream);
+			itemStackRequest.value()->read(stream);
 		}
-		if (inputFlags.get(PlayerAuthInputFlags::PerformBlockActions)) {
+		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
 			blockActions = {};
 			auto max = stream.readVarInt().value_or(0);
 			for (std::size_t i = 0; (i < max); ++i) {
@@ -176,8 +167,9 @@ public:
 				}
 			}
 		}
-		if (inputFlags.get(PlayerAuthInputFlags::InClientPredictedVehicle)) {
-			vehicleInfo.read(stream);
+		if (inputFlags.get(InputData::IN_CLIENT_PREDICTED_VEHICLE)) {
+			vehicleInfo.emplace();
+			vehicleInfo.value().read(stream);
 		}
 		analogMoveVecX = stream.readFloat().value_or(0.0f);
 		analogMoveVecZ = stream.readFloat().value_or(0.0f);
@@ -193,9 +185,9 @@ public:
 		stream.writeFloat(moveVecZ);
 		stream.writeFloat(headYaw);
 		inputFlags.write(stream);
-		stream.writeUnsignedVarInt(magic_enum::enum_integer(inputMode));
-		stream.writeUnsignedVarInt(magic_enum::enum_integer(playMode));
-		stream.writeUnsignedVarInt(magic_enum::enum_integer(interactionMode));
+		stream.writeUnsignedVarInt(inputMode);
+		stream.writeUnsignedVarInt(playMode);
+		stream.writeUnsignedVarInt(interactionMode);
 		stream.writeVec2(interactRotation);
 		stream.writeUnsignedVarLong(tick);
 		stream.writeVec3(delta);

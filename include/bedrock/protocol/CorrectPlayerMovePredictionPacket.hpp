@@ -105,7 +105,7 @@ public:
     glm::vec3 delta;
     bool onGround;
     uint64_t tick;
-    Prediction predictionType;
+    Type predictionType;
     glm::vec2 vehicleRotation;
     std::optional<float> vehicleAngularVelocity;
 
@@ -115,9 +115,9 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		predictionType = magic_enum::enum_cast<Prediction>(
+		predictionType = magic_enum::enum_cast<Type>(
 			stream.readUnsignedByte().value_or(0)
-		).value_or(Prediction::TypePlayer);
+		).value_or(Type{});
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
 		vehicleRotation = glm::vec2{stream.readFloat().value_or(0.0f), stream.readFloat().value_or(0.0f)};

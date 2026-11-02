@@ -109,8 +109,7 @@ public:
 		eventId = stream.readVarInt().value_or(0);
 		auto offset = stream.position();
 		try {
-			eventData = std::make_shared<CompoundTag>();
-			eventData->read(stream);
+			eventData = NetworkNbtSerializer::readHeadless(stream.data(), NbtTagType::Compound, offset);
 		} catch (const std::exception& e) {
 			throw;
 		}

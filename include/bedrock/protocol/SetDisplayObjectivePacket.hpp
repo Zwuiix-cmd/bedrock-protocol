@@ -112,7 +112,7 @@ public:
     std::string objectiveName;
     std::string displayName;
     std::string criteriaName;
-    Sort sortOrder;
+    Order sortOrder;
 
 public:
     std::string_view getName() override {
@@ -126,9 +126,9 @@ public:
 		objectiveName = stream.readString().value_or("");
 		displayName = stream.readString().value_or("");
 		criteriaName = stream.readString().value_or("");
-		sortOrder = magic_enum::enum_cast<Sort>(
+		sortOrder = magic_enum::enum_cast<Order>(
 			stream.readVarInt().value_or(0)
-		).value_or(Sort::OrderAscending);
+		).value_or(Order{});
     }
 
     void write(BinaryStream& stream) override {

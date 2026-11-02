@@ -1,18 +1,10 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <vector>
+
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
 
@@ -32,9 +24,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         iterations = stream.readUnsignedByte().value_or(0);
         results = stream.readList([&]() {
-            NetworkItemDescriptor value;
-            value.read(stream);
-            return value;
+            return stream.readValue<NetworkItemDescriptor>();
         });
     }
 

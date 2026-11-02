@@ -124,13 +124,13 @@ public:
 		postProcessFilter = stream.readString().value_or("");
 		screenshotBorderResourcePath = stream.readString().value_or("");
 		agentCapabilities = std::make_shared<EducationSettingsAgentCapabilities>();
-		agentCapabilities->read(stream);
+		agentCapabilities.value()->read(stream);
 		codeBuilderOverrideUri = stream.readOptional([&]() {
 			return stream.readString().value_or("");
 		});
 		hasQuiz = stream.readBool().value_or(false);
 		linkSettings = std::make_shared<EducationSettingsExternalLinkSettings>();
-		linkSettings->read(stream);
+		linkSettings.value()->read(stream);
     }
 
     void write(BinaryStream& stream) override {

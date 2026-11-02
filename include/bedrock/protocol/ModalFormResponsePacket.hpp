@@ -103,7 +103,7 @@ public:
 
     uint32_t formId;
     std::optional<std::string> formData;
-    std::optional<Cancel> cancelReason;
+    std::optional<Reason> cancelReason;
 
 public:
     std::string_view getName() override {
@@ -116,9 +116,9 @@ public:
 			return stream.readString().value_or("");
 		});
 		cancelReason = stream.readOptional([&]() {
-			return magic_enum::enum_cast<Cancel>(
+			return magic_enum::enum_cast<Reason>(
 			stream.readUnsignedByte().value_or(0)
-		).value_or(Cancel::ReasonClosed);
+		).value_or(Reason{});
 		});
     }
 

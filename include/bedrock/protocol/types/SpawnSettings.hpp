@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <string>
+
 
 class SpawnSettings {
 public:
@@ -21,17 +14,17 @@ public:
         UserDefined = 1,
     };
 
-    Biome biomeType;
+    Type biomeType;
     std::string biomeName;
     int32_t dimension;
 
     SpawnSettings() = default;
-    explicit SpawnSettings(const Biome& biomeTypeValue, const std::string& biomeNameValue, const int32_t& dimensionValue) : biomeType(biomeTypeValue), biomeName(biomeNameValue), dimension(dimensionValue) {}
+    explicit SpawnSettings(const Type& biomeTypeValue, const std::string& biomeNameValue, const int32_t& dimensionValue) : biomeType(biomeTypeValue), biomeName(biomeNameValue), dimension(dimensionValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        biomeType = magic_enum::enum_cast<Biome>(
+        biomeType = magic_enum::enum_cast<Type>(
             stream.readUnsignedShort().value_or(0)
-        ).value_or(Biome::TypeDefault);
+        ).value_or(Type{});
         biomeName = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
     }

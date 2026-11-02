@@ -115,17 +115,17 @@ public:
 		switch (typeId) {
 			case PackSettingType::Float:
 			{
-				packSetting = FloatPackSetting::read(stream, name);
+				packSetting = FloatPackSetting::create(stream, name);
 				break;
 			}
 			case PackSettingType::Bool:
 			{
-				packSetting = BoolPackSetting::read(stream, name);
+				packSetting = BoolPackSetting::create(stream, name);
 				break;
 			}
 			case PackSettingType::String:
 			{
-				packSetting = StringPackSetting::read(stream, name);
+				packSetting = StringPackSetting::create(stream, name);
 				break;
 			}
 		}

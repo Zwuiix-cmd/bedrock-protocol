@@ -124,7 +124,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		std::remove_cvref_t<decltype(stream.readUnsignedShort().value_or(0))> raw{};
+		uint16_t raw{};
 		bossActorUniqueId = stream.readActorUniqueID().value_or(0);
 		eventType = magic_enum::enum_cast<Type>(
 			stream.readUnsignedVarInt().value_or(0)

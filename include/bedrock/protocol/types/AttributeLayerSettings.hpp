@@ -1,18 +1,10 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+
 #include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightFloat.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightString.hpp>
@@ -40,7 +32,7 @@ public:
         priority = stream.readInt().value_or(0);
         enabled = stream.readBool().value_or(false);
         transitionsPaused = stream.readBool().value_or(false);
-        weight = AttributeLayerSettingsWeight::decode(stream);
+        weight = AttributeLayerSettingsWeight::create(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

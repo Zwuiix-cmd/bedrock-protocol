@@ -117,7 +117,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		std::remove_cvref_t<decltype(((!message) && (!filteredMessage)))> skipMessage{};
+		bool skipMessage{};
 		stream.writeVarInt(reason);
 		stream.writeBool(skipMessage = ((!message) && (!filteredMessage)));
 		if (!skipMessage) {

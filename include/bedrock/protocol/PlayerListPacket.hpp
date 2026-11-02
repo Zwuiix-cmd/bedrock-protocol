@@ -118,7 +118,7 @@ public:
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < count); ++i) {
 			auto entry = std::make_shared<PlayerListEntry>();
-			if (type == magic_enum::enum_integer(Type::Add)) {
+			if (type == Type::Add) {
 				entry->uuid = stream.readUUID().value_or("");
 				entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
 				entry->username = stream.readString().value_or("");
@@ -138,7 +138,7 @@ public:
 			}
 			entries.push_back(entry);
 		}
-		if (type == magic_enum::enum_integer(Type::Add)) {
+		if (type == Type::Add) {
 			for (std::size_t i = 0; (i < count); ++i) {
 				entries[i]->skinData->isVerified = stream.readBool().value_or(false);
 			}
@@ -149,7 +149,7 @@ public:
 		stream.writeUnsignedByte(magic_enum::enum_integer(type));
 		stream.writeUnsignedVarInt(entries.size());
 		for (const auto& entry : entries) {
-			if (type == magic_enum::enum_integer(Type::Add)) {
+			if (type == Type::Add) {
 				stream.writeUUID(entry->uuid);
 				stream.writeActorUniqueID(entry->actorUniqueId);
 				stream.writeString(entry->username);
@@ -165,7 +165,7 @@ public:
 				stream.writeUUID(entry->uuid);
 			}
 		}
-		if (type == magic_enum::enum_integer(Type::Add)) {
+		if (type == Type::Add) {
 			for (const auto& entry : entries) {
 				stream.writeBool(entry->skinData->isVerified);
 			}

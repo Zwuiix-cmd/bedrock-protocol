@@ -4,7 +4,7 @@
 #include <bedrock/protocol/types/TypesGeneratedIncludes1.hpp>
 
 
-inline std::shared_ptr<AttributeLayerSettingsWeight> AttributeLayerSettingsWeight::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<AttributeLayerSettingsWeight> AttributeLayerSettingsWeight::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 0: {
             auto value = std::make_shared<AttributeLayerSettingsWeightFloat>();
@@ -21,7 +21,7 @@ inline std::shared_ptr<AttributeLayerSettingsWeight> AttributeLayerSettingsWeigh
     }
 }
 
-inline std::shared_ptr<AttributeLayerSyncPayload> AttributeLayerSyncPayload::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<AttributeLayerSyncPayload> AttributeLayerSyncPayload::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<AttributeUpdateLayerSettings>();
@@ -48,7 +48,7 @@ inline std::shared_ptr<AttributeLayerSyncPayload> AttributeLayerSyncPayload::dec
     }
 }
 
-inline std::shared_ptr<AttributeValue> AttributeValue::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<AttributeValue> AttributeValue::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 0: {
             auto value = std::make_shared<AttributeValueBool>();
@@ -70,7 +70,7 @@ inline std::shared_ptr<AttributeValue> AttributeValue::decode(ReadOnlyBinaryStre
     }
 }
 
-inline std::shared_ptr<AttributeValueColorValue> AttributeValueColorValue::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<AttributeValueColorValue> AttributeValueColorValue::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<AttributeValueColorArray>();
@@ -87,7 +87,7 @@ inline std::shared_ptr<AttributeValueColorValue> AttributeValueColorValue::decod
     }
 }
 
-inline std::shared_ptr<DataStore> DataStore::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<DataStore> DataStore::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<DataStoreChange>();
@@ -109,7 +109,7 @@ inline std::shared_ptr<DataStore> DataStore::decode(ReadOnlyBinaryStream& stream
     }
 }
 
-inline std::shared_ptr<DataStoreValue> DataStoreValue::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<DataStoreValue> DataStoreValue::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<BoolDataStoreValue>();
@@ -131,7 +131,7 @@ inline std::shared_ptr<DataStoreValue> DataStoreValue::decode(ReadOnlyBinaryStre
     }
 }
 
-inline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<GameRule> GameRule::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<BoolGameRule>();
@@ -153,11 +153,11 @@ inline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream) 
     }
 }
 
-inline std::shared_ptr<GameRule> GameRule::decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
+inline std::shared_ptr<GameRule> GameRule::create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
-        case 1: return BoolGameRule::decode(stream, isPlayerModifiable);
-        case 3: return FloatGameRule::decode(stream, isPlayerModifiable);
-        case 2: return IntGameRule::decode(stream, isPlayerModifiable, isStartGame);
+        case 1: return BoolGameRule::create(stream, isPlayerModifiable);
+        case 3: return FloatGameRule::create(stream, isPlayerModifiable);
+        case 2: return IntGameRule::create(stream, isPlayerModifiable, isStartGame);
         default: return nullptr;
     }
 }
@@ -168,7 +168,7 @@ inline std::map<std::string, std::shared_ptr<GameRule>> GameRule::readRules(Read
     for (uint32_t index = 0; index < count; ++index) {
         auto name = stream.readString().value_or("");
         const auto isPlayerModifiable = stream.readBool().value_or(false);
-        rules.emplace(std::move(name), decode(stream, isPlayerModifiable, isStartGame));
+        rules.emplace(std::move(name), GameRule::create(stream, isPlayerModifiable, isStartGame));
     }
     return rules;
 }
@@ -184,7 +184,7 @@ inline void GameRule::writeRules(BinaryStream& stream, const std::map<std::strin
     }
 }
 
-inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 10: {
             auto value = std::make_shared<BeaconPaymentStackRequestAction>();
@@ -281,7 +281,7 @@ inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::decode(Re
     }
 }
 
-inline std::shared_ptr<PackSetting> PackSetting::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<PackSetting> PackSetting::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 2: {
             auto value = std::make_shared<StringPackSetting>();
@@ -293,7 +293,7 @@ inline std::shared_ptr<PackSetting> PackSetting::decode(ReadOnlyBinaryStream& st
     }
 }
 
-inline std::shared_ptr<SyncWorldClocksPayload> SyncWorldClocksPayload::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<SyncWorldClocksPayload> SyncWorldClocksPayload::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 2: {
             auto value = std::make_shared<SyncWorldClocksAddTimeMarker>();
@@ -320,7 +320,7 @@ inline std::shared_ptr<SyncWorldClocksPayload> SyncWorldClocksPayload::decode(Re
     }
 }
 
-inline std::shared_ptr<TransactionData> TransactionData::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<TransactionData> TransactionData::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 1: {
             auto value = std::make_shared<MismatchTransactionData>();
@@ -352,7 +352,7 @@ inline std::shared_ptr<TransactionData> TransactionData::decode(ReadOnlyBinarySt
     }
 }
 
-inline std::shared_ptr<ItemDescriptor> ItemDescriptor::decode(ReadOnlyBinaryStream& stream) {
+inline std::shared_ptr<ItemDescriptor> ItemDescriptor::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
         case 5: {
             auto value = std::make_shared<ComplexAliasItemDescriptor>();

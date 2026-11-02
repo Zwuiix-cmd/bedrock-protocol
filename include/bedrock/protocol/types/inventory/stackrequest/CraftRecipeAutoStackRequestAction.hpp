@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <vector>
+
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
 
@@ -53,7 +46,7 @@ public:
 		stream.writeUnsignedByte(repetitions2);
 		stream.writeUnsignedByte(ingredients.size());
 		for (const auto& ingredient : ingredients) {
-			if (magic_enum::enum_integer(ingredient)) magic_enum::enum_integer(ingredient)->write(stream);
+			if (ingredient) ingredient->write(stream);
 		}
     }
 };

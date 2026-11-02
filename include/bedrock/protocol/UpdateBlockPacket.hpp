@@ -112,7 +112,7 @@ public:
     glm::ivec3 blockPosition;
     uint32_t blockRuntimeId;
     Flag flags = Flag::Network;
-    Data dataLayerId = Layer::Normal;
+    Layer dataLayerId = Layer::Normal;
 
 public:
     std::string_view getName() override {
@@ -125,9 +125,9 @@ public:
 		flags = magic_enum::enum_cast<Flag>(
 			stream.readUnsignedVarInt().value_or(0)
 		).value_or(Flag::None);
-		dataLayerId = magic_enum::enum_cast<Data>(
+		dataLayerId = magic_enum::enum_cast<Layer>(
 			stream.readUnsignedVarInt().value_or(0)
-		).value_or(Data::LayerNormal);
+		).value_or(Layer{});
     }
 
     void write(BinaryStream& stream) override {

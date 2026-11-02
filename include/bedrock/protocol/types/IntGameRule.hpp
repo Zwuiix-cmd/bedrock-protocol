@@ -1,18 +1,10 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+
 #include <bedrock/protocol/types/GameRule.hpp>
 
 class IntGameRule : public GameRule {
@@ -28,7 +20,7 @@ public:
 		value = valueValue;
     }
 
-    static std::shared_ptr<IntGameRule> decode(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
+    static std::shared_ptr<IntGameRule> create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
 		return std::make_shared<IntGameRule>((isStartGame ? stream.readUnsignedVarInt().value_or(0) : stream.readUnsignedInt().value_or(0)), isPlayerModifiable);
     }
 

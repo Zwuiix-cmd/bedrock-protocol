@@ -85,7 +85,6 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
-#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 
 class UpdatePlayerGameTypePacket : public Packet {
@@ -97,7 +96,7 @@ public:
     }
 
 public:
-    GameMode gameMode;
+    int32_t gameMode;
     int64_t playerActorUniqueId;
     uint64_t tick;
 
@@ -107,15 +106,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gameMode = magic_enum::enum_cast<GameMode>(
-			stream.readVarInt().value_or(0)
-		).value_or(GameMode::Survival);
+		gameMode = stream.readVarInt().value_or(0);
 		playerActorUniqueId = stream.readActorUniqueID().value_or(0);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(magic_enum::enum_integer(gameMode));
+		stream.writeVarInt(gameMode);
 		stream.writeActorUniqueID(playerActorUniqueId);
 		stream.writeUnsignedVarLong(tick);
     }

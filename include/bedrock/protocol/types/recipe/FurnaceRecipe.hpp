@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 
@@ -40,14 +34,14 @@ public:
 		(void)0;
     }
 
-    static std::shared_ptr<FurnaceRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
+    static std::shared_ptr<FurnaceRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<FurnaceRecipe>();
         result->inputId = stream.readVarInt().value_or(0);
         result->inputMeta = stream.readOptional([&]() {
             return stream.readVarInt().value_or(0);
         });
         result->blockName = stream.readString().value_or("");
-        result->result.read(stream);
+        result->result = stream.readValue<NetworkItemDescriptor>();
         return result;
     }
 
@@ -57,7 +51,7 @@ public:
             return stream.readVarInt().value_or(0);
         });
         blockName = stream.readString().value_or("");
-        result.read(stream);
+        result = stream.readValue<NetworkItemDescriptor>();
     }
 
     void write(BinaryStream& stream) const override {

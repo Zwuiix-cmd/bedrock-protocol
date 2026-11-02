@@ -1,21 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
-#include <bedrock/protocol/types/BuildPlatform.hpp>
-#include <bedrock/protocol/types/GraphicsMode.hpp>
-#include <bedrock/protocol/types/UIProfile.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaPieceTintColor.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaSkinPiece.hpp>
@@ -35,9 +26,9 @@ public:
     int32_t DefaultInputMode;
     std::string DeviceId;
     std::string DeviceModel;
-    ::BuildPlatform DeviceOS;
+    int32_t DeviceOS;
     std::string GameVersion;
-    ::GraphicsMode GraphicsMode;
+    int32_t GraphicsMode;
     int32_t GuiScale;
     bool IsEditorMode;
     std::string LanguageCode;
@@ -66,7 +57,7 @@ public:
     std::string SkinResourcePatch;
     std::string ThirdPartyName;
     bool TrustedSkin;
-    ::UIProfile UIProfile;
+    int32_t UIProfile;
 
     ClientData() = default;
 
@@ -84,13 +75,9 @@ public:
         DefaultInputMode = stream.readInt().value_or(0);
         DeviceId = stream.readString().value_or("");
         DeviceModel = stream.readString().value_or("");
-        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(
-            stream.readInt().value_or(0)
-        ).value_or(BuildPlatform::Unknown);
+        DeviceOS = stream.readInt().value_or(0);
         GameVersion = stream.readString().value_or("");
-        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(
-            stream.readInt().value_or(0)
-        ).value_or(GraphicsMode::Simple);
+        GraphicsMode = stream.readInt().value_or(0);
         GuiScale = stream.readInt().value_or(0);
         IsEditorMode = stream.readBool().value_or(false);
         LanguageCode = stream.readString().value_or("");
@@ -119,9 +106,7 @@ public:
         SkinResourcePatch = stream.readString().value_or("");
         ThirdPartyName = stream.readString().value_or("");
         TrustedSkin = stream.readBool().value_or(false);
-        UIProfile = magic_enum::enum_cast<::UIProfile>(
-            stream.readInt().value_or(0)
-        ).value_or(UIProfile::Classic);
+        UIProfile = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -140,9 +125,9 @@ public:
         stream.writeInt(DefaultInputMode);
         stream.writeString(DeviceId);
         stream.writeString(DeviceModel);
-        stream.writeInt(magic_enum::enum_integer(DeviceOS));
+        stream.writeInt(DeviceOS);
         stream.writeString(GameVersion);
-        stream.writeInt(magic_enum::enum_integer(GraphicsMode));
+        stream.writeInt(GraphicsMode);
         stream.writeInt(GuiScale);
         stream.writeBool(IsEditorMode);
         stream.writeString(LanguageCode);
@@ -175,6 +160,6 @@ public:
         stream.writeString(SkinResourcePatch);
         stream.writeString(ThirdPartyName);
         stream.writeBool(TrustedSkin);
-        stream.writeInt(magic_enum::enum_integer(UIProfile));
+        stream.writeInt(UIProfile);
     }
 };

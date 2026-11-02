@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <exception>
+#include <memory>
+
 #include <bedrock/protocol/types/PlayerBlockAction.hpp>
 
 class PlayerBlockActionWithBlockInfo {
@@ -28,7 +21,7 @@ public:
 		}
     }
 
-    static std::shared_ptr<PlayerBlockActionWithBlockInfo> read(ReadOnlyBinaryStream& stream, const int32_t& actionType) {
+    static std::shared_ptr<PlayerBlockActionWithBlockInfo> create(ReadOnlyBinaryStream& stream, const int32_t& actionType) {
 		auto blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		auto face = stream.readVarInt().value_or(0);
 		return std::make_shared<PlayerBlockActionWithBlockInfo>(actionType, blockPosition, face);

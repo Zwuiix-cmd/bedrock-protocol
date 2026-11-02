@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <exception>
+#include <string>
+
 
 class SkinImage {
 public:
@@ -22,8 +16,8 @@ public:
 
     SkinImage() = default;
     explicit SkinImage(const uint32_t& heightValue, const uint32_t& widthValue, const std::string& dataValue) : height(heightValue), width(widthValue), data(dataValue) {
-		std::remove_cvref_t<decltype(((heightValue * widthValue) * 4))> expected{};
-		std::remove_cvref_t<decltype(dataValue.size())> actual{};
+		int64_t expected{};
+		std::size_t actual{};
 		if ((heightValue < 0) || (widthValue < 0)) {
 			throw std::exception{};
 		}

@@ -140,7 +140,7 @@ public:
 			attributes.push_back(std::make_shared<Attribute>(id, min, max, current, current, std::vector<std::shared_ptr<AttributeModifier>>{}));
 		}
 		metadata.read(stream);
-		syncedProperties.read(stream);
+		syncedProperties = stream.readValue<PropertySyncData>();
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < linkCount); ++i) {
 			links.push_back(stream.readObject<EntityLink>());
@@ -168,7 +168,7 @@ public:
 		syncedProperties.write(stream);
 		stream.writeUnsignedVarInt(links.size());
 		for (const auto& link : links) {
-			if (magic_enum::enum_integer(link)) magic_enum::enum_integer(link)->write(stream);
+			if (link) link->write(stream);
 		}
     }
 };

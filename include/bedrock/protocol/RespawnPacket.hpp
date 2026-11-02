@@ -96,14 +96,14 @@ public:
     }
 
 public:
-    enum class Respawnstate : uint8_t {
+    enum class RespawnState : uint8_t {
         ForSpawn = 0,
         ToSpawn = 1,
         ReadyToSpawn = 2,
     };
 
     glm::vec3 position;
-    Respawnstate respawnState = SEARCHING_FOR_SPAWN;
+    RespawnState respawnState = RespawnState::ForSpawn;
     uint64_t actorRuntimeId;
 
 public:
@@ -113,9 +113,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
-		respawnState = magic_enum::enum_cast<Respawnstate>(
+		respawnState = magic_enum::enum_cast<RespawnState>(
 			stream.readUnsignedByte().value_or(0)
-		).value_or(Respawnstate{});
+		).value_or(RespawnState{});
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
     }
 

@@ -111,11 +111,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		head.read(stream);
-		chest.read(stream);
-		legs.read(stream);
-		feet.read(stream);
-		body.read(stream);
+		head = stream.readValue<NetworkItemStack>();
+		chest = stream.readValue<NetworkItemStack>();
+		legs = stream.readValue<NetworkItemStack>();
+		feet = stream.readValue<NetworkItemStack>();
+		body = stream.readValue<NetworkItemStack>();
     }
 
     void write(BinaryStream& stream) override {

@@ -1,18 +1,10 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/PredictedResult.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
@@ -60,14 +52,14 @@ public:
         triggerType = magic_enum::enum_cast<TriggerType>(
             stream.readVarInt().value_or(0)
         ).value_or(TriggerType::Unknown);
-        itemInHand.read(stream);
+        itemInHand = stream.readValue<NetworkItemStack>();
         clientInteractPrediction = magic_enum::enum_cast<PredictedResult>(
             stream.readVarInt().value_or(0)
         ).value_or(PredictedResult::Failure);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeUnsignedVarInt(actionType);
+        stream.writeInt(magic_enum::enum_integer(actionType));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeVarInt(face);
         stream.writeVarInt(hotbarSlot);

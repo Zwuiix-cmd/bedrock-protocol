@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 
 class PacketShapeData {
@@ -129,7 +123,7 @@ public:
         stream.writeOptional(segments, [&](const auto& optionalValue) {
             stream.writeUnsignedByte(optionalValue);
         });
-        stream.writeOptional(magic_enum::enum_integer(type), [&](const auto& optionalValue) {
+        stream.writeOptional(type, [&](const auto& optionalValue) {
             stream.writeVarInt(magic_enum::enum_integer(optionalValue));
         });
         stream.writeOptional(location, [&](const auto& optionalValue) {

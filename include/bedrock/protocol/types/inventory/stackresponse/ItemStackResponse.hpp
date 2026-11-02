@@ -1,18 +1,13 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <exception>
+#include <memory>
+#include <vector>
+
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
 
 class ItemStackResponse {
@@ -35,7 +30,7 @@ public:
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if ((result != magic_enum::enum_integer(Result::Ok)) && (containerInfos.size() != 0)) {
+		if ((result != Result::Ok) && (containerInfos.size() != 0)) {
 			throw std::exception{};
 		}
     }
@@ -51,7 +46,7 @@ public:
     virtual void write(BinaryStream& stream) const {
 		stream.writeUnsignedByte(magic_enum::enum_integer(result));
 		stream.writeInt(requestId);
-		if (result == magic_enum::enum_integer(Result::Ok)) {
+		if (result == Result::Ok) {
 			stream.writeUnsignedVarInt(containerInfos.size());
 			for (const auto& containerInfo : containerInfos) {
 				containerInfo->write(stream);

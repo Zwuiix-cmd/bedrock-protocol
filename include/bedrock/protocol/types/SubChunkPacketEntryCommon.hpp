@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/SubChunkPacketHeightMapInfo.hpp>
 #include <bedrock/protocol/types/SubChunkPositionOffset.hpp>
 
@@ -38,7 +32,7 @@ public:
         heightMap(heightMapValue),
         renderHeightMap(renderHeightMapValue) {}
 
-    static std::shared_ptr<SubChunkPacketEntryCommon> read(ReadOnlyBinaryStream& stream, const bool& cacheEnabled) {
+    static std::shared_ptr<SubChunkPacketEntryCommon> create(ReadOnlyBinaryStream& stream, const bool& cacheEnabled) {
         auto result = std::make_shared<SubChunkPacketEntryCommon>();
         result->requestResult = stream.readUnsignedByte().value_or(0);
         result->terrainData = stream.readString().value_or("");

@@ -96,7 +96,7 @@ public:
     }
 
 public:
-    enum class Status : uint8_t {
+    enum class Login : uint8_t {
         Success = 0,
         FailedClient = 1,
         FailedServer = 2,
@@ -106,10 +106,11 @@ public:
         FailedServerFull = 7,
         FailedEditorVanilla = 8,
         FailedVanillaEditor = 9,
-        Spawn = 3,
     };
 
-    Status status;
+    static constexpr int64_t PLAYER_SPAWN = 3;
+
+    uint32_t status;
 
 public:
     std::string_view getName() override {
@@ -117,12 +118,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		status = magic_enum::enum_cast<Status>(
-			stream.readUnsignedIntBE().value_or(0)
-		).value_or(Status{});
+		status = stream.readUnsignedIntBE().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedIntBE(magic_enum::enum_integer(status));
+		stream.writeUnsignedIntBE(status);
     }
 };

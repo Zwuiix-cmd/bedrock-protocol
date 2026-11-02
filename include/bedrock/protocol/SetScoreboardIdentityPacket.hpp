@@ -120,7 +120,7 @@ public:
 		    for (std::size_t i = 0; (i < count); ++i) {
 				auto entry = std::make_shared<ScoreboardIdentityPacketEntry>();
 				entry->scoreboardId = stream.readVarLong().value_or(0);
-				if (type == magic_enum::enum_integer(Type::RegisterIdentity)) {
+				if (type == Type::RegisterIdentity) {
 					entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
 				}
 				entries.push_back(entry);
@@ -133,7 +133,7 @@ public:
 		stream.writeUnsignedVarInt(entries.size());
 		for (const auto& entry : entries) {
 			stream.writeVarLong(entry->scoreboardId);
-			if (type == magic_enum::enum_integer(Type::RegisterIdentity)) {
+			if (type == Type::RegisterIdentity) {
 				stream.writeActorUniqueID(*(entry->actorUniqueId));
 			}
 		}

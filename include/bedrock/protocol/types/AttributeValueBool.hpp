@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <string_view>
+
 #include <bedrock/protocol/types/AttributeValue.hpp>
 
 class AttributeValueBool : public AttributeValue {
@@ -48,7 +41,7 @@ public:
     }
 
     void write(BinaryStream& stream) const override {
-		stream.writeBool(magic_enum::enum_name(value));
+		stream.writeBool(value);
 		stream.writeString(magic_enum::enum_name(operation));
     }
 };

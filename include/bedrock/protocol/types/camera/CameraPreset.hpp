@@ -1,24 +1,19 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+
 #include <bedrock/protocol/types/ControlScheme.hpp>
 #include <bedrock/protocol/types/camera/CameraPresetAimAssist.hpp>
 
 class CameraPreset {
 public:
-    enum class Audiolistenertype : uint8_t {
+    enum class Audio : uint8_t {
         ListenerTypeCamera = 0,
         ListenerTypePlayer = 1,
     };
@@ -41,7 +36,7 @@ public:
     std::optional<float> radius;
     std::optional<float> yawLimitMin;
     std::optional<float> yawLimitMax;
-    std::optional<Audiolistenertype> audioListenerType;
+    std::optional<int32_t> audioListenerType;
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
@@ -66,7 +61,7 @@ public:
         const std::optional<float>& radiusValue,
         const std::optional<float>& yawLimitMinValue,
         const std::optional<float>& yawLimitMaxValue,
-        const std::optional<Audiolistenertype>& audioListenerTypeValue,
+        const std::optional<int32_t>& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
         const std::optional<ControlScheme>& controlSchemeValue
@@ -146,9 +141,7 @@ public:
             return stream.readFloat().value_or(0.0f);
         });
         audioListenerType = stream.readOptional([&]() {
-            return magic_enum::enum_cast<Audiolistenertype>(
-            stream.readInt().value_or(0)
-        ).value_or(Audiolistenertype{});
+            return stream.readInt().value_or(0);
         });
         playerEffects = stream.readOptional([&]() {
             return stream.readBool().value_or(false);

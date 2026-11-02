@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 
 class MultiRecipe : public RecipeWithTypeId {
@@ -41,7 +35,7 @@ public:
 		(void)0;
     }
 
-    static std::shared_ptr<MultiRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
+    static std::shared_ptr<MultiRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
 		auto uuid = stream.readUUID().value_or("");
 		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
 		return std::make_shared<MultiRecipe>(typeId, uuid, recipeNetId);

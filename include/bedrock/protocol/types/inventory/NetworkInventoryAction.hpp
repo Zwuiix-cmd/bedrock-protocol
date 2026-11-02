@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <magic_enum/magic_enum.hpp>
+#include <cstdint>
+#include <exception>
+
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 
 class NetworkInventoryAction {
@@ -75,8 +68,8 @@ public:
 			}
 		}
 		inventorySlot = stream.readUnsignedVarInt().value_or(0);
-		oldItem.read(stream);
-		newItem.read(stream);
+		oldItem = stream.readValue<NetworkItemStack>();
+		newItem = stream.readValue<NetworkItemStack>();
 		return;
     }
 

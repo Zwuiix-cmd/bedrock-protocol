@@ -1,19 +1,14 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <memory>
+#include <string>
+#include <type_traits>
 #include <variant>
+#include <vector>
+
+#include <bedrock/protocol/types/command/ConstrainedEnumValue.hpp>
 
 class CommandHardEnum {
 public:

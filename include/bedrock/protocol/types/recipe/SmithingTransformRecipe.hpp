@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
@@ -50,7 +43,7 @@ public:
 		(void)0;
     }
 
-    static std::shared_ptr<SmithingTransformRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
+    static std::shared_ptr<SmithingTransformRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<SmithingTransformRecipe>();
         result->recipeId = stream.readString().value_or("");
         result->blockName = stream.readString().value_or("");
@@ -60,7 +53,7 @@ public:
         result->input->read(stream);
         result->addition = std::make_shared<RecipeIngredient>();
         result->addition->read(stream);
-        result->output.read(stream);
+        result->output = stream.readValue<NetworkItemDescriptor>();
         result->recipeNetId = stream.readInt().value_or(0);
         return result;
     }
@@ -74,7 +67,7 @@ public:
         input->read(stream);
         addition = std::make_shared<RecipeIngredient>();
         addition->read(stream);
-        output.read(stream);
+        output = stream.readValue<NetworkItemDescriptor>();
         recipeNetId = stream.readInt().value_or(0);
     }
 

@@ -110,7 +110,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		item.read(stream);
+		item = stream.readValue<NetworkItemStack>();
 		inventorySlot = stream.readUnsignedByte().value_or(0);
 		hotbarSlot = stream.readUnsignedByte().value_or(0);
 		windowId = stream.readUnsignedByte().value_or(0);

@@ -1,18 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+
 #include <bedrock/protocol/types/PackSetting.hpp>
 
 class StringPackSetting : public PackSetting {
@@ -28,7 +21,7 @@ public:
 		value = valueValue;
     }
 
-    static std::shared_ptr<StringPackSetting> read(ReadOnlyBinaryStream& stream, const std::string& name) {
+    static std::shared_ptr<StringPackSetting> create(ReadOnlyBinaryStream& stream, const std::string& name) {
 		return std::make_shared<StringPackSetting>(name, stream.readString().value_or(""));
     }
 

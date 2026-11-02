@@ -138,34 +138,34 @@ public:
 				case Entry::UserDataShapeless:
 				case Entry::ShapelessChemistry:
 				{
-					recipesWithTypeIds = ShapelessRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(ShapelessRecipe::create(recipeType, stream));
 					break;
 				}
 				case Entry::Shaped:
 				case Entry::ShapedChemistry:
 				{
-					recipesWithTypeIds = ShapedRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(ShapedRecipe::create(recipeType, stream));
 					break;
 				}
 				case Entry::Furnace:
 				case Entry::FurnaceData:
 				{
-					recipesWithTypeIds = FurnaceRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(FurnaceRecipe::create(recipeType, stream));
 					break;
 				}
 				case Entry::Multi:
 				{
-					recipesWithTypeIds = MultiRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(MultiRecipe::create(recipeType, stream));
 					break;
 				}
 				case Entry::SmithingTransform:
 				{
-					recipesWithTypeIds = SmithingTransformRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(SmithingTransformRecipe::create(recipeType, stream));
 					break;
 				}
 				case Entry::SmithingTrim:
 				{
-					recipesWithTypeIds = SmithingTrimRecipe::decode(recipeType, stream);
+					recipesWithTypeIds.push_back(SmithingTrimRecipe::create(recipeType, stream));
 					break;
 				}
 				default:

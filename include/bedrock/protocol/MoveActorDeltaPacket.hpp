@@ -125,22 +125,22 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		flags = static_cast<Flag>(stream.readUnsignedShort().value_or(0));
-		if (hasFlag(flags, Has::X)) {
+		if (hasFlag(flags, Flag::HasX)) {
 			xPos = stream.readFloat().value_or(0.0f);
 		}
-		if (hasFlag(flags, Has::Y)) {
+		if (hasFlag(flags, Flag::HasY)) {
 			yPos = stream.readFloat().value_or(0.0f);
 		}
-		if (hasFlag(flags, Has::Z)) {
+		if (hasFlag(flags, Flag::HasZ)) {
 			zPos = stream.readFloat().value_or(0.0f);
 		}
-		if (hasFlag(flags, Has::Pitch)) {
+		if (hasFlag(flags, Flag::HasPitch)) {
 			pitch = stream.readRotationByte().value_or(0);
 		}
-		if (hasFlag(flags, Has::Yaw)) {
+		if (hasFlag(flags, Flag::HasYaw)) {
 			yaw = stream.readRotationByte().value_or(0);
 		}
-		if (hasFlag(flags, Has::HeadYaw)) {
+		if (hasFlag(flags, Flag::HasHeadYaw)) {
 			headYaw = stream.readRotationByte().value_or(0);
 		}
     }
@@ -148,22 +148,22 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
 		stream.writeUnsignedShort(magic_enum::enum_integer(flags));
-		if (hasFlag(flags, Has::X)) {
+		if (hasFlag(flags, Flag::HasX)) {
 			stream.writeFloat(xPos);
 		}
-		if (hasFlag(flags, Has::Y)) {
+		if (hasFlag(flags, Flag::HasY)) {
 			stream.writeFloat(yPos);
 		}
-		if (hasFlag(flags, Has::Z)) {
+		if (hasFlag(flags, Flag::HasZ)) {
 			stream.writeFloat(zPos);
 		}
-		if (hasFlag(flags, Has::Pitch)) {
+		if (hasFlag(flags, Flag::HasPitch)) {
 			stream.writeRotationByte(pitch);
 		}
-		if (hasFlag(flags, Has::Yaw)) {
+		if (hasFlag(flags, Flag::HasYaw)) {
 			stream.writeRotationByte(yaw);
 		}
-		if (hasFlag(flags, Has::HeadYaw)) {
+		if (hasFlag(flags, Flag::HasHeadYaw)) {
 			stream.writeRotationByte(headYaw);
 		}
     }

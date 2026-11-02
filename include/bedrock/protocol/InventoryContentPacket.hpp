@@ -113,11 +113,11 @@ public:
 		windowId = stream.readUnsignedVarInt().value_or(0);
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < count); ++i) {
-			items.read(stream);
+			items.push_back(stream.readValue<NetworkItemStack>());
 		}
 		containerName = std::make_shared<FullContainerName>();
 		containerName->read(stream);
-		storage.read(stream);
+		storage = stream.readValue<NetworkItemStack>();
     }
 
     void write(BinaryStream& stream) override {

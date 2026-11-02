@@ -1,21 +1,14 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-#include <magic_enum/magic_enum.hpp>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <bedrock/protocol/Forward.hpp>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
 #include <map>
-#include <bedrock/protocol/types/ChatRestrictionLevel.hpp>
-#include <bedrock/protocol/types/EditorWorldType.hpp>
+
 #include <bedrock/protocol/types/EducationUriResource.hpp>
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/GameRule.hpp>
@@ -31,7 +24,7 @@ public:
     int32_t difficulty;
     glm::ivec3 spawnPosition;
     bool hasAchievementsDisabled = true;
-    EditorWorldType editorWorldType = EditorWorldType::NonEditor;
+    int32_t editorWorldType = 0;
     bool createdInEditorMode = false;
     bool exportedFromEditorMode = false;
     int32_t time = -1;
@@ -69,7 +62,7 @@ public:
     bool isNewNether = true;
     std::optional<std::shared_ptr<EducationUriResource>> eduSharedUriResource;
     std::optional<bool> experimentalGameplayOverride;
-    ChatRestrictionLevel chatRestrictionLevel = ChatRestrictionLevel::None;
+    uint8_t chatRestrictionLevel = 0;
     bool disablePlayerInteractions = false;
 
     LevelSettings() = default;
@@ -82,9 +75,7 @@ public:
         difficulty = stream.readVarInt().value_or(0);
         spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         hasAchievementsDisabled = stream.readBool().value_or(false);
-        editorWorldType = magic_enum::enum_cast<EditorWorldType>(
-            stream.readVarInt().value_or(0)
-        ).value_or(EditorWorldType::NonEditor);
+        editorWorldType = stream.readVarInt().value_or(0);
         createdInEditorMode = stream.readBool().value_or(false);
         exportedFromEditorMode = stream.readBool().value_or(false);
         time = stream.readVarInt().value_or(0);
@@ -118,9 +109,7 @@ public:
         limitedWorldWidth = stream.readInt().value_or(0);
         limitedWorldLength = stream.readInt().value_or(0);
         isNewNether = stream.readBool().value_or(false);
-        chatRestrictionLevel = magic_enum::enum_cast<ChatRestrictionLevel>(
-            stream.readUnsignedByte().value_or(0)
-        ).value_or(ChatRestrictionLevel::None);
+        chatRestrictionLevel = stream.readUnsignedByte().value_or(0);
         disablePlayerInteractions = stream.readBool().value_or(false);
         spawnSettings = std::make_shared<SpawnSettings>();
         spawnSettings->read(stream);
@@ -129,7 +118,7 @@ public:
             const auto count = stream.readUnsignedInt().value_or(0);
             for (uint32_t i = 0; i < count; ++i) {
                 auto key = stream.readString().value_or("");
-                auto value = GameRule::decode(stream);
+                auto value = GameRule::create(stream);
                 result.emplace(std::move(key), std::move(value));
             }
             return result;
@@ -153,7 +142,7 @@ public:
 		stream.writeVarInt(difficulty);
 		stream.writeSignedBlockPos(spawnPosition);
 		stream.writeBool(hasAchievementsDisabled);
-		stream.writeVarInt(magic_enum::enum_integer(editorWorldType));
+		stream.writeVarInt(editorWorldType);
 		stream.writeBool(createdInEditorMode);
 		stream.writeBool(exportedFromEditorMode);
 		stream.writeVarInt(time);
@@ -193,7 +182,7 @@ public:
 		stream.writeOptional(experimentalGameplayOverride, [&](const auto& value) {
 			stream.writeBool(value);
 		});
-		stream.writeUnsignedByte(magic_enum::enum_integer(chatRestrictionLevel));
+		stream.writeUnsignedByte(chatRestrictionLevel);
 		stream.writeBool(disablePlayerInteractions);
     }
 };

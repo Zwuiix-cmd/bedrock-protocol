@@ -115,8 +115,8 @@ public:
 		inventorySlot = stream.readUnsignedVarInt().value_or(0);
 		containerName = std::make_shared<FullContainerName>();
 		containerName->read(stream);
-		storage.read(stream);
-		item.read(stream);
+		storage = stream.readValue<NetworkItemStack>();
+		item = stream.readValue<NetworkItemStack>();
     }
 
     void write(BinaryStream& stream) override {

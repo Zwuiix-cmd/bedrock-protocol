@@ -327,6 +327,16 @@ void testMalformedBuffers() {
     expect(trailingInput.position() < trailingInput.size(), "trailing data was unexpectedly consumed");
 }
 
+void testMalformedCollectionBounds() {
+    const std::string oversizedCount{"\xff\xff\xff\x7f", 4};
+    ReadOnlyBinaryStream input(oversizedCount);
+    const auto values = input.readList([&]() {
+        return input.readUnsignedByte().value_or(0);
+    });
+    expect(values.empty(), "malformed collection unexpectedly decoded entries");
+    expect(input.hasOverflowed(), "malformed collection did not stop at the stream boundary");
+}
+
 void testPacketPool() {
     generated_packet_tests::run(expect);
     expect(PacketPool::createPacket(PacketIds::Unknown) == nullptr, "PacketPool accepted Unknown packet ID");
@@ -344,6 +354,7 @@ int main() {
         testOptionalPacketFields();
         testGeneratedCodecFixes();
         testMalformedBuffers();
+        testMalformedCollectionBounds();
         testPacketPool();
     } catch (const std::exception& exception) {
         std::cerr << "protocol tests failed: " << exception.what() << '\n';

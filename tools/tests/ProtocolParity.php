@@ -341,6 +341,40 @@ function checkCriticalCodecContracts(string $root, string $sourceRoot, array &$f
         && !str_contains($playerAuthInput, 'blockActions.emplace();')) {
         $failures[] = 'PlayerAuthInputPacket: block action optional is not engaged before push_back';
     }
+
+    $startGame = file_get_contents($root . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . 'StartGamePacket.hpp');
+    if ($startGame !== false) {
+        assertHeaderOrder(
+            'StartGamePacket',
+            $startGame,
+            [
+                'yaw = stream.readFloat()',
+                'levelSettings = std::make_shared<LevelSettings>()',
+                'levelId = stream.readString()',
+                'blockPalette.push_back',
+                'multiplayerCorrelationId = stream.readString()',
+                'playerActorProperties = NetworkNbtSerializer::read(stream)',
+            ],
+            $failures,
+        );
+        if (str_contains($startGame, 'readValue<std::monostate>')) {
+            $failures[] = 'StartGamePacket: unsupported placeholder reached the generated reader';
+        }
+    }
+}
+
+/** @param list<string> $needles */
+function assertHeaderOrder(string $name, string $contents, array $needles, array &$failures): void
+{
+    $offset = 0;
+    foreach ($needles as $needle) {
+        $position = strpos($contents, $needle, $offset);
+        if ($position === false) {
+            $failures[] = $name . ': missing or reordered codec fragment ' . $needle;
+            return;
+        }
+        $offset = $position + strlen($needle);
+    }
 }
 
 function isSerializerCall(StaticCall $call): bool

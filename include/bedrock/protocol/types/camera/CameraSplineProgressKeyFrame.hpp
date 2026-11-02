@@ -37,7 +37,7 @@ public:
         progress = stream.readFloat().value_or(0.0f);
         time = stream.readFloat().value_or(0.0f);
         easeType = stream.readOptional([&]() {
-	return static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
+	return magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
 });
     }
 

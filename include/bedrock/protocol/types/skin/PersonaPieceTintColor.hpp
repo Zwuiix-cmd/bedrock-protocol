@@ -32,7 +32,7 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        pieceType = static_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0));
+        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PersonaSkinPieceType>(0));
         colors = std::monostate{};
     }
 

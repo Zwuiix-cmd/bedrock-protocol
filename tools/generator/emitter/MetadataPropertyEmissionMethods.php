@@ -43,6 +43,7 @@ trait MetadataPropertyEmissionMethods
 #pragma once
 
 #include <cstdint>
+#include <magic_enum/magic_enum.hpp>
 #include <map>
 #include <memory>
 #include <string>
@@ -90,7 +91,7 @@ public:
                 stream.seek(stream.size());
                 return;
             }
-            const auto type = static_cast<EntityMetadataType>(stream.readUnsignedVarInt().value_or(0));
+            const auto type = magic_enum::enum_cast<EntityMetadataType>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<EntityMetadataType>(0));
             const uint8_t innerType = stream.readUnsignedByte().value_or(0);
             if (innerType != static_cast<uint8_t>(type)) {
                 stream.seek(stream.size());
@@ -114,8 +115,8 @@ public:
             }
             const auto type = property->getType();
             stream.writeUnsignedVarInt(key);
-            stream.writeUnsignedVarInt(static_cast<uint32_t>(type));
-            stream.writeUnsignedByte(static_cast<uint8_t>(type));
+            stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
+            stream.writeUnsignedByte(magic_enum::enum_integer(type));
             property->write(stream);
         }
     }

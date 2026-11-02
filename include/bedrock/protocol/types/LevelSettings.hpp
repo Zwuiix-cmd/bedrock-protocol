@@ -101,10 +101,10 @@ public:
         difficulty = stream.readVarInt().value_or(0);
         spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         hasAchievementsDisabled = stream.readBool().value_or(false);
-        editorWorldType = static_cast<EditorWorldType>(stream.readVarInt().value_or(0));
+        editorWorldType = magic_enum::enum_cast<EditorWorldType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<EditorWorldType>(0));
         createdInEditorMode = stream.readBool().value_or(false);
         exportedFromEditorMode = stream.readBool().value_or(false);
-        editorLevelMigrationVersion = static_cast<EditorLevelMigrationVersion>(stream.readByte().value_or(0));
+        editorLevelMigrationVersion = magic_enum::enum_cast<EditorLevelMigrationVersion>(stream.readByte().value_or(0)).value_or(magic_enum::enum_value<EditorLevelMigrationVersion>(0));
         time = stream.readVarInt().value_or(0);
         eduEditionOffer = stream.readUnsignedVarInt().value_or(0);
         hasEduFeaturesEnabled = stream.readBool().value_or(false);
@@ -135,7 +135,7 @@ public:
         limitedWorldWidth = stream.readInt().value_or(0);
         limitedWorldLength = stream.readInt().value_or(0);
         isNewNether = stream.readBool().value_or(false);
-        chatRestrictionLevel = static_cast<ChatRestrictionLevel>(stream.readUnsignedByte().value_or(0));
+        chatRestrictionLevel = magic_enum::enum_cast<ChatRestrictionLevel>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<ChatRestrictionLevel>(0));
         disablePlayerInteractions = stream.readBool().value_or(false);
         serverEditorConnectionPolicy = stream.readVarInt().value_or(0);
         allowAnonymousBlockDropsInEditorWorlds = stream.readBool().value_or(false);
@@ -144,7 +144,7 @@ public:
     value->read(stream);
     return value;
 }());
-        worldGamemode = static_cast<GameMode>(stream.readVarInt().value_or(0));
+        worldGamemode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<GameMode>(0));
         gameRules = ([&]() {
     std::map<std::string, std::shared_ptr<GameRule>> result;
     const auto count = stream.readUnsignedInt().value_or(0);
@@ -160,7 +160,7 @@ public:
     value->read(stream);
     return value;
 }());
-        defaultPlayerPermission = static_cast<PlayerPermissions>(stream.readVarInt().value_or(0));
+        defaultPlayerPermission = magic_enum::enum_cast<PlayerPermissions>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<PlayerPermissions>(0));
         eduSharedUriResource = stream.readOptional([&]() {
 	return ([&]() {
 	auto value = std::make_shared<EducationUriResource>();

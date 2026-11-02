@@ -39,7 +39,7 @@ public:
         customName = stream.readOptional([&]() {
 	return stream.readString().value_or("");
 });
-        action = static_cast<ScorePacketEntryAction>(stream.readVarInt().value_or(0));
+        action = magic_enum::enum_cast<ScorePacketEntryAction>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<ScorePacketEntryAction>(0));
     }
 
     virtual void write(BinaryStream& stream) const {

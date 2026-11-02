@@ -25,7 +25,7 @@ public:
     AuthenticationInfo() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        AuthenticationType = static_cast<::AuthenticationType>(stream.readInt().value_or(0));
+        AuthenticationType = magic_enum::enum_cast<::AuthenticationType>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<::AuthenticationType>(0));
         Certificate = stream.readString().value_or("");
         Token = stream.readString().value_or("");
     }

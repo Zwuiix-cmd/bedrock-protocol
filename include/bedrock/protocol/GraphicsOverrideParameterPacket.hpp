@@ -145,7 +145,7 @@ public:
 		playerIdentifier = stream.readOptional([&]() {
 			return stream.readString().value_or("");
 		});
-		parameterType = static_cast<GraphicsOverrideParameterType>(stream.readUnsignedByte().value_or(0));
+		parameterType = magic_enum::enum_cast<GraphicsOverrideParameterType>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<GraphicsOverrideParameterType>(0));
 		reset = stream.readBool().value_or(false);
     }
 

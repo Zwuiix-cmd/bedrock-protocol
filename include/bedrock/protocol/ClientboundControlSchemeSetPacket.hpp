@@ -119,7 +119,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		scheme = static_cast<ControlScheme>(stream.readUnsignedByte().value_or(0));
+		scheme = magic_enum::enum_cast<ControlScheme>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<ControlScheme>(0));
     }
 
     void write(BinaryStream& stream) override {

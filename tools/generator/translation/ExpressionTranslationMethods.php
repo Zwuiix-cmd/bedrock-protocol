@@ -358,8 +358,10 @@ public function expression(?Node $expression, array $declaration, ?array $method
                 $value = $this->isStringEnumProperty($expression->var, $declaration)
                     ? $this->stringEnumFromString($expression->var, $value, $declaration)
                     : (str_starts_with($value, 'static_cast<' . $enumType . '>(')
+                        || str_starts_with($value, 'magic_enum::enum_')
+                        || str_contains($value, '::')
                         ? $value
-                        : 'static_cast<' . $enumType . '>(' . $value . ')');
+                        : $this->enumReadValue($enumType, $value));
             }
             return $this->expression($expression->var, $declaration, $method) . ' = ' . $value;
         }

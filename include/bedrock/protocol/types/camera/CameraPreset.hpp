@@ -156,9 +156,9 @@ public:
         yawLimitMax = stream.readOptional([&]() {
 	return stream.readFloat().value_or(0.0f);
 });
-        audioListenerType = static_cast<Audiolistenertype>(stream.readOptional([&]() {
+        audioListenerType = magic_enum::enum_cast<Audiolistenertype>(stream.readOptional([&]() {
 	return stream.readInt().value_or(0);
-}));
+})).value_or(magic_enum::enum_value<Audiolistenertype>(0));
         playerEffects = stream.readOptional([&]() {
 	return stream.readBool().value_or(false);
 });
@@ -170,7 +170,7 @@ public:
 	}());
 });
         controlScheme = stream.readOptional([&]() {
-	return static_cast<ControlScheme>(stream.readVarInt().value_or(0));
+	return magic_enum::enum_cast<ControlScheme>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<ControlScheme>(0));
 });
         startingRotation = stream.readOptional([&]() {
 	return stream.readVec2().value_or(glm::vec2(0.0f));

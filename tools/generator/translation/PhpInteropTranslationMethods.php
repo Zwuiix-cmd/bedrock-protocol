@@ -106,7 +106,12 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
             $referenced = $this->findDeclaration($class);
             if ($referenced !== null && $referenced['kind'] === 'enum' && $referenced['backingType'] === 'string') {
                 $value = $arguments[0] ?? '""';
-                return 'magic_enum::enum_cast<' . CPPName::type($class) . '>(std::string_view(' . $value . ')).value_or(static_cast<' . CPPName::type($class) . '>(0))';
+                $enumType = CPPName::type($class);
+                return 'magic_enum::enum_cast<' . $enumType . '>(std::string_view(' . $value . ')).value_or(magic_enum::enum_value<' . $enumType . '>(0))';
+            }
+            if ($referenced !== null
+                && (($referenced['kind'] ?? null) === 'enum' || $this->isEnumLikeDeclaration($referenced))) {
+                return $this->enumReadValue(CPPName::type($class), $arguments[0] ?? '0');
             }
             return 'static_cast<' . CPPName::type($class) . '>(' . ($arguments[0] ?? '0') . ')';
         }

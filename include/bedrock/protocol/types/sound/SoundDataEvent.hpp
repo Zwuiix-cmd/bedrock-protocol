@@ -43,7 +43,7 @@ public:
         seconds(secondsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        type = static_cast<SoundDataEventType>(stream.readVarInt().value_or(0));
+        type = magic_enum::enum_cast<SoundDataEventType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<SoundDataEventType>(0));
         volume = stream.readOptional([&]() {
 	return stream.readFloat().value_or(0.0f);
 });

@@ -123,7 +123,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		state = magic_enum::enum_cast<MatchmakingState>(std::string_view(stream.readUnsignedByte().value_or(0))).value_or(static_cast<MatchmakingState>(0));
+		state = magic_enum::enum_cast<MatchmakingState>(std::string_view(stream.readUnsignedByte().value_or(0))).value_or(magic_enum::enum_value<MatchmakingState>(0));
 		destinationName = stream.readString().value_or("");
 		options = stream.readOptional([&]() { return ([&]() {
 		    auto value = std::make_shared<MatchmakingStateOptions>();

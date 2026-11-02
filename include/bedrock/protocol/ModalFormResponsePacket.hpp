@@ -129,9 +129,9 @@ public:
 		formData = stream.readOptional([&]() {
 			return stream.readString().value_or("");
 		});
-		cancelReason = static_cast<Cancel>(stream.readOptional([&]() {
+		cancelReason = magic_enum::enum_cast<Cancel>(stream.readOptional([&]() {
 			return stream.readUnsignedByte().value_or(0);
-		}));
+		})).value_or(magic_enum::enum_value<Cancel>(0));
     }
 
     void write(BinaryStream& stream) override {

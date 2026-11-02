@@ -121,7 +121,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		graphicsMode = stream.readOptional([&]() {
-			return static_cast<GraphicsMode>(stream.readUnsignedByte().value_or(0));
+			return magic_enum::enum_cast<GraphicsMode>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<GraphicsMode>(0));
 		});
 		filterProfanityChange = stream.readOptional([&]() {
 			return stream.readBool().value_or(false);

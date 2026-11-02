@@ -152,7 +152,7 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 if ($enumType !== null) {
                     $value = $this->stringEnumName($property, $declaration) !== null
                         ? $this->stringEnumFromStringForProperty($property, $value, $declaration)
-                        : 'static_cast<' . $enumType . '>(' . $value . ')';
+                        : $this->enumReadValue($enumType, $value);
                 }
                 $lines[] = '        ' . $target . ' = ' . $value . ';';
             } elseif (!$returnShared) {

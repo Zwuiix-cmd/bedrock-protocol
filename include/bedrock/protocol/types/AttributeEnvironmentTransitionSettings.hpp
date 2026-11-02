@@ -40,7 +40,7 @@ public:
         totalTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         currentTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         clockName = stream.readString().value_or("");
-        easeType = static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -125,8 +125,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
 		propertyIndex = stream.readUnsignedVarInt().value_or(0);
-		updateType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(static_cast<OverrideUpdateType>(0));
-		auto innerType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readString().value_or(""))).value_or(static_cast<OverrideUpdateType>(0));
+		updateType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(magic_enum::enum_value<OverrideUpdateType>(0));
+		auto innerType = magic_enum::enum_cast<OverrideUpdateType>(std::string_view(stream.readString().value_or(""))).value_or(magic_enum::enum_value<OverrideUpdateType>(0));
 		if ((magic_enum::enum_name(innerType) != magic_enum::enum_name(updateType))) {
 			throw std::exception{};
 		}

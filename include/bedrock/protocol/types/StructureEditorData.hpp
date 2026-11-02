@@ -43,7 +43,7 @@ public:
         structureDataField = stream.readString().value_or("");
         includePlayers = stream.readBool().value_or(false);
         showBoundingBox = stream.readBool().value_or(false);
-        structureBlockType = static_cast<Type>(stream.readVarInt().value_or(0));
+        structureBlockType = magic_enum::enum_cast<Type>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
         structureRedstoneSaveMode = stream.readUnsignedByte().value_or(0);
         filteredStructureName = stream.readOptional([&]() {
 	return stream.readString().value_or("");

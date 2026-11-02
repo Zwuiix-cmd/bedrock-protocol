@@ -126,7 +126,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actorUniqueId = stream.readUnsignedVarLong().value_or(0);
-        updateType = static_cast<Type>(stream.readUnsignedVarLong().value_or(0));
+        updateType = magic_enum::enum_cast<Type>(stream.readUnsignedVarLong().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
     }
 
     void write(BinaryStream& stream) override {

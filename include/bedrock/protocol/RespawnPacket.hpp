@@ -127,7 +127,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
-		respawnState = static_cast<Respawnstate>(stream.readUnsignedByte().value_or(0));
+		respawnState = magic_enum::enum_cast<Respawnstate>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Respawnstate>(0));
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
     }
 

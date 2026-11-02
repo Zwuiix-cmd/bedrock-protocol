@@ -30,7 +30,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         color = stream.readUnsignedInt().value_or(0);
         x = stream.readInt().value_or(0);
-        y = static_cast<Y>(stream.readInt().value_or(0));
+        y = magic_enum::enum_cast<Y>(stream.readInt().value_or(0)).value_or(magic_enum::enum_value<Y>(0));
     }
 
     virtual void write(BinaryStream& stream) const {

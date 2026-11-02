@@ -135,7 +135,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		inventorySlot = stream.readVarInt().value_or(0);
-		type = static_cast<Type>(stream.readUnsignedVarInt().value_or(0));
+		type = magic_enum::enum_cast<Type>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
 		switch (type) {
 			case Type::ReplacePage:
 			case Type::AddPage: {

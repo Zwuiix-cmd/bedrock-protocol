@@ -332,6 +332,11 @@ private function enumStorageValue(string $value, string $enumType): string
         return 'magic_enum::enum_integer(' . $value . ')';
     }
 
+    private function enumReadValue(string $enumType, string $value): string
+    {
+        return 'magic_enum::enum_cast<' . $enumType . '>(' . $value . ').value_or(magic_enum::enum_value<' . $enumType . '>(0))';
+    }
+
 private function enumStorageCast(Node $argument, string $value, array $declaration): string
     {
         $propertyEnumType = $argument instanceof Node\Arg

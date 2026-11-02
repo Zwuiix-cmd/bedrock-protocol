@@ -126,7 +126,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = static_cast<Action>(stream.readVarInt().value_or(0));
+		action = magic_enum::enum_cast<Action>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Action>(0));
 		score = stream.readVarInt().value_or(0);
 		activityId = stream.readString().value_or("");
     }

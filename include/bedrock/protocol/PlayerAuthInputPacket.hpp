@@ -155,7 +155,7 @@ public:
 		moveVecX = stream.readFloat().value_or(0.0f);
 		moveVecZ = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		inputFlags = static_cast<PlayerAuthInputFlags>(PlayerAuthInputFlags{PlayerAuthInputFlags::Count});
+		inputFlags = PlayerAuthInputFlags{PlayerAuthInputFlags::Count};
 		for (const auto& flag : stream.readList([&]() {
 	return stream.readVarInt().value_or(0);
 })) {
@@ -164,9 +164,9 @@ public:
 			}
 			inputFlags.set(flag, true);
 		}
-		inputMode = static_cast<InputMode>(stream.readUnsignedVarInt().value_or(0));
-		playMode = static_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0));
-		interactionMode = static_cast<InteractionMode>(stream.readVarInt().value_or(0));
+		inputMode = magic_enum::enum_cast<InputMode>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<InputMode>(0));
+		playMode = magic_enum::enum_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0)).value_or(magic_enum::enum_value<PlayMode>(0));
+		interactionMode = magic_enum::enum_cast<InteractionMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<InteractionMode>(0));
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));

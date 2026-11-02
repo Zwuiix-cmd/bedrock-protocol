@@ -148,7 +148,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		needsTranslation = stream.readBool().value_or(false);
 		auto category = stream.readUnsignedByte().value_or(0);
-		type = static_cast<Type>(stream.readUnsignedByte().value_or(0));
+		type = magic_enum::enum_cast<Type>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Type>(0));
 		switch (type) {
 			case Type::Chat:
 			case Type::Whisper:

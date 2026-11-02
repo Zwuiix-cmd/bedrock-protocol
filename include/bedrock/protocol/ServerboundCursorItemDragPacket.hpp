@@ -119,7 +119,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		state = static_cast<CursorItemDragState>(stream.readUnsignedByte().value_or(0));
+		state = magic_enum::enum_cast<CursorItemDragState>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<CursorItemDragState>(0));
     }
 
     void write(BinaryStream& stream) override {

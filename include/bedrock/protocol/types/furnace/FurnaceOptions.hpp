@@ -38,8 +38,8 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         filtering = stream.readBool().value_or(false);
-        leftFurnaceTab = static_cast<FurnaceLeftTab>(stream.readVarInt().value_or(0));
-        layout = static_cast<FurnaceLayout>(stream.readVarInt().value_or(0));
+        leftFurnaceTab = magic_enum::enum_cast<FurnaceLeftTab>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<FurnaceLeftTab>(0));
+        layout = magic_enum::enum_cast<FurnaceLayout>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<FurnaceLayout>(0));
     }
 
     virtual void write(BinaryStream& stream) const {

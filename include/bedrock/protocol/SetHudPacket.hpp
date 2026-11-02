@@ -124,10 +124,10 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				hudElements.push_back(static_cast<HudElement>(stream.readVarInt().value_or(0)));
+				hudElements.push_back(magic_enum::enum_cast<HudElement>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<HudElement>(0)));
 		    }
 		}
-		visibility = static_cast<HudVisibility>(stream.readVarInt().value_or(0));
+		visibility = magic_enum::enum_cast<HudVisibility>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<HudVisibility>(0));
     }
 
     void write(BinaryStream& stream) override {

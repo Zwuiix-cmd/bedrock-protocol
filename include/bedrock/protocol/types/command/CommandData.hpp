@@ -56,7 +56,7 @@ public:
         name = stream.readString().value_or("");
         description = stream.readString().value_or("");
         flags = stream.readInt().value_or(0);
-        permission = static_cast<CommandPermissions>(stream.readVarInt().value_or(0));
+        permission = magic_enum::enum_cast<CommandPermissions>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CommandPermissions>(0));
         aliases = stream.readOptional([&]() {
 	return ([&]() {
 	auto value = std::make_shared<CommandHardEnum>();

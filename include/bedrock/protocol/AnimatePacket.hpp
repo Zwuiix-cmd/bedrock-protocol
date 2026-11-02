@@ -130,13 +130,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        action = static_cast<Action>(stream.readUnsignedByte().value_or(0));
+        action = magic_enum::enum_cast<Action>(stream.readUnsignedByte().value_or(0)).value_or(magic_enum::enum_value<Action>(0));
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         data = stream.readFloat().value_or(0.0f);
         swingSource = stream.readOptional([&]() {
 	return stream.readString().value_or("");
 });
-        hand = static_cast<HandSlot>(stream.readVarInt().value_or(0));
+        hand = magic_enum::enum_cast<HandSlot>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<HandSlot>(0));
     }
 
     void write(BinaryStream& stream) override {

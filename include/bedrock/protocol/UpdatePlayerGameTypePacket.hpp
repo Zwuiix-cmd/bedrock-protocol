@@ -121,7 +121,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gameMode = static_cast<GameMode>(stream.readVarInt().value_or(0));
+		gameMode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<GameMode>(0));
 		playerActorUniqueId = stream.readActorUniqueID().value_or(0);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }

@@ -134,7 +134,7 @@ public:
 		objectiveName = stream.readString().value_or("");
 		displayName = stream.readString().value_or("");
 		criteriaName = stream.readString().value_or("");
-		sortOrder = static_cast<Sort>(stream.readVarInt().value_or(0));
+		sortOrder = magic_enum::enum_cast<Sort>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Sort>(0));
     }
 
     void write(BinaryStream& stream) override {

@@ -55,7 +55,7 @@ public:
         totalTime = stream.readFloat().value_or(0.0f);
         splineIdentifier = stream.readString().value_or("");
         loadFromJson = stream.readBool().value_or(false);
-        easeType = static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
         curve = stream.readList([&]() {
 	return stream.readVec3().value_or(glm::vec3(0.0f));
 });

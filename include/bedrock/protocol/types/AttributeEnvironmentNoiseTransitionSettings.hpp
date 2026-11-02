@@ -54,7 +54,7 @@ public:
         clockName = stream.readString().value_or("");
         localTransitionTicks = stream.readUnsignedVarInt().value_or(0);
         noiseName = stream.readString().value_or("");
-        easeType = static_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0));
+        easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<CameraSetInstructionEaseType>(0));
         noiseAlignment = ([&]() {
     auto value = std::make_shared<NoiseAlignment>();
     value->read(stream);

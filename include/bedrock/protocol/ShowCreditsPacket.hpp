@@ -125,7 +125,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		playerActorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		status = static_cast<Status>(stream.readVarInt().value_or(0));
+		status = magic_enum::enum_cast<Status>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<Status>(0));
     }
 
     void write(BinaryStream& stream) override {

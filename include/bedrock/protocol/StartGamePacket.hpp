@@ -175,7 +175,7 @@ public:
         blockPaletteChecksum = stream.readUnsignedLong().value_or(0);
         enableClientSideChunkGeneration = stream.readBool().value_or(false);
         blockNetworkIdsAreHashes = stream.readBool().value_or(false);
-        playerGamemode = static_cast<GameMode>(stream.readVarInt().value_or(0));
+        playerGamemode = magic_enum::enum_cast<GameMode>(stream.readVarInt().value_or(0)).value_or(magic_enum::enum_value<GameMode>(0));
         playerActorProperties = NetworkNbtSerializer::read(stream);
         levelSettings = ([&]() {
     auto value = std::make_shared<LevelSettings>();

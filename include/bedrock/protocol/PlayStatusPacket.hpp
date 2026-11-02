@@ -131,7 +131,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		status = static_cast<Status>(stream.readUnsignedIntBE().value_or(0));
+		status = magic_enum::enum_cast<Status>(stream.readUnsignedIntBE().value_or(0)).value_or(magic_enum::enum_value<Status>(0));
     }
 
     void write(BinaryStream& stream) override {

@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class CommandSoftEnum {
 public:
@@ -44,3 +46,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

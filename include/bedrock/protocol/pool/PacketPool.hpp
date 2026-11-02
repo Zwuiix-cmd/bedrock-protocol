@@ -11,6 +11,8 @@
 #include <cassert>
 #include <bedrock/protocol/Packet.hpp>
 
+namespace bedrock::protocol {
+
 class PacketPool {
 public:
     using Constructor = std::shared_ptr<Packet>(*)();
@@ -59,3 +61,5 @@ private:
     static inline std::once_flag s_setupFlag;
     static constexpr size_t ExpectedPacketCount = 224;
 };
+
+} // namespace bedrock::protocol

@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/AbilitiesData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateAbilitiesPacket : public Packet {
 public:
@@ -113,3 +115,5 @@ public:
 		data->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

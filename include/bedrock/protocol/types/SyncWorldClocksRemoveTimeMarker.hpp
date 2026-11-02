@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClocksPayload.hpp>
+namespace bedrock::protocol {
+
 
 class SyncWorldClocksRemoveTimeMarker : public SyncWorldClocksPayload {
 public:
@@ -48,3 +50,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

@@ -8,6 +8,8 @@
 
 #include <bedrock/protocol/types/camera/CameraSetInstructionEase.hpp>
 #include <bedrock/protocol/types/camera/CameraSetInstructionRotation.hpp>
+namespace bedrock::protocol {
+
 
 class CameraSetInstruction {
 public:
@@ -95,3 +97,5 @@ public:
 		stream.writeBool(ignoreStartingValuesComponent);
     }
 };
+
+} // namespace bedrock::protocol

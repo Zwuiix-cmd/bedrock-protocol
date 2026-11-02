@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ItemStackRequestActionType : uint8_t {
     Take = 0,
     Place = 1,
@@ -24,3 +26,5 @@ enum class ItemStackRequestActionType : uint8_t {
     CraftingNonImplementedDeprecatedAskTyLaing = 18,
     CraftingResultsDeprecatedAskTyLaing = 19,
 };
+
+} // namespace bedrock::protocol

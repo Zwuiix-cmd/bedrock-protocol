@@ -12,6 +12,8 @@
 #include <bedrock/protocol/types/command/CommandHardEnum.hpp>
 #include <bedrock/protocol/types/command/CommandOverload.hpp>
 #include <bedrock/protocol/types/command/CommandPermissions.hpp>
+namespace bedrock::protocol {
+
 
 class CommandData {
 public:
@@ -71,3 +73,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

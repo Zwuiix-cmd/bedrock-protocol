@@ -6,6 +6,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/ArmorSlot.hpp>
+namespace bedrock::protocol {
+
 
 class ArmorSlotAndDamagePair {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeUnsignedShort(damage);
     }
 };
+
+} // namespace bedrock::protocol

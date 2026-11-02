@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/command/CommandOriginData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CommandRequestPacket : public Packet {
 public:
@@ -123,3 +125,5 @@ public:
 		stream.writeString(version);
     }
 };
+
+} // namespace bedrock::protocol

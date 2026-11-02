@@ -10,6 +10,8 @@
 
 #include <bedrock/protocol/types/ControlScheme.hpp>
 #include <bedrock/protocol/types/camera/CameraPresetAimAssist.hpp>
+namespace bedrock::protocol {
+
 
 class CameraPreset {
 public:
@@ -221,3 +223,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/StructureEditorData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class StructureBlockUpdatePacket : public Packet {
 public:
@@ -123,3 +125,5 @@ public:
 		stream.writeBool(waterlogged);
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class PackSetting {
 public:
@@ -20,3 +22,5 @@ public:
 
     static std::shared_ptr<PackSetting> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

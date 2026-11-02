@@ -92,6 +92,8 @@
 #include <bedrock/protocol/types/MapImage.hpp>
 #include <bedrock/protocol/types/MapTrackedObject.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientboundMapItemDataPacket : public Packet {
 public:
@@ -248,3 +250,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

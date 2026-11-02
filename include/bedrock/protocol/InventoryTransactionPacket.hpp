@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class InventoryTransactionPacket : public Packet {
 public:
@@ -173,3 +175,5 @@ public:
 		trData->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

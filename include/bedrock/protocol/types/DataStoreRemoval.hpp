@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/DataStore.hpp>
+namespace bedrock::protocol {
+
 
 class DataStoreRemoval : public DataStore {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeString(name);
     }
 };
+
+} // namespace bedrock::protocol

@@ -100,6 +100,8 @@
 #include <bedrock/protocol/types/ServerTelemetryData.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class StartGamePacket : public Packet {
 public:
@@ -218,3 +220,5 @@ public:
 		serverTelemetryData->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

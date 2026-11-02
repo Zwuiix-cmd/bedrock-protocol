@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class DropStackRequestAction : public ItemStackRequestAction {
 public:
@@ -42,3 +44,5 @@ public:
 		stream.writeBool(randomly);
     }
 };
+
+} // namespace bedrock::protocol

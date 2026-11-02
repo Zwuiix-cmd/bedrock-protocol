@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <memory>
 
+namespace bedrock::protocol {
+
 
 class RecipeWithTypeId {
 public:
@@ -20,3 +22,5 @@ public:
 
     static std::shared_ptr<RecipeWithTypeId> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

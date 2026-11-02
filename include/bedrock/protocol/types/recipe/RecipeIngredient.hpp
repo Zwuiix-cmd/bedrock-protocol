@@ -7,6 +7,8 @@
 #include <optional>
 
 #include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class RecipeIngredient {
 public:
@@ -30,3 +32,5 @@ public:
         stream.writeVarInt(count);
     }
 };
+
+} // namespace bedrock::protocol

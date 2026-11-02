@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeConditionalTransformationData {
 public:
@@ -53,3 +55,5 @@ public:
 		stream.writeUnsignedInt(minPassingNeighbors);
     }
 };
+
+} // namespace bedrock::protocol

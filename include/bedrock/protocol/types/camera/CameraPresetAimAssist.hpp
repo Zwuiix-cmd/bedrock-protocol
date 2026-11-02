@@ -7,6 +7,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
+namespace bedrock::protocol {
+
 
 class CameraPresetAimAssist {
 public:
@@ -59,3 +61,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

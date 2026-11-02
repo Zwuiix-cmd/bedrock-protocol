@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class ClientDataPersonaPieceTintColor {
 public:
@@ -27,3 +29,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

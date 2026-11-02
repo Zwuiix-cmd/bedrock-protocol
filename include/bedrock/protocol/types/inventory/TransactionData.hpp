@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/NetworkInventoryAction.hpp>
+namespace bedrock::protocol {
+
 
 class TransactionData {
 public:
@@ -21,3 +23,5 @@ public:
 
     static std::shared_ptr<TransactionData> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/StructureSettings.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class StructureTemplateDataRequestPacket : public Packet {
 public:
@@ -131,3 +133,5 @@ public:
 		stream.writeUnsignedByte(magic_enum::enum_integer(requestType));
     }
 };
+
+} // namespace bedrock::protocol

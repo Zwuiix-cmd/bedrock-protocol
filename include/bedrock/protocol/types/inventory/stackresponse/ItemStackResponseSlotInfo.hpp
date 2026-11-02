@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ItemStackResponseSlotInfo {
 public:
@@ -54,3 +56,5 @@ public:
 		stream.writeVarInt(durabilityCorrection);
     }
 };
+
+} // namespace bedrock::protocol

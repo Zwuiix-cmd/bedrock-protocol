@@ -6,6 +6,8 @@
 #include <memory>
 #include <map>
 
+namespace bedrock::protocol {
+
 
 class GameRule {
 public:
@@ -25,3 +27,5 @@ public:
     static std::map<std::string, std::shared_ptr<GameRule>> readRules(ReadOnlyBinaryStream& stream, const bool& isStartGame);
     static void writeRules(BinaryStream& stream, const std::map<std::string, std::shared_ptr<GameRule>>& rules, const bool& isStartGame);
 };
+
+} // namespace bedrock::protocol

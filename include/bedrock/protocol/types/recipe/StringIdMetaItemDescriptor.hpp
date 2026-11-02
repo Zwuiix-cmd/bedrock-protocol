@@ -7,6 +7,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class StringIdMetaItemDescriptor : public ItemDescriptor {
 public:
@@ -35,3 +37,5 @@ public:
 		stream.writeUnsignedShort(meta);
     }
 };
+
+} // namespace bedrock::protocol

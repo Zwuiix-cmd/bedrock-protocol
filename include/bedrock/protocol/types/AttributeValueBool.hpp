@@ -7,6 +7,8 @@
 #include <string_view>
 
 #include <bedrock/protocol/types/AttributeValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeValueBool : public AttributeValue {
 public:
@@ -46,18 +48,20 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<AttributeValueBool::Operation>(AttributeValueBool::Operation value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::AttributeValueBool::Operation>(::bedrock::protocol::AttributeValueBool::Operation value) noexcept {
     switch (value) {
-        case AttributeValueBool::Operation::Override: return "override";
-        case AttributeValueBool::Operation::AlphaBlend: return "alpha_blend";
-        case AttributeValueBool::Operation::And: return "and";
-        case AttributeValueBool::Operation::Nand: return "nand";
-        case AttributeValueBool::Operation::Or: return "or";
-        case AttributeValueBool::Operation::Nor: return "nor";
-        case AttributeValueBool::Operation::Xor: return "xor";
-        case AttributeValueBool::Operation::Xnor: return "xnor";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Override: return "override";
+        case ::bedrock::protocol::AttributeValueBool::Operation::AlphaBlend: return "alpha_blend";
+        case ::bedrock::protocol::AttributeValueBool::Operation::And: return "and";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Nand: return "nand";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Or: return "or";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Nor: return "nor";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Xor: return "xor";
+        case ::bedrock::protocol::AttributeValueBool::Operation::Xnor: return "xnor";
         default: return invalid_tag;
     }
 }

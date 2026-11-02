@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class CameraAimAssistPresetExclusionDefinition {
 public:
@@ -81,3 +83,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <memory>
 
+namespace bedrock::protocol {
+
 
 class MapInfoRequestPacketClientPixel {
 public:
@@ -37,3 +39,5 @@ public:
 		stream.writeUnsignedShort((x + (y * Y_INDEX_MULTIPLIER)));
     }
 };
+
+} // namespace bedrock::protocol

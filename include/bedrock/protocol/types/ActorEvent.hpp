@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ActorEvent : uint8_t {
     Jump = 1,
     HurtAnimation = 2,
@@ -67,3 +69,5 @@ enum class ActorEvent : uint8_t {
     ShakeWetnessStop = 79,
     KineticDamageDealt = 80,
 };
+
+} // namespace bedrock::protocol

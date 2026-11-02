@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeCoordinateData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeScatterParamData {
 public:
@@ -78,3 +80,5 @@ public:
 		stream.writeShort(iterations);
     }
 };
+
+} // namespace bedrock::protocol

@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class LoomStackRequestAction : public ItemStackRequestAction {
 public:
@@ -30,3 +32,5 @@ public:
 		stream.writeUnsignedByte(repetitions);
     }
 };
+
+} // namespace bedrock::protocol

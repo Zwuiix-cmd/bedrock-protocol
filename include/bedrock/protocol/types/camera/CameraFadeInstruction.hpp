@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/camera/CameraFadeInstructionColor.hpp>
 #include <bedrock/protocol/types/camera/CameraFadeInstructionTime.hpp>
+namespace bedrock::protocol {
+
 
 class CameraFadeInstruction {
 public:
@@ -39,3 +41,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

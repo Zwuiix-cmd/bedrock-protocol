@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class InventoryTransactionChangedSlotsHack {
 public:
@@ -42,3 +44,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

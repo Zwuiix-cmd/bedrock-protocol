@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/ScoreboardIdentityPacketEntry.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetScoreboardIdentityPacket : public Packet {
 public:
@@ -140,3 +142,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

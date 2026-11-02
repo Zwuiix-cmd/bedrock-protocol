@@ -10,6 +10,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseContainerInfo.hpp>
+namespace bedrock::protocol {
+
 
 class ItemStackResponse {
 public:
@@ -70,3 +72,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AgentActionEventPacket : public Packet {
 public:
@@ -117,3 +119,5 @@ public:
 		stream.writeString(responseJson);
     }
 };
+
+} // namespace bedrock::protocol

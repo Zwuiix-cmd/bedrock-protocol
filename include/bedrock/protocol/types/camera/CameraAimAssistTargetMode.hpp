@@ -4,7 +4,11 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class CameraAimAssistTargetMode : uint8_t {
     Angle = 0,
     Distance = 1,
 };
+
+} // namespace bedrock::protocol

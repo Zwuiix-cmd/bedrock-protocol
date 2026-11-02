@@ -10,6 +10,8 @@
 
 #include <bedrock/protocol/types/BuildPlatform.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerListEntry {
 public:
@@ -62,3 +64,5 @@ public:
         skinData->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

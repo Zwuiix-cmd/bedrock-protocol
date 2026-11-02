@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MultiplayerSettingsPacket : public Packet {
 public:
@@ -119,3 +121,5 @@ public:
 		stream.writeVarInt(magic_enum::enum_integer(action));
     }
 };
+
+} // namespace bedrock::protocol

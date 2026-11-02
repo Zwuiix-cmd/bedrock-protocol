@@ -30,6 +30,8 @@ trait PoolAndEnumEmissionMethods
 #include <cassert>
 #include <bedrock/protocol/Packet.hpp>
 
+namespace bedrock::protocol {
+
 class PacketPool {
 public:
     using Constructor = std::shared_ptr<Packet>(*)();
@@ -78,6 +80,8 @@ private:
     static inline std::once_flag s_setupFlag;
     static constexpr size_t ExpectedPacketCount = 64;
 };
+
+} // namespace bedrock::protocol
 CPP;
         $body = str_replace(
             'static constexpr size_t ExpectedPacketCount = 64;',
@@ -90,6 +94,7 @@ CPP;
         foreach ($registrations as $registration) {
             $cpp .= '#include <bedrock/protocol/' . CPPName::type($registration) . ".hpp>\n";
         }
+        $cpp .= $this->protocolNamespaceOpen();
         $cpp .= <<<'CPP'
 
 void PacketPool::setup() noexcept {
@@ -120,6 +125,8 @@ void PacketPool::registerPacket() noexcept {
     s_byType.emplace(tid, &PacketPool::ctor<P>);
     s_byId.emplace(P::ID, &PacketPool::ctor<P>);
 }
+
+} // namespace bedrock::protocol
 CPP;
         $this->write($poolBase . DIRECTORY_SEPARATOR . 'PacketPool.cpp', $cpp);
     }

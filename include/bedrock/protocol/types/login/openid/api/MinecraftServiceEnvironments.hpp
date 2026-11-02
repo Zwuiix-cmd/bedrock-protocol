@@ -5,6 +5,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/login/openid/api/MinecraftServiceAuthEnvironments.hpp>
+namespace bedrock::protocol {
+
 
 class MinecraftServiceEnvironments {
 public:
@@ -21,3 +23,5 @@ public:
         auth->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

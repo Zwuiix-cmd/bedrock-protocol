@@ -8,6 +8,8 @@
 
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
+namespace bedrock::protocol {
+
 
 class ItemTypeEntry {
 public:
@@ -47,3 +49,5 @@ public:
         NetworkNbtSerializer::write(stream, componentNbt);
     }
 };
+
+} // namespace bedrock::protocol

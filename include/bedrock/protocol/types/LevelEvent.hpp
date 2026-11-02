@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class LevelEvent : uint32_t {
     SoundClick = 1000,
     SoundClickFail = 1001,
@@ -125,3 +127,5 @@ enum class LevelEvent : uint32_t {
     AnimationVaultEjectItem = 9813,
     AddParticleMask = 16384,
 };
+
+} // namespace bedrock::protocol

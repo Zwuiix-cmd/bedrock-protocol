@@ -9,6 +9,8 @@
 #include <bedrock/protocol/types/inventory/PredictedResult.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class UseItemTransactionData : public TransactionData {
 public:
@@ -76,3 +78,5 @@ public:
         stream.writeUnsignedByte(clientCooldownState);
     }
 };
+
+} // namespace bedrock::protocol

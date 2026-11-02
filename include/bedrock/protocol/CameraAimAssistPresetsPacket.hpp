@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/camera/CameraAimAssistCategory.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistPreset.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CameraAimAssistPresetsPacket : public Packet {
 public:
@@ -135,3 +137,5 @@ public:
 		stream.writeUnsignedByte(operation);
     }
 };
+
+} // namespace bedrock::protocol

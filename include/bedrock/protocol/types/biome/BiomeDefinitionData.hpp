@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeDefinitionData {
 public:
@@ -88,3 +90,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

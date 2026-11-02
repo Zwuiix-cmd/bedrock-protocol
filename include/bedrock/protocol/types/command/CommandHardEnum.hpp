@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/command/ConstrainedEnumValue.hpp>
+namespace bedrock::protocol {
+
 
 class CommandHardEnum {
 public:
@@ -39,3 +41,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

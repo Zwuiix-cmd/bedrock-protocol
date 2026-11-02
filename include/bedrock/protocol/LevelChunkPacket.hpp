@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/ChunkPosition.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class LevelChunkPacket : public Packet {
 public:
@@ -168,3 +170,5 @@ public:
 		stream.writeString(extraPayload);
     }
 };
+
+} // namespace bedrock::protocol

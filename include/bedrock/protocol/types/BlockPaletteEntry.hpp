@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
+namespace bedrock::protocol {
+
 
 class BlockPaletteEntry {
 public:
@@ -26,3 +28,5 @@ public:
         NetworkNbtSerializer::write(stream, states);
     }
 };
+
+} // namespace bedrock::protocol

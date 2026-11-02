@@ -5,6 +5,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
+namespace bedrock::protocol {
+
 
 class CameraProgressOption {
 public:
@@ -29,3 +31,5 @@ public:
 		stream.writeString(easeType);
     }
 };
+
+} // namespace bedrock::protocol

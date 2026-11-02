@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/SubChunkPacketEntryCommon.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkPacketEntryWithCache {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeUnsignedLong(usedBlobHash);
     }
 };
+
+} // namespace bedrock::protocol

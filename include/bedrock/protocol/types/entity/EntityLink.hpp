@@ -5,6 +5,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class EntityLink {
 public:
@@ -57,3 +59,5 @@ public:
         stream.writeFloat(vehicleAngularVelocity);
     }
 };
+
+} // namespace bedrock::protocol

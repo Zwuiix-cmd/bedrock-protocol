@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class NormalTransactionData : public TransactionData {
 public:
@@ -26,3 +28,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

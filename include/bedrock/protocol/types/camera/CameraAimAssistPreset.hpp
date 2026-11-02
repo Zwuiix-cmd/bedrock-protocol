@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/camera/CameraAimAssistPresetExclusionDefinition.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistPresetItemSettings.hpp>
+namespace bedrock::protocol {
+
 
 class CameraAimAssistPreset {
 public:
@@ -70,3 +72,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
+namespace bedrock::protocol {
+
 
 class FurnaceRecipe : public RecipeWithTypeId {
 public:
@@ -61,3 +63,5 @@ public:
         stream.writeString(blockName);
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <memory>
 
+namespace bedrock::protocol {
+
 
 class DataStore {
 public:
@@ -18,3 +20,5 @@ public:
 
     static std::shared_ptr<DataStore> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

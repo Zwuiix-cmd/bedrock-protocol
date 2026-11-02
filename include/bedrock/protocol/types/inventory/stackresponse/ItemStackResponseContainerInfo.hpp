@@ -8,6 +8,8 @@
 
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
 #include <bedrock/protocol/types/inventory/stackresponse/ItemStackResponseSlotInfo.hpp>
+namespace bedrock::protocol {
+
 
 class ItemStackResponseContainerInfo {
 public:
@@ -49,3 +51,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

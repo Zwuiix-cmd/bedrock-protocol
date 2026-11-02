@@ -97,6 +97,8 @@
 #include <bedrock/protocol/types/PlayerBlockAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequest.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerAuthInputPacket : public Packet {
 public:
@@ -223,3 +225,5 @@ public:
 		stream.writeVec2(rawMove);
     }
 };
+
+} // namespace bedrock::protocol

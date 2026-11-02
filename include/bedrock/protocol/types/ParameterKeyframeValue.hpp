@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class ParameterKeyframeValue {
 public:
@@ -22,3 +24,5 @@ public:
 		stream.writeVec3(value);
     }
 };
+
+} // namespace bedrock::protocol

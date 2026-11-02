@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class CommandParameterRawData {
 public:
@@ -39,3 +41,5 @@ public:
 		stream.writeUnsignedByte(flags);
     }
 };
+
+} // namespace bedrock::protocol

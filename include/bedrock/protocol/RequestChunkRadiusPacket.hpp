@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class RequestChunkRadiusPacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		stream.writeUnsignedByte(maxRadius);
     }
 };
+
+} // namespace bedrock::protocol

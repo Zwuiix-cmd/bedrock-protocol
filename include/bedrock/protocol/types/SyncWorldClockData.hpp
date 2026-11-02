@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
+namespace bedrock::protocol {
+
 
 class SyncWorldClockData {
 public:
@@ -64,3 +66,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

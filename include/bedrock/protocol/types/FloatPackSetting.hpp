@@ -5,6 +5,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/PackSetting.hpp>
+namespace bedrock::protocol {
+
 
 class FloatPackSetting : public PackSetting {
 public:
@@ -30,3 +32,5 @@ public:
 		stream.writeFloat(value);
     }
 };
+
+} // namespace bedrock::protocol

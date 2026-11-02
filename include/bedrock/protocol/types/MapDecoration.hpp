@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class MapDecoration {
 public:
@@ -49,3 +51,5 @@ public:
         stream.writeUnsignedInt(color);
     }
 };
+
+} // namespace bedrock::protocol

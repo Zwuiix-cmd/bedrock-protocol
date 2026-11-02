@@ -32,6 +32,8 @@
 #include <string_view>
 #include <vector>
 
+using namespace bedrock::protocol;
+
 namespace {
 
 void expect(bool condition, std::string_view message) {

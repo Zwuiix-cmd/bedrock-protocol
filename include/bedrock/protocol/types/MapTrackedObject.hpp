@@ -5,6 +5,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class MapTrackedObject {
 public:
@@ -33,3 +35,5 @@ public:
         stream.writeActorUniqueID(actorUniqueId);
     }
 };
+
+} // namespace bedrock::protocol

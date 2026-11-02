@@ -4,6 +4,9 @@
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 struct NetworkItemStack {
     int32_t stackId = 0;
     NetworkItemDescriptor descriptor;
@@ -34,3 +37,6 @@ struct NetworkItemStack {
     }
 
 };
+
+
+} // namespace bedrock::protocol

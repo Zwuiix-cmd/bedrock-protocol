@@ -94,6 +94,8 @@
 #include <bedrock/protocol/types/recipe/PotionTypeRecipe.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CraftingDataPacket : public Packet {
 public:
@@ -255,3 +257,5 @@ public:
 		stream.writeBool(cleanRecipes);
     }
 };
+
+} // namespace bedrock::protocol

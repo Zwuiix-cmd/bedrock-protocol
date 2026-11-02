@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
+namespace bedrock::protocol {
+
 
 class RecipeUnlockingRequirement {
 public:
@@ -31,3 +33,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

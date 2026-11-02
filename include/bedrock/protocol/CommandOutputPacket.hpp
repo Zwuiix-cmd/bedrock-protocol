@@ -91,6 +91,8 @@
 #include <bedrock/protocol/types/command/CommandOriginData.hpp>
 #include <bedrock/protocol/types/command/CommandOutputMessage.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CommandOutputPacket : public Packet {
 public:
@@ -165,14 +167,16 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<CommandOutputPacket::OutputType>(CommandOutputPacket::OutputType value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::CommandOutputPacket::OutputType>(::bedrock::protocol::CommandOutputPacket::OutputType value) noexcept {
     switch (value) {
-        case CommandOutputPacket::OutputType::Last: return "lastoutput";
-        case CommandOutputPacket::OutputType::Silent: return "silent";
-        case CommandOutputPacket::OutputType::All: return "alloutput";
-        case CommandOutputPacket::OutputType::DataSet: return "dataset";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::Last: return "lastoutput";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::Silent: return "silent";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::All: return "alloutput";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::DataSet: return "dataset";
         default: return invalid_tag;
     }
 }

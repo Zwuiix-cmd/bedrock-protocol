@@ -10,6 +10,8 @@
 
 #include <bedrock/protocol/types/AttributeLayerSettings.hpp>
 #include <bedrock/protocol/types/AttributeEnvironment.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeLayer {
 public:
@@ -61,3 +63,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/GameRule.hpp>
+namespace bedrock::protocol {
+
 
 class IntGameRule : public GameRule {
 public:
@@ -35,3 +37,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

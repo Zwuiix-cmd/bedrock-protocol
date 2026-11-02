@@ -7,6 +7,8 @@
 #include <string>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 
 class CommandOriginData {
 public:
@@ -54,26 +56,28 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<CommandOriginData::Type>(CommandOriginData::Type value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::CommandOriginData::Type>(::bedrock::protocol::CommandOriginData::Type value) noexcept {
     switch (value) {
-        case CommandOriginData::Type::Player: return "player";
-        case CommandOriginData::Type::Block: return "commandblock";
-        case CommandOriginData::Type::MinecartBlock: return "minecartcommandblock";
-        case CommandOriginData::Type::DevConsole: return "devconsole";
-        case CommandOriginData::Type::Test: return "test";
-        case CommandOriginData::Type::AutomationPlayer: return "automationplayer";
-        case CommandOriginData::Type::ClientAutomation: return "clientautomation";
-        case CommandOriginData::Type::DedicatedServer: return "dedicatedserver";
-        case CommandOriginData::Type::Entity: return "entity";
-        case CommandOriginData::Type::Virtual: return "virtual";
-        case CommandOriginData::Type::GameArgument: return "gameargument";
-        case CommandOriginData::Type::EntityServer: return "entityserver";
-        case CommandOriginData::Type::Precompiled: return "precompiled";
-        case CommandOriginData::Type::GameDirectorEntityServer: return "gamedirectorentityserver";
-        case CommandOriginData::Type::Scripting: return "scripting";
-        case CommandOriginData::Type::ExecuteContext: return "executecontext";
+        case ::bedrock::protocol::CommandOriginData::Type::Player: return "player";
+        case ::bedrock::protocol::CommandOriginData::Type::Block: return "commandblock";
+        case ::bedrock::protocol::CommandOriginData::Type::MinecartBlock: return "minecartcommandblock";
+        case ::bedrock::protocol::CommandOriginData::Type::DevConsole: return "devconsole";
+        case ::bedrock::protocol::CommandOriginData::Type::Test: return "test";
+        case ::bedrock::protocol::CommandOriginData::Type::AutomationPlayer: return "automationplayer";
+        case ::bedrock::protocol::CommandOriginData::Type::ClientAutomation: return "clientautomation";
+        case ::bedrock::protocol::CommandOriginData::Type::DedicatedServer: return "dedicatedserver";
+        case ::bedrock::protocol::CommandOriginData::Type::Entity: return "entity";
+        case ::bedrock::protocol::CommandOriginData::Type::Virtual: return "virtual";
+        case ::bedrock::protocol::CommandOriginData::Type::GameArgument: return "gameargument";
+        case ::bedrock::protocol::CommandOriginData::Type::EntityServer: return "entityserver";
+        case ::bedrock::protocol::CommandOriginData::Type::Precompiled: return "precompiled";
+        case ::bedrock::protocol::CommandOriginData::Type::GameDirectorEntityServer: return "gamedirectorentityserver";
+        case ::bedrock::protocol::CommandOriginData::Type::Scripting: return "scripting";
+        case ::bedrock::protocol::CommandOriginData::Type::ExecuteContext: return "executecontext";
         default: return invalid_tag;
     }
 }

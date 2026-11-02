@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class PotionTypeRecipe {
 public:
@@ -48,3 +50,5 @@ public:
         stream.writeVarInt(outputItemMeta);
     }
 };
+
+} // namespace bedrock::protocol

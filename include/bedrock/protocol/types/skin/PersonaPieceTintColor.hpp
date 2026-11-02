@@ -8,6 +8,8 @@
 #include <string_view>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class PersonaPieceTintColor {
 public:
@@ -41,13 +43,15 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<PersonaPieceTintColor::PieceType>(PersonaPieceTintColor::PieceType value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::PersonaPieceTintColor::PieceType>(::bedrock::protocol::PersonaPieceTintColor::PieceType value) noexcept {
     switch (value) {
-        case PersonaPieceTintColor::PieceType::PersonaEyes: return "persona_eyes";
-        case PersonaPieceTintColor::PieceType::PersonaHair: return "persona_hair";
-        case PersonaPieceTintColor::PieceType::PersonaMouth: return "persona_mouth";
+        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaEyes: return "persona_eyes";
+        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaHair: return "persona_hair";
+        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaMouth: return "persona_mouth";
         default: return invalid_tag;
     }
 }

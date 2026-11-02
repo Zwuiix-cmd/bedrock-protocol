@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeScatterParamData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeConsolidatedFeatureData {
 public:
@@ -46,3 +48,5 @@ public:
 		stream.writeBool(useInternal);
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ResourcePackType : uint8_t {
     Invalid = 0,
     Addon = 1,
@@ -15,3 +17,5 @@ enum class ResourcePackType : uint8_t {
     Skins = 7,
     WorldTemplate = 8,
 };
+
+} // namespace bedrock::protocol

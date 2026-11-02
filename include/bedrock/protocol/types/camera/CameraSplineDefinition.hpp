@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/camera/CameraSplineInstruction.hpp>
+namespace bedrock::protocol {
+
 
 class CameraSplineDefinition {
 public:
@@ -26,3 +28,5 @@ public:
 		instruction->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

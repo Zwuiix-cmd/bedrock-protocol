@@ -4,8 +4,12 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ChatRestrictionLevel : uint8_t {
     None = 0,
     Dropped = 1,
     Disabled = 2,
 };
+
+} // namespace bedrock::protocol

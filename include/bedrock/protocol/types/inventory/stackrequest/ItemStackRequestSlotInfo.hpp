@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
+namespace bedrock::protocol {
+
 
 class ItemStackRequestSlotInfo {
 public:
@@ -36,3 +38,5 @@ public:
 		stream.writeVarInt(stackId);
     }
 };
+
+} // namespace bedrock::protocol

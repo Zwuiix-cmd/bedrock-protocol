@@ -36,6 +36,8 @@ $lines = [
     '#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>',
     '#include <bedrock/protocol/pool/PacketPool.hpp>',
 
+    'using namespace bedrock::protocol;',
+
     '',
     'namespace generated_packet_tests {',
     '',

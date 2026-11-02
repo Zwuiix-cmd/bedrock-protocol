@@ -6,6 +6,8 @@
 #include <optional>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class BiomeCappedSurfaceData {
 public:
@@ -67,3 +69,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

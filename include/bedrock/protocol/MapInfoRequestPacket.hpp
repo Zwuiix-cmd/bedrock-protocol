@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/MapInfoRequestPacketClientPixel.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MapInfoRequestPacket : public Packet {
 public:
@@ -126,3 +128,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

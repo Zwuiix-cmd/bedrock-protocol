@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/SubChunkPacketEntryWithoutCacheList.hpp>
 #include <bedrock/protocol/types/SubChunkPosition.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkPacket : public Packet {
 public:
@@ -138,3 +140,5 @@ public:
         std::visit([&](const auto& alternative) { using Alternative = std::remove_cvref_t<decltype(alternative)>; if constexpr (std::is_same_v<Alternative, std::shared_ptr<SubChunkPacketEntryWithCacheList>>) { alternative->write(stream); } else if constexpr (std::is_same_v<Alternative, std::shared_ptr<SubChunkPacketEntryWithoutCacheList>>) { alternative->write(stream); } }, entries);
     }
 };
+
+} // namespace bedrock::protocol

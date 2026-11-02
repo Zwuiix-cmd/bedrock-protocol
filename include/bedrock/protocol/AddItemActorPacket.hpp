@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AddItemActorPacket : public Packet {
 public:
@@ -131,3 +133,5 @@ public:
 		stream.writeBool(isFromFishing);
     }
 };
+
+} // namespace bedrock::protocol

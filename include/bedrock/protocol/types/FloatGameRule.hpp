@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/GameRule.hpp>
+namespace bedrock::protocol {
+
 
 class FloatGameRule : public GameRule {
 public:
@@ -31,3 +33,5 @@ public:
 		stream.writeFloat(value);
     }
 };
+
+} // namespace bedrock::protocol

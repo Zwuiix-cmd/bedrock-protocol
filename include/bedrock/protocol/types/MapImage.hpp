@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class MapImage {
 public:
@@ -91,3 +93,5 @@ public:
 		stream.writeByteArray(*(encodedPixelCache));
     }
 };
+
+} // namespace bedrock::protocol

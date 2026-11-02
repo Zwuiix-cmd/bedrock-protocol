@@ -7,6 +7,8 @@
 #include <optional>
 
 #include <bedrock/protocol/types/WorldPosition.hpp>
+namespace bedrock::protocol {
+
 
 class LocatorBarWaypoint {
 public:
@@ -80,3 +82,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

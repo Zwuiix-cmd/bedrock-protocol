@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class DestroyStackRequestAction : public ItemStackRequestAction {
 public:
@@ -32,3 +34,5 @@ public:
 		source->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

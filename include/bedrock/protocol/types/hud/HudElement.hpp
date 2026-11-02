@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class HudElement : uint8_t {
     PaperDoll = 0,
     Armor = 1,
@@ -19,3 +21,5 @@ enum class HudElement : uint8_t {
     StatusEffects = 11,
     ItemText = 12,
 };
+
+} // namespace bedrock::protocol

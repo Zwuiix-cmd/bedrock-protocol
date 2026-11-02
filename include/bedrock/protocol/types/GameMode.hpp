@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class GameMode : uint8_t {
     Survival = 0,
     Creative = 1,
@@ -13,3 +15,5 @@ enum class GameMode : uint8_t {
     Default = 5,
     Spectator = 6,
 };
+
+} // namespace bedrock::protocol

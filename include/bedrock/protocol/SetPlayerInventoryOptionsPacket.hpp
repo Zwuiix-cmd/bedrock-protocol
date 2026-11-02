@@ -89,6 +89,8 @@
 #include <bedrock/protocol/types/inventory/InventoryLeftTab.hpp>
 #include <bedrock/protocol/types/inventory/InventoryRightTab.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetPlayerInventoryOptionsPacket : public Packet {
 public:
@@ -134,3 +136,5 @@ public:
 		stream.writeVarInt(magic_enum::enum_integer(craftingLayout));
     }
 };
+
+} // namespace bedrock::protocol

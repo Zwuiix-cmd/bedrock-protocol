@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/OverrideUpdateType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerUpdateEntityOverridesPacket : public Packet {
 public:
@@ -138,3 +140,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

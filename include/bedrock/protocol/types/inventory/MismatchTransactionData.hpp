@@ -6,6 +6,8 @@
 #include <exception>
 
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class MismatchTransactionData : public TransactionData {
 public:
@@ -30,3 +32,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

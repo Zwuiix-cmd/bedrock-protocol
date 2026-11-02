@@ -11,6 +11,8 @@
 #include <bedrock/protocol/types/DoubleDataStoreValue.hpp>
 #include <bedrock/protocol/types/StringDataStoreValue.hpp>
 #include <bedrock/protocol/types/DataStore.hpp>
+namespace bedrock::protocol {
+
 
 class DataStoreChange : public DataStore {
 public:
@@ -51,3 +53,5 @@ public:
 		data->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

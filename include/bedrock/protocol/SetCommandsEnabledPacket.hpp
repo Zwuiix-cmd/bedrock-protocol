@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetCommandsEnabledPacket : public Packet {
 public:
@@ -111,3 +113,5 @@ public:
 		stream.writeBool(enabled);
     }
 };
+
+} // namespace bedrock::protocol

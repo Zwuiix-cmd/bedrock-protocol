@@ -96,6 +96,8 @@
 #include <bedrock/protocol/types/command/raw/CommandEnumRawData.hpp>
 #include <bedrock/protocol/types/command/raw/CommandRawData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AvailableCommandsPacket : public Packet {
 public:
@@ -224,3 +226,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

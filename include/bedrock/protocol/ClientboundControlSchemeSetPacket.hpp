@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/ControlScheme.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientboundControlSchemeSetPacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		stream.writeUnsignedByte(magic_enum::enum_integer(scheme));
     }
 };
+
+} // namespace bedrock::protocol

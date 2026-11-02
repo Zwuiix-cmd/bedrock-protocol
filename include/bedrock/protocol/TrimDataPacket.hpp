@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/TrimMaterial.hpp>
 #include <bedrock/protocol/types/TrimPattern.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class TrimDataPacket : public Packet {
 public:
@@ -132,3 +134,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class BeaconPaymentStackRequestAction : public ItemStackRequestAction {
 public:
@@ -29,3 +31,5 @@ public:
 		stream.writeVarInt(secondaryEffectId);
     }
 };
+
+} // namespace bedrock::protocol

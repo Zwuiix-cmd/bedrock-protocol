@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class MineBlockStackRequestAction : public ItemStackRequestAction {
 public:
@@ -32,3 +34,5 @@ public:
 		stream.writeVarInt(stackId);
     }
 };
+
+} // namespace bedrock::protocol

@@ -9,6 +9,8 @@
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
+namespace bedrock::protocol {
+
 
 class SmithingTransformRecipe : public RecipeWithTypeId {
 public:
@@ -79,3 +81,5 @@ public:
         stream.writeUnsignedVarInt(recipeNetId);
     }
 };
+
+} // namespace bedrock::protocol

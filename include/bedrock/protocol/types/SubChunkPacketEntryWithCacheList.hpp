@@ -6,6 +6,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/SubChunkPacketEntryWithCache.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkPacketEntryWithCacheList {
 public:
@@ -24,3 +26,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

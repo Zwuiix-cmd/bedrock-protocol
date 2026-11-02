@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/PackSetting.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ServerboundPackSettingChangePacket : public Packet {
 public:
@@ -138,3 +140,5 @@ public:
 		packSetting->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

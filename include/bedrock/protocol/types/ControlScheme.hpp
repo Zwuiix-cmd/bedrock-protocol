@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ControlScheme : uint8_t {
     LockedPlayerRelativeStrafe = 0,
     CameraRelative = 1,
@@ -11,3 +13,5 @@ enum class ControlScheme : uint8_t {
     PlayerRelative = 3,
     PlayerRelativeStrafe = 4,
 };
+
+} // namespace bedrock::protocol

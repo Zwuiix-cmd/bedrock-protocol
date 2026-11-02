@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ChunkCacheBlob {
 public:
@@ -24,3 +26,5 @@ public:
         stream.writeString(payload);
     }
 };
+
+} // namespace bedrock::protocol

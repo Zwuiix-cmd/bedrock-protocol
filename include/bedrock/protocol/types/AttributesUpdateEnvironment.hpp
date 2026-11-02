@@ -10,6 +10,8 @@
 
 #include <bedrock/protocol/types/AttributeEnvironment.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
+namespace bedrock::protocol {
+
 
 class AttributesUpdateEnvironment : public AttributeLayerSyncPayload {
 public:
@@ -60,3 +62,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

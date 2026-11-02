@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class BuildPlatform : int32_t {
     Unknown = -1,
     Android = 1,
@@ -22,3 +24,5 @@ enum class BuildPlatform : int32_t {
     WindowsPhone = 14,
     Linux = 15,
 };
+
+} // namespace bedrock::protocol

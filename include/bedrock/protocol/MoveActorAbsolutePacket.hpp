@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MoveActorAbsolutePacket : public Packet {
 public:
@@ -132,3 +134,5 @@ public:
 		stream.writeRotationByte(headYaw);
     }
 };
+
+} // namespace bedrock::protocol

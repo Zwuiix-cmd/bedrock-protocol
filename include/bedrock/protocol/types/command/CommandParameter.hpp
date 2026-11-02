@@ -12,6 +12,8 @@
 
 #include <bedrock/protocol/types/command/CommandHardEnum.hpp>
 #include <bedrock/protocol/types/command/CommandSoftEnum.hpp>
+namespace bedrock::protocol {
+
 
 class CommandParameter {
 public:
@@ -51,3 +53,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

@@ -8,6 +8,8 @@
 #include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightFloat.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightString.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeLayerSettings {
 public:
@@ -43,3 +45,5 @@ public:
 		stream.writeBool(transitionsPaused);
     }
 };
+
+} // namespace bedrock::protocol

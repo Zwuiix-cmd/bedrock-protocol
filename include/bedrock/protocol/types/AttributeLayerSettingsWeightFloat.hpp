@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeLayerSettingsWeightFloat : public AttributeLayerSettingsWeight {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeFloat(value);
     }
 };
+
+} // namespace bedrock::protocol

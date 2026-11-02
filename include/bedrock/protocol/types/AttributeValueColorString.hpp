@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/AttributeValueColorValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeValueColorString : public AttributeValueColorValue {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeString(value);
     }
 };
+
+} // namespace bedrock::protocol

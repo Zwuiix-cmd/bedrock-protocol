@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ResourcePackInfoEntry {
 public:
@@ -69,3 +71,5 @@ public:
 		stream.writeString(cdnUrl);
     }
 };
+
+} // namespace bedrock::protocol

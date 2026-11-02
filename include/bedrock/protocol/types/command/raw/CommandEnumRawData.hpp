@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class CommandEnumRawData {
 public:
@@ -43,3 +45,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

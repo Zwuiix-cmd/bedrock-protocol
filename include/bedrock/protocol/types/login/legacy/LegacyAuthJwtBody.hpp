@@ -5,6 +5,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/login/JwtBodyRfc7519.hpp>
+namespace bedrock::protocol {
+
 
 class LegacyAuthJwtBody : public JwtBodyRfc7519 {
 public:
@@ -21,3 +23,5 @@ public:
         stream.writeString(identityPublicKey);
     }
 };
+
+} // namespace bedrock::protocol

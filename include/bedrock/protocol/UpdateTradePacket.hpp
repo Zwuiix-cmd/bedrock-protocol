@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateTradePacket : public Packet {
 public:
@@ -140,3 +142,5 @@ public:
 		NetworkNbtSerializer::write(stream, offers);
     }
 };
+
+} // namespace bedrock::protocol

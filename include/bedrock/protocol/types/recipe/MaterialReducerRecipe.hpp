@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/MaterialReducerRecipeOutput.hpp>
+namespace bedrock::protocol {
+
 
 class MaterialReducerRecipe {
 public:
@@ -38,3 +40,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

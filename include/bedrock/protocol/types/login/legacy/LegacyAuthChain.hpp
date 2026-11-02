@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class LegacyAuthChain {
 public:
@@ -24,3 +26,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

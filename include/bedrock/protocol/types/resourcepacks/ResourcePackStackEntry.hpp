@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ResourcePackStackEntry {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeString(subPackName);
     }
 };
+
+} // namespace bedrock::protocol

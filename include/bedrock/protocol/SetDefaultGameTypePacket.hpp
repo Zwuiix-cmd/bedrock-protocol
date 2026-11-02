@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetDefaultGameTypePacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		stream.writeVarInt(magic_enum::enum_integer(gamemode));
     }
 };
+
+} // namespace bedrock::protocol

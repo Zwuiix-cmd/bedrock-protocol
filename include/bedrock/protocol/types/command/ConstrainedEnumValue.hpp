@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class ConstrainedEnumValue {
 public:
@@ -38,3 +40,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

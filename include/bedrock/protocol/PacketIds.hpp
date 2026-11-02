@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 enum class PacketIds : int {
     Unknown                            = 0,
     Login                              = 1,
@@ -229,3 +231,5 @@ enum class PacketIds : int {
     SyncWorldClocks                    = 344,
     ClientboundAttributeLayerSync      = 345,
 };
+
+} // namespace bedrock::protocol

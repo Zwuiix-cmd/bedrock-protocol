@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class UseItemOnEntityTransactionData : public TransactionData {
 public:
@@ -54,3 +56,5 @@ public:
         stream.writeVec3(clickPosition);
     }
 };
+
+} // namespace bedrock::protocol

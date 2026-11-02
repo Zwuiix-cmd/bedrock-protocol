@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class BiomeWeightedData {
 public:
@@ -23,3 +25,5 @@ public:
 		stream.writeUnsignedInt(weight);
     }
 };
+
+} // namespace bedrock::protocol

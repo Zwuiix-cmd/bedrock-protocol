@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class WindowTypes : int32_t {
     None = -9,
     Inventory = -1,
@@ -45,3 +47,5 @@ enum class WindowTypes : int32_t {
     DecoratedPot = 35,
     Crafter = 36,
 };
+
+} // namespace bedrock::protocol

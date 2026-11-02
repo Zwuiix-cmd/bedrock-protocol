@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class TrimPattern {
 public:
@@ -23,3 +25,5 @@ public:
 		stream.writeString(patternId);
     }
 };
+
+} // namespace bedrock::protocol

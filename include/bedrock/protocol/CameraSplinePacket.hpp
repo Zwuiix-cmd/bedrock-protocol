@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/camera/CameraSplineDefinition.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CameraSplinePacket : public Packet {
 public:
@@ -120,3 +122,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

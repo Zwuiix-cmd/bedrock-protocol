@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/entity/AttributeModifier.hpp>
+namespace bedrock::protocol {
+
 
 class Attribute {
 public:
@@ -53,3 +55,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

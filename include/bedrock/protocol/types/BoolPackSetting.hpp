@@ -5,6 +5,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/PackSetting.hpp>
+namespace bedrock::protocol {
+
 
 class BoolPackSetting : public PackSetting {
 public:
@@ -30,3 +32,5 @@ public:
 		stream.writeBool(value);
     }
 };
+
+} // namespace bedrock::protocol

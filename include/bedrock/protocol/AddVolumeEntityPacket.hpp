@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AddVolumeEntityPacket : public Packet {
 public:
@@ -134,3 +136,5 @@ public:
 		stream.writeString(engineVersion);
     }
 };
+
+} // namespace bedrock::protocol

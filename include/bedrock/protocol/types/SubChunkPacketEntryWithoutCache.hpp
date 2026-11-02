@@ -5,6 +5,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/SubChunkPacketEntryCommon.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkPacketEntryWithoutCache {
 public:
@@ -22,3 +24,5 @@ public:
 		base->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

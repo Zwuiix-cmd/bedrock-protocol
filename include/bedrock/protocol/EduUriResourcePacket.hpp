@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/EducationUriResource.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class EduUriResourcePacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		resource->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

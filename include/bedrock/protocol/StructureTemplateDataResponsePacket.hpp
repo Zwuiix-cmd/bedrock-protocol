@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class StructureTemplateDataResponsePacket : public Packet {
 public:
@@ -132,3 +134,5 @@ public:
 		stream.writeUnsignedByte(magic_enum::enum_integer(responseType));
     }
 };
+
+} // namespace bedrock::protocol

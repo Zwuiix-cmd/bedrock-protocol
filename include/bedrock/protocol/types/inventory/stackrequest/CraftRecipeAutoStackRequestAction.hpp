@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class CraftRecipeAutoStackRequestAction : public ItemStackRequestAction {
 public:
@@ -64,3 +66,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

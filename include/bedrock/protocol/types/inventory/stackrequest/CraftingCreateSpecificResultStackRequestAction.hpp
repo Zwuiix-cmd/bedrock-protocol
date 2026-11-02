@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class CraftingCreateSpecificResultStackRequestAction : public ItemStackRequestAction {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeUnsignedByte(resultIndex);
     }
 };
+
+} // namespace bedrock::protocol

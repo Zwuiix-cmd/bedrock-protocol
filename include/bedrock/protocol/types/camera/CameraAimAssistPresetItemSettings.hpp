@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class CameraAimAssistPresetItemSettings {
 public:
@@ -23,3 +25,5 @@ public:
 		stream.writeString(categoryName);
     }
 };
+
+} // namespace bedrock::protocol

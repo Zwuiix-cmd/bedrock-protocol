@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MobArmorEquipmentPacket : public Packet {
 public:
@@ -127,3 +129,5 @@ public:
 		body.write(stream);
     }
 };
+
+} // namespace bedrock::protocol

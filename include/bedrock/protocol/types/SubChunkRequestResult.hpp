@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class SubChunkRequestResult : uint8_t {
     Success = 1,
     NoSuchChunk = 2,
@@ -12,3 +14,5 @@ enum class SubChunkRequestResult : uint8_t {
     YIndexOutOfBounds = 5,
     SuccessAllAir = 6,
 };
+
+} // namespace bedrock::protocol

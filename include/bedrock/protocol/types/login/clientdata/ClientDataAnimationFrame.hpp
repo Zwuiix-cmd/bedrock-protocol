@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ClientDataAnimationFrame {
 public:
@@ -35,3 +37,5 @@ public:
         stream.writeInt(AnimationExpression);
     }
 };
+
+} // namespace bedrock::protocol

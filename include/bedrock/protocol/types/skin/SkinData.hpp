@@ -13,6 +13,8 @@
 #include <bedrock/protocol/types/skin/PersonaSkinPiece.hpp>
 #include <bedrock/protocol/types/skin/SkinAnimation.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
+namespace bedrock::protocol {
+
 
 class SkinData {
 public:
@@ -151,12 +153,14 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<SkinData::ArmSize>(SkinData::ArmSize value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::SkinData::ArmSize>(::bedrock::protocol::SkinData::ArmSize value) noexcept {
     switch (value) {
-        case SkinData::ArmSize::Slim: return "slim";
-        case SkinData::ArmSize::Wide: return "wide";
+        case ::bedrock::protocol::SkinData::ArmSize::Slim: return "slim";
+        case ::bedrock::protocol::SkinData::ArmSize::Wide: return "wide";
         default: return invalid_tag;
     }
 }

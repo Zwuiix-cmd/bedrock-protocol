@@ -8,6 +8,8 @@
 
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class DeprecatedCraftingResultsStackRequestAction : public ItemStackRequestAction {
 public:
@@ -45,3 +47,5 @@ public:
         stream.writeUnsignedByte(iterations);
     }
 };
+
+} // namespace bedrock::protocol

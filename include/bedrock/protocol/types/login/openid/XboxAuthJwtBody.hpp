@@ -5,6 +5,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/login/JwtBodyRfc7519.hpp>
+namespace bedrock::protocol {
+
 
 class XboxAuthJwtBody : public JwtBodyRfc7519 {
 public:
@@ -45,3 +47,5 @@ public:
         stream.writeString(pname);
     }
 };
+
+} // namespace bedrock::protocol

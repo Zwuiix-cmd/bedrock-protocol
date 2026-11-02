@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/command/ChainedSubCommandValue.hpp>
+namespace bedrock::protocol {
+
 
 class ChainedSubCommandData {
 public:
@@ -33,3 +35,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

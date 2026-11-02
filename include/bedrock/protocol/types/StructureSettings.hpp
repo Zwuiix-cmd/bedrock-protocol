@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class StructureSettings {
 public:
@@ -59,3 +61,5 @@ public:
         stream.writeVec3(pivot);
     }
 };
+
+} // namespace bedrock::protocol

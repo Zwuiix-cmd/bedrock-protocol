@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class CameraFadeInstructionTime {
 public:
@@ -25,3 +27,5 @@ public:
 		stream.writeFloat(fadeOutTime);
     }
 };
+
+} // namespace bedrock::protocol

@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/PlayerAuthInputFlags.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientMovementPredictionSyncPacket : public Packet {
 public:
@@ -147,3 +149,5 @@ public:
 		stream.writeBool(actorFlyingState);
     }
 };
+
+} // namespace bedrock::protocol

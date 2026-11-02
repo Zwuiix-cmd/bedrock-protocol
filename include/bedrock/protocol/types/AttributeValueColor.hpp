@@ -11,6 +11,8 @@
 #include <bedrock/protocol/types/AttributeValueColorArray.hpp>
 #include <bedrock/protocol/types/AttributeValueColorString.hpp>
 #include <bedrock/protocol/types/AttributeValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeValueColor : public AttributeValue {
 public:
@@ -48,15 +50,17 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<AttributeValueColor::Operation>(AttributeValueColor::Operation value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::AttributeValueColor::Operation>(::bedrock::protocol::AttributeValueColor::Operation value) noexcept {
     switch (value) {
-        case AttributeValueColor::Operation::Override: return "override";
-        case AttributeValueColor::Operation::AlphaBlend: return "alpha_blend";
-        case AttributeValueColor::Operation::Add: return "add";
-        case AttributeValueColor::Operation::Subtract: return "subtract";
-        case AttributeValueColor::Operation::Multiply: return "multiply";
+        case ::bedrock::protocol::AttributeValueColor::Operation::Override: return "override";
+        case ::bedrock::protocol::AttributeValueColor::Operation::AlphaBlend: return "alpha_blend";
+        case ::bedrock::protocol::AttributeValueColor::Operation::Add: return "add";
+        case ::bedrock::protocol::AttributeValueColor::Operation::Subtract: return "subtract";
+        case ::bedrock::protocol::AttributeValueColor::Operation::Multiply: return "multiply";
         default: return invalid_tag;
     }
 }

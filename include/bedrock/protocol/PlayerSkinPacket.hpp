@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerSkinPacket : public Packet {
 public:
@@ -125,3 +127,5 @@ public:
 		stream.writeBool(skin->isVerified);
     }
 };
+
+} // namespace bedrock::protocol

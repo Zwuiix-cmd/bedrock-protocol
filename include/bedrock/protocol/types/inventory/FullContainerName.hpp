@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <optional>
 
+namespace bedrock::protocol {
+
 
 class FullContainerName {
 public:
@@ -28,3 +30,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

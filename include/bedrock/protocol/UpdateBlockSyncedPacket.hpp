@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateBlockSyncedPacket : public Packet {
 public:
@@ -122,3 +124,5 @@ public:
         stream.writeUnsignedVarLong(magic_enum::enum_integer(updateType));
     }
 };
+
+} // namespace bedrock::protocol

@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class SpawnSettings {
 public:
@@ -35,3 +37,5 @@ public:
 		stream.writeVarInt(dimension);
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class SyncWorldClockStateData {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeBool(paused);
     }
 };
+
+} // namespace bedrock::protocol

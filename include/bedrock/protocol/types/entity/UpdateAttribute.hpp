@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/entity/AttributeModifier.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateAttribute {
 public:
@@ -78,3 +80,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

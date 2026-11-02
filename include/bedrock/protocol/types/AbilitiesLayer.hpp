@@ -6,6 +6,9 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 enum class AbilitiesLayerId : uint16_t {
     Cache = 0,
     Base = 1,
@@ -42,3 +45,5 @@ public:
         stream.writeFloat(walkSpeed);
     }
 };
+
+} // namespace bedrock::protocol

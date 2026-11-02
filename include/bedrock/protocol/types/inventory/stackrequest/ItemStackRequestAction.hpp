@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <memory>
 
+namespace bedrock::protocol {
+
 
 class ItemStackRequestAction {
 public:
@@ -18,3 +20,5 @@ public:
 
     static std::shared_ptr<ItemStackRequestAction> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

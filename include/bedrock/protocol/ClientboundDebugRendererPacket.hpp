@@ -89,6 +89,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/DebugMarkerData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientboundDebugRendererPacket : public Packet {
 public:
@@ -127,12 +129,14 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<ClientboundDebugRendererPacket::Type>(ClientboundDebugRendererPacket::Type value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::ClientboundDebugRendererPacket::Type>(::bedrock::protocol::ClientboundDebugRendererPacket::Type value) noexcept {
     switch (value) {
-        case ClientboundDebugRendererPacket::Type::Clear: return "cleardebugmarkers";
-        case ClientboundDebugRendererPacket::Type::AddCube: return "adddebugmarkercube";
+        case ::bedrock::protocol::ClientboundDebugRendererPacket::Type::Clear: return "cleardebugmarkers";
+        case ::bedrock::protocol::ClientboundDebugRendererPacket::Type::AddCube: return "adddebugmarkercube";
         default: return invalid_tag;
     }
 }

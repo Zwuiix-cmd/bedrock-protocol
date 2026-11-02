@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/command/raw/CommandParameterRawData.hpp>
+namespace bedrock::protocol {
+
 
 class CommandOverloadRawData {
 public:
@@ -47,3 +49,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

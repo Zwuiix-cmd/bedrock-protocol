@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestSlotInfo.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class SwapStackRequestAction : public ItemStackRequestAction {
 public:
@@ -38,3 +40,5 @@ public:
 		slot2->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

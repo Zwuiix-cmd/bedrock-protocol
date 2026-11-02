@@ -14,6 +14,8 @@
 #include <utility>
 #include <vector>
 
+namespace bedrock::protocol {
+
 enum class NbtTagType : uint8_t {
     End = 0,
     Byte = 1,
@@ -480,3 +482,5 @@ private:
         stream.writeUnsignedByte(static_cast<uint8_t>(NbtTagType::End));
     }
 };
+
+} // namespace bedrock::protocol

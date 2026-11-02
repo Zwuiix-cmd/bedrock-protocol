@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class AuthServiceOpenIdConfiguration {
 public:
@@ -22,3 +24,5 @@ public:
         stream.writeString(jwks_uri);
     }
 };
+
+} // namespace bedrock::protocol

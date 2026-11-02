@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/PlayerAuthInputVehicleInfo.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerAuthInputVehicleInfo {
 public:
@@ -34,3 +36,5 @@ public:
 		stream.writeActorUniqueID(predictedVehicleActorUniqueId);
     }
 };
+
+} // namespace bedrock::protocol

@@ -8,6 +8,9 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/types/PlayerAction.hpp>
 
+namespace bedrock::protocol {
+
+
 struct PlayerBlockAction {
     PlayerAction actionType = PlayerAction::StopBreak;
     glm::ivec3 blockPosition = glm::ivec3(0);
@@ -46,3 +49,5 @@ struct PlayerBlockAction {
         return decodeWithBlockInfo(stream, static_cast<PlayerAction>(value));
     }
 };
+
+} // namespace bedrock::protocol

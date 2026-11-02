@@ -7,6 +7,9 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/types/AbilitiesLayer.hpp>
 
+namespace bedrock::protocol {
+
+
 class AbilitiesData {
 public:
     int64_t targetActorUniqueId = 0;
@@ -38,3 +41,5 @@ public:
         }
     }
 };
+
+} // namespace bedrock::protocol

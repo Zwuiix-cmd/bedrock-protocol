@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ChainedSubCommandValue {
 public:
@@ -24,3 +26,5 @@ public:
         stream.writeInt(type);
     }
 };
+
+} // namespace bedrock::protocol

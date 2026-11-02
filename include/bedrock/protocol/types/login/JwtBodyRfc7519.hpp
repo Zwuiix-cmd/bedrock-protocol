@@ -6,6 +6,8 @@
 #include <string>
 #include <variant>
 
+namespace bedrock::protocol {
+
 
 class JwtBodyRfc7519 {
 public:
@@ -39,3 +41,5 @@ public:
         stream.writeString(jti);
     }
 };
+
+} // namespace bedrock::protocol

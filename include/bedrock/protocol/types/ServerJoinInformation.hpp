@@ -6,6 +6,8 @@
 #include <optional>
 
 #include <bedrock/protocol/types/GatheringJoinInfo.hpp>
+namespace bedrock::protocol {
+
 
 class ServerJoinInformation {
 public:
@@ -26,3 +28,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class LoginPacket : public Packet {
 public:
@@ -106,53 +108,23 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        protocol = stream.readUnsignedIntBE().value_or(0);
-        authInfoJson.clear();
-        clientDataJwt.clear();
-
-        const auto connectionRequest = stream.readStringView();
-        if (!connectionRequest) return;
-
-        ReadOnlyBinaryStream connectionRequestReader(*connectionRequest);
-        const auto authInfoJsonLength = connectionRequestReader.readUnsignedInt();
-        if (!authInfoJsonLength) {
-            stream.markOverflowed();
-            return;
-        }
-
-        const auto authInfoJsonView = connectionRequestReader.readByteArrayView(*authInfoJsonLength);
-        if (!authInfoJsonView) {
-            stream.markOverflowed();
-            return;
-        }
-
-        const auto clientDataJwtLength = connectionRequestReader.readUnsignedInt();
-        if (!clientDataJwtLength) {
-            stream.markOverflowed();
-            return;
-        }
-
-        const auto clientDataJwtView = connectionRequestReader.readByteArrayView(*clientDataJwtLength);
-        if (!clientDataJwtView) {
-            stream.markOverflowed();
-            return;
-        }
-
-        authInfoJson.assign(authInfoJsonView->data(), authInfoJsonView->size());
-        clientDataJwt.assign(clientDataJwtView->data(), clientDataJwtView->size());
+		protocol = stream.readUnsignedIntBE().value_or(0);
+		auto connRequestReader = ReadOnlyBinaryStream(stream.readString().value_or(""));
+		auto authInfoJsonLength = connRequestReader.readUnsignedInt().value_or(0);
+		authInfoJson = connRequestReader.readByteArray(authInfoJsonLength).value_or("");
+		auto clientDataJwtLength = connRequestReader.readUnsignedInt().value_or(0);
+		clientDataJwt = connRequestReader.readByteArray(clientDataJwtLength).value_or("");
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeUnsignedIntBE(protocol);
-
-        const auto connectionRequestSize = sizeof(uint32_t)
-            + authInfoJson.size()
-            + sizeof(uint32_t)
-            + clientDataJwt.size();
-        stream.writeUnsignedVarInt(static_cast<uint32_t>(connectionRequestSize));
-        stream.writeUnsignedInt(static_cast<uint32_t>(authInfoJson.size()));
-        stream.writeByteArray(authInfoJson);
-        stream.writeUnsignedInt(static_cast<uint32_t>(clientDataJwt.size()));
-        stream.writeByteArray(clientDataJwt);
+		stream.writeUnsignedIntBE(protocol);
+		auto connRequestWriter = BinaryStream();
+		connRequestWriter.writeUnsignedInt(authInfoJson.size());
+		connRequestWriter.writeByteArray(authInfoJson);
+		connRequestWriter.writeUnsignedInt(clientDataJwt.size());
+		connRequestWriter.writeByteArray(clientDataJwt);
+		stream.writeString(connRequestWriter.getBuffer());
     }
 };
+
+} // namespace bedrock::protocol

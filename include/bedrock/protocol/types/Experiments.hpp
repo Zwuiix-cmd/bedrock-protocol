@@ -6,6 +6,8 @@
 #include <utility>
 #include <map>
 
+namespace bedrock::protocol {
+
 
 class Experiments {
 public:
@@ -35,3 +37,5 @@ public:
 		stream.writeBool(hasPreviouslyUsedExperiments);
     }
 };
+
+} // namespace bedrock::protocol

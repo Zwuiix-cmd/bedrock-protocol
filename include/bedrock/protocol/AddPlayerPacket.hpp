@@ -94,6 +94,8 @@
 #include <bedrock/protocol/types/entity/PropertySyncData.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AddPlayerPacket : public Packet {
 public:
@@ -179,3 +181,5 @@ public:
 		stream.writeInt(magic_enum::enum_integer(buildPlatform));
     }
 };
+
+} // namespace bedrock::protocol

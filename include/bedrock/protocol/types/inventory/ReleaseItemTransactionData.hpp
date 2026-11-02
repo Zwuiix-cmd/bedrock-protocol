@@ -7,6 +7,8 @@
 
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class ReleaseItemTransactionData : public TransactionData {
 public:
@@ -47,3 +49,5 @@ public:
         stream.writeVec3(headPosition);
     }
 };
+
+} // namespace bedrock::protocol

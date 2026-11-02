@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class MinecraftServiceAuthEnvironment {
 public:
@@ -19,3 +21,5 @@ public:
         stream.writeString(serviceUri);
     }
 };
+
+} // namespace bedrock::protocol

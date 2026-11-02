@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class BiomeReplacementData {
 public:
@@ -62,3 +64,5 @@ public:
 		stream.writeUnsignedInt(replacementIndex);
     }
 };
+
+} // namespace bedrock::protocol

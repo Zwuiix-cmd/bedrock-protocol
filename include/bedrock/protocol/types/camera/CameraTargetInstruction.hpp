@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <optional>
 
+namespace bedrock::protocol {
+
 
 class CameraTargetInstruction {
 public:
@@ -28,3 +30,5 @@ public:
 		stream.writeLong(actorUniqueId);
     }
 };
+
+} // namespace bedrock::protocol

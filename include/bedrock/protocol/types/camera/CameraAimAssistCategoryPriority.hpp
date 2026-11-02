@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class CameraAimAssistCategoryPriority {
 public:
@@ -24,3 +26,5 @@ public:
 		stream.writeInt(priority);
     }
 };
+
+} // namespace bedrock::protocol

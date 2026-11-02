@@ -7,6 +7,8 @@
 #include <optional>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ScorePacketEntry {
 public:
@@ -53,3 +55,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

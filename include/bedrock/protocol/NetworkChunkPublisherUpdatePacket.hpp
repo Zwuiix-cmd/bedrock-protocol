@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/ChunkPosition.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class NetworkChunkPublisherUpdatePacket : public Packet {
 public:
@@ -130,3 +132,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

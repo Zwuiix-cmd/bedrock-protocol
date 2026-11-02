@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class CreativeGroupEntry {
 public:
@@ -35,3 +37,5 @@ public:
         icon.write(stream);
     }
 };
+
+} // namespace bedrock::protocol

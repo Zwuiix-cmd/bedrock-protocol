@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/hud/LoadingScreenType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ServerboundLoadingScreenPacket : public Packet {
 public:
@@ -121,3 +123,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

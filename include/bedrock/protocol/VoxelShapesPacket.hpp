@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/SerializableVoxelShape.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class VoxelShapesPacket : public Packet {
 public:
@@ -139,3 +141,5 @@ public:
 		stream.writeUnsignedShort(customShapeCount);
     }
 };
+
+} // namespace bedrock::protocol

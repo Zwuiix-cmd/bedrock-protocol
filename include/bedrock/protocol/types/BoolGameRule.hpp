@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/GameRule.hpp>
+namespace bedrock::protocol {
+
 
 class BoolGameRule : public GameRule {
 public:
@@ -31,3 +33,5 @@ public:
 		stream.writeBool(value);
     }
 };
+
+} // namespace bedrock::protocol

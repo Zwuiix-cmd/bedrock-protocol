@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/camera/CameraAimAssistActionType.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistTargetMode.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CameraAimAssistPacket : public Packet {
 public:
@@ -132,3 +134,5 @@ public:
 		stream.writeBool(showDebugRender);
     }
 };
+
+} // namespace bedrock::protocol

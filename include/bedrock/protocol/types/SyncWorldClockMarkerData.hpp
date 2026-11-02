@@ -6,6 +6,8 @@
 #include <optional>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class SyncWorldClockMarkerData {
 public:
@@ -44,3 +46,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

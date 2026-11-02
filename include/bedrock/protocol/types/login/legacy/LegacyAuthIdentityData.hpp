@@ -5,6 +5,8 @@
 #include <optional>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class LegacyAuthIdentityData {
 public:
@@ -36,3 +38,5 @@ public:
         stream.writeString(XUID);
     }
 };
+
+} // namespace bedrock::protocol

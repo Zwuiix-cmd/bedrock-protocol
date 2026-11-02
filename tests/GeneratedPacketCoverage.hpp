@@ -9,6 +9,7 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/pool/PacketPool.hpp>
+using namespace bedrock::protocol;
 
 namespace generated_packet_tests {
 
@@ -254,13 +255,7 @@ void run(Expect&& expect) {
         bool roundtripSucceeded = false;
         for (const auto fill : std::array<uint8_t, 5>{0, 1, 2, 9, 17}) {
             const auto candidate = PacketPool::createPacket(id);
-            std::string fixture(4096, static_cast<char>(fill));
-            if (id == PacketIds::Login) {
-                BinaryStream loginFixture;
-                loginFixture.writeUnsignedIntBE(924);
-                loginFixture.writeString(std::string(2 * sizeof(uint32_t), '\0'));
-                fixture = loginFixture.getBuffer();
-            }
+            const std::string fixture(4096, static_cast<char>(fill));
             ReadOnlyBinaryStream input(fixture);
             try {
                 candidate->read(input);

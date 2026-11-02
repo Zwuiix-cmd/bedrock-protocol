@@ -6,6 +6,9 @@
 #include <bedrock/protocol/PacketIds.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 class Packet {
 public:
     static constexpr PacketIds ID = PacketIds::Unknown;
@@ -18,3 +21,5 @@ public:
     virtual void write(BinaryStream& stream) = 0;
     virtual void read(ReadOnlyBinaryStream& stream) = 0;
 };
+
+} // namespace bedrock::protocol

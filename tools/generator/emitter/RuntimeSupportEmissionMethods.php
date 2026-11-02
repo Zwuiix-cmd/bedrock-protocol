@@ -14,7 +14,7 @@ trait RuntimeSupportEmissionMethods
     private function writeRuntime(string $output): void
     {
         $base = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol';
-        $this->write($base . DIRECTORY_SEPARATOR . 'Packet.hpp', <<<'CPP'
+        $this->write($base . DIRECTORY_SEPARATOR . 'Packet.hpp', $this->wrapProtocolHeader(<<<'CPP'
 #pragma once
 
 #include <magic_enum/magic_enum.hpp>
@@ -35,7 +35,7 @@ public:
     virtual void write(BinaryStream& stream) = 0;
     virtual void read(ReadOnlyBinaryStream& stream) = 0;
 };
-CPP);
+CPP));
     }
 
     private function writeGeneratedRuntimeTypes(string $output, array $declarations): void
@@ -58,44 +58,44 @@ CPP);
 
         $this->write(
             $this->runtimeTypePath($output, $byName['PlayerAuthInputFlags'], 'PlayerAuthInputFlags'),
-            $this->playerAuthInputFlagsHeader($byName['PlayerAuthInputFlags']),
+            $this->wrapProtocolHeader($this->playerAuthInputFlagsHeader($byName['PlayerAuthInputFlags'])),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['PlayerBlockAction'], 'PlayerBlockAction'),
-            $this->playerBlockActionHeader(
+            $this->wrapProtocolHeader($this->playerBlockActionHeader(
                 $byName['PlayerBlockAction'],
                 $byName['PlayerBlockActionWithBlockInfo'] ?? null,
                 $byName['PlayerBlockActionStopBreak'] ?? null,
                 $this->typeIncludePaths['PlayerAction'] ?? 'types/PlayerAction.hpp',
-            ),
+            )),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['MetadataProperty'], 'MetadataProperty'),
-            $this->metadataPropertyHeader($byName),
+            $this->wrapProtocolHeader($this->metadataPropertyHeader($byName)),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['ItemStack'], 'NetworkItemDescriptor'),
-            $this->networkItemDescriptorHeader($byName['ItemStack']),
+            $this->wrapProtocolHeader($this->networkItemDescriptorHeader($byName['ItemStack'])),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['ItemStackWrapper'], 'NetworkItemStack'),
-            $this->networkItemStackHeader(
+            $this->wrapProtocolHeader($this->networkItemStackHeader(
                 $byName['ItemStack'],
                 $byName['ItemStackWrapper'],
                 $this->typeIncludePaths['NetworkItemDescriptor'] ?? 'types/NetworkItemDescriptor.hpp',
-            ),
+            )),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['AbilitiesLayer'], 'AbilitiesLayer'),
-            $this->abilitiesLayerHeader(),
+            $this->wrapProtocolHeader($this->abilitiesLayerHeader()),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['AbilitiesData'], 'AbilitiesData'),
-            $this->abilitiesDataHeader($this->typeIncludePaths['AbilitiesLayer'] ?? 'types/AbilitiesLayer.hpp'),
+            $this->wrapProtocolHeader($this->abilitiesDataHeader($this->typeIncludePaths['AbilitiesLayer'] ?? 'types/AbilitiesLayer.hpp')),
         );
         $this->write(
             $this->runtimeTypePath($output, $byName['PropertySyncData'], 'PropertySyncData'),
-            $this->propertySyncDataHeader(),
+            $this->wrapProtocolHeader($this->propertySyncDataHeader()),
         );
     }
 

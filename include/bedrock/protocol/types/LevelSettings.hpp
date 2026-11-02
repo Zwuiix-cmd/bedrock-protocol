@@ -17,6 +17,8 @@
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/GameRule.hpp>
 #include <bedrock/protocol/types/SpawnSettings.hpp>
+namespace bedrock::protocol {
+
 
 class LevelSettings {
 public:
@@ -191,3 +193,5 @@ public:
 		stream.writeBool(disablePlayerInteractions);
     }
 };
+
+} // namespace bedrock::protocol

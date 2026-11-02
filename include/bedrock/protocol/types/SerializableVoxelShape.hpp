@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/SerializableVoxelCells.hpp>
+namespace bedrock::protocol {
+
 
 class SerializableVoxelShape {
 public:
@@ -74,3 +76,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

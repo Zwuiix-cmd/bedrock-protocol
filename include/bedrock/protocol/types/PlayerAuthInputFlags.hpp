@@ -7,6 +7,9 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 enum class InputData : int {
     ASCEND = 0,
     DESCEND = 1,
@@ -148,3 +151,5 @@ struct PlayerAuthInputFlags {
         }
     }
 };
+
+} // namespace bedrock::protocol

@@ -6,6 +6,8 @@
 #include <exception>
 
 #include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class IntIdMetaItemDescriptor : public ItemDescriptor {
 public:
@@ -36,3 +38,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

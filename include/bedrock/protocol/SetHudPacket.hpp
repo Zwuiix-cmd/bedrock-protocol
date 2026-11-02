@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/hud/HudElement.hpp>
 #include <bedrock/protocol/types/hud/HudVisibility.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetHudPacket : public Packet {
 public:
@@ -127,3 +129,5 @@ public:
 		stream.writeVarInt(magic_enum::enum_integer(visibility));
     }
 };
+
+} // namespace bedrock::protocol

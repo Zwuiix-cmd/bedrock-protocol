@@ -8,6 +8,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
+namespace bedrock::protocol {
+
 
 class PacketShapeData {
 public:
@@ -155,3 +157,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

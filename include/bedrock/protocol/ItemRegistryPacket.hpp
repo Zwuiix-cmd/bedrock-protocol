@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/ItemTypeEntry.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ItemRegistryPacket : public Packet {
 public:
@@ -126,3 +128,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

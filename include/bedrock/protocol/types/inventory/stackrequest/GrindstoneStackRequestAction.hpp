@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class GrindstoneStackRequestAction : public ItemStackRequestAction {
 public:
@@ -32,3 +34,5 @@ public:
 		stream.writeUnsignedByte(repetitions);
     }
 };
+
+} // namespace bedrock::protocol

@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/entity/PropertySyncData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetActorDataPacket : public Packet {
 public:
@@ -122,3 +124,5 @@ public:
 		stream.writeUnsignedVarLong(tick);
     }
 };
+
+} // namespace bedrock::protocol

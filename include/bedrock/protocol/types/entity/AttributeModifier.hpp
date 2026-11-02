@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class AttributeModifier {
 public:
@@ -49,3 +51,5 @@ public:
 		stream.writeBool(serializable);
     }
 };
+
+} // namespace bedrock::protocol

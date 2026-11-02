@@ -10,6 +10,8 @@
 #include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
 #include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
+namespace bedrock::protocol {
+
 
 class ShapedRecipe : public RecipeWithTypeId {
 public:
@@ -80,3 +82,5 @@ public:
         stream.writeUnsignedVarInt(recipeNetId);
     }
 };
+
+} // namespace bedrock::protocol

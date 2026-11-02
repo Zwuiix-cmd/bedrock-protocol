@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AddPaintingPacket : public Packet {
 public:
@@ -123,3 +125,5 @@ public:
 		stream.writeString(title);
     }
 };
+
+} // namespace bedrock::protocol

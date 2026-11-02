@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class ComplexAliasItemDescriptor : public ItemDescriptor {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeString(alias);
     }
 };
+
+} // namespace bedrock::protocol

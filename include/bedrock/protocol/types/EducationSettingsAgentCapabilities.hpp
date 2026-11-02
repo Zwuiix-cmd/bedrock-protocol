@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <optional>
 
+namespace bedrock::protocol {
+
 
 class EducationSettingsAgentCapabilities {
 public:
@@ -24,3 +26,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

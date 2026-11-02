@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/inventory/CreativeGroupEntry.hpp>
 #include <bedrock/protocol/types/inventory/CreativeItemEntry.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CreativeContentPacket : public Packet {
 public:
@@ -139,3 +141,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

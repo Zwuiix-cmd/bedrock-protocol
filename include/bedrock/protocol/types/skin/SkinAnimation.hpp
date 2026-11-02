@@ -7,6 +7,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
+namespace bedrock::protocol {
+
 
 class SkinAnimation {
 public:
@@ -57,3 +59,5 @@ public:
         stream.writeUnsignedInt(magic_enum::enum_integer(expressionType));
     }
 };
+
+} // namespace bedrock::protocol

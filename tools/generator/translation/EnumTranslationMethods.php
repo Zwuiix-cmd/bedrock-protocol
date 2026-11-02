@@ -85,7 +85,7 @@ private function propertyEnumType(array $property, array $declaration): ?string
                 $cppType = $this->catalog->typeAlias((string) $candidate['name'])
                     ?? CPPName::type((string) $candidate['name']);
                 return (string) ($property['name'] ?? '') === (string) ($candidate['name'] ?? '')
-                    ? '::' . ltrim($cppType, ':')
+                    ? '::bedrock::protocol::' . ltrim((string) $cppType, ':')
                     : $cppType;
             }
         }

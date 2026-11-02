@@ -4,9 +4,13 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class PlayerPermissions : uint8_t {
     Custom = 3,
     Operator = 2,
     Member = 1,
     Visitor = 0,
 };
+
+} // namespace bedrock::protocol

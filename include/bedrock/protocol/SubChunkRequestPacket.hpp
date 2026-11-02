@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/SubChunkPosition.hpp>
 #include <bedrock/protocol/types/SubChunkPositionOffset.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkRequestPacket : public Packet {
 public:
@@ -129,3 +131,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

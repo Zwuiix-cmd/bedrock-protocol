@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetDisplayObjectivePacket : public Packet {
 public:
@@ -140,13 +142,15 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<SetDisplayObjectivePacket::DisplaySlot>(SetDisplayObjectivePacket::DisplaySlot value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::SetDisplayObjectivePacket::DisplaySlot>(::bedrock::protocol::SetDisplayObjectivePacket::DisplaySlot value) noexcept {
     switch (value) {
-        case SetDisplayObjectivePacket::DisplaySlot::List: return "list";
-        case SetDisplayObjectivePacket::DisplaySlot::Sidebar: return "sidebar";
-        case SetDisplayObjectivePacket::DisplaySlot::BelowName: return "belowname";
+        case ::bedrock::protocol::SetDisplayObjectivePacket::DisplaySlot::List: return "list";
+        case ::bedrock::protocol::SetDisplayObjectivePacket::DisplaySlot::Sidebar: return "sidebar";
+        case ::bedrock::protocol::SetDisplayObjectivePacket::DisplaySlot::BelowName: return "belowname";
         default: return invalid_tag;
     }
 }

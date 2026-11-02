@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class UIInventorySlotOffset {
 public:
@@ -24,3 +26,5 @@ public:
         (void)stream;
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class DimensionData {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeVarInt(generator);
     }
 };
+
+} // namespace bedrock::protocol

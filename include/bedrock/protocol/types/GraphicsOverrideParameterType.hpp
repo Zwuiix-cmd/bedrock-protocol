@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class GraphicsOverrideParameterType : uint8_t {
     SkyZenithColor = 0,
     SkyHorizonColor = 1,
@@ -55,3 +57,5 @@ enum class GraphicsOverrideParameterType : uint8_t {
     AmbientColor = 47,
     AmbientIlluminance = 48,
 };
+
+} // namespace bedrock::protocol

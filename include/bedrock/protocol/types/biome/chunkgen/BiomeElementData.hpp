@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeElementData {
 public:
@@ -61,3 +63,5 @@ public:
 		surfaceMaterial->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

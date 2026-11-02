@@ -8,6 +8,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/StructureSettings.hpp>
+namespace bedrock::protocol {
+
 
 class StructureEditorData {
 public:
@@ -56,3 +58,5 @@ public:
         structureSettings->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

@@ -89,6 +89,8 @@
 #include <bedrock/protocol/types/inventory/FullContainerName.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class InventorySlotPacket : public Packet {
 public:
@@ -127,3 +129,5 @@ public:
 		item.write(stream);
     }
 };
+
+} // namespace bedrock::protocol

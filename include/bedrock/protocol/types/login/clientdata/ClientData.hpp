@@ -8,12 +8,14 @@
 #include <string>
 #include <vector>
 
-#include <bedrock/protocol/types/BuildPlatform.hpp>
-#include <bedrock/protocol/types/GraphicsMode.hpp>
-#include <bedrock/protocol/types/UIProfile.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaPieceTintColor.hpp>
 #include <bedrock/protocol/types/login/clientdata/ClientDataPersonaSkinPiece.hpp>
+#include <bedrock/protocol/types/BuildPlatform.hpp>
+#include <bedrock/protocol/types/UIProfile.hpp>
+#include <bedrock/protocol/types/GraphicsMode.hpp>
+namespace bedrock::protocol {
+
 
 class ClientData {
 public:
@@ -30,9 +32,9 @@ public:
     int32_t DefaultInputMode;
     std::string DeviceId;
     std::string DeviceModel;
-    ::BuildPlatform DeviceOS;
+    ::bedrock::protocol::BuildPlatform DeviceOS;
     std::string GameVersion;
-    ::GraphicsMode GraphicsMode;
+    ::bedrock::protocol::GraphicsMode GraphicsMode;
     int32_t GuiScale;
     bool IsEditorMode;
     std::string LanguageCode;
@@ -61,7 +63,7 @@ public:
     std::string SkinResourcePatch;
     std::string ThirdPartyName;
     bool TrustedSkin;
-    ::UIProfile UIProfile;
+    ::bedrock::protocol::UIProfile UIProfile;
 
     ClientData() = default;
 
@@ -79,13 +81,13 @@ public:
         DefaultInputMode = stream.readInt().value_or(0);
         DeviceId = stream.readString().value_or("");
         DeviceModel = stream.readString().value_or("");
-        DeviceOS = magic_enum::enum_cast<::BuildPlatform>(
+        DeviceOS = magic_enum::enum_cast<::bedrock::protocol::BuildPlatform>(
             stream.readInt().value_or(0)
         ).value_or(BuildPlatform::Unknown);
         GameVersion = stream.readString().value_or("");
-        GraphicsMode = magic_enum::enum_cast<::GraphicsMode>(
+        GraphicsMode = magic_enum::enum_cast<::bedrock::protocol::GraphicsMode>(
             stream.readInt().value_or(0)
-        ).value_or(GraphicsMode::Simple);
+        ).value_or(bedrock::protocol::GraphicsMode::Simple);
         GuiScale = stream.readInt().value_or(0);
         IsEditorMode = stream.readBool().value_or(false);
         LanguageCode = stream.readString().value_or("");
@@ -114,9 +116,9 @@ public:
         SkinResourcePatch = stream.readString().value_or("");
         ThirdPartyName = stream.readString().value_or("");
         TrustedSkin = stream.readBool().value_or(false);
-        UIProfile = magic_enum::enum_cast<::UIProfile>(
+        UIProfile = magic_enum::enum_cast<::bedrock::protocol::UIProfile>(
             stream.readInt().value_or(0)
-        ).value_or(UIProfile::Classic);
+        ).value_or(bedrock::protocol::UIProfile::Classic);
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -173,3 +175,5 @@ public:
         stream.writeInt(magic_enum::enum_integer(UIProfile));
     }
 };
+
+} // namespace bedrock::protocol

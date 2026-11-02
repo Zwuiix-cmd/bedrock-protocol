@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/camera/CameraAimAssistActionType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientCameraAimAssistPacket : public Packet {
 public:
@@ -120,3 +122,5 @@ public:
 		stream.writeBool(allowAimAssist);
     }
 };
+
+} // namespace bedrock::protocol

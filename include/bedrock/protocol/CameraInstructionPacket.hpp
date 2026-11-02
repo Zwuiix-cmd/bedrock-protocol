@@ -96,6 +96,8 @@
 #include <bedrock/protocol/types/camera/CameraSplineInstruction.hpp>
 #include <bedrock/protocol/types/camera/CameraTargetInstruction.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class CameraInstructionPacket : public Packet {
 public:
@@ -171,3 +173,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

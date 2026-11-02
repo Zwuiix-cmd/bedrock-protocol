@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class ServerTelemetryData {
 public:
@@ -38,3 +40,5 @@ public:
 		stream.writeString(ownerId);
     }
 };
+
+} // namespace bedrock::protocol

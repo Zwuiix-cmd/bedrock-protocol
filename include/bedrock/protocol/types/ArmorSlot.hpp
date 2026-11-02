@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ArmorSlot : uint8_t {
     Head = 0,
     Torso = 1,
@@ -11,3 +13,5 @@ enum class ArmorSlot : uint8_t {
     Feet = 3,
     Body = 4,
 };
+
+} // namespace bedrock::protocol

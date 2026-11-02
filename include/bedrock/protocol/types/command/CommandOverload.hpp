@@ -6,6 +6,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/command/CommandParameter.hpp>
+namespace bedrock::protocol {
+
 
 class CommandOverload {
 public:
@@ -29,3 +31,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

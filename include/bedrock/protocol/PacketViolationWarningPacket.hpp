@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PacketViolationWarningPacket : public Packet {
 public:
@@ -134,3 +136,5 @@ public:
 		stream.writeString(message);
     }
 };
+
+} // namespace bedrock::protocol

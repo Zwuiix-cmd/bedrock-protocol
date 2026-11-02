@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/Enchant.hpp>
+namespace bedrock::protocol {
+
 
 class EnchantOption {
 public:
@@ -63,3 +65,5 @@ public:
         stream.writeUnsignedVarInt(optionId);
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class SubChunkPacketHeightMapType : uint8_t {
     NoData = 0,
     Data = 1,
@@ -11,3 +13,5 @@ enum class SubChunkPacketHeightMapType : uint8_t {
     AllTooLow = 3,
     AllCopied = 4,
 };
+
+} // namespace bedrock::protocol

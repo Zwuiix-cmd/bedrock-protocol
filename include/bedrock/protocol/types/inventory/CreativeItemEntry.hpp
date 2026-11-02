@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/NetworkItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class CreativeItemEntry {
 public:
@@ -27,3 +29,5 @@ public:
         stream.writeUnsignedVarInt(groupId);
     }
 };
+
+} // namespace bedrock::protocol

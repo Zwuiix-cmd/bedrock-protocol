@@ -9,6 +9,8 @@
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeWeightedTemperatureData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeOverworldGenRulesData {
 public:
@@ -122,3 +124,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

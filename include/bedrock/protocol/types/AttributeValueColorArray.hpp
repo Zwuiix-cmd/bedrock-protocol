@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/AttributeValueColorValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeValueColorArray : public AttributeValueColorValue {
 public:
@@ -41,3 +43,5 @@ public:
 		stream.writeUnsignedInt((((value) >> 24) & 0xffu));
     }
 };
+
+} // namespace bedrock::protocol

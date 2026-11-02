@@ -10,6 +10,8 @@
 
 #include <bedrock/protocol/types/camera/CameraProgressOption.hpp>
 #include <bedrock/protocol/types/camera/CameraRotationOption.hpp>
+namespace bedrock::protocol {
+
 
 class CameraSplineInstruction {
 public:
@@ -91,3 +93,5 @@ public:
 		stream.writeBool(loadFromJson);
     }
 };
+
+} // namespace bedrock::protocol

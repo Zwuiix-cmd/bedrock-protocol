@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/biome/BiomeDefinitionData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeDefinitionListPacket : public Packet {
 public:
@@ -130,3 +132,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

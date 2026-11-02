@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/CompressionAlgorithm.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class NetworkSettingsPacket : public Packet {
 public:
@@ -131,3 +133,5 @@ public:
 		stream.writeFloat(clientThrottleScalar);
     }
 };
+
+} // namespace bedrock::protocol

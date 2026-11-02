@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MobEquipmentPacket : public Packet {
 public:
@@ -124,3 +126,5 @@ public:
 		stream.writeUnsignedByte(windowId);
     }
 };
+
+} // namespace bedrock::protocol

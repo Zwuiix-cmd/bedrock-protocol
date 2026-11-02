@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ScriptDebugShapeType : uint8_t {
     Line = 0,
     Box = 1,
@@ -12,3 +14,5 @@ enum class ScriptDebugShapeType : uint8_t {
     Text = 4,
     Arrow = 5,
 };
+
+} // namespace bedrock::protocol

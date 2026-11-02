@@ -89,6 +89,8 @@
 #include <bedrock/protocol/types/GraphicsOverrideParameterType.hpp>
 #include <bedrock/protocol/types/ParameterKeyframeValue.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class GraphicsOverrideParameterPacket : public Packet {
 public:
@@ -146,3 +148,5 @@ public:
 		stream.writeBool(reset);
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/login/openid/api/MinecraftServicesResult.hpp>
+namespace bedrock::protocol {
+
 
 class MinecraftServicesDiscovery {
 public:
@@ -21,3 +23,5 @@ public:
         result->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

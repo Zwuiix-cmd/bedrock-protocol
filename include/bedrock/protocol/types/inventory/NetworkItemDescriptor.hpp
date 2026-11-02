@@ -6,6 +6,9 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 struct NetworkItemDescriptor {
     int32_t id = 0;
     uint32_t meta = 0;
@@ -31,3 +34,6 @@ struct NetworkItemDescriptor {
         }
     }
 };
+
+
+} // namespace bedrock::protocol

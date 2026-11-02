@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class AgentActionType : uint8_t {
     Attack = 1,
     Collect = 2,
@@ -24,3 +26,5 @@ enum class AgentActionType : uint8_t {
     TransferItemTo = 17,
     Turn = 18,
 };
+
+} // namespace bedrock::protocol

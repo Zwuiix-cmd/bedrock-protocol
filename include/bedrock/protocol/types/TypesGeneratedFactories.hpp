@@ -3,6 +3,8 @@
 #include <bedrock/protocol/types/TypesGeneratedIncludes0.hpp>
 #include <bedrock/protocol/types/TypesGeneratedIncludes1.hpp>
 
+namespace bedrock::protocol {
+
 
 inline std::shared_ptr<AttributeLayerSettingsWeight> AttributeLayerSettingsWeight::create(ReadOnlyBinaryStream& stream) {
     switch (stream.readUnsignedVarInt().value_or(0)) {
@@ -384,3 +386,5 @@ inline std::shared_ptr<ItemDescriptor> ItemDescriptor::create(ReadOnlyBinaryStre
             return nullptr;
     }
 }
+
+} // namespace bedrock::protocol

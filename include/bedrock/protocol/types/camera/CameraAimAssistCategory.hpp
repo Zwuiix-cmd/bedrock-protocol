@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriorities.hpp>
+namespace bedrock::protocol {
+
 
 class CameraAimAssistCategory {
 public:
@@ -31,3 +33,5 @@ public:
 		priorities->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class BiomeMesaSurfaceData {
 public:
@@ -38,3 +40,5 @@ public:
 		stream.writeBool(forest);
     }
 };
+
+} // namespace bedrock::protocol

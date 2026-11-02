@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/PlayerListEntry.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerListPacket : public Packet {
 public:
@@ -174,3 +176,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

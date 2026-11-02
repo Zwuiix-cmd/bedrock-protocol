@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class CommandEnumConstraintRawData {
 public:
@@ -52,3 +54,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

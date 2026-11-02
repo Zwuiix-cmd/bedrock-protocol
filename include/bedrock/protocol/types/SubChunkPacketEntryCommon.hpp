@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/SubChunkPacketHeightMapInfo.hpp>
 #include <bedrock/protocol/types/SubChunkPositionOffset.hpp>
+namespace bedrock::protocol {
+
 
 class SubChunkPacketEntryCommon {
 public:
@@ -72,3 +74,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

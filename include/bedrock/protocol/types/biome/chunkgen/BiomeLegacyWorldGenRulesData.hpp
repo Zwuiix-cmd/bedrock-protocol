@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeConditionalTransformationData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeLegacyWorldGenRulesData {
 public:
@@ -39,3 +41,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

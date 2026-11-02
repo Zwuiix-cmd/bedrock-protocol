@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class UpdateSubChunkBlocksPacketEntry {
 public:
@@ -43,3 +45,5 @@ public:
 		stream.writeUnsignedVarInt(syncedUpdateType);
     }
 };
+
+} // namespace bedrock::protocol

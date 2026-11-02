@@ -15,6 +15,7 @@ trait DeclarationEmissionMethods
     private function writeForwardDeclarations(string $output, array $types): void
     {
         $body = "#pragma once\n\n#include <cstdint>\n\n";
+        $body .= $this->protocolNamespaceOpen();
         foreach ($types as $type) {
             if ($this->isEnumDeclaration($type)) {
                 $body .= 'enum class ' . $this->generatedTypeName($type) . ' : ' . $this->enumUnderlyingType($type) . ";\n";
@@ -22,6 +23,7 @@ trait DeclarationEmissionMethods
                 $body .= 'class ' . $this->generatedTypeName($type) . ";\n";
             }
         }
+        $body .= $this->protocolNamespaceClose();
         $this->write($output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . 'Forward.hpp', $body);
     }
 
@@ -29,13 +31,13 @@ trait DeclarationEmissionMethods
     {
         $names = array_map(static fn (array $packet): string => CPPName::packetId($packet['name']), $packets);
         $width = max(7, ...array_map('strlen', $names));
-        $body = "#pragma once\n\n#include <cstdint>\n\nenum class PacketIds : int {\n";
+        $body = "#pragma once\n\n#include <cstdint>\n\n" . $this->protocolNamespaceOpen() . "enum class PacketIds : int {\n";
         $body .= str_pad('    Unknown', $width + 4) . " = 0,\n";
         foreach ($packets as $packet) {
             $name = CPPName::packetId($packet['name']);
             $body .= str_pad('    ' . $name, $width + 4) . ' = ' . (int) $packet['networkId'] . ",\n";
         }
-        $body .= "};\n";
+        $body .= "};\n" . $this->protocolNamespaceClose();
         $path = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . 'PacketIds.hpp';
         $this->write($path, $body);
     }
@@ -44,6 +46,7 @@ trait DeclarationEmissionMethods
     {
         $name = $this->generatedTypeName($declaration);
         $body = "#pragma once\n\n#include <cstdint>\n#include <magic_enum/magic_enum.hpp>\n#include <string_view>\n\n";
+        $body .= $this->protocolNamespaceOpen();
         $cases = $this->enumCases($declaration);
         $enumInclude = $this->generatedTypeInclude($declaration);
         $body .= 'enum class ' . $name . ' : ' . $this->enumUnderlyingType($declaration) . " {\n";
@@ -70,17 +73,19 @@ trait DeclarationEmissionMethods
         }
         $body .= "};\n";
         if ($this->isStringEnumDeclaration($declaration)) {
+            $qualifiedName = $this->qualifiedProtocolType($name);
+            $body .= $this->protocolNamespaceClose();
             $nameCaseLines = [];
             foreach ($cases as $case) {
                 if (!is_string($case['value'] ?? null)) {
                     continue;
                 }
-                $nameCaseLines[] = '        case ' . $name . '::' . CPPName::enumCase((string) $case['name'])
+                $nameCaseLines[] = '        case ' . $qualifiedName . '::' . CPPName::enumCase((string) $case['name'])
                     . ': return ' . json_encode($case['value'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ";\n";
             }
             $body .= "namespace magic_enum::customize {\n\n";
-            $body .= 'template <> constexpr customize_t enum_name<' . $name . '>('
-                . $name . " value) noexcept {\n"
+            $body .= 'template <> constexpr customize_t enum_name<' . $qualifiedName . '>('
+                . $qualifiedName . " value) noexcept {\n"
                 . "    switch (value) {\n";
             if (count($nameCaseLines) > 300) {
                 $directory = dirname($enumInclude);
@@ -99,6 +104,8 @@ trait DeclarationEmissionMethods
             }
             $body .= "        default: return invalid_tag;\n"
                 . "    }\n}\n\n}\n";
+        } else {
+            $body .= $this->protocolNamespaceClose();
         }
         $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
     }
@@ -241,6 +248,7 @@ trait DeclarationEmissionMethods
         $inheritance = $bases === [] ? '' : ' : public ' . implode(', public ', array_unique($bases));
         $isAbstractType = ($declaration['abstract'] ?? false) || ($declaration['kind'] ?? null) === 'interface';
         $derivedTypes = $isAbstractType ? $this->derivedTypes($declaration, $types) : [];
+        $body .= $this->protocolNamespaceOpen();
         $body .= "\nclass " . $name . $inheritance . " {\npublic:\n";
         $body .= $this->constants($declaration);
         foreach ($declaration['properties'] as $property) {
@@ -388,6 +396,7 @@ trait DeclarationEmissionMethods
             $body .= "    }\n";
         }
         $body .= "};\n";
+        $body .= $this->protocolNamespaceClose();
         $body .= $this->stringEnumCustomizations($declaration);
         $body = str_replace(
             '__GENERATED_STANDARD_INCLUDES__',

@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
+namespace bedrock::protocol {
+
 
 class ItemInteractionData {
 public:
@@ -59,3 +61,5 @@ public:
 		transactionData->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

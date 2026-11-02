@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/biome/chunkgen/BiomeDefinitionChunkGenData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeDefinitionEntry {
 public:
@@ -90,3 +92,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

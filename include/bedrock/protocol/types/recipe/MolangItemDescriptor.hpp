@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/recipe/ItemDescriptor.hpp>
+namespace bedrock::protocol {
+
 
 class MolangItemDescriptor : public ItemDescriptor {
 public:
@@ -30,3 +32,5 @@ public:
 		stream.writeUnsignedByte(molangVersion);
     }
 };
+
+} // namespace bedrock::protocol

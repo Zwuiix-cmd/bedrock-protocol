@@ -12,6 +12,8 @@
 #include <vector>
 #include <type_traits>
 
+namespace bedrock::protocol {
+
 class BinaryStream : public ReadOnlyBinaryStream {
 public:
     BinaryStream() noexcept : ReadOnlyBinaryStream() {
@@ -425,4 +427,6 @@ private:
         return uuid;
     }
 };
+
+} // namespace bedrock::protocol
 

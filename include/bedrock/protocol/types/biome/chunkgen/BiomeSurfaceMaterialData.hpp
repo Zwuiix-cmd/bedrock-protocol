@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class BiomeSurfaceMaterialData {
 public:
@@ -48,3 +50,5 @@ public:
 		stream.writeInt(seaFloorDepth);
     }
 };
+
+} // namespace bedrock::protocol

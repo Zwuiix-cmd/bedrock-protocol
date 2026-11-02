@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/entity/UpdateAttribute.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateAttributesPacket : public Packet {
 public:
@@ -126,3 +128,5 @@ public:
 		stream.writeUnsignedVarLong(tick);
     }
 };
+
+} // namespace bedrock::protocol

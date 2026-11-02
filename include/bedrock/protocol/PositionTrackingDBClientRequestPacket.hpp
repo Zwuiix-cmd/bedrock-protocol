@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PositionTrackingDBClientRequestPacket : public Packet {
 public:
@@ -116,3 +118,5 @@ public:
 		stream.writeVarInt(trackingId);
     }
 };
+
+} // namespace bedrock::protocol

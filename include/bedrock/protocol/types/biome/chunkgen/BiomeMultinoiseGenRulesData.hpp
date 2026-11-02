@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class BiomeMultinoiseGenRulesData {
 public:
@@ -42,3 +44,5 @@ public:
 		stream.writeFloat(weight);
     }
 };
+
+} // namespace bedrock::protocol

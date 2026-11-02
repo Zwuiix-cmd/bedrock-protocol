@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class EntityMetadataProperties : uint8_t {
     Flags = 0,
     Health = 1,
@@ -147,3 +149,5 @@ enum class EntityMetadataProperties : uint8_t {
     AimAssistPriorityCategoryId = 137,
     AimAssistPriorityActorId = 138,
 };
+
+} // namespace bedrock::protocol

@@ -8,6 +8,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/AttributeValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeEnvironment {
 public:
@@ -65,3 +67,5 @@ public:
 		stream.writeString(easeType);
     }
 };
+
+} // namespace bedrock::protocol

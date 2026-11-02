@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ResourcePackChunkDataPacket : public Packet {
 public:
@@ -120,3 +122,5 @@ public:
 		stream.writeString(data);
     }
 };
+
+} // namespace bedrock::protocol

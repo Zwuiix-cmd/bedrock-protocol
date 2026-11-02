@@ -92,6 +92,8 @@
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/entity/PropertySyncData.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class AddActorPacket : public Packet {
 public:
@@ -174,3 +176,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

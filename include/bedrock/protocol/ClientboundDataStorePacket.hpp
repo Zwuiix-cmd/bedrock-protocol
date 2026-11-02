@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/DataStore.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientboundDataStorePacket : public Packet {
 public:
@@ -130,3 +132,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

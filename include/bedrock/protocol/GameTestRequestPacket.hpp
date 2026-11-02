@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class GameTestRequestPacket : public Packet {
 public:
@@ -138,3 +140,5 @@ public:
 		stream.writeString(testName);
     }
 };
+
+} // namespace bedrock::protocol

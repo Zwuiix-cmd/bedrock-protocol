@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class SubChunkPositionOffset {
 public:
@@ -28,3 +30,5 @@ public:
         stream.writeByte(zOffset);
     }
 };
+
+} // namespace bedrock::protocol

@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/MovementEffectType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class MovementEffectPacket : public Packet {
 public:
@@ -123,3 +125,5 @@ public:
 		stream.writeUnsignedVarLong(tick);
     }
 };
+
+} // namespace bedrock::protocol

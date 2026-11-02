@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ParticleIds : uint8_t {
     Bubble = 1,
     BubbleManual = 2,
@@ -108,3 +110,5 @@ enum class ParticleIds : uint8_t {
     PauseMobGrowth = 99,
     ResetMobGrowth = 100,
 };
+
+} // namespace bedrock::protocol

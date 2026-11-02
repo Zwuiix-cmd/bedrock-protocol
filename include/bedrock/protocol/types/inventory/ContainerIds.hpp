@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ContainerIds : int32_t {
     None = -1,
     Inventory = 0,
@@ -16,3 +18,5 @@ enum class ContainerIds : int32_t {
     Ui = 124,
     ContainerIdRegistry = 125,
 };
+
+} // namespace bedrock::protocol

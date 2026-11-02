@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <memory>
 
+namespace bedrock::protocol {
+
 
 class SyncWorldClocksPayload {
 public:
@@ -18,3 +20,5 @@ public:
 
     static std::shared_ptr<SyncWorldClocksPayload> create(ReadOnlyBinaryStream& stream);
 };
+
+} // namespace bedrock::protocol

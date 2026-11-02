@@ -224,6 +224,8 @@
 #include <bedrock/protocol/ServerboundDataDrivenScreenClosedPacket.hpp>
 #include <bedrock/protocol/SyncWorldClocksPacket.hpp>
 #include <bedrock/protocol/ClientboundAttributeLayerSyncPacket.hpp>
+namespace bedrock::protocol {
+
 
 void PacketPool::setup() noexcept {
     std::call_once(s_setupFlag, [](){
@@ -471,3 +473,5 @@ void PacketPool::registerPacket() noexcept {
     s_byType.emplace(tid, &PacketPool::ctor<P>);
     s_byId.emplace(P::ID, &PacketPool::ctor<P>);
 }
+
+} // namespace bedrock::protocol

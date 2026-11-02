@@ -7,6 +7,8 @@
 #include <string_view>
 
 #include <bedrock/protocol/types/AttributeValue.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeValueFloat : public AttributeValue {
 public:
@@ -45,17 +47,19 @@ public:
     }
 };
 
+} // namespace bedrock::protocol
+
 namespace magic_enum::customize {
 
-template <> constexpr customize_t enum_name<AttributeValueFloat::Operation>(AttributeValueFloat::Operation value) noexcept {
+template <> constexpr customize_t enum_name<::bedrock::protocol::AttributeValueFloat::Operation>(::bedrock::protocol::AttributeValueFloat::Operation value) noexcept {
     switch (value) {
-        case AttributeValueFloat::Operation::Override: return "override";
-        case AttributeValueFloat::Operation::AlphaBlend: return "alpha_blend";
-        case AttributeValueFloat::Operation::Add: return "add";
-        case AttributeValueFloat::Operation::Subtract: return "subtract";
-        case AttributeValueFloat::Operation::Multiply: return "multiply";
-        case AttributeValueFloat::Operation::Minimum: return "minimum";
-        case AttributeValueFloat::Operation::Maximum: return "maximum";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Override: return "override";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::AlphaBlend: return "alpha_blend";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Add: return "add";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Subtract: return "subtract";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Multiply: return "multiply";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Minimum: return "minimum";
+        case ::bedrock::protocol::AttributeValueFloat::Operation::Maximum: return "maximum";
         default: return invalid_tag;
     }
 }

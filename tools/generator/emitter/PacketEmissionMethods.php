@@ -53,6 +53,7 @@ trait PacketEmissionMethods
             $body .= '#include <bedrock/protocol/' . $include . ">\n";
         }
         $body .= "#include <bedrock/protocol/types/TypesGenerated.hpp>\n";
+        $body .= $this->protocolNamespaceOpen();
         $body .= "\nclass " . $name . " : public Packet {\npublic:\n";
         $body .= '    static constexpr PacketIds ID = PacketIds::' . CPPName::packetId($packet['name']) . ";\n\n";
         $body .= "    PacketIds getId() override {\n        return ID;\n    }\n\npublic:\n";
@@ -78,6 +79,7 @@ trait PacketEmissionMethods
             ? $this->translator->genericBody($packet, false)
             : $this->translator->methodBody($encode, $packet) . "\n";
         $body .= "    }\n};\n";
+        $body .= $this->protocolNamespaceClose();
         if ($this->stringEnumDefinitions($packet) !== []) {
             $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
         }
@@ -432,7 +434,7 @@ trait PacketEmissionMethods
         if ($definitions === []) {
             return '';
         }
-        $owner = $this->generatedTypeName($declaration);
+        $owner = $this->qualifiedProtocolType($this->generatedTypeName($declaration));
         $body = "\nnamespace magic_enum::customize {\n\n";
         foreach ($definitions as $enumName => $definition) {
             $body .= 'template <> constexpr customize_t enum_name<' . $owner . '::' . $enumName . '>('

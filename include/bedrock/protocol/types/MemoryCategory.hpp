@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class MemoryCategory : uint8_t {
     Unknown = 0,
     InvalidSizeUnknown = 1,
@@ -87,3 +89,5 @@ enum class MemoryCategory : uint8_t {
     DataDrivenUi = 79,
     DataDrivenUiDefs = 80,
 };
+
+} // namespace bedrock::protocol

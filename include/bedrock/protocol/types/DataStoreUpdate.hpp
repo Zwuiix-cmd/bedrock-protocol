@@ -11,6 +11,8 @@
 #include <bedrock/protocol/types/DoubleDataStoreValue.hpp>
 #include <bedrock/protocol/types/StringDataStoreValue.hpp>
 #include <bedrock/protocol/types/DataStore.hpp>
+namespace bedrock::protocol {
+
 
 class DataStoreUpdate : public DataStore {
 public:
@@ -61,3 +63,5 @@ public:
 		stream.writeUnsignedInt(pathUpdateCount);
     }
 };
+
+} // namespace bedrock::protocol

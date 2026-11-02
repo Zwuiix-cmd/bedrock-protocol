@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class SubChunkPacketHeightMapInfo {
 public:
@@ -40,3 +42,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

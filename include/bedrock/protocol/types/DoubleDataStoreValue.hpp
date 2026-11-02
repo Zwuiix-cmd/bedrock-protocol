@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/DataStoreValue.hpp>
+namespace bedrock::protocol {
+
 
 class DoubleDataStoreValue : public DataStoreValue {
 public:
@@ -26,3 +28,5 @@ public:
         stream.writeFloat(value);
     }
 };
+
+} // namespace bedrock::protocol

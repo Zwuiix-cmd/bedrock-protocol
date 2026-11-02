@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class ContainerUIIds : uint8_t {
     AnvilInput = 0,
     AnvilMaterial = 1,
@@ -73,3 +75,5 @@ enum class ContainerUIIds : uint8_t {
     RecipeBlocksContainer = 65,
     RecipeFurnaceItemsContainer = 66,
 };
+
+} // namespace bedrock::protocol

@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ContainerSetDataPacket : public Packet {
 public:
@@ -130,3 +132,5 @@ public:
 		stream.writeVarInt(value);
     }
 };
+
+} // namespace bedrock::protocol

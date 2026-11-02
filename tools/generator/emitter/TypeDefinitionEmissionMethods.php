@@ -48,7 +48,7 @@ trait TypeDefinitionEmissionMethods
         foreach ($includeParts as $includePart) {
             $factoryBody .= '#include <bedrock/protocol/types/' . $includePart . ">\n";
         }
-        $factoryBody .= "\n" . $definitions;
+        $factoryBody .= "\n" . $this->protocolNamespaceOpen() . $definitions . $this->protocolNamespaceClose();
         $this->write($base . DIRECTORY_SEPARATOR . 'TypesGeneratedFactories.hpp', $factoryBody);
 
         $body = "#pragma once\n\n";

@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class BiomeCoordinateData {
 public:
@@ -53,3 +55,5 @@ public:
 		stream.writeVarInt(distribution);
     }
 };
+
+} // namespace bedrock::protocol

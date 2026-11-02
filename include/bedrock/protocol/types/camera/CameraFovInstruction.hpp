@@ -5,6 +5,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
+namespace bedrock::protocol {
+
 
 class CameraFovInstruction {
 public:
@@ -41,3 +43,5 @@ public:
 		stream.writeBool(clear);
     }
 };
+
+} // namespace bedrock::protocol

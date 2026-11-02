@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class DeprecatedCraftingNonImplementedStackRequestAction : public ItemStackRequestAction {
 public:
@@ -24,3 +26,5 @@ public:
         (void)stream;
     }
 };
+
+} // namespace bedrock::protocol

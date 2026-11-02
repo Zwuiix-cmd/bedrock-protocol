@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ClientboundAttributeLayerSyncPacket : public Packet {
 public:
@@ -140,3 +142,5 @@ public:
 		payload->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

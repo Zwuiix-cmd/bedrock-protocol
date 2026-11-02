@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/camera/CameraAimAssistCategoryPriority.hpp>
+namespace bedrock::protocol {
+
 
 class CameraAimAssistCategoryPriorities {
 public:
@@ -72,3 +74,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class NetworkPermissions {
 public:
@@ -19,3 +21,5 @@ public:
 		stream.writeBool(disableClientSounds);
     }
 };
+
+} // namespace bedrock::protocol

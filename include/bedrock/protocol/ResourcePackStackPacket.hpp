@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/Experiments.hpp>
 #include <bedrock/protocol/types/resourcepacks/ResourcePackStackEntry.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ResourcePackStackPacket : public Packet {
 public:
@@ -134,3 +136,5 @@ public:
 		stream.writeBool(useVanillaEditorPacks);
     }
 };
+
+} // namespace bedrock::protocol

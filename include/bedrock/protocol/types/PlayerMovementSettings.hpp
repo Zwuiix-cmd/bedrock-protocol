@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class PlayerMovementSettings {
 public:
@@ -28,3 +30,5 @@ public:
 		stream.writeBool(serverAuthoritativeBlockBreaking);
     }
 };
+
+} // namespace bedrock::protocol

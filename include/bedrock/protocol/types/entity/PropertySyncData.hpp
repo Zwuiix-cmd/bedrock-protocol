@@ -7,6 +7,9 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
+
 class PropertySyncData {
 public:
     std::vector<std::pair<uint32_t, int32_t>> intProperties;
@@ -50,3 +53,5 @@ public:
         }
     }
 };
+
+} // namespace bedrock::protocol

@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class CameraFadeInstructionColor {
 public:
@@ -25,3 +27,5 @@ public:
 		stream.writeFloat(blue);
     }
 };
+
+} // namespace bedrock::protocol

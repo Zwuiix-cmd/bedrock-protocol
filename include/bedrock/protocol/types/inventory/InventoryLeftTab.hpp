@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class InventoryLeftTab : uint8_t {
     None = 0,
     Construction = 1,
@@ -13,3 +15,5 @@ enum class InventoryLeftTab : uint8_t {
     Search = 5,
     Survival = 6,
 };
+
+} // namespace bedrock::protocol

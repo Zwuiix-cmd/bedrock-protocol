@@ -18,6 +18,8 @@
 #include <bedrock/protocol/types/biome/chunkgen/BiomeReplacementData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialAdjustmentData.hpp>
 #include <bedrock/protocol/types/biome/chunkgen/BiomeSurfaceMaterialData.hpp>
+namespace bedrock::protocol {
+
 
 class BiomeDefinitionChunkGenData {
 public:
@@ -161,3 +163,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

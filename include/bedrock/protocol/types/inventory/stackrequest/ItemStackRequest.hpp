@@ -26,6 +26,8 @@
 #include <bedrock/protocol/types/inventory/stackrequest/PlaceStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/SwapStackRequestAction.hpp>
 #include <bedrock/protocol/types/inventory/stackrequest/TakeStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class ItemStackRequest {
 public:
@@ -80,3 +82,5 @@ public:
 		stream.writeInt(filterStringCause);
     }
 };
+
+} // namespace bedrock::protocol

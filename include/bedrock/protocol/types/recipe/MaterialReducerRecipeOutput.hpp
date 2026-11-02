@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class MaterialReducerRecipeOutput {
 public:
@@ -23,3 +25,5 @@ public:
         stream.writeVarInt(count);
     }
 };
+
+} // namespace bedrock::protocol

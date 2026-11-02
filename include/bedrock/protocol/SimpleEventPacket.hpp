@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SimpleEventPacket : public Packet {
 public:
@@ -119,3 +121,5 @@ public:
 		stream.writeUnsignedShort(magic_enum::enum_integer(eventType));
     }
 };
+
+} // namespace bedrock::protocol

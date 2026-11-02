@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerStartItemCooldownPacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		stream.writeVarInt(cooldownTicks);
     }
 };
+
+} // namespace bedrock::protocol

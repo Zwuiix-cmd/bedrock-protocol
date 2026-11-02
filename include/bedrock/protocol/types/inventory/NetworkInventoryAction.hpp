@@ -7,6 +7,8 @@
 #include <exception>
 
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
+namespace bedrock::protocol {
+
 
 class NetworkInventoryAction {
 public:
@@ -100,3 +102,5 @@ public:
 		newItem.write(stream);
     }
 };
+
+} // namespace bedrock::protocol

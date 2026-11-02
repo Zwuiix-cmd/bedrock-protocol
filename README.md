@@ -42,6 +42,8 @@ cmake -S . -B build `
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+using namespace bedrock::protocol;
+
 BinaryStream encoded;
 SetTimePacket packet;
 packet.time = 42;
@@ -56,6 +58,8 @@ decoded.read(input);
 
 ```cpp
 #include <bedrock/protocol/pool/PacketPool.hpp>
+
+using namespace bedrock::protocol;
 
 PacketPool::setup();
 auto packet = PacketPool::createPacket(PacketIds::SetTime);

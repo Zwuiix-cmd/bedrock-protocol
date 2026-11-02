@@ -7,6 +7,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/PackSetting.hpp>
+namespace bedrock::protocol {
+
 
 class StringPackSetting : public PackSetting {
 public:
@@ -32,3 +34,5 @@ public:
 		stream.writeString(value);
     }
 };
+
+} // namespace bedrock::protocol

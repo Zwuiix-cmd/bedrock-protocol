@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class ServerSettingsRequestPacket : public Packet {
 public:
@@ -110,3 +112,5 @@ public:
         (void)stream;
     }
 };
+
+} // namespace bedrock::protocol

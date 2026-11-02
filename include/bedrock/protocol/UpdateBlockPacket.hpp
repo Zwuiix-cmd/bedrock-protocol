@@ -86,6 +86,8 @@
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdateBlockPacket : public Packet {
 public:
@@ -137,3 +139,5 @@ public:
 		stream.writeUnsignedVarInt(magic_enum::enum_integer(dataLayerId));
     }
 };
+
+} // namespace bedrock::protocol

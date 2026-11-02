@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class CommandParameterTypes : uint8_t {
     Int = 1,
     Val = 3,
@@ -25,3 +27,5 @@ enum class CommandParameterTypes : uint8_t {
     BlockStateArray = 84,
     Codebuilderargs = 87,
 };
+
+} // namespace bedrock::protocol

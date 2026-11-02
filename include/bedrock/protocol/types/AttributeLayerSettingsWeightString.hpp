@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/AttributeLayerSettingsWeight.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeLayerSettingsWeightString : public AttributeLayerSettingsWeight {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeString(value);
     }
 };
+
+} // namespace bedrock::protocol

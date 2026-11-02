@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/DataStoreValue.hpp>
+namespace bedrock::protocol {
+
 
 class BoolDataStoreValue : public DataStoreValue {
 public:
@@ -26,3 +28,5 @@ public:
 		stream.writeBool(value);
     }
 };
+
+} // namespace bedrock::protocol

@@ -88,6 +88,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/entity/EntityLink.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class SetActorLinkPacket : public Packet {
 public:
@@ -114,3 +116,5 @@ public:
 		if (link) link->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

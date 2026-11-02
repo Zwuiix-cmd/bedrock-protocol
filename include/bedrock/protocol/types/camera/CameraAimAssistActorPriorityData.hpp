@@ -4,6 +4,8 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 
 class CameraAimAssistActorPriorityData {
 public:
@@ -38,3 +40,5 @@ public:
 		stream.writeInt(priority);
     }
 };
+
+} // namespace bedrock::protocol

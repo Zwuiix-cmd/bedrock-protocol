@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class DebugMarkerData {
 public:
@@ -39,3 +41,5 @@ public:
 		stream.writeUnsignedLong(durationMillis);
     }
 };
+
+} // namespace bedrock::protocol

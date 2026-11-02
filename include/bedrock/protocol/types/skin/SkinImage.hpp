@@ -7,6 +7,8 @@
 #include <exception>
 #include <string>
 
+namespace bedrock::protocol {
+
 
 class SkinImage {
 public:
@@ -38,3 +40,5 @@ public:
         stream.writeString(data);
     }
 };
+
+} // namespace bedrock::protocol

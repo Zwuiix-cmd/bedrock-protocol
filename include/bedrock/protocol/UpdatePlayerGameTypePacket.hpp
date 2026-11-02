@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class UpdatePlayerGameTypePacket : public Packet {
 public:
@@ -120,3 +122,5 @@ public:
 		stream.writeUnsignedVarLong(tick);
     }
 };
+
+} // namespace bedrock::protocol

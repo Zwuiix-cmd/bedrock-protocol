@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+namespace bedrock::protocol {
+
 
 class CommandOutputMessage {
 public:
@@ -30,3 +32,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

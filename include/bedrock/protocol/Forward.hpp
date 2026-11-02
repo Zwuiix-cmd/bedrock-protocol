@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+namespace bedrock::protocol {
+
 enum class ActorEvent : uint8_t;
 enum class AgentActionType : uint8_t;
 class ArmorSlotAndDamagePair;
@@ -318,3 +320,5 @@ enum class ScriptDebugShapeType : uint8_t;
 enum class ShowStoreOfferRedirectType : uint8_t;
 enum class TriggerType : uint8_t;
 class ItemDescriptor;
+
+} // namespace bedrock::protocol

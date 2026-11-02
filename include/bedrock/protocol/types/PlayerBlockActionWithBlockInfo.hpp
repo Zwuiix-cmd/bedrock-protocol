@@ -7,6 +7,8 @@
 #include <memory>
 
 #include <bedrock/protocol/types/PlayerBlockAction.hpp>
+namespace bedrock::protocol {
+
 
 class PlayerBlockActionWithBlockInfo {
 public:
@@ -38,3 +40,5 @@ public:
 		stream.writeVarInt(face);
     }
 };
+
+} // namespace bedrock::protocol

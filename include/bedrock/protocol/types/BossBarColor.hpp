@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class BossBarColor : uint8_t {
     Pink = 0,
     Blue = 1,
@@ -14,3 +16,5 @@ enum class BossBarColor : uint8_t {
     RebeccaPurple = 6,
     White = 7,
 };
+
+} // namespace bedrock::protocol

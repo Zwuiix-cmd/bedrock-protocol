@@ -6,6 +6,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/DataStoreValue.hpp>
+namespace bedrock::protocol {
+
 
 class StringDataStoreValue : public DataStoreValue {
 public:
@@ -27,3 +29,5 @@ public:
 		stream.writeString(value);
     }
 };
+
+} // namespace bedrock::protocol

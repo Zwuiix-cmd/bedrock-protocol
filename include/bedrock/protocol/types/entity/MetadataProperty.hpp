@@ -11,6 +11,9 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 
+namespace bedrock::protocol {
+
+
 enum class EntityMetadataType : uint32_t {
     BYTE = 0,
     SHORT = 1,
@@ -212,3 +215,5 @@ private:
         return nullptr;
     }
 };
+
+} // namespace bedrock::protocol

@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <optional>
 
+namespace bedrock::protocol {
+
 
 class ScoreboardIdentityPacketEntry {
 public:
@@ -27,3 +29,5 @@ public:
         });
     }
 };
+
+} // namespace bedrock::protocol

@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class EntityMetadataFlags : uint8_t {
     Onfire = 0,
     Sneaking = 1,
@@ -135,3 +137,5 @@ enum class EntityMetadataFlags : uint8_t {
     RotationLockedToVehicle = 126,
     NumberOfFlags = 127,
 };
+
+} // namespace bedrock::protocol

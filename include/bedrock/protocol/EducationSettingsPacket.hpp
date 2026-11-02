@@ -90,6 +90,8 @@
 #include <bedrock/protocol/types/EducationSettingsAgentCapabilities.hpp>
 #include <bedrock/protocol/types/EducationSettingsExternalLinkSettings.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class EducationSettingsPacket : public Packet {
 public:
@@ -150,3 +152,5 @@ public:
 		});
     }
 };
+
+} // namespace bedrock::protocol

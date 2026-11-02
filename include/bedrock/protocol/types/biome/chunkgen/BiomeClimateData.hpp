@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class BiomeClimateData {
 public:
@@ -37,3 +39,5 @@ public:
 		stream.writeFloat(snowAccumulationMax);
     }
 };
+
+} // namespace bedrock::protocol

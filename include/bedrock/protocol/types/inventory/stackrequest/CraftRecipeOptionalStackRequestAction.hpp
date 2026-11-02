@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include <bedrock/protocol/types/inventory/stackrequest/ItemStackRequestAction.hpp>
+namespace bedrock::protocol {
+
 
 class CraftRecipeOptionalStackRequestAction : public ItemStackRequestAction {
 public:
@@ -28,3 +30,5 @@ public:
 		stream.writeInt(filterStringIndex);
     }
 };
+
+} // namespace bedrock::protocol

@@ -9,6 +9,8 @@
 
 #include <bedrock/protocol/types/SyncWorldClockMarkerData.hpp>
 #include <bedrock/protocol/types/SyncWorldClocksPayload.hpp>
+namespace bedrock::protocol {
+
 
 class SyncWorldClocksAddTimeMarker : public SyncWorldClocksPayload {
 public:
@@ -54,3 +56,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

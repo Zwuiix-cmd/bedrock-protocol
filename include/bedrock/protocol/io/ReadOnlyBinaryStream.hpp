@@ -19,6 +19,8 @@
 #include <type_traits>
 #include <variant>
 
+namespace bedrock::protocol {
+
 template <typename Enum>
 requires std::is_enum_v<Enum>
 [[nodiscard]] constexpr bool hasFlag(Enum value, Enum flag) noexcept {
@@ -523,4 +525,6 @@ private:
         return result;
     }
 };
+
+} // namespace bedrock::protocol
 

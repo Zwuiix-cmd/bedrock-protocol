@@ -8,6 +8,8 @@
 #include <bedrock/protocol/types/skin/SkinAnimation.hpp>
 #include <bedrock/protocol/types/skin/SkinData.hpp>
 #include <bedrock/protocol/types/skin/SkinImage.hpp>
+namespace bedrock::protocol {
+
 
 class ClientDataToSkinDataHelper {
 public:
@@ -22,3 +24,5 @@ public:
         (void)stream;
     }
 };
+
+} // namespace bedrock::protocol

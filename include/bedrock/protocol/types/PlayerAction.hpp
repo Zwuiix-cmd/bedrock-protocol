@@ -4,6 +4,8 @@
 #include <magic_enum/magic_enum.hpp>
 #include <string_view>
 
+namespace bedrock::protocol {
+
 enum class PlayerAction : uint8_t {
     StartBreak = 0,
     AbortBreak = 1,
@@ -44,3 +46,5 @@ enum class PlayerAction : uint8_t {
     StartUsingItem = 37,
     CrackBreak = 18,
 };
+
+} // namespace bedrock::protocol

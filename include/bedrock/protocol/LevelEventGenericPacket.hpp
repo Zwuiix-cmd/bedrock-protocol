@@ -87,6 +87,8 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
+namespace bedrock::protocol {
+
 
 class LevelEventGenericPacket : public Packet {
 public:
@@ -121,3 +123,5 @@ public:
 		stream.writeByteArray(NetworkNbtSerializer::writeHeadless(eventData));
     }
 };
+
+} // namespace bedrock::protocol

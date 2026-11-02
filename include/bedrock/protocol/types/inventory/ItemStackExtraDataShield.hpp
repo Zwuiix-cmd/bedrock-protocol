@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/inventory/ItemStackExtraData.hpp>
+namespace bedrock::protocol {
+
 
 class ItemStackExtraDataShield : public ItemStackExtraData {
 public:
@@ -33,3 +35,5 @@ public:
         stream.writeLong(blockingTick);
     }
 };
+
+} // namespace bedrock::protocol

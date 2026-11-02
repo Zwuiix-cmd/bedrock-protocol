@@ -3,6 +3,8 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 
+namespace bedrock::protocol {
+
 
 class CameraSetInstructionRotation {
 public:
@@ -22,3 +24,5 @@ public:
 		stream.writeFloat(yaw);
     }
 };
+
+} // namespace bedrock::protocol

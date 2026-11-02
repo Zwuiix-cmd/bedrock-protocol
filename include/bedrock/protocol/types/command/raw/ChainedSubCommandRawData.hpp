@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <bedrock/protocol/types/command/raw/ChainedSubCommandValueRawData.hpp>
+namespace bedrock::protocol {
+
 
 class ChainedSubCommandRawData {
 public:
@@ -48,3 +50,5 @@ public:
 		}
     }
 };
+
+} // namespace bedrock::protocol

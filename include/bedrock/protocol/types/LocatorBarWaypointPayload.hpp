@@ -7,6 +7,8 @@
 #include <string>
 
 #include <bedrock/protocol/types/LocatorBarWaypoint.hpp>
+namespace bedrock::protocol {
+
 
 class LocatorBarWaypointPayload {
 public:
@@ -37,3 +39,5 @@ public:
 		stream.writeUnsignedByte(action);
     }
 };
+
+} // namespace bedrock::protocol

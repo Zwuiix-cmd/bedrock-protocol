@@ -8,6 +8,8 @@
 
 #include <bedrock/protocol/types/AttributeLayerSettings.hpp>
 #include <bedrock/protocol/types/AttributeLayerSyncPayload.hpp>
+namespace bedrock::protocol {
+
 
 class AttributeUpdateLayerSettings : public AttributeLayerSyncPayload {
 public:
@@ -43,3 +45,5 @@ public:
 		settings->write(stream);
     }
 };
+
+} // namespace bedrock::protocol

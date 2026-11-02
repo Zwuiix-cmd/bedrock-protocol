@@ -149,6 +149,27 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     $lines[] = '        ' . $target . '->read(stream);';
                     continue;
                 }
+                $propertyType = $this->cppPropertyType($property, $declaration);
+                $arrayParts = $this->arrayTypeParts(
+                    (string) ($property['type'] ?? ''),
+                    (string) ($property['doc'] ?? ''),
+                );
+                if ($arrayParts !== null
+                    && $arrayParts['key'] !== null
+                    && str_starts_with($propertyType, 'std::map<')) {
+                    $countName = $field . 'Count';
+                    $keyName = $field . 'Key';
+                    $valueName = $field . 'Value';
+                    $keyRead = $this->fallbackReadValue($arrayParts['key'], null, $declaration);
+                    $valueRead = $this->fallbackReadValue($arrayParts['value'], null, $declaration);
+                    $lines[] = '        const auto ' . $countName . ' = stream.readUnsignedInt().value_or(0);';
+                    $lines[] = '        for (std::size_t index = 0; index < ' . $countName . '; ++index) {';
+                    $lines[] = '            auto ' . $keyName . ' = ' . $keyRead . ';';
+                    $lines[] = '            auto ' . $valueName . ' = ' . $valueRead . ';';
+                    $lines[] = '            ' . $target . '.emplace(std::move(' . $keyName . '), std::move(' . $valueName . '));';
+                    $lines[] = '        }';
+                    continue;
+                }
                 $inferredValue = $this->inferredPropertyReadValue($declaration, $property);
                 $value = $inferredValue ?? $this->fallbackReadValue(
                     $property['type'] ?? null,

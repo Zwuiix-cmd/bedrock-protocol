@@ -211,6 +211,7 @@ trait TypeEmissionMethods
         $parameters = [];
         $baseInitializers = [];
         $initializers = [];
+        $initializedParameters = [];
         $parentDeclaration = null;
         $parentName = CPPName::type((string) ($declaration['parent'] ?? ''));
         foreach ($types as $candidate) {
@@ -247,6 +248,7 @@ trait TypeEmissionMethods
             if ($property === null) {
                 return null;
             }
+            $initializedParameters[$parameterName] = true;
             $parameters[] = 'const ' . $this->propertyType($property, $declaration, false) . '& ' . CPPName::identifier($parameterName) . 'Value';
             if (!isset($properties[$parameterName]) && in_array($parameterName, $parentParameterNames, true)) {
                 $parentArguments[$parameterName] = CPPName::identifier($parameterName . 'Value');
@@ -278,7 +280,37 @@ trait TypeEmissionMethods
             $body = '    explicit ' . $name . '(' . implode(', ', $parameters) . ')'
                 . ($allInitializers === [] ? '' : ' : ' . implode(', ', $allInitializers));
         }
-        if (($constructor['body'] ?? []) === []) {
+        $constructorBody = array_values(array_filter(
+            $constructor['body'] ?? [],
+            static function (mixed $statement) use ($initializedParameters): bool {
+                if (!$statement instanceof \PhpParser\Node\Stmt\Expression) {
+                    return true;
+                }
+                $expression = $statement->expr;
+                if ((($expression instanceof \PhpParser\Node\Expr\MethodCall
+                        && $expression->var instanceof \PhpParser\Node\Expr\Variable
+                        && $expression->var->name === 'parent')
+                    || ($expression instanceof \PhpParser\Node\Expr\StaticCall
+                        && $expression->class instanceof \PhpParser\Node\Name
+                        && $expression->class->getLast() === 'parent'))
+                    && $expression->name instanceof \PhpParser\Node\Identifier
+                    && strtolower($expression->name->toString()) === '__construct') {
+                    return false;
+                }
+                if ($expression instanceof \PhpParser\Node\Expr\Assign
+                    && $expression->var instanceof \PhpParser\Node\Expr\PropertyFetch
+                    && $expression->var->var instanceof \PhpParser\Node\Expr\Variable
+                    && $expression->var->var->name === 'this'
+                    && $expression->var->name instanceof \PhpParser\Node\Identifier
+                    && $expression->expr instanceof \PhpParser\Node\Expr\Variable
+                    && $expression->expr->name === $expression->var->name->toString()
+                    && isset($initializedParameters[$expression->var->name->toString()])) {
+                    return false;
+                }
+                return true;
+            },
+        ));
+        if ($constructorBody === []) {
             return $body . " {}\n";
         }
         $aliases = [];
@@ -286,7 +318,13 @@ trait TypeEmissionMethods
             $parameterName = (string) ($parameter['name'] ?? '');
             $aliases[$parameterName] = CPPName::identifier($parameterName . 'Value');
         }
-        $body .= " {\n" . $this->translator->methodBodyWithAliases($constructor, $declaration, $aliases) . "\n    }\n";
+        $constructor['body'] = $constructorBody;
+        $body .= " {\n"
+            . $this->indentGeneratedBody(
+                $this->translator->methodBodyWithAliases($constructor, $declaration, $aliases),
+                0,
+            )
+            . "\n    }\n";
         return $body;
     }
 }

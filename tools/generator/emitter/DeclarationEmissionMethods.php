@@ -273,7 +273,10 @@ trait DeclarationEmissionMethods
             $staticName = 'create';
             $body .= "\n    static std::shared_ptr<" . $name . "> " . $staticName
                 . '(' . $this->serializerParameters($method) . ") {\n";
-            $body .= $this->translator->methodBody($method, $declaration, true) . "\n";
+            $body .= $this->indentGeneratedBody(
+                $this->translator->methodBody($method, $declaration, true),
+                0,
+            ) . "\n";
             $body .= "    }\n";
         }
         $hasAbstractRead = false;
@@ -399,5 +402,14 @@ trait DeclarationEmissionMethods
             static fn (string $include): string => '#include ' . $include,
             $includes,
         )) . "\n";
+    }
+
+    private function indentGeneratedBody(string $body, int $indent): string
+    {
+        $prefix = str_repeat("\t", $indent);
+        return implode("\n", array_map(
+            static fn (string $line): string => $line === '' ? '' : $prefix . $line,
+            explode("\n", $body),
+        ));
     }
 }

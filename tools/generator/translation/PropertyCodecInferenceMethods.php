@@ -157,6 +157,7 @@ private function inferConstructorPropertyCodecs(Node\Expr\New_ $node, array $var
             if (!is_array($property)) {
                 continue;
             }
+            $this->registerPropertyOrder($owner, (string) $property['name']);
             $codec = $this->codecExpression($argument->value, $variableCodecs, $declaration);
             if ($codec !== null) {
                 $this->registerPropertyCodec($owner, (string) $property['name'], $codec);
@@ -327,14 +328,20 @@ private function codecForCall(string $class, string $name): ?array
 private function registerPropertyCodec(string $owner, string $property, array $codec): void
     {
         $owner = CPPName::type($owner);
+        $this->registerPropertyOrder($owner, $property);
+        $this->inferredPropertyTypes[$owner][$property] = $codec['type'];
+        $this->inferredPropertyCodecs[$owner][$property] = $codec;
+    }
+
+    private function registerPropertyOrder(string $owner, string $property): void
+    {
+        $owner = CPPName::type($owner);
         if (!isset($this->inferredPropertyOrder[$owner])) {
             $this->inferredPropertyOrder[$owner] = [];
         }
         if (!in_array($property, $this->inferredPropertyOrder[$owner], true)) {
             $this->inferredPropertyOrder[$owner][] = $property;
         }
-        $this->inferredPropertyTypes[$owner][$property] = $codec['type'];
-        $this->inferredPropertyCodecs[$owner][$property] = $codec;
     }
 
 private function orderedProperties(array $declaration): array

@@ -117,6 +117,15 @@ private function statement(Node $statement, array $declaration, array $method, i
                 return $prefix . 'auto ' . $this->variableName((string) $statement->expr->var->name, $declaration) . ' = ' . str_replace("\n", "\n" . $prefix, $value) . ';';
             }
             if ($statement->expr instanceof Node\Expr\MethodCall) {
+                $inlinedNestedStatement = $this->inlineNestedMethodCall(
+                    $statement->expr,
+                    $declaration,
+                    $method,
+                    $indent,
+                );
+                if ($inlinedNestedStatement !== null) {
+                    return $inlinedNestedStatement;
+                }
                 $inlinedStatement = $this->inlineVoidMethodStatement(
                     $statement->expr,
                     $declaration,
@@ -125,6 +134,17 @@ private function statement(Node $statement, array $declaration, array $method, i
                 );
                 if ($inlinedStatement !== null) {
                     return $inlinedStatement;
+                }
+            }
+            if ($statement->expr instanceof Node\Expr\StaticCall) {
+                $inlinedNestedStatement = $this->inlineNestedMethodCall(
+                    $statement->expr,
+                    $declaration,
+                    $method,
+                    $indent,
+                );
+                if ($inlinedNestedStatement !== null) {
+                    return $inlinedNestedStatement;
                 }
             }
             $expression = $this->expression($statement->expr, $declaration, $method);
@@ -464,6 +484,74 @@ private function negateCondition(string $condition): string
         return preg_match('/^[A-Za-z_]\\w*(?:[.\\-]\\w+)*$/', $condition) === 1
             ? '!' . $condition
             : '!(' . $condition . ')';
+    }
+
+private function inlineNestedMethodCall(
+        Node\Expr\MethodCall|Node\Expr\StaticCall $outer,
+        array $declaration,
+        array $method,
+        int $indent,
+    ): ?string {
+        foreach ($outer->args as $argument) {
+            if (!$argument instanceof Node\Arg
+                || !$argument->value instanceof Node\Expr\MethodCall
+                || !$argument->value->var instanceof Node\Expr\Variable
+                || $argument->value->var->name !== 'this') {
+                continue;
+            }
+            $nested = $argument->value;
+            $nestedExpression = $this->expression($nested, $declaration, $method);
+            $outerExpression = $this->expression($outer, $declaration, $method);
+            $translated = $this->withInlinedMethodContext(
+                $nested,
+                $declaration,
+                $method,
+                function (array $helper) use ($declaration, $indent): ?array {
+                    $body = array_values(array_filter(
+                        $helper['body'] ?? [],
+                        static fn (mixed $statement): bool => $statement instanceof Node\Stmt,
+                    ));
+                    $return = array_pop($body);
+                    if (!$return instanceof Node\Stmt\Return_ || $return->expr === null) {
+                        return null;
+                    }
+                    $previousDeclaredVariables = $this->declaredVariables;
+                    $previousLocalVariables = $this->localVariables;
+                    $this->declaredVariables = [];
+                    $this->localVariables = array_fill_keys(
+                        $this->localVariableNames($body),
+                        true,
+                    );
+                    $lines = [];
+                    try {
+                        foreach ($body as $statement) {
+                            $translated = $this->statement($statement, $declaration, $helper, $indent);
+                            if ($translated !== '') {
+                                $lines[] = $translated;
+                            }
+                        }
+                        $returnValue = $this->expression($return->expr, $declaration, $helper);
+                    } finally {
+                        $this->declaredVariables = $previousDeclaredVariables;
+                        $this->localVariables = $previousLocalVariables;
+                    }
+                    return [$lines, $returnValue];
+                },
+            );
+            if (!is_array($translated)) {
+                continue;
+            }
+            [$lines, $returnValue] = $translated;
+            $outerExpression = preg_replace(
+                '/\\(\\[&\\]\\(\\)(?: -> [^{]+)? \\{.*?\\}\\(\\)\\)/s',
+                $returnValue,
+                $outerExpression,
+                1,
+            ) ?? str_replace($nestedExpression, $returnValue, $outerExpression);
+            $lines[] = str_repeat("\t", $indent) . $outerExpression . ';';
+            return implode("\n", $lines);
+        }
+        return null;
     }
 
 private function inlineObjectAppend(
@@ -933,9 +1021,45 @@ private function destructuringAssignment(Node\Expr\Assign $assignment, array $de
         if (count($elementTypes) !== count($names)) {
             return null;
         }
-        $tupleType = 'std::tuple<' . implode(', ', $elementTypes) . '>';
-        $value = $this->expression($assignment->expr, $declaration, $method, $tupleType);
-        return 'auto [' . implode(', ', $names) . '] = ' . $value . ';';
+        $lines = [];
+        foreach ($names as $index => $name) {
+            $lines[] = $elementTypes[$index] . ' ' . $name . '{};';
+        }
+        foreach ($assignment->expr->arms as $index => $arm) {
+            $conditions = [];
+            foreach ($arm->conds ?? [] as $condition) {
+                $conditions[] = $this->conditionExpression($condition, $declaration, $method);
+            }
+            if ($conditions === []) {
+                $lines[] = '} else {';
+            } else {
+                $keyword = $index === 0 ? 'if' : '} else if';
+                $lines[] = $keyword . ' (' . implode(' || ', $conditions) . ') {';
+            }
+            if ($arm->body instanceof Node\Expr\Throw_) {
+                $lines[] = "\t" . $this->throwExpression($arm->body, $declaration, $method);
+            } elseif ($arm->body instanceof Node\Expr\Array_) {
+                foreach ($arm->body->items as $itemIndex => $item) {
+                    if ($item === null || !isset($names[$itemIndex])) {
+                        continue;
+                    }
+                    $lines[] = "\t" . $names[$itemIndex] . ' = '
+                        . $this->expression(
+                            $item->value,
+                            $declaration,
+                            $method,
+                            $elementTypes[$itemIndex],
+                        )
+                        . ';';
+                }
+            } else {
+                return null;
+            }
+            if ($index === count($assignment->expr->arms) - 1) {
+                $lines[] = '}';
+            }
+        }
+        return implode("\n", $lines);
     }
 
 private function matchTupleTypes(Node\Expr\Match_ $match, array $declaration): array

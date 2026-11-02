@@ -84,8 +84,63 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
         }
         $lines[] = 'for (std::size_t ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
+        if ($body->expr->expr instanceof Node\Expr\Match_) {
+            $match = $this->listMatchBody(
+                $body->expr->expr,
+                $target,
+                $valueType,
+                $declaration,
+                $method,
+            );
+            if ($match !== null) {
+                $lines[] = $this->indentGeneratedStatement($match, '    ');
+                $lines[] = '}';
+                return implode("\n", $lines);
+            }
+        }
         $lines[] = '    ' . $target . '.push_back(' . $value . ');';
         $lines[] = '}';
+        return implode("\n", $lines);
+    }
+
+    private function listMatchBody(
+        Node\Expr\Match_ $match,
+        string $target,
+        ?string $valueType,
+        array $declaration,
+        array $method,
+    ): ?string {
+        $subject = $this->expression($match->cond, $declaration, $method);
+        $subjectName = 'matchValue';
+        $lines = ['auto ' . $subjectName . ' = ' . $subject . ';'];
+        $subjectType = $this->enumExpressionType($match->cond, $declaration);
+        foreach ($match->arms as $index => $arm) {
+            $conditions = [];
+            foreach ($arm->conds ?? [] as $condition) {
+                $conditionValue = $this->expression($condition, $declaration, $method);
+                $conditionType = $this->enumExpressionType($condition, $declaration);
+                if ($conditionType !== null && $subjectType === null) {
+                    $conditionValue = $this->enumStorageValue($conditionValue, $conditionType);
+                }
+                $conditions[] = $subjectName . ' == ' . $conditionValue;
+            }
+            if ($conditions === []) {
+                $lines[] = '} else {';
+            } else {
+                $keyword = $index === 0 ? 'if' : '} else if';
+                $lines[] = $keyword . ' (' . implode(' || ', $conditions) . ') {';
+            }
+            if ($arm->body instanceof Node\Expr\Throw_) {
+                $lines[] = "\t" . $this->throwExpression($arm->body, $declaration, $method);
+            } else {
+                $lines[] = "\t" . $target . '.push_back('
+                    . $this->expression($arm->body, $declaration, $method, $valueType)
+                    . ');';
+            }
+            if ($index === count($match->arms) - 1) {
+                $lines[] = '}';
+            }
+        }
         return implode("\n", $lines);
     }
 

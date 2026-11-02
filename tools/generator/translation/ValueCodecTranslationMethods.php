@@ -17,7 +17,7 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
             $variant = $this->cppType($type);
             $first = $this->fallbackReadValue($unionParts[0], null, $declaration);
             if ($this->nullableType($type)) {
-                return '([&]() { auto value = stream.readOptional([&]() { return ' . $first . '; }); return value ? ' . $variant . '{*value} : ' . $variant . '{std::monostate{}}; }())';
+                return 'stream.readOptionalVariant<' . $variant . '>([&]() { return ' . $first . '; })';
             }
             return $variant . '{' . $first . '}';
         }
@@ -34,16 +34,8 @@ private function fallbackReadValue(?string $type, ?string $doc, array $declarati
             $mapType = $this->cppType($type, false, $doc);
             $key = $this->fallbackReadValue($arrayParts['key'], null, $declaration);
             $value = $this->fallbackReadValue($arrayParts['value'], null, $declaration);
-            return "([&]() {\n"
-                . '    ' . $mapType . " result;\n"
-                . "    const auto count = stream.readUnsignedInt().value_or(0);\n"
-                . "    for (uint32_t i = 0; i < count; ++i) {\n"
-                . '        auto key = ' . $key . ";\n"
-                . '        auto value = ' . $value . ";\n"
-                . "        result.emplace(std::move(key), std::move(value));\n"
-                . "    }\n"
-                . "    return result;\n"
-                . "}())";
+            return 'stream.readMap<' . $mapType . '>([&]() { return ' . $key . '; }, '
+                . '[&]() { return ' . $value . '; })';
         }
         $element = $this->arrayElementType($type, $doc);
         if ($element !== null) {

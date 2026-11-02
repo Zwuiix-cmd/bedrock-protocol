@@ -17,6 +17,7 @@
 #include <limits>
 #include <memory>
 #include <type_traits>
+#include <variant>
 
 template <typename Enum>
 requires std::is_enum_v<Enum>
@@ -32,6 +33,27 @@ public:
         T value;
         value.read(*this);
         return value;
+    }
+
+    template <typename Variant, typename Reader>
+    Variant readOptionalVariant(Reader&& reader) {
+        auto value = readOptional(std::forward<Reader>(reader));
+        return value
+            ? Variant{*value}
+            : Variant{std::monostate{}};
+    }
+
+    template <typename Map, typename KeyReader, typename ValueReader>
+    Map readMap(KeyReader&& keyReader, ValueReader&& valueReader) {
+        Map result;
+        const auto count = readUnsignedInt().value_or(0);
+        for (std::size_t index = 0; index < count; ++index) {
+            result.emplace(
+                std::forward<KeyReader>(keyReader)(),
+                std::forward<ValueReader>(valueReader)()
+            );
+        }
+        return result;
     }
 
     // -- constructors --

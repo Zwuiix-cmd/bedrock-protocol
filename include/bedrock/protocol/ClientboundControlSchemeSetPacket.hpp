@@ -119,10 +119,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		scheme = static_cast<ControlScheme>(static_cast<ControlScheme>(stream.readUnsignedByte().value_or(0)));
+		scheme = static_cast<ControlScheme>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(scheme)>>>(scheme));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<ControlScheme>>(scheme));
     }
 };

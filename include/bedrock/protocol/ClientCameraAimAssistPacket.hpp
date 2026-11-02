@@ -122,13 +122,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		presetId = stream.readString().value_or("");
-		actionType = static_cast<CameraAimAssistActionType>(static_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)));
+		actionType = static_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0));
 		allowAimAssist = stream.readBool().value_or(false);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeString(presetId);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(actionType)>>>(actionType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistActionType>>(actionType));
 		stream.writeBool(allowAimAssist);
     }
 };

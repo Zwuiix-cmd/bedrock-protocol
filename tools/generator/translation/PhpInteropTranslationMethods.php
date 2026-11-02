@@ -229,6 +229,9 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             if (str_starts_with($name, 'CATEGORY_')) {
                 return 'Category::' . CPPName::enumCase(substr($name, 9));
             }
+            if (str_starts_with($name, 'ACTION_') && $this->hasActionEnum($current)) {
+                return 'Action::' . CPPName::enumCase(substr($name, 7));
+            }
             return CPPName::identifier($name);
         }
         $referenced = $this->findDeclaration($class);
@@ -253,6 +256,9 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
                 }
             }
         }
+        if ($referenced !== null && str_starts_with($name, 'ACTION_') && $this->hasActionEnum($referenced)) {
+            return CPPName::type($class) . '::Action::' . CPPName::enumCase(substr($name, 7));
+        }
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
             return CPPName::type($class) . '::' . CPPName::enumCase($name);
         }
@@ -262,6 +268,29 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             }
         }
         return CPPName::type($class) . '::' . CPPName::identifier($name);
+    }
+
+    private function hasActionEnum(array $declaration): bool
+    {
+        $hasActionConstants = false;
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            if (str_starts_with((string) ($constant['name'] ?? ''), 'ACTION_')) {
+                $hasActionConstants = true;
+                break;
+            }
+        }
+        if (!$hasActionConstants) {
+            return false;
+        }
+        foreach ($declaration['properties'] ?? [] as $property) {
+            $name = strtolower((string) ($property['name'] ?? ''));
+            if ($name === 'action'
+                || str_ends_with($name, 'action')
+                || str_ends_with($name, 'actiontype')) {
+                return true;
+            }
+        }
+        return false;
     }
 
 private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, array $declaration, ?array $method): string

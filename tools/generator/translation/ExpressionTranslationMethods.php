@@ -69,6 +69,18 @@ public function expression(?Node $expression, array $declaration, ?array $method
                 return $this->coerceVariantAlternative($expression, CPPName::identifier($property), $expectedType, $declaration);
             }
             if ($property === 'value') {
+                $enumType = $this->enumExpressionType($expression->var, $declaration)
+                    ?? $this->expressionType($expression->var, $declaration);
+                if ($enumType !== null) {
+                    $enumDeclaration = $this->findDeclaration(CPPName::type($enumType));
+                    if ($enumType === 'Action'
+                        || $enumType === 'BuildPlatform'
+                        || $enumType === 'Type'
+                        || $enumType === 'Category'
+                        || ($enumDeclaration !== null && $this->isEnumLikeDeclaration($enumDeclaration))) {
+                        return 'static_cast<std::underlying_type_t<' . $enumType . '>>(' . $object . ')';
+                    }
+                }
                 return 'static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(' . $object . ')>>>(' . $object . ')';
             }
             return $this->coerceVariantAlternative(
@@ -333,7 +345,7 @@ public function expression(?Node $expression, array $declaration, ?array $method
             $value = $this->expression($expression->expr, $declaration, $method, $this->assignmentCPPType($expression->var, $declaration));
             $enumType = $this->enumPropertyType($expression->var, $declaration)
                 ?? $this->assignmentCPPType($expression->var, $declaration);
-            $isEnumTarget = in_array($enumType, ['BuildPlatform', 'Type', 'Category'], true)
+            $isEnumTarget = in_array($enumType, ['Action', 'BuildPlatform', 'Type', 'Category'], true)
                 || ($enumType !== null
                     && str_contains($enumType, '::')
                     && !str_starts_with($enumType, 'std::')
@@ -345,7 +357,9 @@ public function expression(?Node $expression, array $declaration, ?array $method
             if ($enumType !== null) {
                 $value = $this->isStringEnumProperty($expression->var, $declaration)
                     ? $this->stringEnumFromString($expression->var, $value, $declaration)
-                    : 'static_cast<' . $enumType . '>(' . $value . ')';
+                    : (str_starts_with($value, 'static_cast<' . $enumType . '>(')
+                        ? $value
+                        : 'static_cast<' . $enumType . '>(' . $value . ')');
             }
             return $this->expression($expression->var, $declaration, $method) . ' = ' . $value;
         }

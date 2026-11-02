@@ -110,12 +110,14 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_LEAVE_VEHICLE = 3;
-    static constexpr int64_t ACTION_MOUSEOVER = 4;
-    static constexpr int64_t ACTION_OPEN_NPC = 5;
-    static constexpr int64_t ACTION_OPEN_INVENTORY = 6;
+    enum class Action : uint8_t {
+        LeaveVehicle = 3,
+        Mouseover = 4,
+        OpenNpc = 5,
+        OpenInventory = 6,
+    };
 
-    uint8_t action;
+    Action action;
     uint64_t targetActorRuntimeId;
     std::optional<glm::vec3> position;
 
@@ -125,7 +127,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = stream.readUnsignedByte().value_or(0);
+		action = static_cast<Action>(stream.readUnsignedByte().value_or(0));
 		targetActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		position = stream.readOptional([&]() {
 		            return stream.readVec3().value_or(glm::vec3(0.0f));
@@ -133,7 +135,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(action);
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(action));
 		stream.writeActorRuntimeID(targetActorRuntimeId);
 		stream.writeOptional(position, [&](const auto& value) {
 		            stream.writeVec3(value);

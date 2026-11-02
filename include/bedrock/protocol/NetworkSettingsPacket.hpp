@@ -127,7 +127,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		compressionThreshold = stream.readUnsignedShort().value_or(0);
-		compressionAlgorithm = static_cast<CompressionAlgorithm>(static_cast<CompressionAlgorithm>(stream.readUnsignedShort().value_or(0)));
+		compressionAlgorithm = static_cast<CompressionAlgorithm>(stream.readUnsignedShort().value_or(0));
 		enableClientThrottling = stream.readBool().value_or(false);
 		clientThrottleThreshold = stream.readUnsignedByte().value_or(0);
 		clientThrottleScalar = stream.readFloat().value_or(0.0f);
@@ -135,7 +135,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedShort(compressionThreshold);
-		stream.writeUnsignedShort(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(compressionAlgorithm)>>>(compressionAlgorithm));
+		stream.writeUnsignedShort(static_cast<std::underlying_type_t<CompressionAlgorithm>>(compressionAlgorithm));
 		stream.writeBool(enableClientThrottling);
 		stream.writeUnsignedByte(clientThrottleThreshold);
 		stream.writeFloat(clientThrottleScalar);

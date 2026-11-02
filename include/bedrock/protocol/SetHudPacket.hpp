@@ -127,14 +127,14 @@ public:
 				hudElements.push_back(static_cast<HudElement>(stream.readVarInt().value_or(0)));
 		    }
 		}
-		visibility = static_cast<HudVisibility>(static_cast<HudVisibility>(stream.readVarInt().value_or(0)));
+		visibility = static_cast<HudVisibility>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedVarInt(hudElements.size());
 		for (const auto& element : hudElements) {
-			stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(element)>>>(element));
+			stream.writeVarInt(static_cast<std::underlying_type_t<HudElement>>(element));
 		}
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(visibility)>>>(visibility));
+		stream.writeVarInt(static_cast<std::underlying_type_t<HudVisibility>>(visibility));
     }
 };

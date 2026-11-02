@@ -131,7 +131,7 @@ public:
 		compressedPackSize = stream.readUnsignedLong().value_or(0);
 		sha256 = stream.readString().value_or("");
 		isPremium = stream.readBool().value_or(false);
-		packType = static_cast<ResourcePackType>(static_cast<ResourcePackType>(stream.readUnsignedByte().value_or(0)));
+		packType = static_cast<ResourcePackType>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
@@ -141,6 +141,6 @@ public:
 		stream.writeUnsignedLong(compressedPackSize);
 		stream.writeString(sha256);
 		stream.writeBool(isPremium);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(packType)>>>(packType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<ResourcePackType>>(packType));
     }
 };

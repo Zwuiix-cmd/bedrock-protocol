@@ -120,14 +120,14 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		loadingScreenType = static_cast<LoadingScreenType>(static_cast<LoadingScreenType>(stream.readVarInt().value_or(0)));
+		loadingScreenType = static_cast<LoadingScreenType>(stream.readVarInt().value_or(0));
 		loadingScreenId = stream.readOptional([&]() {
 		            return stream.readUnsignedInt().value_or(0);
 		        });
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(loadingScreenType)>>>(loadingScreenType));
+		stream.writeVarInt(static_cast<std::underlying_type_t<LoadingScreenType>>(loadingScreenType));
 		stream.writeOptional(loadingScreenId, [&](const auto& value) {
 		            stream.writeUnsignedInt(value);
 		        });

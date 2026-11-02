@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<NoiseAlignmentType>>(type));
 		stream.writeUnsignedVarInt(value);
     }
 };

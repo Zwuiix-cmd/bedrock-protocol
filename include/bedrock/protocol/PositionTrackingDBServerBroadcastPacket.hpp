@@ -112,11 +112,13 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_UPDATE = 0;
-    static constexpr int64_t ACTION_DESTROY = 1;
-    static constexpr int64_t ACTION_NOT_FOUND = 2;
+    enum class Action : uint8_t {
+        Update = 0,
+        Destroy = 1,
+        NotFound = 2,
+    };
 
-    uint8_t action;
+    Action action;
     int32_t trackingId;
     std::shared_ptr<CompoundTag> nbt;
 
@@ -126,13 +128,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        action = stream.readUnsignedByte().value_or(0);
+        action = static_cast<Action>(stream.readUnsignedByte().value_or(0));
         trackingId = stream.readVarInt().value_or(0);
         nbt = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(action);
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(action));
 		stream.writeVarInt(trackingId);
 		NetworkNbtSerializer::write(stream, nbt);
     }

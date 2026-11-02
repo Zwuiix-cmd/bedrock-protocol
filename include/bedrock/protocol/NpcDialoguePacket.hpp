@@ -110,11 +110,13 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_OPEN = 0;
-    static constexpr int64_t ACTION_CLOSE = 1;
+    enum class Action : uint8_t {
+        Open = 0,
+        Close = 1,
+    };
 
     int64_t npcActorUniqueId;
-    int32_t actionType;
+    Action actionType;
     std::string dialogue;
     std::string sceneName;
     std::string npcName;
@@ -127,7 +129,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		npcActorUniqueId = stream.readLong().value_or(0);
-		actionType = stream.readVarInt().value_or(0);
+		actionType = static_cast<Action>(stream.readVarInt().value_or(0));
 		dialogue = stream.readString().value_or("");
 		sceneName = stream.readString().value_or("");
 		npcName = stream.readString().value_or("");
@@ -136,7 +138,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeLong(npcActorUniqueId);
-		stream.writeVarInt(actionType);
+		stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
 		stream.writeString(dialogue);
 		stream.writeString(sceneName);
 		stream.writeString(npcName);

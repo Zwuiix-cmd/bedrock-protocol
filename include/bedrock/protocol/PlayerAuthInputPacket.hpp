@@ -164,9 +164,9 @@ public:
 			}
 			inputFlags.set(flag, true);
 		}
-		inputMode = static_cast<InputMode>(static_cast<InputMode>(stream.readUnsignedVarInt().value_or(0)));
-		playMode = static_cast<PlayMode>(static_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0)));
-		interactionMode = static_cast<InteractionMode>(static_cast<InteractionMode>(stream.readVarInt().value_or(0)));
+		inputMode = static_cast<InputMode>(stream.readUnsignedVarInt().value_or(0));
+		playMode = static_cast<PlayMode>(stream.readUnsignedVarInt().value_or(0));
+		interactionMode = static_cast<InteractionMode>(stream.readVarInt().value_or(0));
 		interactRotation = stream.readVec2().value_or(glm::vec2(0.0f));
 		tick = stream.readUnsignedVarLong().value_or(0);
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
@@ -210,7 +210,7 @@ public:
 		stream.writeFloat(moveVecZ);
 		stream.writeFloat(headYaw);
 		auto flagsArray = std::vector<int32_t>();
-		for (std::size_t i = 0; (i < static_cast<std::underlying_type_t<decltype(PlayerAuthInputFlags::Count)>>(PlayerAuthInputFlags::Count)); ++i) {
+		for (std::size_t i = 0; (i < static_cast<std::underlying_type_t<PlayerAuthInputFlags>>(PlayerAuthInputFlags::Count)); ++i) {
 			if (inputFlags.get(i)) {
 				flagsArray.push_back(i);
 			}
@@ -218,9 +218,9 @@ public:
 		stream.writeList(flagsArray, [&](const auto& value) {
 		            stream.writeVarInt(value);
 		        });
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(inputMode)>>>(inputMode));
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(playMode)>>>(playMode));
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(interactionMode)>>>(interactionMode));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<InputMode>>(inputMode));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<PlayMode>>(playMode));
+		stream.writeVarInt(static_cast<std::underlying_type_t<InteractionMode>>(interactionMode));
 		stream.writeVec2(interactRotation);
 		stream.writeUnsignedVarLong(tick);
 		stream.writeVec3(delta);

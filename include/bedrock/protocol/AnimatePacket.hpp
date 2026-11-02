@@ -111,12 +111,14 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_SWING_ARM = 1;
-    static constexpr int64_t ACTION_STOP_SLEEP = 3;
-    static constexpr int64_t ACTION_CRITICAL_HIT = 4;
-    static constexpr int64_t ACTION_MAGICAL_CRITICAL_HIT = 5;
+    enum class Action : uint8_t {
+        SwingArm = 1,
+        StopSleep = 3,
+        CriticalHit = 4,
+        MagicalCriticalHit = 5,
+    };
 
-    uint8_t action;
+    Action action;
     uint64_t actorRuntimeId;
     float data = 0.0f;
     std::optional<std::string> swingSource;
@@ -128,7 +130,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        action = stream.readUnsignedByte().value_or(0);
+        action = static_cast<Action>(stream.readUnsignedByte().value_or(0));
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         data = stream.readFloat().value_or(0.0f);
         swingSource = stream.readOptional([&]() {
@@ -138,7 +140,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeUnsignedByte(action);
+        stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(action));
         stream.writeActorRuntimeID(actorRuntimeId);
         stream.writeFloat(data);
         stream.writeOptional(swingSource, [&](const auto& optionalValue) {

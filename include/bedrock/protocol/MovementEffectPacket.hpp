@@ -123,14 +123,14 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		effectType = static_cast<MovementEffectType>(static_cast<MovementEffectType>(stream.readUnsignedVarInt().value_or(0)));
+		effectType = static_cast<MovementEffectType>(stream.readUnsignedVarInt().value_or(0));
 		duration = stream.readUnsignedVarInt().value_or(0);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(effectType)>>>(effectType));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<MovementEffectType>>(effectType));
 		stream.writeUnsignedVarInt(duration);
 		stream.writeUnsignedVarLong(tick);
     }

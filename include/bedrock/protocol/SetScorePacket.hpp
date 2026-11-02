@@ -129,15 +129,15 @@ public:
 		            	auto entry = std::make_shared<ScorePacketEntry>();
 		            	entry->action = static_cast<ScorePacketEntryAction>(action);
 		            	entry->scoreboardId = stream.readVarLong().value_or(0);
-		            	if ((action == static_cast<std::underlying_type_t<decltype(ScorePacketEntryAction::Remove)>>(ScorePacketEntryAction::Remove))) {
+		            	if ((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::Remove))) {
 				entry->objectiveName = stream.readOptional([&]() {
 				            return stream.readString().value_or("");
 				        });
-			} else if (((action == static_cast<std::underlying_type_t<decltype(ScorePacketEntryAction::ChangePlayer)>>(ScorePacketEntryAction::ChangePlayer)) || (action == static_cast<std::underlying_type_t<decltype(ScorePacketEntryAction::ChangeEntity)>>(ScorePacketEntryAction::ChangeEntity)))) {
+			} else if (((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangePlayer)) || (action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangeEntity)))) {
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
 				entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
-			} else if ((action == static_cast<std::underlying_type_t<decltype(ScorePacketEntryAction::ChangeFakePlayer)>>(ScorePacketEntryAction::ChangeFakePlayer))) {
+			} else if ((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangeFakePlayer))) {
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
 				entry->customName = stream.readString().value_or("");
@@ -151,7 +151,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeList(entries, [&](const auto& entry) {
 		            	stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(entry->action)>>>(entry->action));
-		            	stream.writeString(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(entry->action)>>>(entry->action));
+		            	stream.writeString(static_cast<std::underlying_type_t<ScorePacketEntryAction>>(entry->action));
 		            	stream.writeVarLong(entry->scoreboardId);
 		            	if ((entry->action == ScorePacketEntryAction::Remove)) {
 				stream.writeOptional(entry->objectiveName, [&](const auto& value) {

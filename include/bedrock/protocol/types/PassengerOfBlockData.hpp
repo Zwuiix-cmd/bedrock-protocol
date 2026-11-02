@@ -52,6 +52,6 @@ public:
 		stream.writeVec3(offset);
 		stream.writeFloat(rotation);
 		stream.writeFloat(rotationLimit);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(emoteType)>>>(emoteType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<EmoteType>>(emoteType));
     }
 };

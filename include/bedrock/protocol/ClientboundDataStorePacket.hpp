@@ -124,17 +124,17 @@ public:
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
 				values.push_back(([&]() -> std::shared_ptr<DataStoreOperation> {
-				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<decltype(DataStoreOperationType::Update)>>(DataStoreOperationType::Update)) return ([&]() {
+				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<DataStoreOperationType>>(DataStoreOperationType::Update)) return ([&]() {
 				    auto value = std::make_shared<DataStoreUpdate>();
 				    value->read(stream);
 				    return value;
 				}());
-				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<decltype(DataStoreOperationType::Change)>>(DataStoreOperationType::Change)) return ([&]() {
+				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<DataStoreOperationType>>(DataStoreOperationType::Change)) return ([&]() {
 				    auto value = std::make_shared<DataStoreChange>();
 				    value->read(stream);
 				    return value;
 				}());
-				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<decltype(DataStoreOperationType::Removal)>>(DataStoreOperationType::Removal)) return ([&]() {
+				    if (stream.readUnsignedVarInt().value_or(0) == static_cast<std::underlying_type_t<DataStoreOperationType>>(DataStoreOperationType::Removal)) return ([&]() {
 				    auto value = std::make_shared<DataStoreRemoval>();
 				    value->read(stream);
 				    return value;

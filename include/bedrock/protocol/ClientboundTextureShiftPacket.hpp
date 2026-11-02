@@ -126,7 +126,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		actionId = static_cast<TextureShiftAction>(static_cast<TextureShiftAction>(stream.readUnsignedByte().value_or(0)));
+		actionId = static_cast<TextureShiftAction>(stream.readUnsignedByte().value_or(0));
 		collectionName = stream.readString().value_or("");
 		fromStep = stream.readString().value_or("");
 		toStep = stream.readString().value_or("");
@@ -142,7 +142,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(actionId)>>>(actionId));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<TextureShiftAction>>(actionId));
 		stream.writeString(collectionName);
 		stream.writeString(fromStep);
 		stream.writeString(toStep);

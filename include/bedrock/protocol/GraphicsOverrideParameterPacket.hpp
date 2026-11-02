@@ -145,7 +145,7 @@ public:
 		playerIdentifier = stream.readOptional([&]() {
 		            return stream.readString().value_or("");
 		        });
-		parameterType = static_cast<GraphicsOverrideParameterType>(static_cast<GraphicsOverrideParameterType>(stream.readUnsignedByte().value_or(0)));
+		parameterType = static_cast<GraphicsOverrideParameterType>(stream.readUnsignedByte().value_or(0));
 		reset = stream.readBool().value_or(false);
     }
 
@@ -164,7 +164,7 @@ public:
 		stream.writeOptional(playerIdentifier, [&](const auto& value) {
 		            stream.writeString(value);
 		        });
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(parameterType)>>>(parameterType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<GraphicsOverrideParameterType>>(parameterType));
 		stream.writeBool(reset);
     }
 };

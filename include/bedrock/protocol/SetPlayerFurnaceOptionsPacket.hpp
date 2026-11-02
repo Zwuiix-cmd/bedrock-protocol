@@ -122,7 +122,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		furnaceType = static_cast<FurnaceType>(static_cast<FurnaceType>(stream.readUnsignedByte().value_or(0)));
+		furnaceType = static_cast<FurnaceType>(stream.readUnsignedByte().value_or(0));
 		furnaceOptions = ([&]() {
 		    auto value = std::make_shared<FurnaceOptions>();
 		    value->read(stream);
@@ -131,7 +131,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(furnaceType)>>>(furnaceType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<FurnaceType>>(furnaceType));
 		furnaceOptions->write(stream);
     }
 };

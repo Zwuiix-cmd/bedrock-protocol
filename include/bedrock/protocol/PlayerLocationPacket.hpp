@@ -122,9 +122,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
-		type = static_cast<PlayerLocationType>(static_cast<PlayerLocationType>(stream.readUnsignedVarInt().value_or(0)));
+		type = static_cast<PlayerLocationType>(stream.readUnsignedVarInt().value_or(0));
 		auto innerType = stream.readVarInt().value_or(0);
-		if ((innerType != static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type))) {
+		if ((innerType != static_cast<std::underlying_type_t<PlayerLocationType>>(type))) {
 			throw std::exception{};
 		}
 		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
@@ -134,8 +134,8 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorUniqueID(actorUniqueId);
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type));
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<PlayerLocationType>>(type));
+		stream.writeVarInt(static_cast<std::underlying_type_t<PlayerLocationType>>(type));
 		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
 			if ((!position)) {
 				throw std::exception{};

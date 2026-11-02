@@ -110,26 +110,28 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_UNKNOWN = -1;
-    static constexpr int64_t ACTION_EQUIP_ARMOR = 0;
-    static constexpr int64_t ACTION_EAT = 1;
-    static constexpr int64_t ACTION_ATTACK = 2;
-    static constexpr int64_t ACTION_CONSUME = 3;
-    static constexpr int64_t ACTION_THROW = 4;
-    static constexpr int64_t ACTION_SHOOT = 5;
-    static constexpr int64_t ACTION_PLACE = 6;
-    static constexpr int64_t ACTION_FILL_BOTTLE = 7;
-    static constexpr int64_t ACTION_FILL_BUCKET = 8;
-    static constexpr int64_t ACTION_POUR_BUCKET = 9;
-    static constexpr int64_t ACTION_USE_TOOL = 10;
-    static constexpr int64_t ACTION_INTERACT = 11;
-    static constexpr int64_t ACTION_RETRIEVED = 12;
-    static constexpr int64_t ACTION_DYED = 13;
-    static constexpr int64_t ACTION_TRADED = 14;
-    static constexpr int64_t ACTION_BRUSHING_COMPLETED = 15;
+    enum class Action : int64_t {
+        Unknown = -1,
+        EquipArmor = 0,
+        Eat = 1,
+        Attack = 2,
+        Consume = 3,
+        Throw = 4,
+        Shoot = 5,
+        Place = 6,
+        FillBottle = 7,
+        FillBucket = 8,
+        PourBucket = 9,
+        UseTool = 10,
+        Interact = 11,
+        Retrieved = 12,
+        Dyed = 13,
+        Traded = 14,
+        BrushingCompleted = 15,
+    };
 
     int16_t itemId;
-    int32_t action;
+    Action action;
 
 public:
     std::string_view getName() override {
@@ -138,11 +140,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		itemId = stream.readShort().value_or(0);
-		action = stream.readInt().value_or(0);
+		action = static_cast<Action>(stream.readInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeShort(itemId);
-		stream.writeInt(action);
+		stream.writeInt(static_cast<std::underlying_type_t<Action>>(action));
     }
 };

@@ -131,13 +131,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		targetActorUniqueId = stream.readLong().value_or(0);
-		playerPermission = static_cast<PlayerPermissions>(static_cast<PlayerPermissions>(stream.readVarInt().value_or(0)));
+		playerPermission = static_cast<PlayerPermissions>(stream.readVarInt().value_or(0));
 		customFlags = stream.readUnsignedShort().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeLong(targetActorUniqueId);
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(playerPermission)>>>(playerPermission));
+		stream.writeVarInt(static_cast<std::underlying_type_t<PlayerPermissions>>(playerPermission));
 		stream.writeUnsignedShort(customFlags);
     }
 };

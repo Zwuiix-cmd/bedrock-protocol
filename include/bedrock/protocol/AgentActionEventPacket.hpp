@@ -122,13 +122,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		requestId = stream.readString().value_or("");
-		action = static_cast<AgentActionType>(static_cast<AgentActionType>(stream.readUnsignedInt().value_or(0)));
+		action = static_cast<AgentActionType>(stream.readUnsignedInt().value_or(0));
 		responseJson = stream.readString().value_or("");
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeString(requestId);
-		stream.writeUnsignedInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(action)>>>(action));
+		stream.writeUnsignedInt(static_cast<std::underlying_type_t<AgentActionType>>(action));
 		stream.writeString(responseJson);
     }
 };

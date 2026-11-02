@@ -130,7 +130,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(graphicsMode, [&](const auto& v) {
-		            stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(v)>>>(v));
+		            stream.writeUnsignedByte(static_cast<std::underlying_type_t<GraphicsMode>>(v));
 		        });
 		stream.writeOptional(filterProfanityChange, [&](const auto& value) {
 		            stream.writeBool(value);

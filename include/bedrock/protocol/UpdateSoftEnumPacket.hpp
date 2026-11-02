@@ -142,6 +142,6 @@ public:
 		for (const auto& v : values) {
 			stream.writeString(v);
 		}
-		stream.writeUnsignedByte(static_cast<int32_t>(type));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
     }
 };

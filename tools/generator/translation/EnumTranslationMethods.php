@@ -87,6 +87,19 @@ private function propertyEnumType(array $property, array $declaration): ?string
                     : $cppType;
             }
         }
+        $hasActionConstants = false;
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            if (str_starts_with((string) ($constant['name'] ?? ''), 'ACTION_')) {
+                $hasActionConstants = true;
+                break;
+            }
+        }
+        if ($hasActionConstants
+            && ($normalizedName === 'action'
+                || str_ends_with($normalizedName, 'action')
+                || str_ends_with($normalizedName, 'actiontype'))) {
+            return 'Action';
+        }
         $hasTypeConstants = false;
         foreach ($declaration['constants'] ?? [] as $constant) {
             if (str_starts_with((string) ($constant['name'] ?? ''), 'TYPE_')) {
@@ -240,7 +253,7 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
 
 private function enumStorageValue(string $value, string $enumType): string
     {
-        return 'static_cast<std::underlying_type_t<decltype(' . $value . ')>>(' . $value . ')';
+        return 'static_cast<std::underlying_type_t<' . $enumType . '>>(' . $value . ')';
     }
 
 private function enumStorageCast(Node $argument, string $value, array $declaration): string
@@ -254,12 +267,12 @@ private function enumStorageCast(Node $argument, string $value, array $declarati
         if ($type === null && $argument instanceof Node\Expr\Variable) {
             $type = $this->expressionTypes[(string) $argument->name] ?? null;
         }
-        $isEnum = in_array($type, ['Type', 'Category', 'BuildPlatform'], true)
+        $isEnum = in_array($type, ['Action', 'Type', 'Category', 'BuildPlatform'], true)
             || ($type !== null && str_contains($type, '::') && !str_starts_with($type, 'std::') && !str_starts_with($type, 'glm::'))
             || ($type !== null && $this->isEnumLikeDeclaration($this->findDeclaration(CPPName::type($type)) ?? []));
         if (!$isEnum) {
             return $value;
         }
-        return 'static_cast<int32_t>(' . $value . ')';
+        return 'static_cast<std::underlying_type_t<' . $type . '>>(' . $value . ')';
     }
 }

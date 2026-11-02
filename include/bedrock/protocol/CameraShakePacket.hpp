@@ -115,13 +115,15 @@ public:
         Rotational = 1,
     };
 
-    static constexpr int64_t ACTION_ADD = 0;
-    static constexpr int64_t ACTION_STOP = 1;
+    enum class Action : uint8_t {
+        Add = 0,
+        Stop = 1,
+    };
 
     float intensity;
     float duration;
     uint8_t shakeType;
-    uint8_t shakeAction;
+    Action shakeAction;
 
 public:
     std::string_view getName() override {
@@ -132,13 +134,13 @@ public:
 		intensity = stream.readFloat().value_or(0.0f);
 		duration = stream.readFloat().value_or(0.0f);
 		shakeType = stream.readUnsignedByte().value_or(0);
-		shakeAction = stream.readUnsignedByte().value_or(0);
+		shakeAction = static_cast<Action>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeFloat(intensity);
 		stream.writeFloat(duration);
 		stream.writeUnsignedByte(shakeType);
-		stream.writeUnsignedByte(shakeAction);
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(shakeAction));
     }
 };

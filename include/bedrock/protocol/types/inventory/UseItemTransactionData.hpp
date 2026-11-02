@@ -26,13 +26,16 @@
 
 class UseItemTransactionData : public TransactionData {
 public:
-    static constexpr int64_t ID = 2;
-    static constexpr int64_t ACTION_CLICK_BLOCK = 0;
-    static constexpr int64_t ACTION_CLICK_AIR = 1;
-    static constexpr int64_t ACTION_BREAK_BLOCK = 2;
-    static constexpr int64_t ACTION_USE_AS_ATTACK = 3;
+    enum class Action : uint8_t {
+        ClickBlock = 0,
+        ClickAir = 1,
+        BreakBlock = 2,
+        UseAsAttack = 3,
+    };
 
-    int32_t actionType;
+    static constexpr int64_t ID = 2;
+
+    Action actionType;
     TriggerType triggerType;
     glm::ivec3 blockPosition;
     uint8_t face;
@@ -51,7 +54,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actionType = stream.readVarInt().value_or(0);
+        actionType = static_cast<Action>(stream.readVarInt().value_or(0));
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         face = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readVarInt().value_or(0);
@@ -66,7 +69,7 @@ public:
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeVarInt(actionType);
+        stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeUnsignedByte(face);
         stream.writeVarInt(hotbarSlot);

@@ -125,18 +125,18 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		leftTab = static_cast<InventoryLeftTab>(static_cast<InventoryLeftTab>(stream.readVarInt().value_or(0)));
-		rightTab = static_cast<InventoryRightTab>(static_cast<InventoryRightTab>(stream.readVarInt().value_or(0)));
+		leftTab = static_cast<InventoryLeftTab>(stream.readVarInt().value_or(0));
+		rightTab = static_cast<InventoryRightTab>(stream.readVarInt().value_or(0));
 		filtering = stream.readBool().value_or(false);
-		inventoryLayout = static_cast<InventoryLayout>(static_cast<InventoryLayout>(stream.readVarInt().value_or(0)));
-		craftingLayout = static_cast<InventoryLayout>(static_cast<InventoryLayout>(stream.readVarInt().value_or(0)));
+		inventoryLayout = static_cast<InventoryLayout>(stream.readVarInt().value_or(0));
+		craftingLayout = static_cast<InventoryLayout>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(leftTab)>>>(leftTab));
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(rightTab)>>>(rightTab));
+		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLeftTab>>(leftTab));
+		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryRightTab>>(rightTab));
 		stream.writeBool(filtering);
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(inventoryLayout)>>>(inventoryLayout));
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(craftingLayout)>>>(craftingLayout));
+		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLayout>>(inventoryLayout));
+		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLayout>>(craftingLayout));
     }
 };

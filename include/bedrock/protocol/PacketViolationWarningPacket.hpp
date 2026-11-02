@@ -136,7 +136,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<int32_t>(type));
+		stream.writeVarInt(static_cast<std::underlying_type_t<Type>>(type));
 		stream.writeVarInt(severity);
 		stream.writeVarInt(packetId);
 		stream.writeString(message);

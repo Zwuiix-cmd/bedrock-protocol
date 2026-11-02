@@ -110,11 +110,13 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_START = 0;
-    static constexpr int64_t ACTION_FINISH = 1;
-    static constexpr int64_t ACTION_RESTART = 2;
+    enum class Action : uint8_t {
+        Start = 0,
+        Finish = 1,
+        Restart = 2,
+    };
 
-    int32_t action;
+    Action action;
     int32_t score;
     std::string activityId;
 
@@ -124,13 +126,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = stream.readVarInt().value_or(0);
+		action = static_cast<Action>(stream.readVarInt().value_or(0));
 		score = stream.readVarInt().value_or(0);
 		activityId = stream.readString().value_or("");
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(action);
+		stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(action));
 		stream.writeVarInt(score);
 		stream.writeString(activityId);
     }

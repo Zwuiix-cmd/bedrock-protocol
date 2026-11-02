@@ -148,7 +148,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<int32_t>(type));
+		stream.writeVarInt(static_cast<std::underlying_type_t<Type>>(type));
 		stream.writeString(text);
 		stream.writeVarInt(fadeInTime);
 		stream.writeVarInt(stayTime);

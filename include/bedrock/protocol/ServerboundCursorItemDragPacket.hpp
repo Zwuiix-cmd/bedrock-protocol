@@ -119,10 +119,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		state = static_cast<CursorItemDragState>(static_cast<CursorItemDragState>(stream.readUnsignedByte().value_or(0)));
+		state = static_cast<CursorItemDragState>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(state)>>>(state));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CursorItemDragState>>(state));
     }
 };

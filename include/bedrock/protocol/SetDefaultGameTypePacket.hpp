@@ -119,10 +119,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gamemode = static_cast<GameMode>(static_cast<GameMode>(stream.readVarInt().value_or(0)));
+		gamemode = static_cast<GameMode>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(gamemode)>>>(gamemode));
+		stream.writeVarInt(static_cast<std::underlying_type_t<GameMode>>(gamemode));
     }
 };

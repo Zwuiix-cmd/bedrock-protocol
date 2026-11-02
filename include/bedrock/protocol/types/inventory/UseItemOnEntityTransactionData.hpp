@@ -20,13 +20,16 @@
 
 class UseItemOnEntityTransactionData : public TransactionData {
 public:
+    enum class Action : uint8_t {
+        Interact = 0,
+        Attack = 1,
+        ItemInteract = 2,
+    };
+
     static constexpr int64_t ID = 3;
-    static constexpr int64_t ACTION_INTERACT = 0;
-    static constexpr int64_t ACTION_ATTACK = 1;
-    static constexpr int64_t ACTION_ITEM_INTERACT = 2;
 
     uint64_t actorRuntimeId;
-    int32_t actionType;
+    Action actionType;
     int32_t hotbarSlot;
     HandSlot hand;
     NetworkItemStack itemInHand;
@@ -40,7 +43,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-        actionType = stream.readVarInt().value_or(0);
+        actionType = static_cast<Action>(stream.readVarInt().value_or(0));
         hotbarSlot = stream.readVarInt().value_or(0);
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
@@ -50,7 +53,7 @@ public:
 
     void write(BinaryStream& stream) const override {
         stream.writeActorRuntimeID(actorRuntimeId);
-        stream.writeVarInt(actionType);
+        stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);

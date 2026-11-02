@@ -153,7 +153,7 @@ public:
 			case Type::Chat:
 			case Type::Whisper:
 			case Type::Announcement: {
-				if ((category != static_cast<std::underlying_type_t<decltype(Category::AuthoredMessage)>>(Category::AuthoredMessage))) {
+				if ((category != static_cast<std::underlying_type_t<Category>>(Category::AuthoredMessage))) {
 					throw std::exception{};
 				}
 				sourceName = stream.readString().value_or("");
@@ -166,7 +166,7 @@ public:
 			case Type::JsonWhisper:
 			case Type::Json:
 			case Type::JsonAnnouncement: {
-				if ((category != static_cast<std::underlying_type_t<decltype(Category::MessageOnly)>>(Category::MessageOnly))) {
+				if ((category != static_cast<std::underlying_type_t<Category>>(Category::MessageOnly))) {
 					throw std::exception{};
 				}
 				message = stream.readString().value_or("");
@@ -175,7 +175,7 @@ public:
 			case Type::Translation:
 			case Type::Popup:
 			case Type::JukeboxPopup: {
-				if ((category != static_cast<std::underlying_type_t<decltype(Category::MessageWithParameters)>>(Category::MessageWithParameters))) {
+				if ((category != static_cast<std::underlying_type_t<Category>>(Category::MessageWithParameters))) {
 					throw std::exception{};
 				}
 				message = stream.readString().value_or("");
@@ -210,8 +210,8 @@ public:
 		    if (type == Type::JukeboxPopup) return Category::MessageWithParameters;
 		    throw std::exception{};
 		}());
-		stream.writeUnsignedByte(static_cast<int32_t>(category));
-		stream.writeUnsignedByte(static_cast<int32_t>(type));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Category>>(category));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
 		switch (type) {
 			case Type::Chat:
 			case Type::Whisper:

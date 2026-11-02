@@ -137,7 +137,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedInt(static_cast<int32_t>(type));
+		stream.writeUnsignedInt(static_cast<std::underlying_type_t<Type>>(type));
 		stream.writeUnsignedVarInt(recipes.size());
 		for (const auto& recipe : recipes) {
 			stream.writeString(recipe);

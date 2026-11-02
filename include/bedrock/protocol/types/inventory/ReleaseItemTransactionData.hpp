@@ -20,11 +20,14 @@
 
 class ReleaseItemTransactionData : public TransactionData {
 public:
-    static constexpr int64_t ID = 4;
-    static constexpr int64_t ACTION_RELEASE = 0;
-    static constexpr int64_t ACTION_CONSUME = 1;
+    enum class Action : uint8_t {
+        Release = 0,
+        Consume = 1,
+    };
 
-    int32_t actionType;
+    static constexpr int64_t ID = 4;
+
+    Action actionType;
     int32_t hotbarSlot;
     NetworkItemStack itemInHand;
     glm::vec3 headPosition;
@@ -36,7 +39,7 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actionType = stream.readVarInt().value_or(0);
+        actionType = static_cast<Action>(stream.readVarInt().value_or(0));
         hotbarSlot = stream.readVarInt().value_or(0);
         headPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         itemInHand = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
@@ -44,7 +47,7 @@ public:
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeVarInt(actionType);
+        stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(headPosition);
         itemInHand.write(stream);

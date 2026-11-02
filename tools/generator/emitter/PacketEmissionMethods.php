@@ -153,7 +153,18 @@ trait PacketEmissionMethods
         $computed = [];
         $types = [];
         $categories = [];
+        $actions = [];
         $stringEnums = [];
+        $hasActionProperty = false;
+        foreach ($declaration['properties'] ?? [] as $property) {
+            $propertyName = strtolower((string) ($property['name'] ?? ''));
+            if ($propertyName === 'action'
+                || str_ends_with($propertyName, 'action')
+                || str_ends_with($propertyName, 'actiontype')) {
+                $hasActionProperty = true;
+                break;
+            }
+        }
         foreach ($declaration['constants'] as $constant) {
             if ($constant['name'] === 'NETWORK_ID') {
                 continue;
@@ -164,6 +175,8 @@ trait PacketEmissionMethods
                     $types[substr($name, 5)] = (int) $constant['value'];
                 } elseif (str_starts_with($name, 'CATEGORY_')) {
                     $categories[substr($name, 9)] = (int) $constant['value'];
+                } elseif ($hasActionProperty && str_starts_with($name, 'ACTION_')) {
+                    $actions[substr($name, 7)] = (int) $constant['value'];
                 } else {
                     $integer[$name] = (int) $constant['value'];
                 }
@@ -213,6 +226,16 @@ trait PacketEmissionMethods
             $body .= '    enum class ' . $enumName . " : uint8_t {\n";
             foreach (array_values($cases) as $index => $case) {
                 $body .= '        ' . CPPName::identifier((string) $case) . ' = ' . $index . ",\n";
+            }
+            $body .= "    };\n\n";
+        }
+        if ($actions !== []) {
+            $minimum = min($actions);
+            $maximum = max($actions);
+            $underlying = $minimum >= 0 && $maximum <= 0xff ? 'uint8_t' : 'int64_t';
+            $body .= "    enum class Action : " . $underlying . " {\n";
+            foreach ($actions as $name => $value) {
+                $body .= '        ' . CPPName::enumCase($name) . ' = ' . $value . ",\n";
             }
             $body .= "    };\n\n";
         }

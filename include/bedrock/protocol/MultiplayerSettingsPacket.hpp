@@ -110,11 +110,13 @@ public:
     }
 
 public:
-    static constexpr int64_t ACTION_ENABLE_MULTIPLAYER = 0;
-    static constexpr int64_t ACTION_DISABLE_MULTIPLAYER = 1;
-    static constexpr int64_t ACTION_REFRESH_JOIN_CODE = 2;
+    enum class Action : uint8_t {
+        EnableMultiplayer = 0,
+        DisableMultiplayer = 1,
+        RefreshJoinCode = 2,
+    };
 
-    int32_t action;
+    Action action;
 
 public:
     std::string_view getName() override {
@@ -122,10 +124,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		action = stream.readVarInt().value_or(0);
+		action = static_cast<Action>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(action);
+		stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(action));
     }
 };

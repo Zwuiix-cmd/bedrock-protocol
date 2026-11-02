@@ -155,7 +155,7 @@ public:
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
 		item = ([&]() { NetworkItemStack value; value.read(stream); return value; }());
-		gameMode = static_cast<GameMode>(static_cast<GameMode>(stream.readVarInt().value_or(0)));
+		gameMode = static_cast<GameMode>(stream.readVarInt().value_or(0));
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
 		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
 		abilities = ([&]() {
@@ -191,7 +191,7 @@ public:
 		stream.writeFloat(yaw);
 		stream.writeFloat(headYaw);
 		item.write(stream);
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(gameMode)>>>(gameMode));
+		stream.writeVarInt(static_cast<std::underlying_type_t<GameMode>>(gameMode));
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		abilities->write(stream);
@@ -203,6 +203,6 @@ public:
 		            data->write(stream);
 		        });
 		stream.writeString(deviceId);
-		stream.writeInt(static_cast<int32_t>(buildPlatform));
+		stream.writeInt(static_cast<std::underlying_type_t<BuildPlatform>>(buildPlatform));
     }
 };

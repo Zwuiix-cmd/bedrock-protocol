@@ -143,8 +143,8 @@ public:
 		title = stream.readString().value_or("");
 		filteredTitle = stream.readString().value_or("");
 		healthPercent = stream.readFloat().value_or(0.0f);
-		color = static_cast<BossBarColor>(static_cast<BossBarColor>(stream.readUnsignedByte().value_or(0)));
-		overlay = static_cast<BossBarOverlay>(static_cast<BossBarOverlay>(stream.readUnsignedByte().value_or(0)));
+		color = static_cast<BossBarColor>(stream.readUnsignedByte().value_or(0));
+		overlay = static_cast<BossBarOverlay>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
@@ -153,7 +153,7 @@ public:
 		stream.writeString(title);
 		stream.writeString(filteredTitle);
 		stream.writeFloat(healthPercent);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(color)>>>(color));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(overlay)>>>(overlay));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<BossBarColor>>(color));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<BossBarOverlay>>(overlay));
     }
 };

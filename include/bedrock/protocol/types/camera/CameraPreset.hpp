@@ -236,7 +236,7 @@ public:
 		            v->write(stream);
 		        });
 		stream.writeOptional(controlScheme, [&](const auto& v) {
-		            stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(v)>>>(v));
+		            stream.writeUnsignedByte(static_cast<std::underlying_type_t<ControlScheme>>(v));
 		        });
 		stream.writeBool(applyInheritedStartingRotation);
 		stream.writeOptional(startingRotation, [&](const auto& value) {

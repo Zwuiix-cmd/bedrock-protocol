@@ -50,10 +50,10 @@ public:
         renderHeightMapType(renderHeightMapTypeValue),
         renderHeightMapData(renderHeightMapDataValue),
         usedBlobHash(usedBlobHashValue) {
-		if (((heightMapTypeValue == static_cast<std::underlying_type_t<decltype(SubChunkPacketHeightMapType::Data)>>(SubChunkPacketHeightMapType::Data)) && (heightMapDataValue == nullptr))) {
+		if (((heightMapTypeValue == static_cast<std::underlying_type_t<SubChunkPacketHeightMapType>>(SubChunkPacketHeightMapType::Data)) && (heightMapDataValue == nullptr))) {
 			throw std::exception{};
 		}
-		if (((renderHeightMapTypeValue == static_cast<std::underlying_type_t<decltype(SubChunkPacketHeightMapType::Data)>>(SubChunkPacketHeightMapType::Data)) && (renderHeightMapDataValue == nullptr))) {
+		if (((renderHeightMapTypeValue == static_cast<std::underlying_type_t<SubChunkPacketHeightMapType>>(SubChunkPacketHeightMapType::Data)) && (renderHeightMapDataValue == nullptr))) {
 			throw std::exception{};
 		}
     }

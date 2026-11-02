@@ -121,11 +121,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		offerId = stream.readUUID().value_or("");
-		redirectType = static_cast<ShowStoreOfferRedirectType>(static_cast<ShowStoreOfferRedirectType>(stream.readUnsignedByte().value_or(0)));
+		redirectType = static_cast<ShowStoreOfferRedirectType>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUUID(offerId);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(redirectType)>>>(redirectType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<ShowStoreOfferRedirectType>>(redirectType));
     }
 };

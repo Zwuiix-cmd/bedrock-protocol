@@ -30,7 +30,7 @@ public:
     ) :
         unlockingContext(unlockingContextValue),
         unlockingIngredients(unlockingIngredientsValue) {
-		if (((unlockingContextValue != static_cast<std::underlying_type_t<decltype(RecipeUnlockingContext::None)>>(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
+		if (((unlockingContextValue != static_cast<std::underlying_type_t<RecipeUnlockingContext>>(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
 			throw std::exception{};
 		}
     }

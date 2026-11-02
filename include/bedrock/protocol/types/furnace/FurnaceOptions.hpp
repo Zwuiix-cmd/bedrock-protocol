@@ -43,8 +43,8 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(leftFurnaceTab)>>>(leftFurnaceTab));
+		stream.writeVarInt(static_cast<std::underlying_type_t<FurnaceLeftTab>>(leftFurnaceTab));
 		stream.writeBool(filtering);
-		stream.writeVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(layout)>>>(layout));
+		stream.writeVarInt(static_cast<std::underlying_type_t<FurnaceLayout>>(layout));
     }
 };

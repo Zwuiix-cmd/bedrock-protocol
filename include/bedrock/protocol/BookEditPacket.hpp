@@ -167,7 +167,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeVarInt(inventorySlot);
-		stream.writeUnsignedVarInt(static_cast<int32_t>(type));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<Type>>(type));
 		switch (type) {
 			case Type::ReplacePage:
 			case Type::AddPage: {

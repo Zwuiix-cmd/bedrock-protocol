@@ -62,8 +62,8 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(type)>>>(type));
+		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<SoundDataEventType>>(type));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<SoundDataEventType>>(type));
 		switch (type) {
 			case SoundDataEventType::Stop:
 			case SoundDataEventType::Pause:

@@ -128,8 +128,8 @@ public:
 		presetId = stream.readString().value_or("");
 		viewAngle = stream.readVec2().value_or(glm::vec2(0.0f));
 		distance = stream.readFloat().value_or(0.0f);
-		targetMode = static_cast<CameraAimAssistTargetMode>(static_cast<CameraAimAssistTargetMode>(stream.readUnsignedByte().value_or(0)));
-		actionType = static_cast<CameraAimAssistActionType>(static_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0)));
+		targetMode = static_cast<CameraAimAssistTargetMode>(stream.readUnsignedByte().value_or(0));
+		actionType = static_cast<CameraAimAssistActionType>(stream.readUnsignedByte().value_or(0));
 		showDebugRender = stream.readBool().value_or(false);
     }
 
@@ -137,8 +137,8 @@ public:
 		stream.writeString(presetId);
 		stream.writeVec2(viewAngle);
 		stream.writeFloat(distance);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(targetMode)>>>(targetMode));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(actionType)>>>(actionType));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistTargetMode>>(targetMode));
+		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistActionType>>(actionType));
 		stream.writeBool(showDebugRender);
     }
 };

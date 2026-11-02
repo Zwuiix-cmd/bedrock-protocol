@@ -39,9 +39,6 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
-        currentTransitionTicks = stream.readUnsignedInt().value_or(0);
-        totalTransitionTicks = stream.readUnsignedInt().value_or(0);
-        easeType = stream.readString().value_or("");
         fromAttribute = stream.readOptional([&]() {
             return AttributeValue::create(stream);
         });
@@ -49,6 +46,9 @@ public:
         toAttribute = stream.readOptional([&]() {
             return AttributeValue::create(stream);
         });
+        currentTransitionTicks = stream.readUnsignedInt().value_or(0);
+        totalTransitionTicks = stream.readUnsignedInt().value_or(0);
+        easeType = stream.readString().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {

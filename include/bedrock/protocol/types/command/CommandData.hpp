@@ -44,10 +44,10 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        permission = stream.readString().value_or("");
         name = stream.readString().value_or("");
         description = stream.readString().value_or("");
         flags = stream.readInt().value_or(0);
+        permission = stream.readString().value_or("");
         aliases = stream.readOptional([&]() {
             return stream.readObject<CommandHardEnum>();
         });
@@ -56,10 +56,10 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeString(permission);
         stream.writeString(name);
         stream.writeString(description);
         stream.writeInt(flags);
+        stream.writeString(permission);
         stream.writeOptional(aliases, [&](const auto& optionalValue) {
             optionalValue->write(stream);
         });

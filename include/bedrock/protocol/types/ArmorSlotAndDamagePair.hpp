@@ -16,10 +16,10 @@ public:
     explicit ArmorSlotAndDamagePair(const ArmorSlot& slotValue, const uint16_t& damageValue) : slot(slotValue), damage(damageValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        damage = stream.readUnsignedShort().value_or(0);
         slot = magic_enum::enum_cast<ArmorSlot>(
             stream.readVarInt().value_or(0)
         ).value_or(ArmorSlot::Head);
+        damage = stream.readUnsignedShort().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -25,9 +25,9 @@ public:
         minPassingNeighbors(minPassingNeighborsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        weightedBiomes = stream.readObjectList<BiomeWeightedData>();
         conditionJSON = stream.readShort().value_or(0);
         minPassingNeighbors = stream.readUnsignedInt().value_or(0);
-        weightedBiomes = stream.readObjectList<BiomeWeightedData>();
     }
 
     virtual void write(BinaryStream& stream) const {

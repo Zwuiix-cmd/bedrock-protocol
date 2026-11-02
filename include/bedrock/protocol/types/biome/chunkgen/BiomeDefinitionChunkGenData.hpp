@@ -75,10 +75,6 @@ public:
         villageType(villageTypeValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        defaultOverworldSurface = stream.readBool().value_or(false);
-        swampSurface = stream.readBool().value_or(false);
-        frozenOceanSurface = stream.readBool().value_or(false);
-        theEndSurface = stream.readBool().value_or(false);
         climate = stream.readOptional([&]() {
             return stream.readObject<BiomeClimateData>();
         });
@@ -94,6 +90,10 @@ public:
         surfaceMaterial = stream.readOptional([&]() {
             return stream.readObject<BiomeSurfaceMaterialData>();
         });
+        defaultOverworldSurface = stream.readBool().value_or(false);
+        swampSurface = stream.readBool().value_or(false);
+        frozenOceanSurface = stream.readBool().value_or(false);
+        theEndSurface = stream.readBool().value_or(false);
         mesaSurface = stream.readOptional([&]() {
             return stream.readObject<BiomeMesaSurfaceData>();
         });

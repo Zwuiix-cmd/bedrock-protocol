@@ -16,14 +16,14 @@ public:
     explicit CreativeItemEntry(const int32_t& entryIdValue, const NetworkItemDescriptor& itemValue, const uint32_t& groupIdValue) : entryId(entryIdValue), item(itemValue), groupId(groupIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        groupId = stream.readUnsignedVarInt().value_or(0);
         entryId = stream.readInt().value_or(0);
         item = stream.readValue<NetworkItemDescriptor>();
+        groupId = stream.readUnsignedVarInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(groupId);
         stream.writeInt(entryId);
         item.write(stream);
+        stream.writeUnsignedVarInt(groupId);
     }
 };

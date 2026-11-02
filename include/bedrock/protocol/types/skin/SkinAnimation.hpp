@@ -39,6 +39,8 @@ public:
         expressionType(expressionTypeValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        image = std::make_shared<SkinImage>();
+        image->read(stream);
         type = magic_enum::enum_cast<Type>(
             stream.readUnsignedInt().value_or(0)
         ).value_or(Type::Head);
@@ -46,14 +48,12 @@ public:
         expressionType = magic_enum::enum_cast<Expression>(
             stream.readUnsignedInt().value_or(0)
         ).value_or(Expression::Linear);
-        image = std::make_shared<SkinImage>();
-        image->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
+        image->write(stream);
         stream.writeInt(magic_enum::enum_integer(type));
         stream.writeFloat(frames);
         stream.writeInt(magic_enum::enum_integer(expressionType));
-        image->write(stream);
     }
 };

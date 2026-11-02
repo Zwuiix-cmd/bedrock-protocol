@@ -47,7 +47,6 @@ public:
         filterStringCause(filterStringCauseValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        filterStringCause = stream.readInt().value_or(0);
         requestId = stream.readInt().value_or(0);
         actions = stream.readList([&]() {
             return ItemStackRequestAction::create(stream);
@@ -55,6 +54,7 @@ public:
         filterStrings = stream.readList([&]() {
             return stream.readString().value_or("");
         });
+        filterStringCause = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

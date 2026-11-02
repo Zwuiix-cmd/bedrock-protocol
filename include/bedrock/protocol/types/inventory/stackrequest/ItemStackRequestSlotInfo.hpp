@@ -24,9 +24,9 @@ public:
         stackId(stackIdValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        slotId = stream.readUnsignedByte().value_or(0);
         containerName = std::make_shared<FullContainerName>();
         containerName->read(stream);
+        slotId = stream.readUnsignedByte().value_or(0);
         stackId = stream.readInt().value_or(0);
     }
 

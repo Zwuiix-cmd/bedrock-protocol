@@ -14,10 +14,7 @@ public:
 
     BoolPackSetting() = default;
     virtual ~BoolPackSetting() = default;
-    explicit BoolPackSetting(const std::string& nameValue, const bool& valueValue) : PackSetting(nameValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit BoolPackSetting(const std::string& nameValue, const bool& valueValue) : PackSetting(nameValue), value(valueValue) {}
 
     static std::shared_ptr<BoolPackSetting> create(ReadOnlyBinaryStream& stream, const std::string& name) {
 		return std::make_shared<BoolPackSetting>(name, stream.readBool().value_or(false));

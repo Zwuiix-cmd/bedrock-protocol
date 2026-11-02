@@ -45,7 +45,6 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         preset = stream.readUnsignedInt().value_or(0);
-        ignoreStartingValuesComponent = stream.readBool().value_or(false);
         ease = stream.readOptional([&]() {
             return stream.readObject<CameraSetInstructionEase>();
         });
@@ -67,6 +66,7 @@ public:
         default_ = stream.readOptional([&]() {
             return stream.readBool().value_or(false);
         });
+        ignoreStartingValuesComponent = stream.readBool().value_or(false);
     }
 
     virtual void write(BinaryStream& stream) const {

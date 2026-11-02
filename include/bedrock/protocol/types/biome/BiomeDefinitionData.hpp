@@ -57,8 +57,8 @@ public:
         foliageSnow = stream.readFloat().value_or(0.0f);
         depth = stream.readFloat().value_or(0.0f);
         scale = stream.readFloat().value_or(0.0f);
-        rain = stream.readBool().value_or(false);
         mapWaterColor = stream.readUnsignedInt().value_or(0);
+        rain = stream.readBool().value_or(false);
         tagIndexes = stream.readList([&]() {
             return stream.readInt().value_or(0);
         });

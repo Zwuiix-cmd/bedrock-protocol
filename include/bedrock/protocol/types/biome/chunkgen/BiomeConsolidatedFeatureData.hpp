@@ -30,12 +30,12 @@ public:
         useInternal(useInternalValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        scatter = std::make_shared<BiomeScatterParamData>();
+        scatter->read(stream);
         feature = stream.readShort().value_or(0);
         identifier = stream.readShort().value_or(0);
         pass = stream.readShort().value_or(0);
         useInternal = stream.readBool().value_or(false);
-        scatter = std::make_shared<BiomeScatterParamData>();
-        scatter->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

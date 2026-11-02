@@ -40,6 +40,7 @@ public:
         iterations(iterationsValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        coordinates = stream.readObjectList<BiomeCoordinateData>();
         evalOrder = stream.readVarInt().value_or(0);
         chancePercentType = stream.readVarInt().value_or(0);
         chancePercent = stream.readShort().value_or(0);
@@ -47,7 +48,6 @@ public:
         chanceDenominator = stream.readInt().value_or(0);
         iterationsType = stream.readVarInt().value_or(0);
         iterations = stream.readShort().value_or(0);
-        coordinates = stream.readObjectList<BiomeCoordinateData>();
     }
 
     virtual void write(BinaryStream& stream) const {

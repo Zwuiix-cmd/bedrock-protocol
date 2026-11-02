@@ -44,6 +44,7 @@ public:
         cdnUrl(cdnUrlValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        packId = stream.readUUID().value_or("");
         version = stream.readString().value_or("");
         sizeBytes = stream.readUnsignedLong().value_or(0);
         encryptionKey = stream.readString().value_or("");
@@ -53,7 +54,6 @@ public:
         isAddonPack = stream.readBool().value_or(false);
         isRtxCapable = stream.readBool().value_or(false);
         cdnUrl = stream.readString().value_or("");
-        packId = stream.readUUID().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {

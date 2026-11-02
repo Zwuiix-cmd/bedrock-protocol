@@ -17,16 +17,16 @@ public:
     explicit RecipeIngredient(const std::optional<std::shared_ptr<ItemDescriptor>>& descriptorValue, const int32_t& countValue) : descriptor(descriptorValue), count(countValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        count = stream.readVarInt().value_or(0);
         descriptor = stream.readOptional([&]() {
             return ItemDescriptor::create(stream);
         });
+        count = stream.readVarInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(count);
         stream.writeOptional(descriptor, [&](const auto& optionalValue) {
             optionalValue->write(stream);
         });
+        stream.writeVarInt(count);
     }
 };

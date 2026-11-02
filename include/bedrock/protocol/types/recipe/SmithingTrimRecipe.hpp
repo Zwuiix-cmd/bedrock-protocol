@@ -35,9 +35,7 @@ public:
         input(inputValue),
         addition(additionValue),
         blockName(blockNameValue),
-        recipeNetId(recipeNetIdValue) {
-		(void)0;
-    }
+        recipeNetId(recipeNetIdValue) {}
 
     static std::shared_ptr<SmithingTrimRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
 		auto recipeId = stream.readString().value_or("");
@@ -51,13 +49,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         recipeId = stream.readString().value_or("");
-        blockName = stream.readString().value_or("");
         template_ = std::make_shared<RecipeIngredient>();
         template_->read(stream);
         input = std::make_shared<RecipeIngredient>();
         input->read(stream);
         addition = std::make_shared<RecipeIngredient>();
         addition->read(stream);
+        blockName = stream.readString().value_or("");
         recipeNetId = stream.readInt().value_or(0);
     }
 

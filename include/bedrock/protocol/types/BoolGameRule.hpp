@@ -15,10 +15,7 @@ public:
 
     BoolGameRule() = default;
     virtual ~BoolGameRule() = default;
-    explicit BoolGameRule(const bool& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit BoolGameRule(const bool& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {}
 
     static std::shared_ptr<BoolGameRule> create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable) {
 		return std::make_shared<BoolGameRule>(stream.readBool().value_or(false), isPlayerModifiable);

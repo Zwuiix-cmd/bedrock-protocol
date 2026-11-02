@@ -28,10 +28,8 @@ public:
 
     static std::shared_ptr<ShapedRecipe> create(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<ShapedRecipe>();
-        result->recipeId = stream.readString().value_or("");
-        result->priority = stream.readVarInt().value_or(0);
-        result->symmetric = stream.readBool().value_or(false);
         result->blockName = stream.readString().value_or("");
+        result->recipeId = stream.readString().value_or("");
         result->input = stream.readList([&]() {
             return stream.readObjectList<RecipeIngredient>();
         });
@@ -39,6 +37,8 @@ public:
             return stream.readValue<NetworkItemDescriptor>();
         });
         result->uuid = stream.readUUID().value_or("");
+        result->priority = stream.readVarInt().value_or(0);
+        result->symmetric = stream.readBool().value_or(false);
         result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         result->unlockingRequirement->read(stream);
         result->recipeNetId = stream.readInt().value_or(0);
@@ -46,10 +46,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        recipeId = stream.readString().value_or("");
-        priority = stream.readVarInt().value_or(0);
-        symmetric = stream.readBool().value_or(false);
         blockName = stream.readString().value_or("");
+        recipeId = stream.readString().value_or("");
         input = stream.readList([&]() {
             return stream.readObjectList<RecipeIngredient>();
         });
@@ -57,16 +55,16 @@ public:
             return stream.readValue<NetworkItemDescriptor>();
         });
         uuid = stream.readUUID().value_or("");
+        priority = stream.readVarInt().value_or(0);
+        symmetric = stream.readBool().value_or(false);
         unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         unlockingRequirement->read(stream);
         recipeNetId = stream.readInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeString(recipeId);
-        stream.writeVarInt(priority);
-        stream.writeBool(symmetric);
         stream.writeString(blockName);
+        stream.writeString(recipeId);
         stream.writeList(input, [&](const auto& item) {
             stream.writeList(item, [&](const auto& item) {
                 item->write(stream);
@@ -76,6 +74,8 @@ public:
             item.write(stream);
         });
         stream.writeUUID(uuid);
+        stream.writeVarInt(priority);
+        stream.writeBool(symmetric);
         unlockingRequirement->write(stream);
         stream.writeInt(recipeNetId);
     }

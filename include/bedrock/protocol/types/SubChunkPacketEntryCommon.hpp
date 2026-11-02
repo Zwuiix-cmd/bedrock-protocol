@@ -34,10 +34,10 @@ public:
 
     static std::shared_ptr<SubChunkPacketEntryCommon> create(ReadOnlyBinaryStream& stream, const bool& cacheEnabled) {
         auto result = std::make_shared<SubChunkPacketEntryCommon>();
-        result->requestResult = stream.readUnsignedByte().value_or(0);
-        result->terrainData = stream.readString().value_or("");
         result->offset = std::make_shared<SubChunkPositionOffset>();
         result->offset->read(stream);
+        result->requestResult = stream.readUnsignedByte().value_or(0);
+        result->terrainData = stream.readString().value_or("");
         result->heightMap = stream.readOptional([&]() {
             return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
@@ -48,10 +48,10 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        requestResult = stream.readUnsignedByte().value_or(0);
-        terrainData = stream.readString().value_or("");
         offset = std::make_shared<SubChunkPositionOffset>();
         offset->read(stream);
+        requestResult = stream.readUnsignedByte().value_or(0);
+        terrainData = stream.readString().value_or("");
         heightMap = stream.readOptional([&]() {
             return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
@@ -61,9 +61,9 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
+        offset->write(stream);
         stream.writeUnsignedByte(requestResult);
         stream.writeString(terrainData);
-        offset->write(stream);
         stream.writeOptional(heightMap, [&](const auto& optionalValue) {
             optionalValue->write(stream);
         });

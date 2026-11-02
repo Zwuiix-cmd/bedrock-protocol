@@ -2,6 +2,7 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -113,16 +114,12 @@ public:
         disablePlayerInteractions = stream.readBool().value_or(false);
         spawnSettings = std::make_shared<SpawnSettings>();
         spawnSettings->read(stream);
-        gameRules = ([&]() {
-            std::map<std::string, std::shared_ptr<GameRule>> result;
-            const auto count = stream.readUnsignedInt().value_or(0);
-            for (uint32_t i = 0; i < count; ++i) {
-                auto key = stream.readString().value_or("");
-                auto value = GameRule::create(stream);
-                result.emplace(std::move(key), std::move(value));
-            }
-            return result;
-        }());
+        const auto gameRulesCount = stream.readUnsignedInt().value_or(0);
+        for (std::size_t index = 0; index < gameRulesCount; ++index) {
+            auto gameRulesKey = stream.readString().value_or("");
+            auto gameRulesValue = GameRule::create(stream);
+            gameRules.emplace(std::move(gameRulesKey), std::move(gameRulesValue));
+        }
         experiments = std::make_shared<Experiments>();
         experiments->read(stream);
         eduSharedUriResource = stream.readOptional([&]() {

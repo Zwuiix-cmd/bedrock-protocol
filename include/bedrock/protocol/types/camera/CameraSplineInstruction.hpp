@@ -41,13 +41,13 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         totalTime = stream.readFloat().value_or(0.0f);
         easeType = stream.readUnsignedByte().value_or(0);
-        splineIdentifier = stream.readString().value_or("");
-        loadFromJson = stream.readBool().value_or(false);
         curve = stream.readList([&]() {
             return stream.readVec3().value_or(glm::vec3(0.0f));
         });
         progressKeyFrames = stream.readObjectList<CameraProgressOption>();
         rotationOptions = stream.readObjectList<CameraRotationOption>();
+        splineIdentifier = stream.readString().value_or("");
+        loadFromJson = stream.readBool().value_or(false);
     }
 
     virtual void write(BinaryStream& stream) const {

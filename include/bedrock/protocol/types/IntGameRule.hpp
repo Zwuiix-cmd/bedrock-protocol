@@ -15,10 +15,7 @@ public:
 
     IntGameRule() = default;
     virtual ~IntGameRule() = default;
-    explicit IntGameRule(const uint32_t& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit IntGameRule(const uint32_t& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {}
 
     static std::shared_ptr<IntGameRule> create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable, const bool& isStartGame) {
 		return std::make_shared<IntGameRule>((isStartGame ? stream.readUnsignedVarInt().value_or(0) : stream.readUnsignedInt().value_or(0)), isPlayerModifiable);

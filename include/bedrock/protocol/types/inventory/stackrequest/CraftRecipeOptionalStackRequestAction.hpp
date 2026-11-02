@@ -19,8 +19,8 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        filterStringIndex = stream.readInt().value_or(0);
         recipeId = stream.readInt().value_or(0);
+        filterStringIndex = stream.readInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {

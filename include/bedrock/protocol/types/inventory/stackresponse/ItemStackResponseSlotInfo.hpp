@@ -38,10 +38,10 @@ public:
         slot = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readUnsignedByte().value_or(0);
         count = stream.readUnsignedByte().value_or(0);
+        itemStackId = stream.readInt().value_or(0);
         customName = stream.readString().value_or("");
         filteredCustomName = stream.readString().value_or("");
         durabilityCorrection = stream.readVarInt().value_or(0);
-        itemStackId = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

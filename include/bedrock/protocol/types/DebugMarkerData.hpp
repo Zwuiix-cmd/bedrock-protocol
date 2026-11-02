@@ -28,8 +28,8 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         text = stream.readString().value_or("");
         position = stream.readVec3().value_or(glm::vec3(0.0f));
-        durationMillis = stream.readUnsignedLong().value_or(0);
         color = stream.readUnsignedInt().value_or(0);
+        durationMillis = stream.readUnsignedLong().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

@@ -34,11 +34,11 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
+        value = AttributeValueColorValue::create(stream);
         const auto operationRaw = stream.readString().value_or("");
         operation = magic_enum::enum_cast<Operation>(
             std::string_view(operationRaw)
         ).value_or(Operation::Override);
-        value = AttributeValueColorValue::create(stream);
     }
 
     void write(BinaryStream& stream) const override {

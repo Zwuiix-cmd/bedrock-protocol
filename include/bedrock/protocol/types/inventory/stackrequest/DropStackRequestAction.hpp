@@ -31,9 +31,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         count = stream.readUnsignedByte().value_or(0);
-        randomly = stream.readBool().value_or(false);
         source = std::make_shared<ItemStackRequestSlotInfo>();
         source->read(stream);
+        randomly = stream.readBool().value_or(false);
     }
 
     void write(BinaryStream& stream) const override {

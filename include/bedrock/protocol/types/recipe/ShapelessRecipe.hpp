@@ -43,20 +43,18 @@ public:
         blockName(blockNameValue),
         priority(priorityValue),
         unlockingRequirement(unlockingRequirementValue),
-        recipeNetId(recipeNetIdValue) {
-		(void)0;
-    }
+        recipeNetId(recipeNetIdValue) {}
 
     static std::shared_ptr<ShapelessRecipe> create(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<ShapelessRecipe>();
         result->recipeId = stream.readString().value_or("");
-        result->blockName = stream.readString().value_or("");
-        result->priority = stream.readVarInt().value_or(0);
         result->inputs = stream.readObjectList<RecipeIngredient>();
         result->outputs = stream.readList([&]() {
             return stream.readValue<NetworkItemDescriptor>();
         });
         result->uuid = stream.readUUID().value_or("");
+        result->blockName = stream.readString().value_or("");
+        result->priority = stream.readVarInt().value_or(0);
         result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         result->unlockingRequirement->read(stream);
         result->recipeNetId = stream.readInt().value_or(0);
@@ -65,13 +63,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         recipeId = stream.readString().value_or("");
-        blockName = stream.readString().value_or("");
-        priority = stream.readVarInt().value_or(0);
         inputs = stream.readObjectList<RecipeIngredient>();
         outputs = stream.readList([&]() {
             return stream.readValue<NetworkItemDescriptor>();
         });
         uuid = stream.readUUID().value_or("");
+        blockName = stream.readString().value_or("");
+        priority = stream.readVarInt().value_or(0);
         unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
         unlockingRequirement->read(stream);
         recipeNetId = stream.readInt().value_or(0);
@@ -79,8 +77,6 @@ public:
 
     void write(BinaryStream& stream) const override {
         stream.writeString(recipeId);
-        stream.writeString(blockName);
-        stream.writeVarInt(priority);
         stream.writeList(inputs, [&](const auto& item) {
             item->write(stream);
         });
@@ -88,6 +84,8 @@ public:
             item.write(stream);
         });
         stream.writeUUID(uuid);
+        stream.writeString(blockName);
+        stream.writeVarInt(priority);
         unlockingRequirement->write(stream);
         stream.writeInt(recipeNetId);
     }

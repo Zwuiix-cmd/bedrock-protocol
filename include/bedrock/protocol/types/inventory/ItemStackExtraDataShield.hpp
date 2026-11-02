@@ -23,9 +23,7 @@ public:
         const int64_t& blockingTickValue
     ) :
         ItemStackExtraData(nbtValue, canPlaceOnValue, canDestroyValue),
-        blockingTick(blockingTickValue) {
-		(void)0;
-    }
+        blockingTick(blockingTickValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         blockingTick = stream.readLong().value_or(0);

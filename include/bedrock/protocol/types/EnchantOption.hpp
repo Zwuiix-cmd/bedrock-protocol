@@ -40,17 +40,16 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         cost = stream.readUnsignedVarInt().value_or(0);
         slotFlags = stream.readUnsignedInt().value_or(0);
-        name = stream.readString().value_or("");
         equipActivatedEnchantments = stream.readObjectList<Enchant>();
         heldActivatedEnchantments = stream.readObjectList<Enchant>();
         selfActivatedEnchantments = stream.readObjectList<Enchant>();
+        name = stream.readString().value_or("");
         optionId = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedVarInt(cost);
         stream.writeUnsignedInt(slotFlags);
-        stream.writeString(name);
         stream.writeList(equipActivatedEnchantments, [&](const auto& item) {
             item->write(stream);
         });
@@ -60,6 +59,7 @@ public:
         stream.writeList(selfActivatedEnchantments, [&](const auto& item) {
             item->write(stream);
         });
+        stream.writeString(name);
         stream.writeInt(optionId);
     }
 };

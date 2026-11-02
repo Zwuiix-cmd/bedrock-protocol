@@ -14,10 +14,7 @@ public:
 
     FloatPackSetting() = default;
     virtual ~FloatPackSetting() = default;
-    explicit FloatPackSetting(const std::string& nameValue, const float& valueValue) : PackSetting(nameValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit FloatPackSetting(const std::string& nameValue, const float& valueValue) : PackSetting(nameValue), value(valueValue) {}
 
     static std::shared_ptr<FloatPackSetting> create(ReadOnlyBinaryStream& stream, const std::string& name) {
 		return std::make_shared<FloatPackSetting>(name, stream.readFloat().value_or(0.0f));

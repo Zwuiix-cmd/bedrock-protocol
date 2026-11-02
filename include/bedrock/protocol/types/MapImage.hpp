@@ -45,7 +45,6 @@ public:
 		}
 		height = pixelsValue.size();
 		width = rowLength.value();
-		pixels = pixelsValue;
     }
 
     static std::shared_ptr<MapImage> create(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
@@ -67,13 +66,13 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        width = stream.readInt().value_or(0);
-        height = stream.readInt().value_or(0);
         pixels = stream.readList([&]() {
             return stream.readList([&]() {
                 return stream.readUnsignedInt().value_or(0);
             });
         });
+        width = stream.readInt().value_or(0);
+        height = stream.readInt().value_or(0);
         encodedPixelCache = stream.readOptional([&]() {
             return stream.readString().value_or("");
         });

@@ -46,9 +46,9 @@ public:
         name = stream.readString().value_or("");
         property = stream.readString().value_or("");
         path = stream.readString().value_or("");
+        data = DataStoreValue::create(stream);
         updateCount = stream.readUnsignedInt().value_or(0);
         pathUpdateCount = stream.readUnsignedInt().value_or(0);
-        data = DataStoreValue::create(stream);
     }
 
     void write(BinaryStream& stream) const override {

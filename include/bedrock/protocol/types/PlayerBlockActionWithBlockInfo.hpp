@@ -28,9 +28,9 @@ public:
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
+        actionType = stream.readInt().value_or(0);
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         face = stream.readVarInt().value_or(0);
-        actionType = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

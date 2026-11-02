@@ -30,9 +30,7 @@ public:
         inputId(inputIdValue),
         inputMeta(inputMetaValue),
         result(resultValue),
-        blockName(blockNameValue) {
-		(void)0;
-    }
+        blockName(blockNameValue) {}
 
     static std::shared_ptr<FurnaceRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
         auto result = std::make_shared<FurnaceRecipe>();
@@ -40,8 +38,8 @@ public:
         result->inputMeta = stream.readOptional([&]() {
             return stream.readVarInt().value_or(0);
         });
-        result->blockName = stream.readString().value_or("");
         result->result = stream.readValue<NetworkItemDescriptor>();
+        result->blockName = stream.readString().value_or("");
         return result;
     }
 
@@ -50,8 +48,8 @@ public:
         inputMeta = stream.readOptional([&]() {
             return stream.readVarInt().value_or(0);
         });
-        blockName = stream.readString().value_or("");
         result = stream.readValue<NetworkItemDescriptor>();
+        blockName = stream.readString().value_or("");
     }
 
     void write(BinaryStream& stream) const override {
@@ -59,7 +57,7 @@ public:
         stream.writeOptional(inputMeta, [&](const auto& optionalValue) {
             stream.writeVarInt(optionalValue);
         });
-        stream.writeString(blockName);
         result.write(stream);
+        stream.writeString(blockName);
     }
 };

@@ -25,10 +25,10 @@ public:
         action(actionValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        action = stream.readUnsignedByte().value_or(0);
         group = stream.readUUID().value_or("");
         waypoint = std::make_shared<LocatorBarWaypoint>();
         waypoint->read(stream);
+        action = stream.readUnsignedByte().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {

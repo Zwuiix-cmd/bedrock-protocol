@@ -15,10 +15,7 @@ public:
 
     FloatGameRule() = default;
     virtual ~FloatGameRule() = default;
-    explicit FloatGameRule(const float& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit FloatGameRule(const float& valueValue, const bool& isPlayerModifiableValue) : GameRule(isPlayerModifiableValue), value(valueValue) {}
 
     static std::shared_ptr<FloatGameRule> create(ReadOnlyBinaryStream& stream, const bool& isPlayerModifiable) {
 		return std::make_shared<FloatGameRule>(stream.readFloat().value_or(0.0f), isPlayerModifiable);

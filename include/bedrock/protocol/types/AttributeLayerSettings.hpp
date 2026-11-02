@@ -30,9 +30,9 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         priority = stream.readInt().value_or(0);
+        weight = AttributeLayerSettingsWeight::create(stream);
         enabled = stream.readBool().value_or(false);
         transitionsPaused = stream.readBool().value_or(false);
-        weight = AttributeLayerSettingsWeight::create(stream);
     }
 
     virtual void write(BinaryStream& stream) const {

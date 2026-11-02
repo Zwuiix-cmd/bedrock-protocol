@@ -16,10 +16,7 @@ public:
 
     StringPackSetting() = default;
     virtual ~StringPackSetting() = default;
-    explicit StringPackSetting(const std::string& nameValue, const std::string& valueValue) : PackSetting(nameValue), value(valueValue) {
-		(void)0;
-		value = valueValue;
-    }
+    explicit StringPackSetting(const std::string& nameValue, const std::string& valueValue) : PackSetting(nameValue), value(valueValue) {}
 
     static std::shared_ptr<StringPackSetting> create(ReadOnlyBinaryStream& stream, const std::string& name) {
 		return std::make_shared<StringPackSetting>(name, stream.readString().value_or(""));

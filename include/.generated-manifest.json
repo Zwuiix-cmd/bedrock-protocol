@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "3aac8913d57e9e33d0ba7b32b22242bd52ca8c35d688690f057d2ac58763c15e",
+    "generatorFingerprint": "8a798a044acac75cda4a491bb53d697a3ff0209727641455fb238894b494216a",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -633,8 +633,8 @@
             "bytes": 5596
         },
         "include/bedrock/protocol/AddPlayerPacket.hpp": {
-            "sha256": "d0c701e635bcc54298e5bd57ef5d4c87c5188cb6e066d055e2e58b352afcce8d",
-            "bytes": 7664
+            "sha256": "eab2fd4c4775d7262ac768a9b4278ce83b3fb63d73e5b0c6b72edc1564c5eec0",
+            "bytes": 7807
         },
         "include/bedrock/protocol/AddVolumeEntityPacket.hpp": {
             "sha256": "0e84370d6507e4b3a67282c6a60654650b0af98dc4581eaeb0c0f195c0c60bf3",
@@ -1069,8 +1069,8 @@
             "bytes": 5879
         },
         "include/bedrock/protocol/NetworkSettingsPacket.hpp": {
-            "sha256": "5e03526219eae4a8dbbfb2de77d88f499e44880a2968851451ce5b1a252e9d4d",
-            "bytes": 5851
+            "sha256": "491b762f15ad7b7f7cf1ab93316ed3b55141e6f945e5527813a0800537511e73",
+            "bytes": 6037
         },
         "include/bedrock/protocol/NetworkStackLatencyPacket.hpp": {
             "sha256": "f8d578877e8d139a0f2e8fc7b9f470947de39966339d2f4b57c111942f6d4f1b",
@@ -1129,8 +1129,8 @@
             "bytes": 5616
         },
         "include/bedrock/protocol/PlayerAuthInputPacket.hpp": {
-            "sha256": "81bdf55a5cbbb3648b8f01cd4619b8ac8cab33db06f9cd9abce2bd4e1cc1cf60",
-            "bytes": 9266
+            "sha256": "ab74936a6588f27f96dc49b65ba8e0ce9fefe06061ea21b02dcf61633d4d5dec",
+            "bytes": 9724
         },
         "include/bedrock/protocol/PlayerEnchantOptionsPacket.hpp": {
             "sha256": "2b4a0124408bfba2083d02fbaf5a52217236125a7b246c389c49f6aa52f34394",
@@ -1309,8 +1309,8 @@
             "bytes": 5129
         },
         "include/bedrock/protocol/SetDefaultGameTypePacket.hpp": {
-            "sha256": "52074c9d0e6fda9afc2d7bf3f48c6357abdf20c17e14ad98a2b7c7f9f02847a2",
-            "bytes": 5135
+            "sha256": "2146bd6b010c81af54660f3d0ac6be78248f722293f8358382830e9ae27b267d",
+            "bytes": 5278
         },
         "include/bedrock/protocol/SetDifficultyPacket.hpp": {
             "sha256": "30ec302dc2828ea6110f81cfdf43f3b8a5d0fb5a1040397be4932408fd476d3b",
@@ -1337,8 +1337,8 @@
             "bytes": 5188
         },
         "include/bedrock/protocol/SetPlayerGameTypePacket.hpp": {
-            "sha256": "4ac9973b210814471b8eaa25d81cde8fea7b1b9a7800d15d124c4d211cfaac1b",
-            "bytes": 5133
+            "sha256": "18ae1f68febfbf83ee2b172946b4a15b586d279cd7586483b1975f91fc54c226",
+            "bytes": 5276
         },
         "include/bedrock/protocol/SetPlayerInventoryOptionsPacket.hpp": {
             "sha256": "8bc9e7abe805f66508f2ffbe5f4daa12a8a353b3cdfc58bdcb6dab7c49b3d676",
@@ -1497,8 +1497,8 @@
             "bytes": 5768
         },
         "include/bedrock/protocol/UpdatePlayerGameTypePacket.hpp": {
-            "sha256": "a8b85aa63dad9f7fca5c404df7d32e8d9a43bd9781557ff28a3e7e64603c67a6",
-            "bytes": 5393
+            "sha256": "5d828e35286d5d4974c50b51cf01a4405b3bbd96327de0dea835bdd4fda9bdcb",
+            "bytes": 5536
         },
         "include/bedrock/protocol/UpdateSoftEnumPacket.hpp": {
             "sha256": "26eef396172530ff6cc2f81d074b585bb49d4dfb64b21d1df731478b05bea4df",
@@ -1825,8 +1825,8 @@
             "bytes": 3749
         },
         "include/bedrock/protocol/types/LevelSettings.hpp": {
-            "sha256": "8d0080b223a944432e82f1a2998dbef0c58da28a924ea8e8ff3dd0996b43acff",
-            "bytes": 8068
+            "sha256": "ee956e468bac1b39f72941afe98dd534d77e274edece0709b58416150a8aad98",
+            "bytes": 8544
         },
         "include/bedrock/protocol/types/LevelSoundEvent.hpp": {
             "sha256": "d2c15a51622e68a287059ac6b060dc64423b2026eb640f85abb6c72a54f7001a",
@@ -2645,8 +2645,8 @@
             "bytes": 1835
         },
         "include/bedrock/protocol/types/login/AuthenticationInfo.hpp": {
-            "sha256": "a23d8b679503b349dcb29a3579c65f7159145361bef9f90b719a713420747c37",
-            "bytes": 723
+            "sha256": "41d715a760513b1db70756b258ee4eb0c2bbb3cbadaab833c341cf84bc59afca",
+            "bytes": 945
         },
         "include/bedrock/protocol/types/login/AuthenticationType.hpp": {
             "sha256": "eb2ce24f096e267c35fe61bb70c90cc1f590f215246d5c675fc718144c899e5d",
@@ -2661,8 +2661,8 @@
             "bytes": 642
         },
         "include/bedrock/protocol/types/login/clientdata/ClientData.hpp": {
-            "sha256": "e9ba3046aeacead10443805f496529321978e848681846e6024646b1058e29a9",
-            "bytes": 6762
+            "sha256": "22303b3f8ef2348e5750819a51ff3225b517c2fe9d196f39c4a5c9ef229c2a13",
+            "bytes": 7321
         },
         "include/bedrock/protocol/types/login/clientdata/ClientDataAnimationFrame.hpp": {
             "sha256": "ee18ac63d4b4eba2a4865ad12cc4af6d0e054ec1247fde254488dc8d67503f8e",
@@ -2863,7 +2863,7 @@
         "enums": 72,
         "registrations": 224,
         "unsupported": 46,
-        "changed": 3,
+        "changed": 11,
         "removed": 2,
         "cached": 0
     }

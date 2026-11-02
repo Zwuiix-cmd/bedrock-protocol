@@ -85,6 +85,7 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 
 class SetDefaultGameTypePacket : public Packet {
@@ -96,7 +97,7 @@ public:
     }
 
 public:
-    int32_t gamemode;
+    GameMode gamemode;
 
 public:
     std::string_view getName() override {
@@ -104,10 +105,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gamemode = stream.readVarInt().value_or(0);
+		gamemode = magic_enum::enum_cast<GameMode>(
+			stream.readVarInt().value_or(0)
+		).value_or(GameMode::Survival);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(gamemode);
+		stream.writeVarInt(magic_enum::enum_integer(gamemode));
     }
 };

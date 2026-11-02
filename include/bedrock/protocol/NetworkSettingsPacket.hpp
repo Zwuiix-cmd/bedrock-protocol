@@ -85,6 +85,7 @@
 #include <bedrock/protocol/types/ScriptDebugShapeType.hpp>
 #include <bedrock/protocol/types/ShowStoreOfferRedirectType.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
+#include <bedrock/protocol/types/CompressionAlgorithm.hpp>
 #include <bedrock/protocol/types/TypesGenerated.hpp>
 
 class NetworkSettingsPacket : public Packet {
@@ -102,7 +103,7 @@ public:
     };
 
     uint16_t compressionThreshold;
-    uint16_t compressionAlgorithm;
+    CompressionAlgorithm compressionAlgorithm;
     bool enableClientThrottling;
     uint8_t clientThrottleThreshold;
     float clientThrottleScalar;
@@ -114,7 +115,9 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		compressionThreshold = stream.readUnsignedShort().value_or(0);
-		compressionAlgorithm = stream.readUnsignedShort().value_or(0);
+		compressionAlgorithm = magic_enum::enum_cast<CompressionAlgorithm>(
+			stream.readUnsignedShort().value_or(0)
+		).value_or(CompressionAlgorithm::Zlib);
 		enableClientThrottling = stream.readBool().value_or(false);
 		clientThrottleThreshold = stream.readUnsignedByte().value_or(0);
 		clientThrottleScalar = stream.readFloat().value_or(0.0f);
@@ -122,7 +125,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedShort(compressionThreshold);
-		stream.writeUnsignedShort(compressionAlgorithm);
+		stream.writeUnsignedShort(magic_enum::enum_integer(compressionAlgorithm));
 		stream.writeBool(enableClientThrottling);
 		stream.writeUnsignedByte(clientThrottleThreshold);
 		stream.writeFloat(clientThrottleScalar);

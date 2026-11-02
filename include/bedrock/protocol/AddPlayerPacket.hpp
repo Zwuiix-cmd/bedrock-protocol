@@ -88,6 +88,7 @@
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
 #include <bedrock/protocol/types/AbilitiesData.hpp>
 #include <bedrock/protocol/types/BuildPlatform.hpp>
+#include <bedrock/protocol/types/GameMode.hpp>
 #include <bedrock/protocol/types/entity/EntityLink.hpp>
 #include <bedrock/protocol/types/entity/MetadataProperty.hpp>
 #include <bedrock/protocol/types/entity/PropertySyncData.hpp>
@@ -113,7 +114,7 @@ public:
     float yaw = 0.0f;
     float headYaw = 0.0f;
     NetworkItemStack item;
-    int32_t gameMode;
+    GameMode gameMode;
     EntityMetadataCollection metadata;
     PropertySyncData syncedProperties;
     AbilitiesData abilitiesPacket;
@@ -137,7 +138,9 @@ public:
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
 		item = stream.readValue<NetworkItemStack>();
-		gameMode = stream.readVarInt().value_or(0);
+		gameMode = magic_enum::enum_cast<GameMode>(
+			stream.readVarInt().value_or(0)
+		).value_or(GameMode::Survival);
 		metadata.read(stream);
 		syncedProperties = stream.readValue<PropertySyncData>();
 		abilitiesPacket = AbilitiesData{};
@@ -163,7 +166,7 @@ public:
 		stream.writeFloat(yaw);
 		stream.writeFloat(headYaw);
 		item.write(stream);
-		stream.writeVarInt(gameMode);
+		stream.writeVarInt(magic_enum::enum_integer(gameMode));
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		abilitiesPacket.write(stream);

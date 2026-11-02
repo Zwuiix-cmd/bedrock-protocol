@@ -2,26 +2,29 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <cstdint>
+#include <magic_enum/magic_enum.hpp>
 #include <string>
 
+#include <bedrock/protocol/types/login/AuthenticationType.hpp>
 
 class AuthenticationInfo {
 public:
-    int32_t AuthenticationType;
+    ::AuthenticationType AuthenticationType;
     std::string Certificate;
     std::string Token;
 
     AuthenticationInfo() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        AuthenticationType = stream.readInt().value_or(0);
+        AuthenticationType = magic_enum::enum_cast<::AuthenticationType>(
+            stream.readInt().value_or(0)
+        ).value_or(AuthenticationType::Full);
         Certificate = stream.readString().value_or("");
         Token = stream.readString().value_or("");
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeInt(AuthenticationType);
+        stream.writeInt(magic_enum::enum_integer(AuthenticationType));
         stream.writeString(Certificate);
         stream.writeString(Token);
     }

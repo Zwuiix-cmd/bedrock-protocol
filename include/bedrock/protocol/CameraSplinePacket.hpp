@@ -109,11 +109,7 @@ public:
 		{
 		    auto splineCount = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < splineCount); ++i) {
-				splines.push_back(([&]() {
-				    auto value = std::make_shared<CameraSplineDefinition>();
-				    value->read(stream);
-				    return value;
-				}()));
+				splines.push_back(stream.readObject<CameraSplineDefinition>());
 		    }
 		}
     }

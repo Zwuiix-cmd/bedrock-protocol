@@ -314,27 +314,88 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
 
     private function directReadAssignment(Node\Expr\Assign $assignment, array $declaration, array $method): ?string
     {
-        if (!$assignment->var instanceof Node\Expr\PropertyFetch
-            || !$assignment->var->var instanceof Node\Expr\Variable
-            || $assignment->var->var->name !== 'this'
-            || !$assignment->var->name instanceof Node\Identifier
-            || !$this->isDeserializerExpression($assignment->expr)) {
+        if (!$this->isDeserializerExpression($assignment->expr)
+            && !($assignment->expr instanceof Node\Expr\StaticCall)
+            && !($assignment->expr instanceof Node\Expr\MethodCall)) {
             return null;
         }
-        $propertyName = $assignment->var->name->toString();
-        foreach ($declaration['properties'] ?? [] as $property) {
-            if (($property['name'] ?? null) !== $propertyName
-                || ($objectType = $this->objectPropertyType($property, $declaration, true)) === null) {
-                continue;
+
+        $objectType = null;
+        if ($assignment->var instanceof Node\Expr\PropertyFetch) {
+            if ($assignment->var->var instanceof Node\Expr\Variable
+                && $assignment->var->var->name === 'this'
+                && $assignment->var->name instanceof Node\Identifier) {
+                $propertyName = $assignment->var->name->toString();
+                foreach ($declaration['properties'] ?? [] as $property) {
+                    if (($property['name'] ?? null) === $propertyName) {
+                        $objectType = $this->objectPropertyType($property, $declaration, true);
+                        break;
+                    }
+                }
             }
-            $target = $this->expression($assignment->var, $declaration, $method);
-            if ($objectType['pointer']) {
-                return $target . ' = std::make_shared<' . $objectType['type'] . '>();' . "\n"
-                    . $target . '->read(stream);';
+            if ($objectType === null) {
+                $objectType = $this->objectTypeFromCppType(
+                    $this->assignmentCPPType($assignment->var, $declaration),
+                );
             }
-            return $target . '.read(stream);';
+        } elseif ($assignment->var instanceof Node\Expr\Variable) {
+            $objectType = $this->objectTypeFromCppType(
+                $this->inferredCPPType($assignment->expr, $declaration),
+            );
         }
-        return null;
+        if ($objectType === null) {
+            $translated = $this->expression($assignment->expr, $declaration, $method);
+            if (preg_match('/std::make_shared<([A-Za-z_]\w*)>\(\)/', $translated, $pointerType) === 1
+                && str_contains($translated, '->read(stream)')) {
+                $objectType = ['type' => $pointerType[1], 'pointer' => true];
+            } elseif (preg_match('/\b([A-Za-z_]\w*) value;\s*value\.read\(stream\)/s', $translated, $valueType) === 1) {
+                $objectType = ['type' => $valueType[1], 'pointer' => false];
+            }
+        }
+        if ($objectType === null) {
+            return null;
+        }
+
+        $target = $this->expression($assignment->var, $declaration, $method);
+        $local = $assignment->var instanceof Node\Expr\Variable;
+        if ($objectType['pointer']) {
+            return ($local ? 'auto ' . $target . ' =' : $target . ' =')
+                . ' std::make_shared<' . $objectType['type'] . '>();' . "\n"
+                . $target . '->read(stream);';
+        }
+        return ($local ? 'auto ' . $target . ' = ' . $objectType['type'] . '{};' : $target . '.read(stream);')
+            . ($local ? "\n" . $target . '.read(stream);' : '');
+    }
+
+    /** @return array{type: string, pointer: bool}|null */
+    private function objectTypeFromCppType(?string $cppType): ?array
+    {
+        if ($cppType === null || $cppType === '') {
+            return null;
+        }
+        if (preg_match('/^std::optional<(.+)>$/', $cppType, $optionalType) === 1) {
+            $cppType = $optionalType[1];
+        }
+        if (preg_match('/^std::shared_ptr<([A-Za-z_]\w*)>$/', $cppType, $pointerType) === 1) {
+            $referenced = $this->findDeclaration($pointerType[1]);
+            if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
+                return null;
+            }
+            return ['type' => $pointerType[1], 'pointer' => true];
+        }
+        if (preg_match('/^[A-Za-z_]\w*$/', $cppType) !== 1
+            || in_array($cppType, [
+                'bool', 'char', 'int8_t', 'uint8_t', 'int16_t', 'uint16_t',
+                'int32_t', 'uint32_t', 'int64_t', 'uint64_t', 'float', 'double',
+                'std::string', 'std::string_view',
+            ], true)) {
+            return null;
+        }
+        $referenced = $this->findDeclaration($cppType);
+        if ($referenced === null || $this->isEnumLikeDeclaration($referenced)) {
+            return null;
+        }
+        return ['type' => $cppType, 'pointer' => false];
     }
 
     private function isDeserializerExpression(Node $expression): bool

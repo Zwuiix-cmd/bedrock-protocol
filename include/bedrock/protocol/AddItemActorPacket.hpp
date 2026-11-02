@@ -117,7 +117,7 @@ public:
 		item.read(stream);
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		motion = stream.readVec3().value_or(glm::vec3(0.0f));
-		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
+		metadata.read(stream);
 		isFromFishing = stream.readBool().value_or(false);
     }
 

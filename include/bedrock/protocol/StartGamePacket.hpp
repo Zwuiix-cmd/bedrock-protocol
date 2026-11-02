@@ -170,9 +170,7 @@ public:
         networkPermissions = std::make_shared<NetworkPermissions>();
         networkPermissions->read(stream);
         serverJoinInformation = stream.readOptional([&]() {
-            auto value = std::make_shared<ServerJoinInformation>();
-            value->read(stream);
-            return value;
+            return stream.readObject<ServerJoinInformation>();
         });
         serverTelemetryData = std::make_shared<ServerTelemetryData>();
         serverTelemetryData->read(stream);

@@ -113,21 +113,13 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				categories.push_back(([&]() {
-				    auto value = std::make_shared<CameraAimAssistCategory>();
-				    value->read(stream);
-				    return value;
-				}()));
+				categories.push_back(stream.readObject<CameraAimAssistCategory>());
 		    }
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				presets.push_back(([&]() {
-				    auto value = std::make_shared<CameraAimAssistPreset>();
-				    value->read(stream);
-				    return value;
-				}()));
+				presets.push_back(stream.readObject<CameraAimAssistPreset>());
 		    }
 		}
 		operation = stream.readUnsignedByte().value_or(0);

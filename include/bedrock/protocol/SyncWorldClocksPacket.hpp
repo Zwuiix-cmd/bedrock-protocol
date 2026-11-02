@@ -107,26 +107,10 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		payload = ([&]() -> std::shared_ptr<SyncWorldClocksPayload> {
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksSyncState::ID) return ([&]() {
-		    auto value = std::make_shared<SyncWorldClocksSyncState>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksInitializeRegistry::ID) return ([&]() {
-		    auto value = std::make_shared<SyncWorldClocksInitializeRegistry>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksAddTimeMarker::ID) return ([&]() {
-		    auto value = std::make_shared<SyncWorldClocksAddTimeMarker>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksRemoveTimeMarker::ID) return ([&]() {
-		    auto value = std::make_shared<SyncWorldClocksRemoveTimeMarker>();
-		    value->read(stream);
-		    return value;
-		}());
+			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksSyncState::ID) return stream.readObject<SyncWorldClocksSyncState>();
+			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksInitializeRegistry::ID) return stream.readObject<SyncWorldClocksInitializeRegistry>();
+			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksAddTimeMarker::ID) return stream.readObject<SyncWorldClocksAddTimeMarker>();
+			if (stream.readUnsignedVarInt().value_or(0) == SyncWorldClocksRemoveTimeMarker::ID) return stream.readObject<SyncWorldClocksRemoveTimeMarker>();
 			throw std::exception{};
 		}());
     }

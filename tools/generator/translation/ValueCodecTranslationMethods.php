@@ -122,11 +122,7 @@ private function readObject(string $type): string
                 . "    return value;\n"
                 . "}())";
         }
-        return "([&]() {\n"
-            . '    auto value = std::make_shared<' . CPPName::type($type) . ">();\n"
-            . "    value->read(stream);\n"
-            . "    return value;\n"
-            . "}())";
+        return 'stream.readObject<' . CPPName::type($type) . '>()';
     }
 
     private function readObjectCallback(string $type): ?string
@@ -155,11 +151,7 @@ private function readObject(string $type): string
     private function readObjectCallbackForCppType(string $cppType): ?string
     {
         if (preg_match('/^std::shared_ptr<([A-Za-z_]\w*)>$/', $cppType, $matches) === 1) {
-            return $this->callback('', implode("\n", [
-                'auto value = std::make_shared<' . $matches[1] . '>();',
-                'value->read(stream);',
-                'return value;',
-            ]));
+            return $this->callback('', 'return stream.readObject<' . $matches[1] . '>();');
         }
         if (!preg_match('/^[A-Za-z_]\w*$/', $cppType)) {
             return null;

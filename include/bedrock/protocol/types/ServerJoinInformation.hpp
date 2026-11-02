@@ -24,9 +24,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         gatheringJoinInfo = stream.readOptional([&]() {
-            auto value = std::make_shared<GatheringJoinInfo>();
-            value->read(stream);
-            return value;
+            return stream.readObject<GatheringJoinInfo>();
         });
     }
 

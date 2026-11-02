@@ -112,21 +112,13 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				layer0Updates.push_back(([&]() {
-				    auto value = std::make_shared<UpdateSubChunkBlocksPacketEntry>();
-				    value->read(stream);
-				    return value;
-				}()));
+				layer0Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		    }
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				layer1Updates.push_back(([&]() {
-				    auto value = std::make_shared<UpdateSubChunkBlocksPacketEntry>();
-				    value->read(stream);
-				    return value;
-				}()));
+				layer1Updates.push_back(stream.readObject<UpdateSubChunkBlocksPacketEntry>());
 		    }
 		}
     }

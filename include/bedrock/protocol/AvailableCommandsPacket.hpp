@@ -168,51 +168,31 @@ public:
 		{
 		auto size = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < size; i++) {
-		    enums.push_back(([&]() {
-		    auto value = std::make_shared<CommandEnumRawData>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    enums.push_back(stream.readObject<CommandEnumRawData>());
 		}
 		}
 		{
 		auto size = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < size; i++) {
-		    chainedSubCommandData.push_back(([&]() {
-		    auto value = std::make_shared<ChainedSubCommandRawData>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    chainedSubCommandData.push_back(stream.readObject<ChainedSubCommandRawData>());
 		}
 		}
 		{
 		auto size = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < size; i++) {
-		    commandData.push_back(([&]() {
-		    auto value = std::make_shared<CommandRawData>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    commandData.push_back(stream.readObject<CommandRawData>());
 		}
 		}
 		{
 		auto size = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < size; i++) {
-		    softEnums.push_back(([&]() {
-		    auto value = std::make_shared<CommandSoftEnum>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    softEnums.push_back(stream.readObject<CommandSoftEnum>());
 		}
 		}
 		{
 		auto size = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < size; i++) {
-		    enumConstraints.push_back(([&]() {
-		    auto value = std::make_shared<CommandEnumConstraintRawData>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    enumConstraints.push_back(stream.readObject<CommandEnumConstraintRawData>());
 		}
 		}
     }

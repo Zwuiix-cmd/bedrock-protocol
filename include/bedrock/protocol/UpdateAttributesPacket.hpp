@@ -112,11 +112,7 @@ public:
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				entries.push_back(([&]() {
-				    auto value = std::make_shared<UpdateAttribute>();
-				    value->read(stream);
-				    return value;
-				}()));
+				entries.push_back(stream.readObject<UpdateAttribute>());
 		    }
 		}
 		tick = stream.readUnsignedVarLong().value_or(0);

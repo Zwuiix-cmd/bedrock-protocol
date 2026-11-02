@@ -127,11 +127,8 @@ public:
 				entry->buildPlatform = magic_enum::enum_cast<BuildPlatform>(
 					stream.readInt().value_or(0)
 				).value_or(BuildPlatform::Unknown);
-				entry->skinData = ([&]() {
-				    auto value = std::make_shared<SkinData>();
-				    value->read(stream);
-				    return value;
-				}());
+				entry->skinData = std::make_shared<SkinData>();
+				entry->skinData->read(stream);
 				entry->isTeacher = stream.readBool().value_or(false);
 				entry->isHost = stream.readBool().value_or(false);
 				entry->isSubClient = stream.readBool().value_or(false);

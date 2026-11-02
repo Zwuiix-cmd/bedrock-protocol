@@ -119,21 +119,13 @@ public:
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				groups.push_back(([&]() {
-				    auto value = std::make_shared<CreativeGroupEntry>();
-				    value->read(stream);
-				    return value;
-				}()));
+				groups.push_back(stream.readObject<CreativeGroupEntry>());
 		    }
 		}
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				items.push_back(([&]() {
-				    auto value = std::make_shared<CreativeItemEntry>();
-				    value->read(stream);
-				    return value;
-				}()));
+				items.push_back(stream.readObject<CreativeItemEntry>());
 		    }
 		}
     }

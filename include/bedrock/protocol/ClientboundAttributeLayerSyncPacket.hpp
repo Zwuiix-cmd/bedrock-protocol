@@ -107,26 +107,10 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		payload = ([&]() -> std::shared_ptr<AttributeLayerSyncPayload> {
-			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayers::ID) return ([&]() {
-		    auto value = std::make_shared<AttributeUpdateLayers>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayerSettings::ID) return ([&]() {
-		    auto value = std::make_shared<AttributeUpdateLayerSettings>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == AttributesUpdateEnvironment::ID) return ([&]() {
-		    auto value = std::make_shared<AttributesUpdateEnvironment>();
-		    value->read(stream);
-		    return value;
-		}());
-			if (stream.readUnsignedVarInt().value_or(0) == AttributesRemoveEnvironment::ID) return ([&]() {
-		    auto value = std::make_shared<AttributesRemoveEnvironment>();
-		    value->read(stream);
-		    return value;
-		}());
+			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayers::ID) return stream.readObject<AttributeUpdateLayers>();
+			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayerSettings::ID) return stream.readObject<AttributeUpdateLayerSettings>();
+			if (stream.readUnsignedVarInt().value_or(0) == AttributesUpdateEnvironment::ID) return stream.readObject<AttributesUpdateEnvironment>();
+			if (stream.readUnsignedVarInt().value_or(0) == AttributesRemoveEnvironment::ID) return stream.readObject<AttributesRemoveEnvironment>();
 			throw std::exception{};
 		}());
     }

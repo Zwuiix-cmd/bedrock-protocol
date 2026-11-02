@@ -113,11 +113,7 @@ public:
 			throw std::exception{};
 		}
 		for (std::size_t i = 0; (i < count); i++) {
-			clientPixels.push_back(([&]() {
-			    auto value = std::make_shared<MapInfoRequestPacketClientPixel>();
-			    value->read(stream);
-			    return value;
-			}()));
+			clientPixels.push_back(stream.readObject<MapInfoRequestPacketClientPixel>());
 		}
     }
 

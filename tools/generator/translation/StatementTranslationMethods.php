@@ -38,6 +38,15 @@ private function statement(Node $statement, array $declaration, array $method, i
             if ($statement->expr instanceof Node\Expr\Assign) {
                 $directRead = $this->directReadAssignment($statement->expr, $declaration, $method);
                 if ($directRead !== null) {
+                    if ($statement->expr->var instanceof Node\Expr\Variable
+                        && $statement->expr->var->name !== 'this') {
+                        $name = (string) $statement->expr->var->name;
+                        $this->declaredVariables[$name] = true;
+                        $inferredType = $this->inferredCPPType($statement->expr->expr, $declaration);
+                        if ($inferredType !== null) {
+                            $this->expressionTypes[$name] = $inferredType;
+                        }
+                    }
                     return $prefix . str_replace("\n", "\n" . $prefix, $directRead);
                 }
             }

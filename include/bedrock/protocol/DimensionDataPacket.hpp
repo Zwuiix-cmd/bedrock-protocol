@@ -111,11 +111,8 @@ public:
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); i++) {
 				auto dimensionNameId = stream.readString().value_or("");
-				auto dimensionData = ([&]() {
-				    auto value = std::make_shared<DimensionData>();
-				    value->read(stream);
-				    return value;
-				}());
+				auto dimensionData = std::make_shared<DimensionData>();
+				dimensionData->read(stream);
 				if (definitions.find(dimensionNameId) != definitions.end()) {
 					throw std::exception{};
 				}

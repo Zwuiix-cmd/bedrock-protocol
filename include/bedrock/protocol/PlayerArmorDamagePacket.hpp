@@ -109,11 +109,7 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				armorSlotAndDamagePairs.push_back(([&]() {
-				    auto value = std::make_shared<ArmorSlotAndDamagePair>();
-				    value->read(stream);
-				    return value;
-				}()));
+				armorSlotAndDamagePairs.push_back(stream.readObject<ArmorSlotAndDamagePair>());
 		    }
 		}
     }

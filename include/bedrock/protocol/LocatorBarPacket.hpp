@@ -109,11 +109,7 @@ public:
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				waypoints.push_back(([&]() {
-				    auto value = std::make_shared<LocatorBarWaypointPayload>();
-				    value->read(stream);
-				    return value;
-				}()));
+				waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
 		    }
 		}
     }

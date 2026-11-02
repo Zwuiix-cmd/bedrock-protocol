@@ -45,14 +45,10 @@ public:
         result->offset = std::make_shared<SubChunkPositionOffset>();
         result->offset->read(stream);
         result->heightMap = stream.readOptional([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
+            return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
         result->renderHeightMap = stream.readOptional([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
+            return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
         return result;
     }
@@ -63,14 +59,10 @@ public:
         offset = std::make_shared<SubChunkPositionOffset>();
         offset->read(stream);
         heightMap = stream.readOptional([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
+            return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
         renderHeightMap = stream.readOptional([&]() {
-            auto value = std::make_shared<SubChunkPacketHeightMapInfo>();
-            value->read(stream);
-            return value;
+            return stream.readObject<SubChunkPacketHeightMapInfo>();
         });
     }
 

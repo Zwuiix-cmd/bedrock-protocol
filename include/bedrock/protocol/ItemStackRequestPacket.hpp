@@ -109,11 +109,7 @@ public:
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				requests.push_back(([&]() {
-				    auto value = std::make_shared<ItemStackRequest>();
-				    value->read(stream);
-				    return value;
-				}()));
+				requests.push_back(stream.readObject<ItemStackRequest>());
 		    }
 		}
     }

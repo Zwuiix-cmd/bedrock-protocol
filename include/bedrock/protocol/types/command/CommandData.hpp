@@ -54,9 +54,7 @@ public:
         description = stream.readString().value_or("");
         flags = stream.readInt().value_or(0);
         aliases = stream.readOptional([&]() {
-            auto value = std::make_shared<CommandHardEnum>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CommandHardEnum>();
         });
         overloads = stream.readObjectList<CommandOverload>();
         chainedSubCommandData = stream.readObjectList<ChainedSubCommandData>();

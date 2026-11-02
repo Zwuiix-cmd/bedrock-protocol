@@ -106,7 +106,18 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        entries = stream.readObjectList<ItemTypeEntry>();
+		{
+		    auto len = stream.readUnsignedVarInt().value_or(0);
+		    for (std::size_t i = 0; (i < len); ++i) {
+				auto stringId = stream.readString().value_or("");
+				auto numericId = stream.readShort().value_or(0);
+				auto isComponentBased = stream.readBool().value_or(false);
+				auto version = stream.readVarInt().value_or(0);
+				auto nbt = monostate{};
+				nbt.read(stream);
+				entries.push_back(std::make_shared<ItemTypeEntry>(stringId, numericId, isComponentBased, version, nbt));
+		    }
+		}
     }
 
     void write(BinaryStream& stream) override {

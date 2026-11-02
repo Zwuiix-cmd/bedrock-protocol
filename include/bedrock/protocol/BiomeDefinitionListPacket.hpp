@@ -110,11 +110,7 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				definitionData.push_back(([&]() {
-				    auto value = std::make_shared<BiomeDefinitionData>();
-				    value->read(stream);
-				    return value;
-				}()));
+				definitionData.push_back(stream.readObject<BiomeDefinitionData>());
 		    }
 		}
 		{

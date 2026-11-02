@@ -109,11 +109,7 @@ public:
 		{
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
-				removedContainers.push_back(([&]() {
-				    auto value = std::make_shared<FullContainerName>();
-				    value->read(stream);
-				    return value;
-				}()));
+				removedContainers.push_back(stream.readObject<FullContainerName>());
 		    }
 		}
     }

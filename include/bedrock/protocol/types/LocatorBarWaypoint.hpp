@@ -49,9 +49,7 @@ public:
             return stream.readBool().value_or(false);
         });
         worldPosition = stream.readOptional([&]() {
-            auto value = std::make_shared<WorldPosition>();
-            value->read(stream);
-            return value;
+            return stream.readObject<WorldPosition>();
         });
         textureId = stream.readOptional([&]() {
             return stream.readInt().value_or(0);

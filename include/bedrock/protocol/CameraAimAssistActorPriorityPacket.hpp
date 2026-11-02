@@ -109,11 +109,7 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				priorityData.push_back(([&]() {
-				    auto value = std::make_shared<CameraAimAssistActorPriorityData>();
-				    value->read(stream);
-				    return value;
-				}()));
+				priorityData.push_back(stream.readObject<CameraAimAssistActorPriorityData>());
 		    }
 		}
     }

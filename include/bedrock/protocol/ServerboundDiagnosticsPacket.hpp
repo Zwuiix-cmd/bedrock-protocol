@@ -127,11 +127,7 @@ public:
 		{
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < count; i++) {
-		    memoryCategoryValues.push_back(([&]() {
-		    auto value = std::make_shared<MemoryCategoryCounter>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    memoryCategoryValues.push_back(stream.readObject<MemoryCategoryCounter>());
 		}
 		}
     }

@@ -402,6 +402,13 @@ public:
     }
 
     template <typename T>
+    std::shared_ptr<T> readObject() {
+        auto value = std::make_shared<T>();
+        value->read(*this);
+        return value;
+    }
+
+    template <typename T>
     std::vector<std::shared_ptr<T>> readObjectList() {
         const auto count = readUnsignedVarInt().value_or(0);
         std::vector<std::shared_ptr<T>> values;

@@ -105,11 +105,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		data = ([&]() {
-		    auto value = std::make_shared<AbilitiesData>();
-		    value->read(stream);
-		    return value;
-		}());
+		data = std::make_shared<AbilitiesData>();
+		data->read(stream);
     }
 
     void write(BinaryStream& stream) override {

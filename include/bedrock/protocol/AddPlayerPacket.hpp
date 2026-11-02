@@ -141,17 +141,13 @@ public:
 		gameMode = magic_enum::enum_cast<GameMode>(
 			stream.readVarInt().value_or(0)
 		).value_or(GameMode::Survival);
-		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
+		metadata.read(stream);
 		syncedProperties.read(stream);
 		abilitiesPacket = AbilitiesData{};
 		abilitiesPacket.read(stream);
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < linkCount); ++i) {
-			links.push_back(([&]() {
-			    auto value = std::make_shared<EntityLink>();
-			    value->read(stream);
-			    return value;
-			}()));
+			links.push_back(stream.readObject<EntityLink>());
 		}
 		deviceId = stream.readString().value_or("");
 		buildPlatform = magic_enum::enum_cast<BuildPlatform>(

@@ -48,21 +48,9 @@ public:
 
     static std::shared_ptr<SmithingTrimRecipe> decode(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
 		auto recipeId = stream.readString().value_or("");
-		auto template_ = ([&]() {
-		    auto value = std::make_shared<RecipeIngredient>();
-		    value->read(stream);
-		    return value;
-		}());
-		auto input = ([&]() {
-		    auto value = std::make_shared<RecipeIngredient>();
-		    value->read(stream);
-		    return value;
-		}());
-		auto addition = ([&]() {
-		    auto value = std::make_shared<RecipeIngredient>();
-		    value->read(stream);
-		    return value;
-		}());
+		auto template_ = stream.readObject<RecipeIngredient>();
+		auto input = stream.readObject<RecipeIngredient>();
+		auto addition = stream.readObject<RecipeIngredient>();
 		auto blockName = stream.readString().value_or("");
 		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
 		return std::make_shared<SmithingTrimRecipe>(typeId, recipeId, template_, input, addition, blockName, recipeNetId);

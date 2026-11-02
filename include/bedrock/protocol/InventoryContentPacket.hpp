@@ -113,7 +113,7 @@ public:
 		windowId = stream.readUnsignedVarInt().value_or(0);
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < count); ++i) {
-			items.push_back(([&]() { NetworkItemStack value; value.read(stream); return value; }()));
+			items.read(stream);
 		}
 		containerName = std::make_shared<FullContainerName>();
 		containerName->read(stream);

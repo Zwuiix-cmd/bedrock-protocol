@@ -116,11 +116,7 @@ public:
 		{
 		auto count = stream.readUnsignedInt().value_or(0);
 		for (std::size_t i = 0; i < count; i++) {
-		    entries.push_back(([&]() {
-		    auto value = std::make_shared<SubChunkPositionOffset>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    entries.push_back(stream.readObject<SubChunkPositionOffset>());
 		}
 		}
     }

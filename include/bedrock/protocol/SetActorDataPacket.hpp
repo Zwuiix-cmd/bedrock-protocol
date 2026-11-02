@@ -110,7 +110,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
+		metadata.read(stream);
 		syncedProperties.read(stream);
 		tick = stream.readUnsignedVarLong().value_or(0);
     }

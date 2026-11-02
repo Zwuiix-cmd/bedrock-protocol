@@ -69,9 +69,7 @@ public:
             return stream.readInt().value_or(0);
         });
         chunkGenData = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeDefinitionChunkGenData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeDefinitionChunkGenData>();
         });
     }
 

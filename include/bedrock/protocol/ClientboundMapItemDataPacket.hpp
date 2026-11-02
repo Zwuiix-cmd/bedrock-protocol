@@ -183,7 +183,8 @@ public:
 			if ((count != (width * height))) {
 				throw std::exception{};
 			}
-			colors = MapImage::decode(stream, height, width);
+			colors = std::make_shared<MapImage>();
+			colors->read(stream);
 		}
     }
 

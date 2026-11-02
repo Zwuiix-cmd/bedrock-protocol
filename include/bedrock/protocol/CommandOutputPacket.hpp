@@ -130,7 +130,7 @@ public:
 		    auto size = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < size); ++i) {
 				messages.push_back(([&]() -> std::shared_ptr<CommandOutputMessage> {
-					auto message = std::make_shared<CommandOutputMessage>();
+					(void)(std::make_shared<CommandOutputMessage>());
 					message->messageId = stream.readString().value_or("");
 					message->isInternal = stream.readBool().value_or(false);
 					{

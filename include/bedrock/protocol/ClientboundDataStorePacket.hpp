@@ -110,21 +110,9 @@ public:
 		    auto len = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < len); ++i) {
 				values.push_back(([&]() -> std::shared_ptr<DataStore> {
-					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Update)) return ([&]() {
-				    auto value = std::make_shared<DataStoreUpdate>();
-				    value->read(stream);
-				    return value;
-				}());
-					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Change)) return ([&]() {
-				    auto value = std::make_shared<DataStoreChange>();
-				    value->read(stream);
-				    return value;
-				}());
-					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Removal)) return ([&]() {
-				    auto value = std::make_shared<DataStoreRemoval>();
-				    value->read(stream);
-				    return value;
-				}());
+					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Update)) return stream.readObject<DataStoreUpdate>();
+					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Change)) return stream.readObject<DataStoreChange>();
+					if (stream.readUnsignedVarInt().value_or(0) == magic_enum::enum_integer(DataStoreType::Removal)) return stream.readObject<DataStoreRemoval>();
 					throw std::exception{};
 				}()));
 		    }

@@ -154,9 +154,7 @@ public:
             return stream.readBool().value_or(false);
         });
         aimAssist = stream.readOptional([&]() {
-            auto value = std::make_shared<CameraPresetAimAssist>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CameraPresetAimAssist>();
         });
         controlScheme = stream.readOptional([&]() {
             return magic_enum::enum_cast<ControlScheme>(

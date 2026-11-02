@@ -139,15 +139,11 @@ public:
 			auto max = stream.readFloat().value_or(0.0f);
 			attributes.push_back(std::make_shared<Attribute>(id, min, max, current, current, std::vector<std::shared_ptr<AttributeModifier>>{}));
 		}
-		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
+		metadata.read(stream);
 		syncedProperties.read(stream);
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < linkCount); ++i) {
-			links.push_back(([&]() {
-			    auto value = std::make_shared<EntityLink>();
-			    value->read(stream);
-			    return value;
-			}()));
+			links.push_back(stream.readObject<EntityLink>());
 		}
     }
 

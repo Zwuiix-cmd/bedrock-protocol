@@ -114,11 +114,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; (i < count); ++i) {
-			values.push_back(([&]() {
-			    auto value = std::make_shared<ParameterKeyframeValue>();
-			    value->read(stream);
-			    return value;
-			}()));
+			values.push_back(stream.readObject<ParameterKeyframeValue>());
 		}
 		unknownFloat = stream.readOptional([&]() {
 			return stream.readFloat().value_or(0.0f);

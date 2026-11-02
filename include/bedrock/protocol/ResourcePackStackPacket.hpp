@@ -115,11 +115,7 @@ public:
 		mustAccept = stream.readBool().value_or(false);
 		auto resourcePackCount = stream.readUnsignedVarInt().value_or(0);
 		while ((resourcePackCount-- > 0)) {
-			resourcePackStack.push_back(([&]() {
-			    auto value = std::make_shared<ResourcePackStackEntry>();
-			    value->read(stream);
-			    return value;
-			}()));
+			resourcePackStack.push_back(stream.readObject<ResourcePackStackEntry>());
 		}
 		baseGameVersion = stream.readString().value_or("");
 		experiments = std::make_shared<Experiments>();

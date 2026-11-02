@@ -86,54 +86,34 @@ public:
         frozenOceanSurface = stream.readBool().value_or(false);
         theEndSurface = stream.readBool().value_or(false);
         climate = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeClimateData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeClimateData>();
         });
         consolidatedFeatures = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeConsolidatedFeaturesData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeConsolidatedFeaturesData>();
         });
         mountainParams = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeMountainParamsData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeMountainParamsData>();
         });
         surfaceMaterialAdjustment = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeSurfaceMaterialAdjustmentData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeSurfaceMaterialAdjustmentData>();
         });
         surfaceMaterial = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeSurfaceMaterialData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeSurfaceMaterialData>();
         });
         mesaSurface = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeMesaSurfaceData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeMesaSurfaceData>();
         });
         cappedSurface = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeCappedSurfaceData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeCappedSurfaceData>();
         });
         overworldGenRules = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeOverworldGenRulesData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeOverworldGenRulesData>();
         });
         multinoiseGenRules = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeMultinoiseGenRulesData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeMultinoiseGenRulesData>();
         });
         legacyWorldGenRules = stream.readOptional([&]() {
-            auto value = std::make_shared<BiomeLegacyWorldGenRulesData>();
-            value->read(stream);
-            return value;
+            return stream.readObject<BiomeLegacyWorldGenRulesData>();
         });
         replacementsData = stream.readObjectList<BiomeReplacementData>();
         villageType = stream.readOptional([&]() {

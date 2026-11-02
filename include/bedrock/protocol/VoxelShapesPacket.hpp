@@ -111,11 +111,7 @@ public:
 		{
 		    auto shapesCount = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < shapesCount); ++i) {
-				shapes.push_back(([&]() {
-				    auto value = std::make_shared<SerializableVoxelShape>();
-				    value->read(stream);
-				    return value;
-				}()));
+				shapes.push_back(stream.readObject<SerializableVoxelShape>());
 		    }
 		}
 		nameMap = {};

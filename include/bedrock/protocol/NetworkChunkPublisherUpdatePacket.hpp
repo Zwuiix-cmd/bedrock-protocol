@@ -118,11 +118,7 @@ public:
 		}
 		{
 		for (std::size_t i = 0; i < count; i++) {
-		    savedChunks.push_back(([&]() {
-		    auto value = std::make_shared<ChunkPosition>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    savedChunks.push_back(stream.readObject<ChunkPosition>());
 		}
 		}
     }

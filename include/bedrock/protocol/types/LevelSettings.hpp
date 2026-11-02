@@ -137,9 +137,7 @@ public:
         experiments = std::make_shared<Experiments>();
         experiments->read(stream);
         eduSharedUriResource = stream.readOptional([&]() {
-            auto value = std::make_shared<EducationUriResource>();
-            value->read(stream);
-            return value;
+            return stream.readObject<EducationUriResource>();
         });
         experimentalGameplayOverride = stream.readOptional([&]() {
             return stream.readBool().value_or(false);

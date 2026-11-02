@@ -31,14 +31,10 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         time = stream.readOptional([&]() {
-            auto value = std::make_shared<CameraFadeInstructionTime>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CameraFadeInstructionTime>();
         });
         color = stream.readOptional([&]() {
-            auto value = std::make_shared<CameraFadeInstructionColor>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CameraFadeInstructionColor>();
         });
     }
 

@@ -109,11 +109,7 @@ public:
 		{
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < count; i++) {
-		    presets.push_back(([&]() {
-		    auto value = std::make_shared<CameraPreset>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    presets.push_back(stream.readObject<CameraPreset>());
 		}
 		}
     }

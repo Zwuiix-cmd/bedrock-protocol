@@ -54,17 +54,13 @@ public:
         preset = stream.readUnsignedInt().value_or(0);
         ignoreStartingValuesComponent = stream.readBool().value_or(false);
         ease = stream.readOptional([&]() {
-            auto value = std::make_shared<CameraSetInstructionEase>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CameraSetInstructionEase>();
         });
         cameraPosition = stream.readOptional([&]() {
             return stream.readVec3().value_or(glm::vec3(0.0f));
         });
         rotation = stream.readOptional([&]() {
-            auto value = std::make_shared<CameraSetInstructionRotation>();
-            value->read(stream);
-            return value;
+            return stream.readObject<CameraSetInstructionRotation>();
         });
         facingPosition = stream.readOptional([&]() {
             return stream.readVec3().value_or(glm::vec3(0.0f));

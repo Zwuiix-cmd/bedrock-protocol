@@ -112,21 +112,13 @@ public:
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				trimPatterns.push_back(([&]() {
-				    auto value = std::make_shared<TrimPattern>();
-				    value->read(stream);
-				    return value;
-				}()));
+				trimPatterns.push_back(stream.readObject<TrimPattern>());
 		    }
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
 		    for (std::size_t i = 0; (i < count); ++i) {
-				trimMaterials.push_back(([&]() {
-				    auto value = std::make_shared<TrimMaterial>();
-				    value->read(stream);
-				    return value;
-				}()));
+				trimMaterials.push_back(stream.readObject<TrimMaterial>());
 		    }
 		}
     }

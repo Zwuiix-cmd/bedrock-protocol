@@ -109,11 +109,7 @@ public:
 		{
 		auto count = stream.readUnsignedVarInt().value_or(0);
 		for (std::size_t i = 0; i < count; i++) {
-		    entries.push_back(([&]() {
-		    auto value = std::make_shared<FeatureRegistryPacketEntry>();
-		    value->read(stream);
-		    return value;
-		}()));
+		    entries.push_back(stream.readObject<FeatureRegistryPacketEntry>());
 		}
 		}
     }

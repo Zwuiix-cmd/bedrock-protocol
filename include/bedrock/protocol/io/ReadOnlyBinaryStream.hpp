@@ -84,6 +84,7 @@ public:
 
     // -- state --
     [[nodiscard]] bool hasOverflowed() const noexcept { return overflowed; }
+    void markOverflowed() noexcept { overflowed = true; }
     [[nodiscard]] std::size_t position() const noexcept { return readPointer; }
     [[nodiscard]] std::size_t size() const noexcept { return bufferSize; }
     [[nodiscard]] std::string_view data() const noexcept {
@@ -234,30 +235,24 @@ public:
         auto sizeOpt = readUnsignedVarInt();
         if (!sizeOpt) return std::nullopt;
         const uint32_t len = *sizeOpt;
+        if (readPointer > bufferSize || static_cast<std::size_t>(len) > bufferSize - readPointer) {
+            overflowed = true;
+            return std::nullopt;
+        }
         if (len == 0) return std::string_view{};
-        if (readPointer + len > bufferSize) { overflowed = true; return std::nullopt; }
         std::string_view view(reinterpret_cast<const char*>(bufferData + readPointer), len);
         readPointer += len;
         return view;
     }
 
     inline bool readString(std::string& out) noexcept {
-        auto sizeOpt = readUnsignedVarInt();
-        if (!sizeOpt) return false;
-        const uint32_t len = *sizeOpt;
-
-        if (static_cast<std::size_t>(len) > bufferSize - readPointer) {
-            overflowed = true;
-            return false;
-        }
-
-        if (len == 0) {
+        const auto view = readStringView();
+        if (!view) return false;
+        if (view->empty()) {
             out.clear();
             return true;
         }
-
-        out.assign(reinterpret_cast<const char*>(bufferData + readPointer), len);
-        readPointer += len;
+        out.assign(view->data(), view->size());
         return true;
     }
 
@@ -291,13 +286,24 @@ public:
     }
 
     inline std::optional<std::string> readByteArray(std::size_t len) noexcept {
-        if (len > bufferSize - readPointer) {
+        const auto view = readByteArrayView(len);
+        if (!view) return std::nullopt;
+        if (view->empty()) return std::string{};
+        return std::string(view->data(), view->size());
+    }
+
+    inline std::optional<std::string_view> readByteArrayView(std::size_t len) noexcept {
+        if (readPointer > bufferSize || len > bufferSize - readPointer) {
             overflowed = true;
             return std::nullopt;
         }
-        std::string value(reinterpret_cast<const char*>(bufferData + readPointer), len);
+        if (len == 0) return std::string_view{};
+        const std::string_view view(
+            reinterpret_cast<const char*>(bufferData + readPointer),
+            len
+        );
         readPointer += len;
-        return value;
+        return view;
     }
 
     inline std::optional<uint32_t> readUnsignedVarInt() noexcept {

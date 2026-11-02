@@ -212,17 +212,16 @@ public:
     }
 
     inline void writeUnsignedVarInt(uint32_t value) {
-        while (true) {
+        std::array<char, 5> bytes{};
+        std::size_t count = 0;
+        do {
             uint8_t byte = static_cast<uint8_t>(value & 0x7Fu);
             value >>= 7;
-            if (value != 0u) {
-                byte |= 0x80u;
-                writeUnsignedByteFast(byte);
-            } else {
-                writeUnsignedByteFast(byte);
-                break;
-            }
-        }
+            if (value != 0u) byte |= 0x80u;
+            bytes[count++] = static_cast<char>(byte);
+        } while (value != 0u);
+        ownedBuffer.append(bytes.data(), count);
+        refreshFromOwned();
     }
 
     inline void writeVarLong(int64_t value) {
@@ -231,17 +230,16 @@ public:
     }
 
     inline void writeUnsignedVarLong(uint64_t value) {
-        while (true) {
+        std::array<char, 10> bytes{};
+        std::size_t count = 0;
+        do {
             uint8_t byte = static_cast<uint8_t>(value & 0x7Fu);
             value >>= 7;
-            if (value != 0ull) {
-                byte |= 0x80u;
-                writeUnsignedByteFast(byte);
-            } else {
-                writeUnsignedByteFast(byte);
-                break;
-            }
-        }
+            if (value != 0ull) byte |= 0x80u;
+            bytes[count++] = static_cast<char>(byte);
+        } while (value != 0ull);
+        ownedBuffer.append(bytes.data(), count);
+        refreshFromOwned();
     }
 
     template <typename Enum>
@@ -289,14 +287,17 @@ public:
 
     inline void writeString(std::string_view buffer) {
         uint32_t length = static_cast<uint32_t>(buffer.size());
+        std::array<char, 5> prefix{};
+        std::size_t prefixSize = 0;
         do {
             uint8_t byte = static_cast<uint8_t>(length & 0x7Fu);
             length >>= 7;
             if (length != 0u) byte |= 0x80u;
-            ownedBuffer.push_back(static_cast<char>(byte));
-            if (length == 0u) break;
-        } while (true);
+            prefix[prefixSize++] = static_cast<char>(byte);
+        } while (length != 0u);
 
+        ownedBuffer.reserve(ownedBuffer.size() + prefixSize + buffer.size());
+        ownedBuffer.append(prefix.data(), prefixSize);
         if (!buffer.empty()) ownedBuffer.append(buffer.data(), buffer.size());
         refreshFromOwned();
     }
@@ -390,14 +391,6 @@ public:
     // If you need the ReadOnlyBinaryStream view to reflect new owned buffer,
     // call refreshFromOwned() (BinaryStream already calls it after writes).
 private:
-    // helper: write a single unsigned byte appended to ownedBuffer (fast)
-    inline void writeUnsignedByteFast(uint8_t value) {
-        // append single byte
-        ownedBuffer.push_back(static_cast<char>(value));
-        // update pointer/size (cheap)
-        refreshFromOwned();
-    }
-
     static inline uint8_t hexValue(char value) noexcept {
         if (value >= '0' && value <= '9') return static_cast<uint8_t>(value - '0');
         if (value >= 'a' && value <= 'f') return static_cast<uint8_t>(value - 'a' + 10);

@@ -254,7 +254,13 @@ void run(Expect&& expect) {
         bool roundtripSucceeded = false;
         for (const auto fill : std::array<uint8_t, 5>{0, 1, 2, 9, 17}) {
             const auto candidate = PacketPool::createPacket(id);
-            const std::string fixture(4096, static_cast<char>(fill));
+            std::string fixture(4096, static_cast<char>(fill));
+            if (id == PacketIds::Login) {
+                BinaryStream loginFixture;
+                loginFixture.writeUnsignedIntBE(924);
+                loginFixture.writeString(std::string(2 * sizeof(uint32_t), '\0'));
+                fixture = loginFixture.getBuffer();
+            }
             ReadOnlyBinaryStream input(fixture);
             try {
                 candidate->read(input);

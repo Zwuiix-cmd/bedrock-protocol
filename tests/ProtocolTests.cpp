@@ -1,5 +1,6 @@
 #include <bedrock/protocol/CameraInstructionPacket.hpp>
 #include <bedrock/protocol/InventoryTransactionPacket.hpp>
+#include <bedrock/protocol/LoginPacket.hpp>
 #include <bedrock/protocol/PacketIds.hpp>
 #include <bedrock/protocol/PlayerAuthInputPacket.hpp>
 #include <bedrock/protocol/SetHudPacket.hpp>
@@ -73,6 +74,40 @@ void testSignedVarInts() {
         expect(decoded.has_value() && decoded.value() == value, "signed VarInt roundtrip failed");
         expect(!input.hasOverflowed(), "signed VarInt unexpectedly overflowed");
     }
+}
+
+void testStringViewsAndLoginPacket() {
+    const std::string stringValue = "connection-request";
+    BinaryStream stringOutput;
+    stringOutput.writeString(stringValue);
+
+    ReadOnlyBinaryStream stringInput(stringOutput.getBuffer());
+    const auto stringView = stringInput.readStringView();
+    expect(stringView.has_value() && *stringView == stringValue, "string view did not decode");
+    expect(stringInput.position() == stringInput.size(), "string view left unread bytes");
+
+    const std::string byteArrayValue = "jwt-payload";
+    ReadOnlyBinaryStream byteArrayInput(byteArrayValue);
+    const auto byteArrayView = byteArrayInput.readByteArrayView(byteArrayValue.size());
+    expect(byteArrayView.has_value() && *byteArrayView == byteArrayValue, "byte array view did not decode");
+    expect(byteArrayInput.position() == byteArrayInput.size(), "byte array view left unread bytes");
+
+    LoginPacket packet;
+    packet.protocol = 924;
+    packet.authInfoJson = "{\"DisplayName\":\"Kodiak\"}";
+    packet.clientDataJwt = "header.payload.signature";
+
+    BinaryStream output;
+    packet.write(output);
+
+    LoginPacket decoded;
+    ReadOnlyBinaryStream input(output.getBuffer());
+    decoded.read(input);
+    expect(!input.hasOverflowed(), "valid Login packet overflowed");
+    expect(input.position() == input.size(), "valid Login packet left unread bytes");
+    expect(decoded.protocol == packet.protocol, "Login protocol changed");
+    expect(decoded.authInfoJson == packet.authInfoJson, "Login auth info changed");
+    expect(decoded.clientDataJwt == packet.clientDataJwt, "Login client data changed");
 }
 
 InventoryTransactionPacket makePacket(InventoryTransactionPacket::Type type) {
@@ -348,6 +383,7 @@ void testPacketPool() {
 int main() {
     try {
         testSignedVarInts();
+        testStringViewsAndLoginPacket();
         testInventoryTransactionTypes();
         testStackRequestAndResponseIds();
         testPlayerAuthInputBlockActions();

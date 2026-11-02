@@ -92,6 +92,54 @@ public:
     inline void writeUnsignedInt(uint32_t value) { writePrimitive<uint32_t>(value); }
     inline void writeUnsignedLong(uint64_t value) { writePrimitive<uint64_t>(value); }
 
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeByte(Enum value) {
+        writeByte(static_cast<int8_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeShort(Enum value) {
+        writeShort(static_cast<int16_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeInt(Enum value) {
+        writeInt(static_cast<int32_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeLong(Enum value) {
+        writeLong(static_cast<int64_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedByte(Enum value) {
+        writeUnsignedByte(static_cast<uint8_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedShort(Enum value) {
+        writeUnsignedShort(static_cast<uint16_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedInt(Enum value) {
+        writeUnsignedInt(static_cast<uint32_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedLong(Enum value) {
+        writeUnsignedLong(static_cast<uint64_t>(value));
+    }
+
     inline void writeShortBE(int16_t value) { writeUnsignedShortBE(static_cast<uint16_t>(value)); }
 
     inline void writeUnsignedShortBE(uint16_t value) {
@@ -151,6 +199,12 @@ public:
         writeUnsignedVarInt(uv);
     }
 
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeVarInt(Enum value) {
+        writeVarInt(static_cast<int32_t>(value));
+    }
+
     inline void writeUnsignedVarInt(uint32_t value) {
         while (true) {
             uint8_t byte = static_cast<uint8_t>(value & 0x7Fu);
@@ -182,6 +236,24 @@ public:
                 break;
             }
         }
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedVarInt(Enum value) {
+        writeUnsignedVarInt(static_cast<uint32_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeVarLong(Enum value) {
+        writeVarLong(static_cast<int64_t>(value));
+    }
+
+    template <typename Enum>
+    requires std::is_enum_v<Enum>
+    inline void writeUnsignedVarLong(Enum value) {
+        writeUnsignedVarLong(static_cast<uint64_t>(value));
     }
 
     inline void writeFloat(float value) { writePrimitive<float>(value); }

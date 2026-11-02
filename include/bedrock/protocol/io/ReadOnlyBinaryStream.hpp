@@ -27,6 +27,13 @@ requires std::is_enum_v<Enum>
 
 class ReadOnlyBinaryStream {
 public:
+    template <typename T>
+    T readValue() {
+        T value;
+        value.read(*this);
+        return value;
+    }
+
     // -- constructors --
     ReadOnlyBinaryStream() noexcept {
         setBuffer(nullptr, 0, false);

@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(static_cast<std::underlying_type_t<ArmorSlot>>(slot));
+		stream.writeVarInt(magic_enum::enum_integer(slot));
 		stream.writeUnsignedShort(damage);
     }
 };

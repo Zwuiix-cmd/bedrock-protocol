@@ -122,7 +122,7 @@ public:
 
     float intensity;
     float duration;
-    uint8_t shakeType;
+    Type shakeType;
     Action shakeAction;
 
 public:
@@ -133,14 +133,14 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		intensity = stream.readFloat().value_or(0.0f);
 		duration = stream.readFloat().value_or(0.0f);
-		shakeType = stream.readUnsignedByte().value_or(0);
+		shakeType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
 		shakeAction = static_cast<Action>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeFloat(intensity);
 		stream.writeFloat(duration);
-		stream.writeUnsignedByte(shakeType);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(shakeAction));
+		stream.writeUnsignedByte(magic_enum::enum_integer(shakeType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(shakeAction));
     }
 };

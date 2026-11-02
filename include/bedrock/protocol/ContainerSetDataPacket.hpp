@@ -110,17 +110,19 @@ public:
     }
 
 public:
-    static constexpr int64_t PROPERTY_FURNACE_SMELT_PROGRESS = 0;
-    static constexpr int64_t PROPERTY_FURNACE_REMAINING_FUEL_TIME = 1;
-    static constexpr int64_t PROPERTY_FURNACE_MAX_FUEL_TIME = 2;
-    static constexpr int64_t PROPERTY_FURNACE_STORED_XP = 3;
-    static constexpr int64_t PROPERTY_FURNACE_FUEL_AUX = 4;
-    static constexpr int64_t PROPERTY_BREWING_STAND_BREW_TIME = 0;
-    static constexpr int64_t PROPERTY_BREWING_STAND_FUEL_AMOUNT = 1;
-    static constexpr int64_t PROPERTY_BREWING_STAND_FUEL_TOTAL = 2;
+    enum class Property : uint8_t {
+        FurnaceSmeltProgress = 0,
+        FurnaceRemainingFuelTime = 1,
+        FurnaceMaxFuelTime = 2,
+        FurnaceStoredXp = 3,
+        FurnaceFuelAux = 4,
+        BrewingStandBrewTime = 0,
+        BrewingStandFuelAmount = 1,
+        BrewingStandFuelTotal = 2,
+    };
 
     uint8_t windowId;
-    int32_t property;
+    Property property;
     int32_t value;
 
 public:
@@ -130,13 +132,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		windowId = stream.readUnsignedByte().value_or(0);
-		property = stream.readVarInt().value_or(0);
+		property = static_cast<Property>(stream.readVarInt().value_or(0));
 		value = stream.readVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedByte(windowId);
-		stream.writeVarInt(property);
+		stream.writeVarInt(magic_enum::enum_integer(property));
 		stream.writeVarInt(value);
     }
 };

@@ -32,6 +32,6 @@ public:
 
     virtual void write(BinaryStream& stream) const {
         stream.writeFloat(duration);
-        stream.writeVarInt(static_cast<int32_t>(type));
+        stream.writeVarInt(magic_enum::enum_integer(type));
     }
 };

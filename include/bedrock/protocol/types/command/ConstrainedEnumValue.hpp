@@ -16,10 +16,12 @@
 
 class ConstrainedEnumValue {
 public:
-    static constexpr int64_t REQUIRES_CHEATS_ENABLED = 1;
-    static constexpr int64_t REQUIRES_ELEVATED_PERMISSIONS = 2;
-    static constexpr int64_t REQUIRES_HOST_PERMISSIONS = 4;
-    static constexpr int64_t REQUIRES_ALLOW_ALIASES = 8;
+    enum class Requires : uint8_t {
+        CheatsEnabled = 1,
+        ElevatedPermissions = 2,
+        HostPermissions = 4,
+        AllowAliases = 8,
+    };
 
     std::string value;
     std::vector<int32_t> constraints;

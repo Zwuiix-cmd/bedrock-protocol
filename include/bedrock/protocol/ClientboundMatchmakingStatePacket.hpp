@@ -134,7 +134,7 @@ public:
 
     void write(BinaryStream& stream) override {
         stream.writeString(destinationName);
-        stream.writeVarInt(static_cast<int32_t>(state));
+        stream.writeVarInt(magic_enum::enum_integer(state));
         stream.writeOptional(options, [&](const auto& optionalValue) {
 			if (optionalValue) optionalValue->write(stream);
 		});

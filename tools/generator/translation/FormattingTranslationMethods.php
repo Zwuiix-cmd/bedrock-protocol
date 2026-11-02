@@ -11,7 +11,7 @@ trait FormattingTranslationMethods
 {
 private function indentLines(array $lines, int $indent): string
     {
-        $prefix = str_repeat('    ', $indent);
+        $prefix = str_repeat("\t", $indent);
         return implode("\n", array_map(static fn (string $line): string => $prefix . $line, $lines));
     }
 

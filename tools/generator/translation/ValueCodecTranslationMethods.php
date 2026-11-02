@@ -222,7 +222,7 @@ private function fallbackWriteValue(?string $type, ?string $doc, string $value, 
         }
         $referenced = $this->findDeclaration($short);
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
-            return 'stream.writeVarInt(static_cast<int32_t>(' . $value . '));';
+            return 'stream.writeVarInt(magic_enum::enum_integer(' . $value . '));';
         }
         if ($referenced !== null && in_array($referenced['kind'], ['class', 'interface'], true)) {
             return 'if (' . $value . ') ' . $value . '->write(stream);';

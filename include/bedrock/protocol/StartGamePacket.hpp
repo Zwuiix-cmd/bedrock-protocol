@@ -217,7 +217,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeActorUniqueID(actorUniqueId);
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeVarInt(static_cast<std::underlying_type_t<GameMode>>(playerGamemode));
+		stream.writeVarInt(magic_enum::enum_integer(playerGamemode));
 		stream.writeVec3(playerPosition);
 		stream.writeFloat(pitch);
 		stream.writeFloat(yaw);

@@ -78,10 +78,10 @@ public function expression(?Node $expression, array $declaration, ?array $method
                         || $enumType === 'Type'
                         || $enumType === 'Category'
                         || ($enumDeclaration !== null && $this->isEnumLikeDeclaration($enumDeclaration))) {
-                        return 'static_cast<std::underlying_type_t<' . $enumType . '>>(' . $object . ')';
+                        return 'magic_enum::enum_integer(' . $object . ')';
                     }
                 }
-                return 'static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(' . $object . ')>>>(' . $object . ')';
+                return 'magic_enum::enum_integer(' . $object . ')';
             }
             return $this->coerceVariantAlternative(
                 $expression,
@@ -343,9 +343,9 @@ public function expression(?Node $expression, array $declaration, ?array $method
                     . ')';
             }
             $value = $this->expression($expression->expr, $declaration, $method, $this->assignmentCPPType($expression->var, $declaration));
-            $enumType = $this->enumPropertyType($expression->var, $declaration)
-                ?? $this->assignmentCPPType($expression->var, $declaration);
-            $isEnumTarget = in_array($enumType, ['Action', 'BuildPlatform', 'Type', 'Category'], true)
+            $propertyEnumType = $this->enumPropertyType($expression->var, $declaration);
+            $enumType = $propertyEnumType ?? $this->assignmentCPPType($expression->var, $declaration);
+            $isEnumTarget = $propertyEnumType !== null
                 || ($enumType !== null
                     && str_contains($enumType, '::')
                     && !str_starts_with($enumType, 'std::')

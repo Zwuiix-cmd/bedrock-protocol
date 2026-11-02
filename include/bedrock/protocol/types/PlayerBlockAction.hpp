@@ -37,10 +37,10 @@ struct PlayerBlockAction {
 
     static bool isValidActionType(int32_t value) noexcept {
         return
-            value == static_cast<int32_t>(PlayerAction::StopBreak)
+            value == static_cast<int32_t>(PlayerAction::Stop::Break)
             || value == static_cast<int32_t>(PlayerAction::AbortBreak)
-            || value == static_cast<int32_t>(PlayerAction::StartBreak)
-            || value == static_cast<int32_t>(PlayerAction::CrackBreak)
+            || value == static_cast<int32_t>(PlayerAction::Start::Break)
+            || value == static_cast<int32_t>(PlayerAction::Crack::Break)
             || value == static_cast<int32_t>(PlayerAction::PredictDestroyBlock)
             || value == static_cast<int32_t>(PlayerAction::ContinueDestroyBlock);
     }

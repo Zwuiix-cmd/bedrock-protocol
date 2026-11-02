@@ -114,12 +114,14 @@ public:
         Malformed = 0,
     };
 
-    static constexpr int64_t SEVERITY_WARNING = 0;
-    static constexpr int64_t SEVERITY_FINAL_WARNING = 1;
-    static constexpr int64_t SEVERITY_TERMINATING_CONNECTION = 2;
+    enum class Severity : uint8_t {
+        Warning = 0,
+        FinalWarning = 1,
+        TerminatingConnection = 2,
+    };
 
     Type type;
-    int32_t severity;
+    Severity severity;
     int32_t packetId;
     std::string message;
 
@@ -130,14 +132,14 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		type = static_cast<Type>(stream.readVarInt().value_or(0));
-		severity = stream.readVarInt().value_or(0);
+		severity = static_cast<Severity>(stream.readVarInt().value_or(0));
 		packetId = stream.readVarInt().value_or(0);
 		message = stream.readString().value_or("");
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<Type>>(type));
-		stream.writeVarInt(severity);
+		stream.writeVarInt(magic_enum::enum_integer(type));
+		stream.writeVarInt(magic_enum::enum_integer(severity));
 		stream.writeVarInt(packetId);
 		stream.writeString(message);
     }

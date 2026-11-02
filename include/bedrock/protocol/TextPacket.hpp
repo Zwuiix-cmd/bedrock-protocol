@@ -153,7 +153,7 @@ public:
 			case Type::Chat:
 			case Type::Whisper:
 			case Type::Announcement: {
-				if ((category != static_cast<std::underlying_type_t<Category>>(Category::AuthoredMessage))) {
+				if ((category != magic_enum::enum_integer(Category::AuthoredMessage))) {
 					throw std::exception{};
 				}
 				sourceName = stream.readString().value_or("");
@@ -166,7 +166,7 @@ public:
 			case Type::JsonWhisper:
 			case Type::Json:
 			case Type::JsonAnnouncement: {
-				if ((category != static_cast<std::underlying_type_t<Category>>(Category::MessageOnly))) {
+				if ((category != magic_enum::enum_integer(Category::MessageOnly))) {
 					throw std::exception{};
 				}
 				message = stream.readString().value_or("");
@@ -175,7 +175,7 @@ public:
 			case Type::Translation:
 			case Type::Popup:
 			case Type::JukeboxPopup: {
-				if ((category != static_cast<std::underlying_type_t<Category>>(Category::MessageWithParameters))) {
+				if ((category != magic_enum::enum_integer(Category::MessageWithParameters))) {
 					throw std::exception{};
 				}
 				message = stream.readString().value_or("");
@@ -196,22 +196,22 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeBool(needsTranslation);
 		auto category = ([&]() -> Category {
-		    if (type == Type::Raw) return Category::MessageOnly;
-		    if (type == Type::Tip) return Category::MessageOnly;
-		    if (type == Type::System) return Category::MessageOnly;
-		    if (type == Type::JsonWhisper) return Category::MessageOnly;
-		    if (type == Type::JsonAnnouncement) return Category::MessageOnly;
-		    if (type == Type::Json) return Category::MessageOnly;
-		    if (type == Type::Chat) return Category::AuthoredMessage;
-		    if (type == Type::Whisper) return Category::AuthoredMessage;
-		    if (type == Type::Announcement) return Category::AuthoredMessage;
-		    if (type == Type::Translation) return Category::MessageWithParameters;
-		    if (type == Type::Popup) return Category::MessageWithParameters;
-		    if (type == Type::JukeboxPopup) return Category::MessageWithParameters;
-		    throw std::exception{};
+			if (type == Type::Raw) return Category::MessageOnly;
+			if (type == Type::Tip) return Category::MessageOnly;
+			if (type == Type::System) return Category::MessageOnly;
+			if (type == Type::JsonWhisper) return Category::MessageOnly;
+			if (type == Type::JsonAnnouncement) return Category::MessageOnly;
+			if (type == Type::Json) return Category::MessageOnly;
+			if (type == Type::Chat) return Category::AuthoredMessage;
+			if (type == Type::Whisper) return Category::AuthoredMessage;
+			if (type == Type::Announcement) return Category::AuthoredMessage;
+			if (type == Type::Translation) return Category::MessageWithParameters;
+			if (type == Type::Popup) return Category::MessageWithParameters;
+			if (type == Type::JukeboxPopup) return Category::MessageWithParameters;
+			throw std::exception{};
 		}());
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Category>>(category));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
+		stream.writeUnsignedByte(magic_enum::enum_integer(category));
+		stream.writeUnsignedByte(magic_enum::enum_integer(type));
 		switch (type) {
 			case Type::Chat:
 			case Type::Whisper:

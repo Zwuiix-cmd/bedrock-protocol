@@ -30,7 +30,7 @@ public:
     ) :
         unlockingContext(unlockingContextValue),
         unlockingIngredients(unlockingIngredientsValue) {
-		if (((unlockingContextValue != static_cast<std::underlying_type_t<RecipeUnlockingContext>>(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
+		if (((unlockingContextValue != magic_enum::enum_integer(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr))) {
 			throw std::exception{};
 		}
     }
@@ -49,7 +49,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(static_cast<int32_t>(unlockingContext));
+        stream.writeVarInt(magic_enum::enum_integer(unlockingContext));
         stream.writeOptional(unlockingIngredients, [&](const auto& optionalValue) {
 			stream.writeList(optionalValue, [&](const auto& item) {
 			if (item) item->write(stream);

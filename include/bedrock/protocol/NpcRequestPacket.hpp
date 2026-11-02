@@ -110,16 +110,18 @@ public:
     }
 
 public:
-    static constexpr int64_t REQUEST_SET_ACTIONS = 0;
-    static constexpr int64_t REQUEST_EXECUTE_ACTION = 1;
-    static constexpr int64_t REQUEST_EXECUTE_CLOSING_COMMANDS = 2;
-    static constexpr int64_t REQUEST_SET_NAME = 3;
-    static constexpr int64_t REQUEST_SET_SKIN = 4;
-    static constexpr int64_t REQUEST_SET_INTERACTION_TEXT = 5;
-    static constexpr int64_t REQUEST_EXECUTE_OPENING_COMMANDS = 6;
+    enum class Request : uint8_t {
+        SetActions = 0,
+        ExecuteAction = 1,
+        ExecuteClosingCommands = 2,
+        SetName = 3,
+        SetSkin = 4,
+        SetInteractionText = 5,
+        ExecuteOpeningCommands = 6,
+    };
 
     uint64_t actorRuntimeId;
-    uint8_t requestType;
+    Request requestType;
     std::string commandString;
     uint8_t actionIndex;
     std::string sceneName;
@@ -131,7 +133,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		requestType = stream.readUnsignedByte().value_or(0);
+		requestType = static_cast<Request>(stream.readUnsignedByte().value_or(0));
 		commandString = stream.readString().value_or("");
 		actionIndex = stream.readUnsignedByte().value_or(0);
 		sceneName = stream.readString().value_or("");
@@ -139,7 +141,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeUnsignedByte(requestType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(requestType));
 		stream.writeString(commandString);
 		stream.writeUnsignedByte(actionIndex);
 		stream.writeString(sceneName);

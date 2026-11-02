@@ -148,7 +148,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<Type>>(type));
+		stream.writeVarInt(magic_enum::enum_integer(type));
 		stream.writeString(text);
 		stream.writeVarInt(fadeInTime);
 		stream.writeVarInt(stayTime);

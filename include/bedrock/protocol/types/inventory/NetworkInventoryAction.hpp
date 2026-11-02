@@ -17,27 +17,32 @@
 
 class NetworkInventoryAction {
 public:
-    static constexpr int64_t SOURCE_CONTAINER = 0;
-    static constexpr int64_t SOURCE_GLOBAL = 1;
-    static constexpr int64_t SOURCE_WORLD = 2;
-    static constexpr int64_t SOURCE_CREATIVE = 3;
-    static constexpr int64_t SOURCE_TODO = 99999;
-    static constexpr int64_t SOURCE_TYPE_CRAFTING_RESULT = -4;
-    static constexpr int64_t SOURCE_TYPE_CRAFTING_USE_INGREDIENT = -5;
-    static constexpr int64_t SOURCE_TYPE_ANVIL_RESULT = -12;
-    static constexpr int64_t SOURCE_TYPE_ANVIL_OUTPUT = -13;
-    static constexpr int64_t SOURCE_TYPE_ENCHANT_OUTPUT = -17;
-    static constexpr int64_t SOURCE_TYPE_TRADING_INPUT_1 = -20;
-    static constexpr int64_t SOURCE_TYPE_TRADING_INPUT_2 = -21;
-    static constexpr int64_t SOURCE_TYPE_TRADING_USE_INPUTS = -22;
-    static constexpr int64_t SOURCE_TYPE_TRADING_OUTPUT = -23;
-    static constexpr int64_t SOURCE_TYPE_BEACON = -24;
-    static constexpr int64_t ACTION_MAGIC_SLOT_CREATIVE_DELETE_ITEM = 0;
-    static constexpr int64_t ACTION_MAGIC_SLOT_CREATIVE_CREATE_ITEM = 1;
-    static constexpr int64_t ACTION_MAGIC_SLOT_DROP_ITEM = 0;
-    static constexpr int64_t ACTION_MAGIC_SLOT_PICKUP_ITEM = 1;
+    enum class Source : int64_t {
+        Container = 0,
+        Global = 1,
+        World = 2,
+        Creative = 3,
+        Todo = 99999,
+        TypeCraftingResult = -4,
+        TypeCraftingUseIngredient = -5,
+        TypeAnvilResult = -12,
+        TypeAnvilOutput = -13,
+        TypeEnchantOutput = -17,
+        TypeTradingInput1 = -20,
+        TypeTradingInput2 = -21,
+        TypeTradingUseInputs = -22,
+        TypeTradingOutput = -23,
+        TypeBeacon = -24,
+    };
 
-    uint32_t sourceType;
+    enum class Action : uint8_t {
+        MagicSlotCreativeDeleteItem = 0,
+        MagicSlotCreativeCreateItem = 1,
+        MagicSlotDropItem = 0,
+        MagicSlotPickupItem = 1,
+    };
+
+    Source sourceType;
     std::optional<int32_t> windowId;
     std::optional<int32_t> sourceFlags;
     uint32_t inventorySlot;
@@ -47,7 +52,7 @@ public:
     NetworkInventoryAction() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        stream.writeUnsignedVarInt(sourceType);
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
 			stream.writeInt(optionalValue);
@@ -60,7 +65,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(sourceType);
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
         stream.writeUnsignedVarInt(inventorySlot);
         stream.writeOptional(windowId, [&](const auto& optionalValue) {
 			stream.writeInt(optionalValue);

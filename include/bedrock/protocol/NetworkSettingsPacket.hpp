@@ -111,8 +111,10 @@ public:
     }
 
 public:
-    static constexpr int64_t COMPRESS_NOTHING = 0;
-    static constexpr int64_t COMPRESS_EVERYTHING = 1;
+    enum class Compress : uint8_t {
+        Nothing = 0,
+        Everything = 1,
+    };
 
     uint16_t compressionThreshold;
     CompressionAlgorithm compressionAlgorithm;
@@ -135,7 +137,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedShort(compressionThreshold);
-		stream.writeUnsignedShort(static_cast<std::underlying_type_t<CompressionAlgorithm>>(compressionAlgorithm));
+		stream.writeUnsignedShort(magic_enum::enum_integer(compressionAlgorithm));
 		stream.writeBool(enableClientThrottling);
 		stream.writeUnsignedByte(clientThrottleThreshold);
 		stream.writeFloat(clientThrottleScalar);

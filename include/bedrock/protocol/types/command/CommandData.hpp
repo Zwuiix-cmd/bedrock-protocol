@@ -84,7 +84,7 @@ public:
         stream.writeString(name);
         stream.writeString(description);
         stream.writeInt(flags);
-        stream.writeVarInt(static_cast<int32_t>(permission));
+        stream.writeVarInt(magic_enum::enum_integer(permission));
         stream.writeOptional(aliases, [&](const auto& optionalValue) {
 			if (optionalValue) optionalValue->write(stream);
 		});

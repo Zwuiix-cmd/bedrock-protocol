@@ -110,12 +110,14 @@ public:
     }
 
 public:
-    static constexpr int64_t EVENT_ADD = 1;
-    static constexpr int64_t EVENT_MODIFY = 2;
-    static constexpr int64_t EVENT_REMOVE = 3;
+    enum class Event : uint8_t {
+        Add = 1,
+        Modify = 2,
+        Remove = 3,
+    };
 
     uint64_t actorRuntimeId;
-    uint8_t eventId;
+    Event eventId;
     int32_t effectId;
     int32_t amplifier = 0;
     bool particles = true;
@@ -130,7 +132,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		eventId = stream.readUnsignedByte().value_or(0);
+		eventId = static_cast<Event>(stream.readUnsignedByte().value_or(0));
 		effectId = stream.readVarInt().value_or(0);
 		amplifier = stream.readVarInt().value_or(0);
 		particles = stream.readBool().value_or(false);
@@ -141,7 +143,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeUnsignedByte(eventId);
+		stream.writeUnsignedByte(magic_enum::enum_integer(eventId));
 		stream.writeVarInt(effectId);
 		stream.writeVarInt(amplifier);
 		stream.writeBool(particles);

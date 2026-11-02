@@ -120,7 +120,7 @@ public:
 
     std::string structureTemplateName;
     std::optional<std::shared_ptr<CompoundTag>> nbt;
-    uint8_t responseType;
+    Type responseType;
 
 public:
     std::string_view getName() override {
@@ -129,7 +129,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         structureTemplateName = stream.readString().value_or("");
-        responseType = stream.readUnsignedByte().value_or(0);
+        responseType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
         nbt = NetworkNbtSerializer::read(stream);
     }
 
@@ -139,6 +139,6 @@ public:
 		if (nbt.has_value()) {
 			NetworkNbtSerializer::write(stream, nbt.value());
 		}
-		stream.writeUnsignedByte(responseType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(responseType));
     }
 };

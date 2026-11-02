@@ -121,39 +121,39 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		entries = stream.readList([&]() {
-		            	auto action = magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(static_cast<ScorePacketEntryAction>(0));
-		            	auto innerType = stream.readString().value_or("");
-		            	if ((action != magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(innerType)).value_or(static_cast<ScorePacketEntryAction>(0)))) {
+					auto action = magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(stream.readUnsignedVarInt().value_or(0))).value_or(static_cast<ScorePacketEntryAction>(0));
+					auto innerType = stream.readString().value_or("");
+					if ((action != magic_enum::enum_cast<ScorePacketEntryAction>(std::string_view(innerType)).value_or(static_cast<ScorePacketEntryAction>(0)))) {
 				throw std::exception{};
 			}
-		            	auto entry = std::make_shared<ScorePacketEntry>();
-		            	entry->action = static_cast<ScorePacketEntryAction>(action);
-		            	entry->scoreboardId = stream.readVarLong().value_or(0);
-		            	if ((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::Remove))) {
+					auto entry = std::make_shared<ScorePacketEntry>();
+					entry->action = static_cast<ScorePacketEntryAction>(action);
+					entry->scoreboardId = stream.readVarLong().value_or(0);
+					if ((action == magic_enum::enum_integer(ScorePacketEntryAction::Remove))) {
 				entry->objectiveName = stream.readOptional([&]() {
 							return stream.readString().value_or("");
 						});
-			} else if (((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangePlayer)) || (action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangeEntity)))) {
+			} else if (((action == magic_enum::enum_integer(ScorePacketEntryAction::ChangePlayer)) || (action == magic_enum::enum_integer(ScorePacketEntryAction::ChangeEntity)))) {
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
 				entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
-			} else if ((action == static_cast<std::underlying_type_t<ScorePacketEntryAction>>(ScorePacketEntryAction::ChangeFakePlayer))) {
+			} else if ((action == magic_enum::enum_integer(ScorePacketEntryAction::ChangeFakePlayer))) {
 				entry->objectiveName = stream.readString().value_or("");
 				entry->score = stream.readInt().value_or(0);
 				entry->customName = stream.readString().value_or("");
 			} else {
 				throw std::exception{};
 			}
-		            	return;
-		        });
+					return;
+				});
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeList(entries, [&](const auto& entry) {
-		            	stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(entry->action)>>>(entry->action));
-		            	stream.writeString(static_cast<std::underlying_type_t<ScorePacketEntryAction>>(entry->action));
-		            	stream.writeVarLong(entry->scoreboardId);
-		            	if ((entry->action == ScorePacketEntryAction::Remove)) {
+					stream.writeUnsignedVarInt(magic_enum::enum_integer(entry->action));
+					stream.writeString(magic_enum::enum_integer(entry->action));
+					stream.writeVarLong(entry->scoreboardId);
+					if ((entry->action == ScorePacketEntryAction::Remove)) {
 				stream.writeOptional(entry->objectiveName, [&](const auto& value) {
 							stream.writeString(value);
 						});
@@ -168,6 +168,6 @@ public:
 			} else {
 				throw std::exception{};
 			}
-		        });
+				});
     }
 };

@@ -146,6 +146,6 @@ public:
         stream.writeOptional(floatOverrideValue, [&](const auto& optionalValue) {
 			stream.writeFloat(optionalValue);
 		});
-        stream.writeVarInt(static_cast<int32_t>(updateType));
+        stream.writeVarInt(magic_enum::enum_integer(updateType));
     }
 };

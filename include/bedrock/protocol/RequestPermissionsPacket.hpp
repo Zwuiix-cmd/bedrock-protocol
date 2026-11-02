@@ -111,14 +111,16 @@ public:
     }
 
 public:
-    static constexpr int64_t FLAG_BUILD = 1;
-    static constexpr int64_t FLAG_MINE = 2;
-    static constexpr int64_t FLAG_DOORS_AND_SWITCHES = 4;
-    static constexpr int64_t FLAG_OPEN_CONTAINERS = 8;
-    static constexpr int64_t FLAG_ATTACK_PLAYERS = 16;
-    static constexpr int64_t FLAG_ATTACK_MOBS = 32;
-    static constexpr int64_t FLAG_OPERATOR = 64;
-    static constexpr int64_t FLAG_TELEPORT = 128;
+    enum class Flag : uint8_t {
+        Build = 1,
+        Mine = 2,
+        DoorsAndSwitches = 4,
+        OpenContainers = 8,
+        AttackPlayers = 16,
+        AttackMobs = 32,
+        Operator = 64,
+        Teleport = 128,
+    };
 
     int64_t targetActorUniqueId;
     PlayerPermissions playerPermission;
@@ -137,7 +139,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeLong(targetActorUniqueId);
-		stream.writeVarInt(static_cast<std::underlying_type_t<PlayerPermissions>>(playerPermission));
+		stream.writeVarInt(magic_enum::enum_integer(playerPermission));
 		stream.writeUnsignedShort(customFlags);
     }
 };

@@ -110,14 +110,16 @@ public:
     }
 
 public:
-    static constexpr int64_t ROTATION_0 = 0;
-    static constexpr int64_t ROTATION_90 = 1;
-    static constexpr int64_t ROTATION_180 = 2;
-    static constexpr int64_t ROTATION_270 = 3;
+    enum class Rotation : uint8_t {
+        _0 = 0,
+        _90 = 1,
+        _180 = 2,
+        _270 = 3,
+    };
 
     int32_t maxTestsPerBatch;
     int32_t repeatCount;
-    uint8_t rotation;
+    Rotation rotation;
     bool stopOnFailure;
     glm::ivec3 testPosition;
     int32_t testsPerRow;
@@ -131,7 +133,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		maxTestsPerBatch = stream.readVarInt().value_or(0);
 		repeatCount = stream.readVarInt().value_or(0);
-		rotation = stream.readUnsignedByte().value_or(0);
+		rotation = static_cast<Rotation>(stream.readUnsignedByte().value_or(0));
 		stopOnFailure = stream.readBool().value_or(false);
 		testPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		testsPerRow = stream.readVarInt().value_or(0);
@@ -141,7 +143,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeVarInt(maxTestsPerBatch);
 		stream.writeVarInt(repeatCount);
-		stream.writeUnsignedByte(rotation);
+		stream.writeUnsignedByte(magic_enum::enum_integer(rotation));
 		stream.writeBool(stopOnFailure);
 		stream.writeSignedBlockPos(testPosition);
 		stream.writeVarInt(testsPerRow);

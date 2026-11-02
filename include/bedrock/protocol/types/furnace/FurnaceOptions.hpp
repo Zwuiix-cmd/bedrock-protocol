@@ -43,8 +43,8 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeVarInt(static_cast<std::underlying_type_t<FurnaceLeftTab>>(leftFurnaceTab));
+		stream.writeVarInt(magic_enum::enum_integer(leftFurnaceTab));
 		stream.writeBool(filtering);
-		stream.writeVarInt(static_cast<std::underlying_type_t<FurnaceLayout>>(layout));
+		stream.writeVarInt(magic_enum::enum_integer(layout));
     }
 };

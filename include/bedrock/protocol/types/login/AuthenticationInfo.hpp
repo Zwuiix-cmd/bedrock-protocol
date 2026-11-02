@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeInt(static_cast<std::underlying_type_t<::AuthenticationType>>(AuthenticationType));
+        stream.writeInt(magic_enum::enum_integer(AuthenticationType));
         stream.writeString(Certificate);
         stream.writeString(Token);
     }

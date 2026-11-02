@@ -128,7 +128,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeString(requestId);
-		stream.writeUnsignedInt(static_cast<std::underlying_type_t<AgentActionType>>(action));
+		stream.writeUnsignedInt(magic_enum::enum_integer(action));
 		stream.writeString(responseJson);
     }
 };

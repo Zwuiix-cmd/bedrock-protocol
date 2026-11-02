@@ -110,11 +110,13 @@ public:
     }
 
 public:
-    static constexpr int64_t GAME = 0;
-    static constexpr int64_t EDITOR = 1;
-    static constexpr int64_t TEST = 2;
+    enum class Type : uint8_t {
+        Game = 0,
+        Editor = 1,
+        Test = 2,
+    };
 
-    uint8_t type;
+    Type type;
 
 public:
     std::string_view getName() override {
@@ -122,10 +124,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		type = stream.readUnsignedByte().value_or(0);
+		type = static_cast<Type>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(type);
+		stream.writeUnsignedByte(magic_enum::enum_integer(type));
     }
 };

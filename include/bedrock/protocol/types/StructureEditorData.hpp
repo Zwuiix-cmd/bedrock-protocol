@@ -32,7 +32,7 @@ public:
     std::string structureDataField;
     bool includePlayers;
     bool showBoundingBox;
-    int32_t structureBlockType;
+    Type structureBlockType;
     std::shared_ptr<StructureSettings> structureSettings;
     uint8_t structureRedstoneSaveMode;
 
@@ -43,7 +43,7 @@ public:
         structureDataField = stream.readString().value_or("");
         includePlayers = stream.readBool().value_or(false);
         showBoundingBox = stream.readBool().value_or(false);
-        structureBlockType = stream.readVarInt().value_or(0);
+        structureBlockType = static_cast<Type>(stream.readVarInt().value_or(0));
         structureRedstoneSaveMode = stream.readUnsignedByte().value_or(0);
         filteredStructureName = stream.readOptional([&]() {
 			return stream.readString().value_or("");
@@ -60,7 +60,7 @@ public:
         stream.writeString(structureDataField);
         stream.writeBool(includePlayers);
         stream.writeBool(showBoundingBox);
-        stream.writeVarInt(structureBlockType);
+        stream.writeVarInt(magic_enum::enum_integer(structureBlockType));
         stream.writeUnsignedByte(structureRedstoneSaveMode);
         stream.writeOptional(filteredStructureName, [&](const auto& optionalValue) {
 			stream.writeString(optionalValue);

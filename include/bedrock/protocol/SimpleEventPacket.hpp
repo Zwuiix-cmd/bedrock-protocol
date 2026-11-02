@@ -116,7 +116,7 @@ public:
         UnlockWorldTemplateSettings = 3,
     };
 
-    uint16_t eventType;
+    Type eventType;
 
 public:
     std::string_view getName() override {
@@ -124,10 +124,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		eventType = stream.readUnsignedShort().value_or(0);
+		eventType = static_cast<Type>(stream.readUnsignedShort().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedShort(eventType);
+		stream.writeUnsignedShort(magic_enum::enum_integer(eventType));
     }
 };

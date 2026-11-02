@@ -110,18 +110,23 @@ public:
     }
 
 public:
-    static constexpr int64_t FLAG_NONE = 0;
-    static constexpr int64_t FLAG_NEIGHBORS = 1;
-    static constexpr int64_t FLAG_NETWORK = 2;
-    static constexpr int64_t FLAG_NOGRAPHIC = 4;
-    static constexpr int64_t FLAG_PRIORITY = 8;
-    static constexpr int64_t DATA_LAYER_NORMAL = 0;
-    static constexpr int64_t DATA_LAYER_LIQUID = 1;
+    enum class Flag : uint8_t {
+        None = 0,
+        Neighbors = 1,
+        Network = 2,
+        Nographic = 4,
+        Priority = 8,
+    };
+
+    enum class Data : uint8_t {
+        LayerNormal = 0,
+        LayerLiquid = 1,
+    };
 
     glm::ivec3 blockPosition;
     uint32_t blockRuntimeId;
-    uint32_t flags = 2;
-    uint32_t dataLayerId = 0;
+    Flag flags = Flag::Network;
+    Data dataLayerId = Data::LayerNormal;
 
 public:
     std::string_view getName() override {
@@ -131,14 +136,14 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
-		flags = stream.readUnsignedVarInt().value_or(0);
-		dataLayerId = stream.readUnsignedVarInt().value_or(0);
+		flags = static_cast<Flag>(stream.readUnsignedVarInt().value_or(0));
+		dataLayerId = static_cast<Data>(stream.readUnsignedVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeSignedBlockPos(blockPosition);
 		stream.writeUnsignedVarInt(blockRuntimeId);
-		stream.writeUnsignedVarInt(flags);
-		stream.writeUnsignedVarInt(dataLayerId);
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(flags));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(dataLayerId));
     }
 };

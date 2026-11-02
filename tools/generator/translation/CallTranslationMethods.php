@@ -87,7 +87,7 @@ private function methodCall(Node\Expr\MethodCall $call, array $declaration, ?arr
                 $this->recordUnsupported($declaration, $method ?? ['name' => 'expression', 'line' => $call->getStartLine()], 'string-backed enum ordinal conversion');
                 return 'std::monostate{}';
             }
-            return 'static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(' . $object . ')>>>(' . $object . ')';
+            return 'magic_enum::enum_integer(' . $object . ')';
         }
         if (in_array(strtolower($name), ['getx', 'gety', 'getz'], true)) {
             return $object . $this->accessOperator($call->var, $declaration) . strtolower(substr($name, 3));

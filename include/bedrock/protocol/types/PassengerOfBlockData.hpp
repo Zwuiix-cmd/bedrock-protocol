@@ -52,6 +52,6 @@ public:
 		stream.writeVec3(offset);
 		stream.writeFloat(rotation);
 		stream.writeFloat(rotationLimit);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<EmoteType>>(emoteType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(emoteType));
     }
 };

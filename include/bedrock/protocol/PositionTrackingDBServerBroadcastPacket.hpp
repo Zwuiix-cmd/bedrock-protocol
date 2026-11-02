@@ -134,7 +134,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(action));
+		stream.writeUnsignedByte(magic_enum::enum_integer(action));
 		stream.writeVarInt(trackingId);
 		NetworkNbtSerializer::write(stream, nbt);
     }

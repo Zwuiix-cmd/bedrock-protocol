@@ -110,12 +110,14 @@ public:
     }
 
 public:
-    static constexpr int64_t CANCEL_REASON_CLOSED = 0;
-    static constexpr int64_t CANCEL_REASON_USER_BUSY = 1;
+    enum class Cancel : uint8_t {
+        ReasonClosed = 0,
+        ReasonUserBusy = 1,
+    };
 
     uint32_t formId;
     std::optional<std::string> formData;
-    std::optional<int32_t> cancelReason;
+    Cancel cancelReason;
 
 public:
     std::string_view getName() override {
@@ -127,9 +129,9 @@ public:
 		formData = stream.readOptional([&]() {
 					return stream.readString().value_or("");
 				});
-		cancelReason = stream.readOptional([&]() {
+		cancelReason = static_cast<Cancel>(stream.readOptional([&]() {
 					return stream.readUnsignedByte().value_or(0);
-				});
+				}));
     }
 
     void write(BinaryStream& stream) override {

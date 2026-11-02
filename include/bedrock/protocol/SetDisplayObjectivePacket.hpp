@@ -110,8 +110,10 @@ public:
     }
 
 public:
-    static constexpr int64_t SORT_ORDER_ASCENDING = 0;
-    static constexpr int64_t SORT_ORDER_DESCENDING = 1;
+    enum class Sort : uint8_t {
+        OrderAscending = 0,
+        OrderDescending = 1,
+    };
 
     static constexpr std::string_view DISPLAY_SLOT_LIST = "list";
     static constexpr std::string_view DISPLAY_SLOT_SIDEBAR = "sidebar";
@@ -120,7 +122,7 @@ public:
     std::string objectiveName;
     std::string displayName;
     std::string criteriaName;
-    int32_t sortOrder;
+    Sort sortOrder;
 
 public:
     std::string_view getName() override {
@@ -132,7 +134,7 @@ public:
 		objectiveName = stream.readString().value_or("");
 		displayName = stream.readString().value_or("");
 		criteriaName = stream.readString().value_or("");
-		sortOrder = stream.readVarInt().value_or(0);
+		sortOrder = static_cast<Sort>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
@@ -140,6 +142,6 @@ public:
 		stream.writeString(objectiveName);
 		stream.writeString(displayName);
 		stream.writeString(criteriaName);
-		stream.writeVarInt(sortOrder);
+		stream.writeVarInt(magic_enum::enum_integer(sortOrder));
     }
 };

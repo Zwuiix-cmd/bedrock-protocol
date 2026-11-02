@@ -62,8 +62,8 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<SoundDataEventType>>(type));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<SoundDataEventType>>(type));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
+		stream.writeUnsignedByte(magic_enum::enum_integer(type));
 		switch (type) {
 			case SoundDataEventType::Stop:
 			case SoundDataEventType::Pause:

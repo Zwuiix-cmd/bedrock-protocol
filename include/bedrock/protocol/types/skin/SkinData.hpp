@@ -169,7 +169,7 @@ public:
         stream.writeList(animations, [&](const auto& item) {
 			if (item) item->write(stream);
 		});
-        stream.writeVarInt(static_cast<int32_t>(armSize));
+        stream.writeVarInt(magic_enum::enum_integer(armSize));
         stream.writeList(personaPieces, [&](const auto& item) {
 			if (item) item->write(stream);
 		});

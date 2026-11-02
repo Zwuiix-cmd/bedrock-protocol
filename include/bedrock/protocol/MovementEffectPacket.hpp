@@ -130,7 +130,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<MovementEffectType>>(effectType));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(effectType));
 		stream.writeUnsignedVarInt(duration);
 		stream.writeUnsignedVarLong(tick);
     }

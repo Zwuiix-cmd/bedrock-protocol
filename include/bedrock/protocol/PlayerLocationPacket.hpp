@@ -124,7 +124,7 @@ public:
 		actorUniqueId = stream.readActorUniqueID().value_or(0);
 		type = static_cast<PlayerLocationType>(stream.readUnsignedVarInt().value_or(0));
 		auto innerType = stream.readVarInt().value_or(0);
-		if ((innerType != static_cast<std::underlying_type_t<PlayerLocationType>>(type))) {
+		if ((innerType != magic_enum::enum_integer(type))) {
 			throw std::exception{};
 		}
 		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
@@ -134,8 +134,8 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorUniqueID(actorUniqueId);
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<PlayerLocationType>>(type));
-		stream.writeVarInt(static_cast<std::underlying_type_t<PlayerLocationType>>(type));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
+		stream.writeVarInt(magic_enum::enum_integer(type));
 		if ((type == PlayerLocationType::PlayerLocationCoordinates)) {
 			if ((!position)) {
 				throw std::exception{};

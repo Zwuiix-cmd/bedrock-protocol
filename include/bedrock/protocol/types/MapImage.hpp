@@ -16,8 +16,10 @@
 
 class MapImage {
 public:
-    static constexpr int64_t MAX_HEIGHT = 128;
-    static constexpr int64_t MAX_WIDTH = 128;
+    enum class Max : uint8_t {
+        Height = 128,
+        Width = 128,
+    };
 
     int32_t width;
     int32_t height;
@@ -37,10 +39,10 @@ public:
 		if ((!rowLength)) {
 			throw std::exception{};
 		}
-		if ((rowLength.value() > MAX_WIDTH)) {
+		if ((rowLength.value() > Max::Width)) {
 			throw std::exception{};
 		}
-		if ((pixelsValue.size() > MAX_HEIGHT)) {
+		if ((pixelsValue.size() > Max::Height)) {
 			throw std::exception{};
 		}
 		height = pixelsValue.size();
@@ -49,10 +51,10 @@ public:
     }
 
     static std::shared_ptr<MapImage> decode(ReadOnlyBinaryStream& stream, const int32_t& height, const int32_t& width) {
-		if ((width > MAX_WIDTH)) {
+		if ((width > Max::Width)) {
 			throw std::exception{};
 		}
-		if ((height > MAX_HEIGHT)) {
+		if ((height > Max::Height)) {
 			throw std::exception{};
 		}
 		auto pixels = std::vector<std::vector<uint32_t>>();

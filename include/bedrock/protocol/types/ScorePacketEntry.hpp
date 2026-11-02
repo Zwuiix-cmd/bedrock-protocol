@@ -54,6 +54,6 @@ public:
         stream.writeOptional(customName, [&](const auto& optionalValue) {
 			stream.writeString(optionalValue);
 		});
-        stream.writeVarInt(static_cast<int32_t>(action));
+        stream.writeVarInt(magic_enum::enum_integer(action));
     }
 };

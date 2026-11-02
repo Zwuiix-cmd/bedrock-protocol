@@ -110,12 +110,17 @@ public:
     }
 
 public:
-    static constexpr int64_t VALUE_TYPE_BOOL = 1;
-    static constexpr int64_t VALUE_TYPE_FLOAT = 2;
-    static constexpr int64_t ABILITY_FLYING = 9;
-    static constexpr int64_t ABILITY_NOCLIP = 17;
+    enum class Value : uint8_t {
+        TypeBool = 1,
+        TypeFloat = 2,
+    };
 
-    int32_t abilityId;
+    enum class Ability : uint8_t {
+        Flying = 9,
+        Noclip = 17,
+    };
+
+    Ability abilityId;
     std::variant<float, bool> abilityValue;
 
 public:
@@ -124,23 +129,23 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		abilityId = stream.readVarInt().value_or(0);
+		abilityId = static_cast<Ability>(stream.readVarInt().value_or(0));
 		auto valueType = stream.readUnsignedByte().value_or(0);
 		auto boolValue = stream.readBool().value_or(false);
 		auto floatValue = stream.readFloat().value_or(0.0f);
 		abilityValue = ([&]() -> std::variant<float, bool> {
-		    if (valueType == VALUE_TYPE_BOOL) return boolValue;
-		    if (valueType == VALUE_TYPE_FLOAT) return floatValue;
-		    throw std::exception{};
+			if (valueType == Value::TypeBool) return boolValue;
+			if (valueType == Value::TypeFloat) return floatValue;
+			throw std::exception{};
 		}());
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(abilityId);
+		stream.writeVarInt(magic_enum::enum_integer(abilityId));
 		auto [valueType, boolValue, floatValue] = ([&]() -> std::tuple<int64_t, bool, float> {
-		    if (true == std::holds_alternative<bool>(abilityValue)) return std::tuple<int64_t, bool, float>{VALUE_TYPE_BOOL, std::get<bool>(abilityValue), 0};
-		    if (true == std::holds_alternative<float>(abilityValue)) return std::tuple<int64_t, bool, float>{VALUE_TYPE_FLOAT, false, std::get<float>(abilityValue)};
-		    throw std::exception{};
+			if (true == std::holds_alternative<bool>(abilityValue)) return std::tuple<int64_t, bool, float>{Value::TypeBool, std::get<bool>(abilityValue), 0};
+			if (true == std::holds_alternative<float>(abilityValue)) return std::tuple<int64_t, bool, float>{Value::TypeFloat, false, std::get<float>(abilityValue)};
+			throw std::exception{};
 		}());
 		stream.writeUnsignedByte(valueType);
 		stream.writeBool(boolValue);

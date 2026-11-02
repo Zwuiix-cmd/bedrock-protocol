@@ -149,12 +149,12 @@ public:
 		headYaw = stream.readFloat().value_or(0.0f);
 		bodyYaw = stream.readFloat().value_or(0.0f);
 		attributes = stream.readList([&]() {
-		            	auto id = stream.readString().value_or("");
-		            	auto min = stream.readFloat().value_or(0.0f);
-		            	auto current = stream.readFloat().value_or(0.0f);
-		            	auto max = stream.readFloat().value_or(0.0f);
-		            	return;
-		        });
+					auto id = stream.readString().value_or("");
+					auto min = stream.readFloat().value_or(0.0f);
+					auto current = stream.readFloat().value_or(0.0f);
+					auto max = stream.readFloat().value_or(0.0f);
+					return;
+				});
 		metadata = ([&]() { EntityMetadataCollection value; value.read(stream); return value; }());
 		syncedProperties = ([&]() { PropertySyncData value; value.read(stream); return value; }());
 		links = stream.readList([&]() {
@@ -178,11 +178,11 @@ public:
 		stream.writeFloat(headYaw);
 		stream.writeFloat(bodyYaw);
 		stream.writeList(attributes, [&](const auto& attribute) {
-		            	stream.writeString(attribute->id);
-		            	stream.writeFloat(attribute->min);
-		            	stream.writeFloat(attribute->current);
-		            	stream.writeFloat(attribute->max);
-		        });
+					stream.writeString(attribute->id);
+					stream.writeFloat(attribute->min);
+					stream.writeFloat(attribute->current);
+					stream.writeFloat(attribute->max);
+				});
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		stream.writeList(links, [&](const auto& value) {

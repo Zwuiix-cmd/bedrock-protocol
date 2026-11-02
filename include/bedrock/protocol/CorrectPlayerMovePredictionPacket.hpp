@@ -110,14 +110,16 @@ public:
     }
 
 public:
-    static constexpr int64_t PREDICTION_TYPE_PLAYER = 0;
-    static constexpr int64_t PREDICTION_TYPE_VEHICLE = 1;
+    enum class Prediction : uint8_t {
+        TypePlayer = 0,
+        TypeVehicle = 1,
+    };
 
     glm::vec3 position;
     glm::vec3 delta;
     bool onGround;
     uint64_t tick;
-    uint8_t predictionType;
+    Prediction predictionType;
     glm::vec2 vehicleRotation;
     std::optional<float> vehicleAngularVelocity;
 
@@ -127,7 +129,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		predictionType = stream.readUnsignedByte().value_or(0);
+		predictionType = static_cast<Prediction>(stream.readUnsignedByte().value_or(0));
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		delta = stream.readVec3().value_or(glm::vec3(0.0f));
 		vehicleRotation = glm::vec2{stream.readFloat().value_or(0.0f), stream.readFloat().value_or(0.0f)};
@@ -139,7 +141,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(predictionType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(predictionType));
 		stream.writeVec3(position);
 		stream.writeVec3(delta);
 		stream.writeFloat(vehicleRotation.x);

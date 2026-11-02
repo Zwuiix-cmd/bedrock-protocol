@@ -121,7 +121,7 @@ public:
     std::string structureTemplateName;
     glm::ivec3 structureBlockPosition;
     std::shared_ptr<StructureSettings> structureSettings;
-    uint8_t requestType;
+    Type requestType;
 
 public:
     std::string_view getName() override {
@@ -136,13 +136,13 @@ public:
 		    value->read(stream);
 		    return value;
 		}());
-		requestType = stream.readUnsignedByte().value_or(0);
+		requestType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeString(structureTemplateName);
 		stream.writeSignedBlockPos(structureBlockPosition);
 		if (structureSettings) structureSettings->write(stream);
-		stream.writeUnsignedByte(requestType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(requestType));
     }
 };

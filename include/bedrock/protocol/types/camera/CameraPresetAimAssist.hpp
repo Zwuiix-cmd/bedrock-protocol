@@ -56,7 +56,7 @@ public:
 					stream.writeString(value);
 				});
 		stream.writeOptional(targetMode, [&](const auto& v) {
-					stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistTargetMode>>(v));
+					stream.writeUnsignedByte(magic_enum::enum_integer(v));
 				});
 		stream.writeOptional(viewAngle, [&](const auto& value) {
 					stream.writeVec2(value);

@@ -112,17 +112,19 @@ public:
     }
 
 public:
-    static constexpr int64_t MODE_NORMAL = 0;
-    static constexpr int64_t MODE_RESET = 1;
-    static constexpr int64_t MODE_TELEPORT = 2;
-    static constexpr int64_t MODE_PITCH = 3;
+    enum class Mode : uint8_t {
+        Normal = 0,
+        Reset = 1,
+        Teleport = 2,
+        Pitch = 3,
+    };
 
     uint64_t actorRuntimeId;
     glm::vec3 position;
     float pitch;
     float yaw;
     float headYaw;
-    uint8_t mode = 0;
+    Mode mode = Mode::Normal;
     bool onGround = false;
     uint64_t ridingActorRuntimeId = 0;
     std::optional<std::shared_ptr<MovePlayerTeleportData>> telemetryData;
@@ -139,7 +141,7 @@ public:
 		pitch = stream.readFloat().value_or(0.0f);
 		yaw = stream.readFloat().value_or(0.0f);
 		headYaw = stream.readFloat().value_or(0.0f);
-		mode = stream.readUnsignedByte().value_or(0);
+		mode = static_cast<Mode>(stream.readUnsignedByte().value_or(0));
 		onGround = stream.readBool().value_or(false);
 		ridingActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		telemetryData = stream.readOptional([&]() { return ([&]() {
@@ -156,7 +158,7 @@ public:
 		stream.writeFloat(pitch);
 		stream.writeFloat(yaw);
 		stream.writeFloat(headYaw);
-		stream.writeUnsignedByte(mode);
+		stream.writeUnsignedByte(magic_enum::enum_integer(mode));
 		stream.writeBool(onGround);
 		stream.writeActorRuntimeID(ridingActorRuntimeId);
 		stream.writeOptional(telemetryData, [&](const auto& data) {

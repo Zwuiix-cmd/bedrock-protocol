@@ -53,11 +53,11 @@ public:
 
     void write(BinaryStream& stream) const override {
         stream.writeActorRuntimeID(actorRuntimeId);
-        stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
+        stream.writeVarInt(magic_enum::enum_integer(actionType));
         stream.writeVarInt(hotbarSlot);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);
-        stream.writeVarInt(static_cast<int32_t>(hand));
+        stream.writeVarInt(magic_enum::enum_integer(hand));
         itemInHand.write(stream);
     }
 };

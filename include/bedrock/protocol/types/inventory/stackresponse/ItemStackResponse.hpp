@@ -18,29 +18,31 @@
 
 class ItemStackResponse {
 public:
-    static constexpr int64_t RESULT_OK = 0;
-    static constexpr int64_t RESULT_ERROR = 1;
+    enum class Result : uint8_t {
+        Ok = 0,
+        Error = 1,
+    };
 
-    uint8_t result;
+    Result result;
     int32_t requestId;
     std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>> containerInfos;
 
     ItemStackResponse() = default;
     explicit ItemStackResponse(
-        const uint8_t& resultValue,
+        const Result& resultValue,
         const int32_t& requestIdValue,
         const std::optional<std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>>& containerInfosValue
     ) :
         result(resultValue),
         requestId(requestIdValue),
         containerInfos(containerInfosValue) {
-		if (((result != RESULT_OK) && containerInfos.has_value())) {
+		if (((magic_enum::enum_integer(result) != magic_enum::enum_integer(Result::Ok)) && containerInfos.has_value())) {
 			throw std::exception{};
 		}
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        result = stream.readUnsignedByte().value_or(0);
+        result = static_cast<Result>(stream.readUnsignedByte().value_or(0));
         requestId = stream.readInt().value_or(0);
         containerInfos = stream.readOptional([&]() {
 			return stream.readList([&]() {
@@ -54,7 +56,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(result);
+		stream.writeUnsignedByte(magic_enum::enum_integer(result));
 		stream.writeInt(requestId);
 		stream.writeOptional(containerInfos, [&](const auto& list) {
 					stream.writeList(list, [&](const auto& v) {

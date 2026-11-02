@@ -151,35 +151,20 @@ trait PacketEmissionMethods
         $integer = [];
         $strings = [];
         $computed = [];
-        $types = [];
-        $categories = [];
-        $actions = [];
+        $enumGroups = [];
         $stringEnums = [];
-        $hasActionProperty = false;
-        foreach ($declaration['properties'] ?? [] as $property) {
-            $propertyName = strtolower((string) ($property['name'] ?? ''));
-            if ($propertyName === 'action'
-                || str_ends_with($propertyName, 'action')
-                || str_ends_with($propertyName, 'actiontype')) {
-                $hasActionProperty = true;
-                break;
-            }
-        }
         foreach ($declaration['constants'] as $constant) {
             if ($constant['name'] === 'NETWORK_ID') {
                 continue;
             }
             if (is_int($constant['value']) || is_bool($constant['value'])) {
                 $name = (string) $constant['name'];
-                if (str_starts_with($name, 'TYPE_')) {
-                    $types[substr($name, 5)] = (int) $constant['value'];
-                } elseif (str_starts_with($name, 'CATEGORY_')) {
-                    $categories[substr($name, 9)] = (int) $constant['value'];
-                } elseif ($hasActionProperty && str_starts_with($name, 'ACTION_')) {
-                    $actions[substr($name, 7)] = (int) $constant['value'];
-                } else {
-                    $integer[$name] = (int) $constant['value'];
+                if (str_contains($name, '_')) {
+                    [$prefix, $case] = explode('_', $name, 2);
+                    $enumGroups[$prefix][$case] = (int) $constant['value'];
+                    continue;
                 }
+                $integer[$name] = (int) $constant['value'];
             } elseif (is_string($constant['value'])) {
                 $strings[$constant['name']] = $constant['value'];
             } elseif (($constant['value'] ?? null) === null && ($constant['valueNode'] ?? null) instanceof \PhpParser\Node) {
@@ -205,22 +190,6 @@ trait PacketEmissionMethods
             }
         }
         $body = '';
-        if ($categories !== []) {
-            $body .= "    enum class Category : uint8_t {\n";
-            foreach ($categories as $name => $value) {
-                $body .= '        ' . CPPName::enumCase($name) . ' = ' . $value . ",\n";
-            }
-            $body .= "    };\n\n";
-        }
-        if ($types !== []) {
-            $maximum = max(array_map(static fn (int $value): int => abs($value), $types));
-            $underlying = $maximum <= 0xff ? 'uint8_t' : 'uint32_t';
-            $body .= "    enum class Type : " . $underlying . " {\n";
-            foreach ($types as $name => $value) {
-                $body .= '        ' . CPPName::enumCase($name) . ' = ' . $value . ",\n";
-            }
-            $body .= "    };\n\n";
-        }
         foreach ($stringEnums as $prefix => $cases) {
             $enumName = CPPName::enumCase($prefix);
             $body .= '    enum class ' . $enumName . " : uint8_t {\n";
@@ -229,13 +198,60 @@ trait PacketEmissionMethods
             }
             $body .= "    };\n\n";
         }
-        if ($actions !== []) {
-            $minimum = min($actions);
-            $maximum = max($actions);
+
+        $matchingPrefixes = [];
+        $semanticProperties = [];
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['static'] ?? false)
+                || !in_array(strtolower(ltrim((string) ($property['type'] ?? ''), '?')), ['int', 'integer', 'uint8', 'uint16', 'uint32', 'uint64'], true)) {
+                continue;
+            }
+            $propertyName = strtolower((string) ($property['name'] ?? ''));
+            foreach (array_keys($enumGroups) as $prefix) {
+                if ($this->enumPrefixMatchesProperty($prefix, $propertyName)) {
+                    $matchingPrefixes[$prefix] = true;
+                }
+            }
+            if (preg_match('/(?:action|rotation|status|state|mode|type|result|request|event|property|reason|severity|algorithm)$/', $propertyName) === 1) {
+                $semanticProperties[] = $propertyName;
+            }
+        }
+
+        $constantCount = count($integer) + array_sum(array_map('count', $enumGroups));
+        if ($matchingPrefixes === [] && count($semanticProperties) === 1 && $constantCount >= 2) {
+            $semanticProperty = $semanticProperties[0];
+            $combined = [];
+            foreach ($enumGroups as $prefix => $cases) {
+                foreach ($cases as $case => $value) {
+                    $combinedCase = $case;
+                    if (isset($combined[$combinedCase])) {
+                        $combinedCase = $prefix . '_' . $case;
+                    }
+                    $combined[$combinedCase] = $value;
+                }
+            }
+            foreach ($integer as $name => $value) {
+                $combined[$name] = $value;
+            }
+            $enumGroups = [CPPName::enumCase($semanticProperty) => $combined];
+            $integer = [];
+        }
+        foreach ($enumGroups as $prefix => $cases) {
+            $emit = count($cases) >= 2
+                || isset($matchingPrefixes[$prefix])
+                || in_array(strtoupper((string) $prefix), ['TYPE', 'CATEGORY'], true);
+            if (!$emit) {
+                foreach ($cases as $case => $value) {
+                    $integer[$prefix . '_' . $case] = $value;
+                }
+                continue;
+            }
+            $minimum = min($cases);
+            $maximum = max($cases);
             $underlying = $minimum >= 0 && $maximum <= 0xff ? 'uint8_t' : 'int64_t';
-            $body .= "    enum class Action : " . $underlying . " {\n";
-            foreach ($actions as $name => $value) {
-                $body .= '        ' . CPPName::enumCase($name) . ' = ' . $value . ",\n";
+            $body .= '    enum class ' . CPPName::enumCase($prefix) . ' : ' . $underlying . " {\n";
+            foreach ($cases as $name => $value) {
+                $body .= '        ' . CPPName::enumCase((string) $name) . ' = ' . $value . ",\n";
             }
             $body .= "    };\n\n";
         }
@@ -255,5 +271,56 @@ trait PacketEmissionMethods
             $body .= '    static constexpr std::string_view ' . CPPName::identifier($name) . ' = "' . addcslashes($value, "\\\"") . "\";\n";
         }
         return $body;
+    }
+
+    private function enumPrefixMatchesProperty(string $prefix, string $propertyName): bool
+    {
+        $prefix = preg_replace('/[^a-z0-9]/', '', strtolower($prefix)) ?? strtolower($prefix);
+        $propertyName = preg_replace('/[^a-z0-9]/', '', strtolower($propertyName)) ?? strtolower($propertyName);
+        if ($prefix === '' || $propertyName === $prefix) {
+            return $prefix !== '';
+        }
+        $semanticNames = [
+            'type',
+            'action',
+            'id',
+            'mode',
+            'state',
+            'status',
+            'result',
+            'request',
+            'event',
+            'property',
+            'reason',
+            'severity',
+            'algorithm',
+            'operation',
+            'value',
+            'kind',
+            'level',
+            'order',
+            'layout',
+            'visibility',
+            'category',
+            'rotation',
+            'layer',
+            'layerid',
+            'scheme',
+            'permission',
+            'permissions',
+            'effect',
+            'target',
+        ];
+        if (str_ends_with($propertyName, $prefix)) {
+            return in_array($prefix, $semanticNames, true);
+        }
+        if (!str_starts_with($propertyName, $prefix)) {
+            return false;
+        }
+        $suffix = substr($propertyName, strlen($prefix));
+        return in_array($suffix, [
+            's',
+            ...$semanticNames,
+        ], true);
     }
 }

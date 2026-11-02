@@ -117,7 +117,7 @@ public:
     };
 
     uint64_t actorUniqueId;
-    uint64_t updateType;
+    Type updateType;
 
 public:
     std::string_view getName() override {
@@ -126,11 +126,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
         actorUniqueId = stream.readUnsignedVarLong().value_or(0);
-        updateType = stream.readUnsignedVarLong().value_or(0);
+        updateType = static_cast<Type>(stream.readUnsignedVarLong().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
         stream.writeUnsignedVarLong(actorUniqueId);
-        stream.writeUnsignedVarLong(updateType);
+        stream.writeUnsignedVarLong(magic_enum::enum_integer(updateType));
     }
 };

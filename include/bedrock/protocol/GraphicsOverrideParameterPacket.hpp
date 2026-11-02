@@ -164,7 +164,7 @@ public:
 		stream.writeOptional(playerIdentifier, [&](const auto& value) {
 					stream.writeString(value);
 				});
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<GraphicsOverrideParameterType>>(parameterType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(parameterType));
 		stream.writeBool(reset);
     }
 };

@@ -116,9 +116,9 @@ public:
         Reset = 2,
     };
 
-    uint8_t actionType;
+    Type actionType;
     glm::ivec3 blockPosition;
-    uint8_t reactionType;
+    Type reactionType;
 
 public:
     std::string_view getName() override {
@@ -126,14 +126,14 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		actionType = stream.readUnsignedByte().value_or(0);
+		actionType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-		reactionType = stream.readUnsignedByte().value_or(0);
+		reactionType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(actionType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(actionType));
 		stream.writeSignedBlockPos(blockPosition);
-		stream.writeUnsignedByte(reactionType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(reactionType));
     }
 };

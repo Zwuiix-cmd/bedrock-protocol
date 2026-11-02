@@ -126,6 +126,6 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeUUID(offerId);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<ShowStoreOfferRedirectType>>(redirectType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(redirectType));
     }
 };

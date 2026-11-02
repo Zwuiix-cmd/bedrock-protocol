@@ -125,7 +125,7 @@ public:
     };
 
     int64_t bossActorUniqueId;
-    uint8_t eventType;
+    Type eventType;
     float healthPercent = 0.0f;
     std::string title;
     std::string filteredTitle;
@@ -139,7 +139,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		bossActorUniqueId = stream.readActorUniqueID().value_or(0);
-		eventType = stream.readUnsignedByte().value_or(0);
+		eventType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
 		title = stream.readString().value_or("");
 		filteredTitle = stream.readString().value_or("");
 		healthPercent = stream.readFloat().value_or(0.0f);
@@ -149,11 +149,11 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorUniqueID(bossActorUniqueId);
-		stream.writeUnsignedByte(eventType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(eventType));
 		stream.writeString(title);
 		stream.writeString(filteredTitle);
 		stream.writeFloat(healthPercent);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<BossBarColor>>(color));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<BossBarOverlay>>(overlay));
+		stream.writeUnsignedByte(magic_enum::enum_integer(color));
+		stream.writeUnsignedByte(magic_enum::enum_integer(overlay));
     }
 };

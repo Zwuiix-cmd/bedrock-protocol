@@ -115,7 +115,7 @@ public:
         Shrug = 1,
     };
 
-    uint8_t animationType;
+    Type animationType;
     uint64_t actorRuntimeId;
 
 public:
@@ -124,12 +124,12 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		animationType = stream.readUnsignedByte().value_or(0);
+		animationType = static_cast<Type>(stream.readUnsignedByte().value_or(0));
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(animationType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(animationType));
 		stream.writeActorRuntimeID(actorRuntimeId);
     }
 };

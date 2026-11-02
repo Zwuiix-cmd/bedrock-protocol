@@ -37,7 +37,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(static_cast<int32_t>(pieceType));
+        stream.writeVarInt(magic_enum::enum_integer(pieceType));
         (void)(colors);
     }
 };

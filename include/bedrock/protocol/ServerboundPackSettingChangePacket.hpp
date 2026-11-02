@@ -125,18 +125,18 @@ public:
 		auto name = stream.readString().value_or("");
 		auto typeId = static_cast<PackSettingType>(stream.readUnsignedVarInt().value_or(0));
 		packSetting = ([&]() -> std::shared_ptr<PackSetting> {
-		    if (typeId == PackSettingType::Float) return FloatPackSetting::read(stream, name);
-		    if (typeId == PackSettingType::Bool) return BoolPackSetting::read(stream, name);
-		    if (typeId == PackSettingType::String) return StringPackSetting::read(stream, name);
-		    if (typeId == PackSettingType::StringArray) return StringArrayPackSetting::read(stream, name);
-		    return {};
+			if (typeId == PackSettingType::Float) return FloatPackSetting::read(stream, name);
+			if (typeId == PackSettingType::Bool) return BoolPackSetting::read(stream, name);
+			if (typeId == PackSettingType::String) return StringPackSetting::read(stream, name);
+			if (typeId == PackSettingType::StringArray) return StringArrayPackSetting::read(stream, name);
+			return {};
 		}());
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeUUID(packId);
 		stream.writeString(packSetting->name);
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<std::remove_cvref_t<decltype(packSetting->getTypeId())>>>(packSetting->getTypeId()));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(packSetting->getTypeId()));
 		packSetting->write(stream);
     }
 };

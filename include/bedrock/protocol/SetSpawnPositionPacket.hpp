@@ -115,7 +115,7 @@ public:
         WorldSpawn = 1,
     };
 
-    int32_t spawnType;
+    Type spawnType;
     glm::ivec3 spawnPosition;
     int32_t dimension;
     glm::ivec3 causingBlockPosition;
@@ -126,14 +126,14 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		spawnType = stream.readVarInt().value_or(0);
+		spawnType = static_cast<Type>(stream.readVarInt().value_or(0));
 		spawnPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		dimension = stream.readVarInt().value_or(0);
 		causingBlockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(spawnType);
+		stream.writeVarInt(magic_enum::enum_integer(spawnType));
 		stream.writeSignedBlockPos(spawnPosition);
 		stream.writeVarInt(dimension);
 		stream.writeSignedBlockPos(causingBlockPosition);

@@ -24,20 +24,22 @@ public:
         Body64 = 3,
     };
 
-    static constexpr int64_t EXPRESSION_LINEAR = 0;
-    static constexpr int64_t EXPRESSION_BLINKING = 1;
+    enum class Expression : uint8_t {
+        Linear = 0,
+        Blinking = 1,
+    };
 
     std::shared_ptr<SkinImage> image;
     Type type;
     float frames;
-    uint32_t expressionType;
+    Type expressionType;
 
     SkinAnimation() = default;
     explicit SkinAnimation(
         const std::shared_ptr<SkinImage>& imageValue,
         const Type& typeValue,
         const float& framesValue,
-        const uint32_t& expressionTypeValue
+        const Type& expressionTypeValue
     ) :
         image(imageValue),
         type(typeValue),
@@ -47,7 +49,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) {
         type = static_cast<Type>(stream.readUnsignedVarInt().value_or(0));
         frames = stream.readFloat().value_or(0.0f);
-        expressionType = stream.readUnsignedVarInt().value_or(0);
+        expressionType = static_cast<Type>(stream.readUnsignedVarInt().value_or(0));
         image = ([&]() {
     auto value = std::make_shared<SkinImage>();
     value->read(stream);
@@ -56,9 +58,9 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<Type>>(type));
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
         stream.writeFloat(frames);
-        stream.writeUnsignedVarInt(expressionType);
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(expressionType));
         if (image) image->write(stream);
     }
 };

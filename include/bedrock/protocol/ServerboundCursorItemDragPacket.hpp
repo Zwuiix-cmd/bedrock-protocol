@@ -123,6 +123,6 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CursorItemDragState>>(state));
+		stream.writeUnsignedByte(magic_enum::enum_integer(state));
     }
 };

@@ -79,7 +79,7 @@ public:
         stream.writeFloat(totalTime);
         stream.writeString(splineIdentifier);
         stream.writeBool(loadFromJson);
-        stream.writeVarInt(static_cast<int32_t>(easeType));
+        stream.writeVarInt(magic_enum::enum_integer(easeType));
         stream.writeList(curve, [&](const auto& item) {
 			stream.writeVec3(item);
 		});

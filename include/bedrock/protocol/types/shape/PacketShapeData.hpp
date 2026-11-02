@@ -105,7 +105,7 @@ public:
     virtual void write(BinaryStream& stream) const {
         stream.writeUnsignedVarLong(networkId);
         stream.writeOptional(type, [&](const auto& optionalValue) {
-			stream.writeVarInt(static_cast<int32_t>(optionalValue));
+			stream.writeVarInt(magic_enum::enum_integer(optionalValue));
 		});
         stream.writeOptional(location, [&](const auto& optionalValue) {
 			stream.writeVec3(optionalValue);

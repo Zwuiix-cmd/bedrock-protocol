@@ -133,10 +133,10 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLeftTab>>(leftTab));
-		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryRightTab>>(rightTab));
+		stream.writeVarInt(magic_enum::enum_integer(leftTab));
+		stream.writeVarInt(magic_enum::enum_integer(rightTab));
 		stream.writeBool(filtering);
-		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLayout>>(inventoryLayout));
-		stream.writeVarInt(static_cast<std::underlying_type_t<InventoryLayout>>(craftingLayout));
+		stream.writeVarInt(magic_enum::enum_integer(inventoryLayout));
+		stream.writeVarInt(magic_enum::enum_integer(craftingLayout));
     }
 };

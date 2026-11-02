@@ -217,7 +217,7 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
         $class = $fetch->class instanceof Node\Name ? $fetch->class->getLast() : '';
         $name = $fetch->name instanceof Node\Identifier ? $fetch->name->toString() : 'value';
         if ($class === 'self' || $class === 'static') {
-            $current = $this->findDeclaration($declaration['name']);
+            $current = $this->findDeclaration($declaration['name']) ?? $declaration;
             foreach ($current['constants'] ?? [] as $constant) {
                 if ($constant['name'] === $name && is_string($constant['value'])) {
                     return 'std::string(' . CPPName::type($declaration['name']) . '::' . CPPName::identifier($name) . ')';
@@ -228,6 +228,10 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             }
             if (str_starts_with($name, 'CATEGORY_')) {
                 return 'Category::' . CPPName::enumCase(substr($name, 9));
+            }
+            $enumCase = $this->constantEnumCase($current, $name);
+            if ($enumCase !== null) {
+                return $enumCase;
             }
             if (str_starts_with($name, 'ACTION_') && $this->hasActionEnum($current)) {
                 return 'Action::' . CPPName::enumCase(substr($name, 7));
@@ -259,6 +263,12 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
         if ($referenced !== null && str_starts_with($name, 'ACTION_') && $this->hasActionEnum($referenced)) {
             return CPPName::type($class) . '::Action::' . CPPName::enumCase(substr($name, 7));
         }
+        if ($referenced !== null) {
+            $enumCase = $this->constantEnumCase($referenced, $name);
+            if ($enumCase !== null) {
+                return CPPName::type($class) . '::' . $enumCase;
+            }
+        }
         if ($referenced !== null && $this->isEnumLikeDeclaration($referenced)) {
             return CPPName::type($class) . '::' . CPPName::enumCase($name);
         }
@@ -268,6 +278,83 @@ private function classConstant(Node\Expr\ClassConstFetch $fetch, array $declarat
             }
         }
         return CPPName::type($class) . '::' . CPPName::identifier($name);
+    }
+
+    private function constantEnumCase(array $declaration, string $name): ?string
+    {
+        if (!str_contains($name, '_')) {
+            return null;
+        }
+        [$prefix, $case] = explode('_', $name, 2);
+        $count = 0;
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            $constantName = (string) ($constant['name'] ?? '');
+            if (str_starts_with($constantName, $prefix . '_')
+                && (is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null))) {
+                ++$count;
+            }
+        }
+        if ($count >= 2 || in_array(strtoupper($prefix), ['TYPE', 'CATEGORY'], true)) {
+            return CPPName::enumCase($prefix) . '::' . CPPName::enumCase($case);
+        }
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if (($property['static'] ?? false)
+                || ltrim((string) ($property['type'] ?? ''), '?') !== 'int') {
+                continue;
+            }
+            $propertyName = strtolower((string) ($property['name'] ?? ''));
+            if ($this->constantPrefixMatchesProperty($prefix, $propertyName)) {
+                return CPPName::enumCase($prefix) . '::' . CPPName::enumCase($case);
+            }
+        }
+        return null;
+    }
+
+    private function constantPrefixMatchesProperty(string $prefix, string $propertyName): bool
+    {
+        $prefix = preg_replace('/[^a-z0-9]/', '', strtolower($prefix)) ?? strtolower($prefix);
+        $propertyName = preg_replace('/[^a-z0-9]/', '', strtolower($propertyName)) ?? strtolower($propertyName);
+        if ($prefix === '' || $propertyName === $prefix) {
+            return $prefix !== '';
+        }
+        $semanticNames = [
+            'type',
+            'action',
+            'id',
+            'mode',
+            'state',
+            'status',
+            'result',
+            'request',
+            'event',
+            'property',
+            'reason',
+            'severity',
+            'algorithm',
+            'operation',
+            'value',
+            'kind',
+            'level',
+            'order',
+            'layout',
+            'visibility',
+            'category',
+            'rotation',
+            'layer',
+            'layerid',
+            'scheme',
+            'permission',
+            'permissions',
+            'effect',
+            'target',
+        ];
+        if (str_ends_with($propertyName, $prefix)) {
+            return in_array($prefix, $semanticNames, true);
+        }
+        if (!str_starts_with($propertyName, $prefix)) {
+            return false;
+        }
+        return in_array(substr($propertyName, strlen($prefix)), ['s', ...$semanticNames], true);
     }
 
     private function hasActionEnum(array $declaration): bool
@@ -328,12 +415,16 @@ private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, arr
             }
         }
         $formattedBody = array_map(static function (string $line): string {
-            $line = str_starts_with($line, '    ') ? substr($line, 4) : $line;
-            return '            ' . $line;
+            $line = preg_replace_callback(
+                '/^(?: {4})+/',
+                static fn (array $matches): string => str_repeat("\t", (int) (strlen($matches[0]) / 4)),
+                $line,
+            ) ?? $line;
+            return "\t\t" . $line;
         }, $body);
         $result = '[&](' . implode(', ', $params) . ') {';
         if ($formattedBody !== []) {
-            $result .= "\n" . implode("\n", $formattedBody) . "\n        }";
+            $result .= "\n" . implode("\n", $formattedBody) . "\n\t\t}";
         } else {
             $result .= '}';
         }

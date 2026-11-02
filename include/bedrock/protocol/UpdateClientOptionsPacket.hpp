@@ -130,7 +130,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeOptional(graphicsMode, [&](const auto& v) {
-					stream.writeUnsignedByte(static_cast<std::underlying_type_t<GraphicsMode>>(v));
+					stream.writeUnsignedByte(magic_enum::enum_integer(v));
 				});
 		stream.writeOptional(filterProfanityChange, [&](const auto& value) {
 					stream.writeBool(value);

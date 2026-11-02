@@ -180,11 +180,11 @@ public:
 					v->write(stream);
 				});
 		stream.writeOptional(replacementsData, [&](const auto& v) {
-		            	stream.writeUnsignedVarInt(v.size());
-		            	for (const auto& item : v) {
+					stream.writeUnsignedVarInt(v.size());
+					for (const auto& item : v) {
 				item->write(stream);
 			}
-		        });
+				});
 		stream.writeOptional(villageType, [&](const auto& v) {
 					stream.writeUnsignedByte(v);
 				});

@@ -141,6 +141,6 @@ public:
 		stream.writeUnsignedLong(compressedPackSize);
 		stream.writeString(sha256);
 		stream.writeBool(isPremium);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<ResourcePackType>>(packType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(packType));
     }
 };

@@ -47,6 +47,6 @@ public:
         stream.writeUnsignedVarInt(totalTransitionTicks);
         stream.writeUnsignedVarInt(currentTransitionTicks);
         stream.writeString(clockName);
-        stream.writeVarInt(static_cast<int32_t>(easeType));
+        stream.writeVarInt(magic_enum::enum_integer(easeType));
     }
 };

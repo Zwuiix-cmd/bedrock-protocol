@@ -180,10 +180,10 @@ public:
         stream.writeVarInt(difficulty);
         stream.writeSignedBlockPos(spawnPosition);
         stream.writeBool(hasAchievementsDisabled);
-        stream.writeVarInt(static_cast<std::underlying_type_t<EditorWorldType>>(editorWorldType));
+        stream.writeVarInt(magic_enum::enum_integer(editorWorldType));
         stream.writeBool(createdInEditorMode);
         stream.writeBool(exportedFromEditorMode);
-        stream.writeByte(static_cast<std::underlying_type_t<EditorLevelMigrationVersion>>(editorLevelMigrationVersion));
+        stream.writeByte(magic_enum::enum_integer(editorLevelMigrationVersion));
         stream.writeVarInt(time);
         stream.writeUnsignedVarInt(eduEditionOffer);
         stream.writeBool(hasEduFeaturesEnabled);
@@ -214,19 +214,19 @@ public:
         stream.writeInt(limitedWorldWidth);
         stream.writeInt(limitedWorldLength);
         stream.writeBool(isNewNether);
-        stream.writeUnsignedByte(static_cast<std::underlying_type_t<ChatRestrictionLevel>>(chatRestrictionLevel));
+        stream.writeUnsignedByte(magic_enum::enum_integer(chatRestrictionLevel));
         stream.writeBool(disablePlayerInteractions);
         stream.writeVarInt(serverEditorConnectionPolicy);
         stream.writeBool(allowAnonymousBlockDropsInEditorWorlds);
         if (spawnSettings) spawnSettings->write(stream);
-        stream.writeVarInt(static_cast<int32_t>(worldGamemode));
+        stream.writeVarInt(magic_enum::enum_integer(worldGamemode));
         stream.writeUnsignedInt(gameRules.size());
 for (const auto& [key, item] : gameRules) {
     stream.writeString(key);
     if (item) item->write(stream);
 }
         if (experiments) experiments->write(stream);
-        stream.writeVarInt(static_cast<int32_t>(defaultPlayerPermission));
+        stream.writeVarInt(magic_enum::enum_integer(defaultPlayerPermission));
         stream.writeOptional(eduSharedUriResource, [&](const auto& optionalValue) {
 			if (optionalValue) optionalValue->write(stream);
 		});

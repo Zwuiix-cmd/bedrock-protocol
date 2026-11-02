@@ -210,7 +210,7 @@ public:
 		stream.writeFloat(moveVecZ);
 		stream.writeFloat(headYaw);
 		auto flagsArray = std::vector<int32_t>();
-		for (std::size_t i = 0; (i < static_cast<std::underlying_type_t<PlayerAuthInputFlags>>(PlayerAuthInputFlags::Count)); ++i) {
+		for (std::size_t i = 0; (i < magic_enum::enum_integer(PlayerAuthInputFlags::Count)); ++i) {
 			if (inputFlags.get(i)) {
 				flagsArray.push_back(i);
 			}
@@ -218,9 +218,9 @@ public:
 		stream.writeList(flagsArray, [&](const auto& value) {
 					stream.writeVarInt(value);
 				});
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<InputMode>>(inputMode));
-		stream.writeUnsignedVarInt(static_cast<std::underlying_type_t<PlayMode>>(playMode));
-		stream.writeVarInt(static_cast<std::underlying_type_t<InteractionMode>>(interactionMode));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(inputMode));
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(playMode));
+		stream.writeVarInt(magic_enum::enum_integer(interactionMode));
 		stream.writeVec2(interactRotation);
 		stream.writeUnsignedVarLong(tick);
 		stream.writeVec3(delta);

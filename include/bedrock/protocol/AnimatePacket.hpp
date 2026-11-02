@@ -140,12 +140,12 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeUnsignedByte(static_cast<std::underlying_type_t<Action>>(action));
+        stream.writeUnsignedByte(magic_enum::enum_integer(action));
         stream.writeActorRuntimeID(actorRuntimeId);
         stream.writeFloat(data);
         stream.writeOptional(swingSource, [&](const auto& optionalValue) {
 			stream.writeString(optionalValue);
 		});
-        stream.writeVarInt(static_cast<int32_t>(hand));
+        stream.writeVarInt(magic_enum::enum_integer(hand));
     }
 };

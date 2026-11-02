@@ -16,24 +16,26 @@
 
 class SpawnSettings {
 public:
-    static constexpr int64_t BIOME_TYPE_DEFAULT = 0;
-    static constexpr int64_t BIOME_TYPE_USER_DEFINED = 1;
+    enum class Biome : uint8_t {
+        TypeDefault = 0,
+        TypeUserDefined = 1,
+    };
 
-    uint16_t biomeType;
+    Biome biomeType;
     std::string biomeName;
     int32_t dimension;
 
     SpawnSettings() = default;
-    explicit SpawnSettings(const uint16_t& biomeTypeValue, const std::string& biomeNameValue, const int32_t& dimensionValue) : biomeType(biomeTypeValue), biomeName(biomeNameValue), dimension(dimensionValue) {}
+    explicit SpawnSettings(const Biome& biomeTypeValue, const std::string& biomeNameValue, const int32_t& dimensionValue) : biomeType(biomeTypeValue), biomeName(biomeNameValue), dimension(dimensionValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        biomeType = stream.readUnsignedShort().value_or(0);
+        biomeType = static_cast<Biome>(stream.readUnsignedShort().value_or(0));
         biomeName = stream.readString().value_or("");
         dimension = stream.readVarInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedShort(biomeType);
+		stream.writeUnsignedShort(magic_enum::enum_integer(biomeType));
 		stream.writeString(biomeName);
 		stream.writeVarInt(dimension);
     }

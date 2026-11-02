@@ -128,7 +128,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeString(presetId);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistActionType>>(actionType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(actionType));
 		stream.writeBool(allowAimAssist);
     }
 };

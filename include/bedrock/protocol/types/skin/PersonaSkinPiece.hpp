@@ -50,7 +50,7 @@ public:
         stream.writeString(pieceId);
         stream.writeBool(isDefaultPiece);
         stream.writeString(productId);
-        stream.writeVarInt(static_cast<int32_t>(pieceType));
+        stream.writeVarInt(magic_enum::enum_integer(pieceType));
         stream.writeUUID(packId);
     }
 };

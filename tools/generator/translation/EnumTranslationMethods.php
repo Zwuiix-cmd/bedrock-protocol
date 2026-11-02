@@ -87,18 +87,47 @@ private function propertyEnumType(array $property, array $declaration): ?string
                     : $cppType;
             }
         }
-        $hasActionConstants = false;
+        $constantGroups = [];
         foreach ($declaration['constants'] ?? [] as $constant) {
-            if (str_starts_with((string) ($constant['name'] ?? ''), 'ACTION_')) {
-                $hasActionConstants = true;
-                break;
+            $constantName = (string) ($constant['name'] ?? '');
+            if ((!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null))
+                || !str_contains($constantName, '_')) {
+                continue;
+            }
+            [$prefix, $case] = explode('_', $constantName, 2);
+            $constantGroups[$prefix][$case] = (int) $constant['value'];
+        }
+        foreach ($constantGroups as $prefix => $cases) {
+            if ($this->enumPrefixMatchesProperty($prefix, $normalizedName)) {
+                return CPPName::enumCase($prefix);
             }
         }
-        if ($hasActionConstants
-            && ($normalizedName === 'action'
-                || str_ends_with($normalizedName, 'action')
-                || str_ends_with($normalizedName, 'actiontype'))) {
-            return 'Action';
+        $matchingPrefixes = [];
+        $semanticProperties = [];
+        foreach ($declaration['properties'] ?? [] as $candidate) {
+            if (($candidate['static'] ?? false)
+                || ltrim((string) ($candidate['type'] ?? ''), '?') !== 'int') {
+                continue;
+            }
+            $candidateName = strtolower((string) ($candidate['name'] ?? ''));
+            foreach (array_keys($constantGroups) as $prefix) {
+                if ($this->enumPrefixMatchesProperty($prefix, $candidateName)) {
+                    $matchingPrefixes[$prefix] = true;
+                }
+            }
+            if (preg_match('/(?:action|rotation|status|state|mode|type|result|request|event|property|reason|severity|algorithm)$/', $candidateName) === 1) {
+                $semanticProperties[] = $candidateName;
+            }
+        }
+        $numericConstants = array_sum(array_map(
+            static fn (array $constant): int => is_int($constant['value'] ?? null) || is_bool($constant['value'] ?? null) ? 1 : 0,
+            $declaration['constants'] ?? [],
+        ));
+        if (count($semanticProperties) === 1
+            && $matchingPrefixes === []
+            && $semanticProperties[0] === $normalizedName
+            && $numericConstants >= 2) {
+            return CPPName::enumCase((string) ($property['name'] ?? 'value'));
         }
         $hasTypeConstants = false;
         foreach ($declaration['constants'] ?? [] as $constant) {
@@ -108,6 +137,53 @@ private function propertyEnumType(array $property, array $declaration): ?string
             }
         }
         return $hasTypeConstants && $name === 'type' ? 'Type' : null;
+    }
+
+    private function enumPrefixMatchesProperty(string $prefix, string $propertyName): bool
+    {
+        $prefix = preg_replace('/[^a-z0-9]/', '', strtolower($prefix)) ?? strtolower($prefix);
+        $propertyName = preg_replace('/[^a-z0-9]/', '', strtolower($propertyName)) ?? strtolower($propertyName);
+        if ($prefix === '' || $propertyName === $prefix) {
+            return $prefix !== '';
+        }
+        $semanticNames = [
+            'type',
+            'action',
+            'id',
+            'mode',
+            'state',
+            'status',
+            'result',
+            'request',
+            'event',
+            'property',
+            'reason',
+            'severity',
+            'algorithm',
+            'operation',
+            'value',
+            'kind',
+            'level',
+            'order',
+            'layout',
+            'visibility',
+            'category',
+            'rotation',
+            'layer',
+            'layerid',
+            'scheme',
+            'permission',
+            'permissions',
+            'effect',
+            'target',
+        ];
+        if (str_ends_with($propertyName, $prefix)) {
+            return in_array($prefix, $semanticNames, true);
+        }
+        if (!str_starts_with($propertyName, $prefix)) {
+            return false;
+        }
+        return in_array(substr($propertyName, strlen($prefix)), ['s', ...$semanticNames], true);
     }
 
 private function stringEnumName(array $property, array $declaration): ?string
@@ -253,26 +329,52 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
 
 private function enumStorageValue(string $value, string $enumType): string
     {
-        return 'static_cast<std::underlying_type_t<' . $enumType . '>>(' . $value . ')';
+        return 'magic_enum::enum_integer(' . $value . ')';
     }
 
 private function enumStorageCast(Node $argument, string $value, array $declaration): string
     {
-        $type = $argument instanceof Node\Arg
+        $propertyEnumType = $argument instanceof Node\Arg
             ? $this->enumPropertyType($argument->value, $declaration)
             : $this->enumPropertyType($argument, $declaration);
+        $type = $propertyEnumType;
         if ($type === null && $argument instanceof Node\Arg) {
             $type = $this->expressionType($argument->value, $declaration);
         }
         if ($type === null && $argument instanceof Node\Expr\Variable) {
             $type = $this->expressionTypes[(string) $argument->name] ?? null;
         }
-        $isEnum = in_array($type, ['Action', 'Type', 'Category', 'BuildPlatform'], true)
+        $isEnum = $propertyEnumType !== null
             || ($type !== null && str_contains($type, '::') && !str_starts_with($type, 'std::') && !str_starts_with($type, 'glm::'))
-            || ($type !== null && $this->isEnumLikeDeclaration($this->findDeclaration(CPPName::type($type)) ?? []));
+            || ($type !== null && $this->isEnumLikeDeclaration($this->findDeclaration(CPPName::type($type)) ?? []))
+            || ($type !== null && $this->isInlineEnumType($type, $declaration));
         if (!$isEnum) {
             return $value;
         }
-        return 'static_cast<std::underlying_type_t<' . $type . '>>(' . $value . ')';
+        return 'magic_enum::enum_integer(' . $value . ')';
+    }
+
+    private function isInlineEnumType(string $type, array $declaration): bool
+    {
+        if (in_array($type, ['Action', 'Type', 'Category', 'BuildPlatform'], true)) {
+            return true;
+        }
+        foreach ($declaration['constants'] ?? [] as $constant) {
+            $name = (string) ($constant['name'] ?? '');
+            if (!str_contains($name, '_')
+                || (!is_int($constant['value'] ?? null) && !is_bool($constant['value'] ?? null))) {
+                continue;
+            }
+            [$prefix] = explode('_', $name, 2);
+            if (CPPName::enumCase($prefix) === $type) {
+                return true;
+            }
+        }
+        foreach ($declaration['properties'] ?? [] as $property) {
+            if ($this->propertyEnumType($property, $declaration) === $type) {
+                return true;
+            }
+        }
+        return false;
     }
 }

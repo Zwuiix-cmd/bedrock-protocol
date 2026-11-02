@@ -133,8 +133,8 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedVarInt(hudElements.size());
 		for (const auto& element : hudElements) {
-			stream.writeVarInt(static_cast<std::underlying_type_t<HudElement>>(element));
+			stream.writeVarInt(magic_enum::enum_integer(element));
 		}
-		stream.writeVarInt(static_cast<std::underlying_type_t<HudVisibility>>(visibility));
+		stream.writeVarInt(magic_enum::enum_integer(visibility));
     }
 };

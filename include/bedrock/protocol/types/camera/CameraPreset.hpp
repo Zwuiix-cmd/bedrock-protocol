@@ -22,8 +22,10 @@
 
 class CameraPreset {
 public:
-    static constexpr int64_t AUDIO_LISTENER_TYPE_CAMERA = 0;
-    static constexpr int64_t AUDIO_LISTENER_TYPE_PLAYER = 1;
+    enum class Audiolistenertype : uint8_t {
+        ListenerTypeCamera = 0,
+        ListenerTypePlayer = 1,
+    };
 
     std::string name;
     std::string parent;
@@ -43,7 +45,7 @@ public:
     std::optional<float> radius;
     std::optional<float> yawLimitMin;
     std::optional<float> yawLimitMax;
-    std::optional<int32_t> audioListenerType;
+    Audiolistenertype audioListenerType;
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
@@ -70,7 +72,7 @@ public:
         const std::optional<float>& radiusValue,
         const std::optional<float>& yawLimitMinValue,
         const std::optional<float>& yawLimitMaxValue,
-        const std::optional<int32_t>& audioListenerTypeValue,
+        const Audiolistenertype& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
         const std::optional<ControlScheme>& controlSchemeValue,
@@ -154,9 +156,9 @@ public:
         yawLimitMax = stream.readOptional([&]() {
 			return stream.readFloat().value_or(0.0f);
 		});
-        audioListenerType = stream.readOptional([&]() {
+        audioListenerType = static_cast<Audiolistenertype>(stream.readOptional([&]() {
 			return stream.readInt().value_or(0);
-		});
+		}));
         playerEffects = stream.readOptional([&]() {
 			return stream.readBool().value_or(false);
 		});
@@ -236,7 +238,7 @@ public:
 					v->write(stream);
 				});
 		stream.writeOptional(controlScheme, [&](const auto& v) {
-					stream.writeUnsignedByte(static_cast<std::underlying_type_t<ControlScheme>>(v));
+					stream.writeUnsignedByte(magic_enum::enum_integer(v));
 				});
 		stream.writeBool(applyInheritedStartingRotation);
 		stream.writeOptional(startingRotation, [&](const auto& value) {

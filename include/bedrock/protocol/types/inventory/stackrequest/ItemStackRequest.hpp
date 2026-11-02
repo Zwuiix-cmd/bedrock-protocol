@@ -67,10 +67,10 @@ public:
     virtual void write(BinaryStream& stream) const {
 		stream.writeInt(requestId);
 		stream.writeList(actions, [&](const auto& action) {
-		            	stream.writeUnsignedVarInt(action->getTypeId());
-		            	stream.writeUnsignedByte(ItemStackRequestActionType::INNER_TYPES[action->getTypeId()]);
-		            	action->write(stream);
-		        });
+					stream.writeUnsignedVarInt(action->getTypeId());
+					stream.writeUnsignedByte(ItemStackRequestActionType::INNER_TYPES[action->getTypeId()]);
+					action->write(stream);
+				});
 		stream.writeList(filterStrings, [&](const auto& value) {
 					stream.writeString(value);
 				});

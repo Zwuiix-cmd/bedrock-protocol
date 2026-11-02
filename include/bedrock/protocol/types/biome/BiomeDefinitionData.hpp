@@ -90,11 +90,11 @@ public:
 		stream.writeUnsignedInt(static_cast<uint32_t>(mapWaterColor));
 		stream.writeBool(rain);
 		stream.writeOptional(tagIndexes, [&](const auto& tagIndexes) {
-		            	stream.writeUnsignedVarInt(tagIndexes.size());
-		            	for (const auto& tag : tagIndexes) {
+					stream.writeUnsignedVarInt(tagIndexes.size());
+					for (const auto& tag : tagIndexes) {
 				stream.writeUnsignedShort(tag);
 			}
-		        });
+				});
 		stream.writeOptional(chunkGenData, [&](const auto& v) {
 					v->write(stream);
 				});

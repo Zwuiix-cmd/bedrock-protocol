@@ -110,11 +110,13 @@ public:
     }
 
 public:
-    static constexpr int64_t STATUS_START_CREDITS = 0;
-    static constexpr int64_t STATUS_END_CREDITS = 1;
+    enum class Status : uint8_t {
+        StartCredits = 0,
+        EndCredits = 1,
+    };
 
     uint64_t playerActorRuntimeId;
-    int32_t status;
+    Status status;
 
 public:
     std::string_view getName() override {
@@ -123,11 +125,11 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		playerActorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		status = stream.readVarInt().value_or(0);
+		status = static_cast<Status>(stream.readVarInt().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(playerActorRuntimeId);
-		stream.writeVarInt(status);
+		stream.writeVarInt(magic_enum::enum_integer(status));
     }
 };

@@ -127,7 +127,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<LoadingScreenType>>(loadingScreenType));
+		stream.writeVarInt(magic_enum::enum_integer(loadingScreenType));
 		stream.writeOptional(loadingScreenId, [&](const auto& value) {
 					stream.writeUnsignedInt(value);
 				});

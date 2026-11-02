@@ -65,7 +65,7 @@ public:
         stream.writeString(xboxUserId);
         stream.writeString(playFabId);
         stream.writeString(platformChatId);
-        stream.writeInt(static_cast<std::underlying_type_t<BuildPlatform>>(buildPlatform));
+        stream.writeInt(magic_enum::enum_integer(buildPlatform));
         stream.writeBool(isTeacher);
         stream.writeBool(isHost);
         stream.writeBool(isSubClient);

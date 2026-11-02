@@ -57,7 +57,7 @@ public:
     virtual void write(BinaryStream& stream) const {
         stream.writeActorUniqueID(fromActorUniqueId);
         stream.writeActorUniqueID(toActorUniqueId);
-        stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
+        stream.writeUnsignedByte(magic_enum::enum_integer(type));
         stream.writeBool(immediate);
         stream.writeBool(causedByRider);
         stream.writeFloat(vehicleAngularVelocity);

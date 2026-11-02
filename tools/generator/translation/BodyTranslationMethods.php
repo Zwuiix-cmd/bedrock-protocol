@@ -157,7 +157,7 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                 if ($enumType !== null) {
                     $value = $this->stringEnumName($property, $declaration) !== null
                         ? $this->stringEnumToStringForProperty($property, $value, $declaration)
-                        : 'static_cast<std::underlying_type_t<' . $enumType . '>>(' . $value . ')';
+                        : 'magic_enum::enum_integer(' . $value . ')';
                 }
                 $lines[] = '        ' . ($this->inferredPropertyWriteValue($declaration, $property, $value) ??
                     $this->fallbackWriteValue(

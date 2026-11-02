@@ -110,17 +110,19 @@ public:
     }
 
 public:
-    static constexpr int64_t FLAG_GROUND = 1;
-    static constexpr int64_t FLAG_TELEPORT = 2;
-    static constexpr int64_t FLAG_FORCE_MOVE_LOCAL_ENTITY = 4;
-    static constexpr int64_t FLAG_FORCE_COMPLETION = 8;
+    enum class Flag : uint8_t {
+        Ground = 1,
+        Teleport = 2,
+        ForceMoveLocalEntity = 4,
+        ForceCompletion = 8,
+    };
 
     uint64_t actorRuntimeId;
     glm::vec3 position;
     float pitch;
     float yaw;
     float headYaw;
-    uint8_t flags = 0;
+    Flag flags = static_cast<Flag>(0);
 
 public:
     std::string_view getName() override {
@@ -129,7 +131,7 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-		flags = stream.readUnsignedByte().value_or(0);
+		flags = static_cast<Flag>(stream.readUnsignedByte().value_or(0));
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
 		pitch = stream.readRotationByte().value_or(0);
 		yaw = stream.readRotationByte().value_or(0);
@@ -138,7 +140,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeActorRuntimeID(actorRuntimeId);
-		stream.writeUnsignedByte(flags);
+		stream.writeUnsignedByte(magic_enum::enum_integer(flags));
 		stream.writeVec3(position);
 		stream.writeRotationByte(pitch);
 		stream.writeRotationByte(yaw);

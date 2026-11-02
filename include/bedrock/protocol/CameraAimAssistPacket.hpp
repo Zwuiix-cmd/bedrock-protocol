@@ -137,8 +137,8 @@ public:
 		stream.writeString(presetId);
 		stream.writeVec2(viewAngle);
 		stream.writeFloat(distance);
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistTargetMode>>(targetMode));
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<CameraAimAssistActionType>>(actionType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(targetMode));
+		stream.writeUnsignedByte(magic_enum::enum_integer(actionType));
 		stream.writeBool(showDebugRender);
     }
 };

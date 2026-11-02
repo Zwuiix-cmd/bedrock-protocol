@@ -141,7 +141,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<Type>>(type));
+		stream.writeUnsignedByte(magic_enum::enum_integer(type));
 		stream.writeUnsignedVarInt(entries.size());
 		for (const auto& entry : entries) {
 			stream.writeVarLong(entry->scoreboardId);

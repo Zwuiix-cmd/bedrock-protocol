@@ -139,8 +139,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		requestId = stream.readInt().value_or(0);
 		requestChangedSlots = stream.readOptional([&]() {
-		            	auto result = std::vector<int32_t>();
-		            	{
+					auto result = std::vector<int32_t>();
+					{
 			    auto len = stream.readUnsignedVarInt().value_or(0);
 			    for (std::size_t i = 0; (i < len); ++i) {
 					result.push_back(([&]() {
@@ -150,16 +150,16 @@ public:
 					}()));
 			    }
 			}
-		            	return;
-		        });
+					return;
+				});
 		auto transactionType = stream.readUnsignedVarInt().value_or(0);
 		trData = ([&]() -> std::variant<std::shared_ptr<NormalTransactionData>, std::shared_ptr<MismatchTransactionData>, std::shared_ptr<UseItemTransactionData>, std::shared_ptr<UseItemOnEntityTransactionData>, std::shared_ptr<ReleaseItemTransactionData>> {
-		    if (transactionType == NormalTransactionData::ID) return std::make_shared<NormalTransactionData>();
-		    if (transactionType == MismatchTransactionData::ID) return std::make_shared<MismatchTransactionData>();
-		    if (transactionType == UseItemTransactionData::ID) return std::make_shared<UseItemTransactionData>();
-		    if (transactionType == UseItemOnEntityTransactionData::ID) return std::make_shared<UseItemOnEntityTransactionData>();
-		    if (transactionType == ReleaseItemTransactionData::ID) return std::make_shared<ReleaseItemTransactionData>();
-		    throw std::exception{};
+			if (transactionType == NormalTransactionData::ID) return std::make_shared<NormalTransactionData>();
+			if (transactionType == MismatchTransactionData::ID) return std::make_shared<MismatchTransactionData>();
+			if (transactionType == UseItemTransactionData::ID) return std::make_shared<UseItemTransactionData>();
+			if (transactionType == UseItemOnEntityTransactionData::ID) return std::make_shared<UseItemOnEntityTransactionData>();
+			if (transactionType == ReleaseItemTransactionData::ID) return std::make_shared<ReleaseItemTransactionData>();
+			throw std::exception{};
 		}());
 		std::visit([&](auto& value) { if (value) value->read(stream); }, trData);
     }
@@ -167,11 +167,11 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeInt(requestId);
 		stream.writeOptional(requestChangedSlots, [&](const auto& value) {
-		            	stream.writeUnsignedVarInt(value.size());
-		            	for (const auto& changedSlots : value) {
+					stream.writeUnsignedVarInt(value.size());
+					for (const auto& changedSlots : value) {
 				changedSlots->write(stream);
 			}
-		        });
+				});
 		stream.writeUnsignedVarInt(std::visit([&](const auto& value) -> int32_t { return value ? std::remove_cvref_t<decltype(*value)>::ID : 0; }, trData));
 		std::visit([&](auto& value) { if (value) value->write(stream); }, trData);
     }

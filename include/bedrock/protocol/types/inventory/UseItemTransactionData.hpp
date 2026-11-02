@@ -69,7 +69,7 @@ public:
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
+        stream.writeVarInt(magic_enum::enum_integer(actionType));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeUnsignedByte(face);
         stream.writeVarInt(hotbarSlot);
@@ -77,9 +77,9 @@ public:
         stream.writeVec3(clickPosition);
         stream.writeUnsignedVarInt(blockRuntimeId);
         stream.writeUnsignedByte(clientCooldownState);
-        stream.writeVarInt(static_cast<int32_t>(triggerType));
-        stream.writeVarInt(static_cast<int32_t>(hand));
+        stream.writeVarInt(magic_enum::enum_integer(triggerType));
+        stream.writeVarInt(magic_enum::enum_integer(hand));
         itemInHand.write(stream);
-        stream.writeVarInt(static_cast<int32_t>(clientInteractPrediction));
+        stream.writeVarInt(magic_enum::enum_integer(clientInteractPrediction));
     }
 };

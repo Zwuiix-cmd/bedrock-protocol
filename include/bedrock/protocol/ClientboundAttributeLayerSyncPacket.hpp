@@ -121,27 +121,27 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		payload = ([&]() -> std::shared_ptr<AttributeLayerSyncPayload> {
-		    if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayers::ID) return ([&]() {
+			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayers::ID) return ([&]() {
 		    auto value = std::make_shared<AttributeUpdateLayers>();
 		    value->read(stream);
 		    return value;
 		}());
-		    if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayerSettings::ID) return ([&]() {
+			if (stream.readUnsignedVarInt().value_or(0) == AttributeUpdateLayerSettings::ID) return ([&]() {
 		    auto value = std::make_shared<AttributeUpdateLayerSettings>();
 		    value->read(stream);
 		    return value;
 		}());
-		    if (stream.readUnsignedVarInt().value_or(0) == AttributesUpdateEnvironment::ID) return ([&]() {
+			if (stream.readUnsignedVarInt().value_or(0) == AttributesUpdateEnvironment::ID) return ([&]() {
 		    auto value = std::make_shared<AttributesUpdateEnvironment>();
 		    value->read(stream);
 		    return value;
 		}());
-		    if (stream.readUnsignedVarInt().value_or(0) == AttributesRemoveEnvironment::ID) return ([&]() {
+			if (stream.readUnsignedVarInt().value_or(0) == AttributesRemoveEnvironment::ID) return ([&]() {
 		    auto value = std::make_shared<AttributesRemoveEnvironment>();
 		    value->read(stream);
 		    return value;
 		}());
-		    throw std::exception{};
+			throw std::exception{};
 		}());
     }
 

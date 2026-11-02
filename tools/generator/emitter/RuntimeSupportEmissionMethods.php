@@ -189,6 +189,7 @@ CPP;
 #pragma once
 
 #include <cstdint>
+#include <magic_enum/magic_enum.hpp>
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
@@ -221,7 +222,7 @@ public:
     }
 
     void write(BinaryStream& stream) const {
-        stream.writeUnsignedShort(static_cast<uint16_t>(layerId));
+        stream.writeUnsignedShort(magic_enum::enum_integer(layerId));
         stream.writeUnsignedInt(setAbilities);
         stream.writeUnsignedInt(setAbilityValues);
         stream.writeFloat(flySpeed);

@@ -127,7 +127,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeVarInt(static_cast<std::underlying_type_t<GameMode>>(gameMode));
+		stream.writeVarInt(magic_enum::enum_integer(gameMode));
 		stream.writeActorUniqueID(playerActorUniqueId);
 		stream.writeUnsignedVarLong(tick);
     }

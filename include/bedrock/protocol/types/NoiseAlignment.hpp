@@ -31,7 +31,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<NoiseAlignmentType>>(type));
+		stream.writeUnsignedByte(magic_enum::enum_integer(type));
 		stream.writeUnsignedVarInt(value);
     }
 };

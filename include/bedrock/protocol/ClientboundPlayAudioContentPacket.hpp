@@ -132,7 +132,7 @@ public:
     void write(BinaryStream& stream) override {
         stream.writeString(sharedMetadata);
         stream.writeString(playbackContent);
-        stream.writeVarInt(static_cast<int32_t>(playbackType));
+        stream.writeVarInt(magic_enum::enum_integer(playbackType));
         (void)(playSound);
     }
 };

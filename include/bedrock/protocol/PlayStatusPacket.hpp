@@ -110,18 +110,20 @@ public:
     }
 
 public:
-    static constexpr int64_t LOGIN_SUCCESS = 0;
-    static constexpr int64_t LOGIN_FAILED_CLIENT = 1;
-    static constexpr int64_t LOGIN_FAILED_SERVER = 2;
-    static constexpr int64_t PLAYER_SPAWN = 3;
-    static constexpr int64_t LOGIN_FAILED_INVALID_TENANT = 4;
-    static constexpr int64_t LOGIN_FAILED_VANILLA_EDU = 5;
-    static constexpr int64_t LOGIN_FAILED_EDU_VANILLA = 6;
-    static constexpr int64_t LOGIN_FAILED_SERVER_FULL = 7;
-    static constexpr int64_t LOGIN_FAILED_EDITOR_VANILLA = 8;
-    static constexpr int64_t LOGIN_FAILED_VANILLA_EDITOR = 9;
+    enum class Status : uint8_t {
+        Success = 0,
+        FailedClient = 1,
+        FailedServer = 2,
+        FailedInvalidTenant = 4,
+        FailedVanillaEdu = 5,
+        FailedEduVanilla = 6,
+        FailedServerFull = 7,
+        FailedEditorVanilla = 8,
+        FailedVanillaEditor = 9,
+        Spawn = 3,
+    };
 
-    uint32_t status;
+    Status status;
 
 public:
     std::string_view getName() override {
@@ -129,10 +131,10 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		status = stream.readUnsignedIntBE().value_or(0);
+		status = static_cast<Status>(stream.readUnsignedIntBE().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedIntBE(status);
+		stream.writeUnsignedIntBE(magic_enum::enum_integer(status));
     }
 };

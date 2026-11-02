@@ -68,7 +68,7 @@ public:
         stream.writeString(clockName);
         stream.writeUnsignedVarInt(localTransitionTicks);
         stream.writeString(noiseName);
-        stream.writeVarInt(static_cast<int32_t>(easeType));
+        stream.writeVarInt(magic_enum::enum_integer(easeType));
         if (noiseAlignment) noiseAlignment->write(stream);
     }
 };

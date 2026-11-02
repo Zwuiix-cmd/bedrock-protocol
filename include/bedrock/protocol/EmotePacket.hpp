@@ -110,15 +110,17 @@ public:
     }
 
 public:
-    static constexpr int64_t FLAG_SERVER = 1;
-    static constexpr int64_t FLAG_MUTE_ANNOUNCEMENT = 2;
+    enum class Flag : uint8_t {
+        Server = 1,
+        MuteAnnouncement = 2,
+    };
 
     uint64_t actorRuntimeId;
     std::string emoteId;
     uint32_t emoteLengthTicks;
     std::string xboxUserId;
     std::string platformChatId;
-    uint8_t flags;
+    Flag flags;
 
 public:
     std::string_view getName() override {
@@ -131,7 +133,7 @@ public:
 		emoteLengthTicks = stream.readUnsignedVarInt().value_or(0);
 		xboxUserId = stream.readString().value_or("");
 		platformChatId = stream.readString().value_or("");
-		flags = stream.readUnsignedByte().value_or(0);
+		flags = static_cast<Flag>(stream.readUnsignedByte().value_or(0));
     }
 
     void write(BinaryStream& stream) override {
@@ -140,6 +142,6 @@ public:
 		stream.writeUnsignedVarInt(emoteLengthTicks);
 		stream.writeString(xboxUserId);
 		stream.writeString(platformChatId);
-		stream.writeUnsignedByte(flags);
+		stream.writeUnsignedByte(magic_enum::enum_integer(flags));
     }
 };

@@ -191,7 +191,7 @@ public:
 		stream.writeFloat(yaw);
 		stream.writeFloat(headYaw);
 		item.write(stream);
-		stream.writeVarInt(static_cast<std::underlying_type_t<GameMode>>(gameMode));
+		stream.writeVarInt(magic_enum::enum_integer(gameMode));
 		metadata.write(stream);
 		syncedProperties.write(stream);
 		abilities->write(stream);
@@ -203,6 +203,6 @@ public:
 					data->write(stream);
 				});
 		stream.writeString(deviceId);
-		stream.writeInt(static_cast<std::underlying_type_t<BuildPlatform>>(buildPlatform));
+		stream.writeInt(magic_enum::enum_integer(buildPlatform));
     }
 };

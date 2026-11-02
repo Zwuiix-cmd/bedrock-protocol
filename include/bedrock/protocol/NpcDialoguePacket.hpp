@@ -138,7 +138,7 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeLong(npcActorUniqueId);
-		stream.writeVarInt(static_cast<std::underlying_type_t<Action>>(actionType));
+		stream.writeVarInt(magic_enum::enum_integer(actionType));
 		stream.writeString(dialogue);
 		stream.writeString(sceneName);
 		stream.writeString(npcName);

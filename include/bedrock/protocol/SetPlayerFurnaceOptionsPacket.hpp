@@ -131,7 +131,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeUnsignedByte(static_cast<std::underlying_type_t<FurnaceType>>(furnaceType));
+		stream.writeUnsignedByte(magic_enum::enum_integer(furnaceType));
 		furnaceOptions->write(stream);
     }
 };

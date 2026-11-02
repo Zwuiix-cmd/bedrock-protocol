@@ -120,29 +120,31 @@ public:
     }
 
 public:
-    static constexpr int64_t ARG_FLAG_VALID = 1048576;
-    static constexpr int64_t ARG_TYPE_INT = 1;
-    static constexpr int64_t ARG_TYPE_FLOAT = 3;
-    static constexpr int64_t ARG_TYPE_VALUE = 4;
-    static constexpr int64_t ARG_TYPE_WILDCARD_INT = 5;
-    static constexpr int64_t ARG_TYPE_OPERATOR = 6;
-    static constexpr int64_t ARG_TYPE_COMPARE_OPERATOR = 7;
-    static constexpr int64_t ARG_TYPE_TARGET = 8;
-    static constexpr int64_t ARG_TYPE_WILDCARD_TARGET = 10;
-    static constexpr int64_t ARG_TYPE_FILEPATH = 17;
-    static constexpr int64_t ARG_TYPE_FULL_INTEGER_RANGE = 23;
-    static constexpr int64_t ARG_TYPE_EQUIPMENT_SLOT = 47;
-    static constexpr int64_t ARG_TYPE_STRING = 56;
-    static constexpr int64_t ARG_TYPE_INT_POSITION = 64;
-    static constexpr int64_t ARG_TYPE_POSITION = 65;
-    static constexpr int64_t ARG_TYPE_MESSAGE = 68;
-    static constexpr int64_t ARG_TYPE_RAWTEXT = 70;
-    static constexpr int64_t ARG_TYPE_JSON = 74;
-    static constexpr int64_t ARG_TYPE_BLOCK_STATES = 84;
-    static constexpr int64_t ARG_TYPE_COMMAND = 90;
-    static constexpr int64_t ARG_FLAG_ENUM = 2097152;
-    static constexpr int64_t ARG_FLAG_POSTFIX = 16777216;
-    static constexpr int64_t ARG_FLAG_SOFT_ENUM = 67108864;
+    enum class Arg : int64_t {
+        FlagValid = 1048576,
+        TypeInt = 1,
+        TypeFloat = 3,
+        TypeValue = 4,
+        TypeWildcardInt = 5,
+        TypeOperator = 6,
+        TypeCompareOperator = 7,
+        TypeTarget = 8,
+        TypeWildcardTarget = 10,
+        TypeFilepath = 17,
+        TypeFullIntegerRange = 23,
+        TypeEquipmentSlot = 47,
+        TypeString = 56,
+        TypeIntPosition = 64,
+        TypePosition = 65,
+        TypeMessage = 68,
+        TypeRawtext = 70,
+        TypeJson = 74,
+        TypeBlockStates = 84,
+        TypeCommand = 90,
+        FlagEnum = 2097152,
+        FlagPostfix = 16777216,
+        FlagSoftEnum = 67108864,
+    };
 
     std::vector<std::string> enumValues;
     std::vector<std::string> chainedSubCommandValues;

@@ -110,12 +110,14 @@ public:
     }
 
 public:
-    static constexpr int64_t SEARCHING_FOR_SPAWN = 0;
-    static constexpr int64_t READY_TO_SPAWN = 1;
-    static constexpr int64_t CLIENT_READY_TO_SPAWN = 2;
+    enum class Respawnstate : uint8_t {
+        ForSpawn = 0,
+        ToSpawn = 1,
+        ReadyToSpawn = 2,
+    };
 
     glm::vec3 position;
-    uint8_t respawnState = 0;
+    Respawnstate respawnState = SEARCHING_FOR_SPAWN;
     uint64_t actorRuntimeId;
 
 public:
@@ -125,13 +127,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		position = stream.readVec3().value_or(glm::vec3(0.0f));
-		respawnState = stream.readUnsignedByte().value_or(0);
+		respawnState = static_cast<Respawnstate>(stream.readUnsignedByte().value_or(0));
 		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
     }
 
     void write(BinaryStream& stream) override {
 		stream.writeVec3(position);
-		stream.writeUnsignedByte(respawnState);
+		stream.writeUnsignedByte(magic_enum::enum_integer(respawnState));
 		stream.writeActorRuntimeID(actorRuntimeId);
     }
 };

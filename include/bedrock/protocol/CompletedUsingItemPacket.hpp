@@ -145,6 +145,6 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeShort(itemId);
-		stream.writeInt(static_cast<std::underlying_type_t<Action>>(action));
+		stream.writeInt(magic_enum::enum_integer(action));
     }
 };

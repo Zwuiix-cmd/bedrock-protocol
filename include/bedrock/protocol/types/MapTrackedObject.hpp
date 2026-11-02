@@ -39,7 +39,7 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedInt(static_cast<std::underlying_type_t<Type>>(type));
+        stream.writeUnsignedInt(magic_enum::enum_integer(type));
         stream.writeOptional(actorUniqueId, [&](const auto& optionalValue) {
 			stream.writeInt(optionalValue);
 		});

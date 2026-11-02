@@ -123,7 +123,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		mapId = stream.readActorUniqueID().value_or(0);
 		auto count = stream.readUnsignedInt().value_or(0);
-		if ((count > (MapImage::MAX_HEIGHT * MapImage::MAX_WIDTH))) {
+		if ((count > (MapImage::Max::Height * MapImage::Max::Width))) {
 			throw std::exception{};
 		}
 		for (std::size_t i = 0; (i < count); i++) {

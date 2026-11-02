@@ -170,10 +170,10 @@ public:
         stream.writeInt(DefaultInputMode);
         stream.writeString(DeviceId);
         stream.writeString(DeviceModel);
-        stream.writeInt(static_cast<std::underlying_type_t<::BuildPlatform>>(DeviceOS));
+        stream.writeInt(magic_enum::enum_integer(DeviceOS));
         stream.writeBool(FilterProfanity);
         stream.writeString(GameVersion);
-        stream.writeInt(static_cast<std::underlying_type_t<::GraphicsMode>>(GraphicsMode));
+        stream.writeInt(magic_enum::enum_integer(GraphicsMode));
         stream.writeInt(GuiScale);
         stream.writeString(LanguageCode);
         stream.writeInt(MaxViewDistance);
@@ -208,6 +208,6 @@ public:
         stream.writeString(SkinResourcePatch);
         stream.writeString(ThirdPartyName);
         stream.writeBool(TrustedSkin);
-        stream.writeInt(static_cast<std::underlying_type_t<::UIProfile>>(UIProfile));
+        stream.writeInt(magic_enum::enum_integer(UIProfile));
     }
 };

@@ -27,7 +27,9 @@ final class CPPName
 
     public static function enumCase(string $name): string
     {
-        $parts = preg_split('/[^A-Za-z0-9]+/', strtolower($name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $normalized = strtolower($name);
+        $normalized = str_replace('mouseover', 'mouse_over', $normalized);
+        $parts = preg_split('/[^A-Za-z0-9]+/', $normalized, -1, PREG_SPLIT_NO_EMPTY) ?: [];
         $result = '';
         foreach ($parts as $part) {
             $result .= ucfirst($part);

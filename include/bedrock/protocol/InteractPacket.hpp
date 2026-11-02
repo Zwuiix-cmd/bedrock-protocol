@@ -98,7 +98,7 @@ public:
 public:
     enum class Action : uint8_t {
         LeaveVehicle = 3,
-        Mouseover = 4,
+        MouseOver = 4,
         OpenNpc = 5,
         OpenInventory = 6,
     };

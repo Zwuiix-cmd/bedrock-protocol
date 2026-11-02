@@ -1,7 +1,7 @@
 {
     "schema": 2,
     "configurationFingerprint": "5f70d6c7913211c9eece89ca9eefc2760a14bfed8560f7d3cec66bf4deac64e3",
-    "generatorFingerprint": "ac5a557eeb90df51e70cbf8d3cfbe102e3effdc23ebcc033b934a8baf7fa88f3",
+    "generatorFingerprint": "254f2e766a5f6b41e417bf3fb2c5760be5903543f5c73bdce2f67a98e7724a0f",
     "source": {
         "url": "https://github.com/axolotl-pm/BedrockProtocol.git",
         "ref": "56.1.0+bedrock-1.26.10",
@@ -941,7 +941,7 @@
             "bytes": 5339
         },
         "include/bedrock/protocol/InteractPacket.hpp": {
-            "sha256": "b7a37d7d696541705e075e6ec945f9300ae5a2ff648ee6fb75b81ae5e7f7bc14",
+            "sha256": "e9d2a3c1143b6394fc074445b472bbf6aa9f33fe48b08e1881da04ac9d874826",
             "bytes": 5740
         },
         "include/bedrock/protocol/InventoryContentPacket.hpp": {
@@ -2863,7 +2863,7 @@
         "enums": 72,
         "registrations": 224,
         "unsupported": 46,
-        "changed": 4,
+        "changed": 3,
         "removed": 2,
         "cached": 0
     }

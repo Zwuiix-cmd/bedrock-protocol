@@ -110,11 +110,11 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        windowId = stream.readUnsignedByte().value_or(0);
-        windowType = stream.readUnsignedByte().value_or(0);
-        windowSlotCount = stream.readVarInt().value_or(0);
-        actorUniqueId = stream.readActorUniqueID().value_or(0);
-        nbt = NetworkNbtSerializer::read(stream);
+		windowId = stream.readUnsignedByte().value_or(0);
+		windowType = stream.readUnsignedByte().value_or(0);
+		windowSlotCount = stream.readVarInt().value_or(0);
+		actorUniqueId = stream.readActorUniqueID().value_or(0);
+		nbt = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {

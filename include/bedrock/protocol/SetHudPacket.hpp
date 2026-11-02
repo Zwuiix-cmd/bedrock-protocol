@@ -108,7 +108,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto hudElementsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < hudElementsCount; ++i) {
+		const bool hudElementsCountAvailable = stream.canReadCollection(hudElementsCount);
+		for (std::size_t i = 0; i < hudElementsCount && hudElementsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    hudElements.push_back(magic_enum::enum_cast<HudElement>(
 			stream.readVarInt().value_or(0)
 		).value_or(HudElement::PaperDoll));

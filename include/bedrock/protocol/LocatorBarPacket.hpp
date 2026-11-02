@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto waypointsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < waypointsCount; ++i) {
+		const bool waypointsCountAvailable = stream.canReadCollection(waypointsCount);
+		for (std::size_t i = 0; i < waypointsCount && waypointsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    waypoints.push_back(stream.readObject<LocatorBarWaypointPayload>());
 		}
     }

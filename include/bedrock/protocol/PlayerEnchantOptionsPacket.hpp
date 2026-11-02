@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto optionsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < optionsCount; ++i) {
+		const bool optionsCountAvailable = stream.canReadCollection(optionsCount);
+		for (std::size_t i = 0; i < optionsCount && optionsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    options.push_back(stream.readObject<EnchantOption>());
 		}
     }

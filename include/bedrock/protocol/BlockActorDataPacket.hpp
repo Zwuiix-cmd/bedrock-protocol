@@ -107,8 +107,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        nbt = NetworkNbtSerializer::read(stream);
+		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
+		nbt = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {

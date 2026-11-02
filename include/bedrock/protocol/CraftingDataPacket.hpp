@@ -131,7 +131,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto recipeCount = stream.readUnsignedVarInt().value_or(0);
 		auto previousType = "none";
-		for (std::size_t i = 0; (i < recipeCount); ++i) {
+		    const bool recipeCountAvailable = stream.canReadCollection(recipeCount);
+		for (std::size_t i = 0; (i < recipeCount) && !stream.hasOverflowed() && recipeCountAvailable && !stream.hasOverflowed(); ++i) {
 			auto recipeType = stream.readVarInt().value_or(0);
 			switch (static_cast<Entry>(recipeType)) {
 				case Entry::Shapeless:
@@ -177,7 +178,8 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		    for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				auto inputId = stream.readVarInt().value_or(0);
 				auto inputMeta = stream.readVarInt().value_or(0);
 				auto ingredientId = stream.readVarInt().value_or(0);
@@ -189,7 +191,8 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		    for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				auto input = stream.readVarInt().value_or(0);
 				auto ingredient = stream.readVarInt().value_or(0);
 				auto output = stream.readVarInt().value_or(0);
@@ -198,14 +201,16 @@ public:
 		}
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		    for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				auto inputIdAndData = stream.readVarInt().value_or(0);
 				auto inputId = (inputIdAndData >> 16);
 				auto inputMeta = (inputIdAndData & 32767);
 				auto outputs = std::vector<std::shared_ptr<MaterialReducerRecipeOutput>>();
 				{
 				    auto outputCount = stream.readUnsignedVarInt().value_or(0);
-				    for (std::size_t j = 0; (j < outputCount); ++j) {
+				    const bool outputCountAvailable = stream.canReadCollection(outputCount);
+				    for (std::size_t j = 0; (j < outputCount) && !stream.hasOverflowed() && outputCountAvailable && !stream.hasOverflowed(); ++j) {
 						auto outputItemId = stream.readVarInt().value_or(0);
 						auto outputItemCount = stream.readVarInt().value_or(0);
 						outputs.push_back(std::make_shared<MaterialReducerRecipeOutput>(outputItemId, outputItemCount));

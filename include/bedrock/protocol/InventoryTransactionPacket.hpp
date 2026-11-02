@@ -121,7 +121,8 @@ public:
 		requestId = stream.readVarInt().value_or(0);
 		if (requestId != 0) {
 			auto requestChangedSlotsCount = stream.readUnsignedVarInt().value_or(0);
-			for (std::size_t i = 0; i < requestChangedSlotsCount; ++i) {
+			const bool requestChangedSlotsCountAvailable = stream.canReadCollection(requestChangedSlotsCount);
+			for (std::size_t i = 0; i < requestChangedSlotsCount && requestChangedSlotsCountAvailable && !stream.hasOverflowed(); ++i) {
 			    requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}
 		}

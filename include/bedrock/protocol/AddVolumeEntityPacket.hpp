@@ -113,14 +113,14 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        entityNetId = stream.readUnsignedVarInt().value_or(0);
-        jsonIdentifier = stream.readString().value_or("");
-        instanceName = stream.readString().value_or("");
-        minBound = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        maxBound = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        dimension = stream.readVarInt().value_or(0);
-        engineVersion = stream.readString().value_or("");
-        data = NetworkNbtSerializer::read(stream);
+		entityNetId = stream.readUnsignedVarInt().value_or(0);
+		data = NetworkNbtSerializer::read(stream);
+		jsonIdentifier = stream.readString().value_or("");
+		instanceName = stream.readString().value_or("");
+		minBound = stream.readSignedBlockPos().value_or(glm::ivec3(0));
+		maxBound = stream.readSignedBlockPos().value_or(glm::ivec3(0));
+		dimension = stream.readVarInt().value_or(0);
+		engineVersion = stream.readString().value_or("");
     }
 
     void write(BinaryStream& stream) override {

@@ -117,13 +117,15 @@ public:
 		auto count = stream.readUnsignedInt().value_or(0);
 		if (cacheEnabled) {
 			auto entriesValue = std::vector<std::shared_ptr<SubChunkPacketEntryWithCache>>();
-			for (std::size_t i = 0; (i < count); i++) {
+			    const bool countAvailable = stream.canReadCollection(count);
+			for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); i++) {
 				entriesValue.push_back(stream.readObject<SubChunkPacketEntryWithCache>());
 			}
 			entries = std::make_shared<SubChunkPacketEntryWithCacheList>(entriesValue);
 		} else {
 			auto entriesValue = std::vector<std::shared_ptr<SubChunkPacketEntryWithoutCache>>();
-			for (std::size_t i = 0; (i < count); i++) {
+			    const bool countAvailable = stream.canReadCollection(count);
+			for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); i++) {
 				entriesValue.push_back(stream.readObject<SubChunkPacketEntryWithoutCache>());
 			}
 			entries = std::make_shared<SubChunkPacketEntryWithoutCacheList>(entriesValue);

@@ -38,7 +38,8 @@ public:
 		auto repetitions2 = stream.readUnsignedByte().value_or(0);
 		auto ingredients = std::vector<std::shared_ptr<RecipeIngredient>>();
 		auto ingredientsCount = stream.readUnsignedByte().value_or(0);
-		for (std::size_t i = 0; i < ingredientsCount; ++i) {
+		const bool ingredientsCountAvailable = stream.canReadCollection(ingredientsCount);
+		for (std::size_t i = 0; i < ingredientsCount && ingredientsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    ingredients.push_back(stream.readObject<RecipeIngredient>());
 		}
 		return std::make_shared<CraftRecipeAutoStackRequestAction>(static_cast<int32_t>(recipeId), static_cast<int32_t>(repetitions), static_cast<int32_t>(repetitions2), ingredients);

@@ -41,37 +41,44 @@ public:
     static std::shared_ptr<BiomeOverworldGenRulesData> create(ReadOnlyBinaryStream& stream) {
 		auto hillTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto hillTransformationsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < hillTransformationsCount; ++i) {
+		const bool hillTransformationsCountAvailable = stream.canReadCollection(hillTransformationsCount);
+		for (std::size_t i = 0; i < hillTransformationsCount && hillTransformationsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    hillTransformations.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto mutateTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto mutateTransformationsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < mutateTransformationsCount; ++i) {
+		const bool mutateTransformationsCountAvailable = stream.canReadCollection(mutateTransformationsCount);
+		for (std::size_t i = 0; i < mutateTransformationsCount && mutateTransformationsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    mutateTransformations.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto riverTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto riverTransformationsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < riverTransformationsCount; ++i) {
+		const bool riverTransformationsCountAvailable = stream.canReadCollection(riverTransformationsCount);
+		for (std::size_t i = 0; i < riverTransformationsCount && riverTransformationsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    riverTransformations.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto shoreTransformations = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto shoreTransformationsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < shoreTransformationsCount; ++i) {
+		const bool shoreTransformationsCountAvailable = stream.canReadCollection(shoreTransformationsCount);
+		for (std::size_t i = 0; i < shoreTransformationsCount && shoreTransformationsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    shoreTransformations.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto preHillsEdges = std::vector<std::shared_ptr<BiomeConditionalTransformationData>>();
 		auto preHillsEdgesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < preHillsEdgesCount; ++i) {
+		const bool preHillsEdgesCountAvailable = stream.canReadCollection(preHillsEdgesCount);
+		for (std::size_t i = 0; i < preHillsEdgesCount && preHillsEdgesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    preHillsEdges.push_back(stream.readObject<BiomeConditionalTransformationData>());
 		}
 		auto postShoreEdges = std::vector<std::shared_ptr<BiomeConditionalTransformationData>>();
 		auto postShoreEdgesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < postShoreEdgesCount; ++i) {
+		const bool postShoreEdgesCountAvailable = stream.canReadCollection(postShoreEdgesCount);
+		for (std::size_t i = 0; i < postShoreEdgesCount && postShoreEdgesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    postShoreEdges.push_back(stream.readObject<BiomeConditionalTransformationData>());
 		}
 		auto climates = std::vector<std::shared_ptr<BiomeWeightedTemperatureData>>();
 		auto climatesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < climatesCount; ++i) {
+		const bool climatesCountAvailable = stream.canReadCollection(climatesCount);
+		for (std::size_t i = 0; i < climatesCount && climatesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    climates.push_back(stream.readObject<BiomeWeightedTemperatureData>());
 		}
 		return std::make_shared<BiomeOverworldGenRulesData>(hillTransformations, mutateTransformations, riverTransformations, shoreTransformations, preHillsEdges, postShoreEdges, climates);

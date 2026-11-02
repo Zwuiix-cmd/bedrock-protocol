@@ -114,11 +114,13 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        structureTemplateName = stream.readString().value_or("");
-        responseType = magic_enum::enum_cast<Type>(
-            stream.readUnsignedByte().value_or(0)
-        ).value_or(Type::Failure);
-        nbt = NetworkNbtSerializer::read(stream);
+		structureTemplateName = stream.readString().value_or("");
+		if (stream.readBool().value_or(false)) {
+			nbt = NetworkNbtSerializer::read(stream);
+		}
+		responseType = magic_enum::enum_cast<Type>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(Type::Failure);
     }
 
     void write(BinaryStream& stream) override {

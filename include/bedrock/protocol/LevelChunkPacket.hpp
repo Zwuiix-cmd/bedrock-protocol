@@ -137,7 +137,8 @@ public:
 			if (count > MAX_BLOB_HASHES) {
 				throw std::exception{};
 			}
-			for (std::size_t i = 0; (i < count); ++i) {
+			    const bool countAvailable = stream.canReadCollection(count);
+			for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				usedBlobHashes.value().push_back(stream.readUnsignedLong().value_or(0));
 			}
 		}

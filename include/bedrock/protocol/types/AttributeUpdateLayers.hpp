@@ -23,7 +23,8 @@ public:
     static std::shared_ptr<AttributeUpdateLayers> create(ReadOnlyBinaryStream& stream) {
 		auto layers = std::vector<std::shared_ptr<AttributeLayer>>();
 		auto layersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < layersCount; ++i) {
+		const bool layersCountAvailable = stream.canReadCollection(layersCount);
+		for (std::size_t i = 0; i < layersCount && layersCountAvailable && !stream.hasOverflowed(); ++i) {
 		    layers.push_back(stream.readObject<AttributeLayer>());
 		}
 		return std::make_shared<AttributeUpdateLayers>(layers);

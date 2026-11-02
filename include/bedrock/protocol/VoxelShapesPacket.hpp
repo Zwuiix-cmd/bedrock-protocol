@@ -109,13 +109,15 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto shapesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < shapesCount; ++i) {
+		const bool shapesCountAvailable = stream.canReadCollection(shapesCount);
+		for (std::size_t i = 0; i < shapesCount && shapesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    shapes.push_back(stream.readObject<SerializableVoxelShape>());
 		}
 		nameMap = {};
 		{
 		    auto namesCount = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < namesCount); ++i) {
+		    const bool namesCountAvailable = stream.canReadCollection(namesCount);
+		    for (std::size_t i = 0; (i < namesCount) && !stream.hasOverflowed() && namesCountAvailable && !stream.hasOverflowed(); ++i) {
 				auto name = stream.readString().value_or("");
 				auto id = stream.readUnsignedShort().value_or(0);
 				nameMap[name] = id;

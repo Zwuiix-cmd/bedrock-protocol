@@ -114,7 +114,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		mustAccept = stream.readBool().value_or(false);
 		auto resourcePackCount = stream.readUnsignedVarInt().value_or(0);
-		while (resourcePackCount-- > 0) {
+		while (resourcePackCount-- > 0 && !stream.hasOverflowed()) {
 			resourcePackStack.push_back(stream.readObject<ResourcePackStackEntry>());
 		}
 		baseGameVersion = stream.readString().value_or("");

@@ -168,7 +168,8 @@ public:
 				}
 				message = stream.readString().value_or("");
 				auto count = stream.readUnsignedVarInt().value_or(0);
-				for (std::size_t i = 0; (i < count); ++i) {
+				    const bool countAvailable = stream.canReadCollection(count);
+				for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 					parameters.push_back(stream.readString().value_or(""));
 				}
 				break;

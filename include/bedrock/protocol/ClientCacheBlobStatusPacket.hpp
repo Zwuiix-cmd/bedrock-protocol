@@ -107,10 +107,12 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		auto missCount = stream.readUnsignedVarInt().value_or(0);
 		auto hitCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < missCount); ++i) {
+		    const bool missCountAvailable = stream.canReadCollection(missCount);
+		for (std::size_t i = 0; (i < missCount) && !stream.hasOverflowed() && missCountAvailable && !stream.hasOverflowed(); ++i) {
 			missHashes.push_back(stream.readUnsignedLong().value_or(0));
 		}
-		for (std::size_t i = 0; (i < hitCount); ++i) {
+		    const bool hitCountAvailable = stream.canReadCollection(hitCount);
+		for (std::size_t i = 0; (i < hitCount) && !stream.hasOverflowed() && hitCountAvailable && !stream.hasOverflowed(); ++i) {
 			hitHashes.push_back(stream.readUnsignedLong().value_or(0));
 		}
     }

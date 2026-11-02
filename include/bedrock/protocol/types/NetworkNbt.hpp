@@ -339,7 +339,8 @@ private:
             case NbtTagType::List: {
                 const auto elementType = stream.readUnsignedByte();
                 const auto count = stream.readVarInt();
-                if (!elementType || !count || !isKnownType(*elementType) || *count < 0) return nullptr;
+                if (!elementType || !count || !isKnownType(*elementType) || *count < 0
+                    || static_cast<std::size_t>(*count) > stream.size() - stream.position()) return nullptr;
 
                 auto result = std::make_unique<ListTag>(static_cast<NbtTagType>(*elementType));
                 if (result->elementType == NbtTagType::End && *count != 0) return nullptr;
@@ -357,7 +358,8 @@ private:
             }
             case NbtTagType::IntArray: {
                 const auto count = stream.readVarInt();
-                if (!count || *count < 0) return nullptr;
+                if (!count || *count < 0
+                    || static_cast<std::size_t>(*count) > stream.size() - stream.position()) return nullptr;
                 auto result = std::make_unique<IntArrayTag>();
                 result->value.reserve(static_cast<std::size_t>(*count));
                 for (int32_t index = 0; index < *count; ++index) {
@@ -369,7 +371,8 @@ private:
             }
             case NbtTagType::LongArray: {
                 const auto count = stream.readVarInt();
-                if (!count || *count < 0) return nullptr;
+                if (!count || *count < 0
+                    || static_cast<std::size_t>(*count) > stream.size() - stream.position()) return nullptr;
                 auto result = std::make_unique<LongArrayTag>();
                 result->value.reserve(static_cast<std::size_t>(*count));
                 for (int32_t index = 0; index < *count; ++index) {

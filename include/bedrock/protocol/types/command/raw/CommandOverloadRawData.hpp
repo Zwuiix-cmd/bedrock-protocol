@@ -25,7 +25,8 @@ public:
 		auto chaining = stream.readBool().value_or(false);
 		auto parameters = std::vector<std::shared_ptr<CommandParameterRawData>>();
 		auto parametersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < parametersCount; i++) {
+		const bool parametersCountAvailable = stream.canReadCollection(parametersCount);
+		for (std::size_t i = 0; i < parametersCount && parametersCountAvailable && !stream.hasOverflowed(); i++) {
 		    parameters.push_back(stream.readObject<CommandParameterRawData>());
 		}
 		return std::make_shared<CommandOverloadRawData>(chaining, parameters);

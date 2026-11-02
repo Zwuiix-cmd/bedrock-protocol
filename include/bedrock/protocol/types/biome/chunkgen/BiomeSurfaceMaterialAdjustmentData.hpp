@@ -18,7 +18,8 @@ public:
     static std::shared_ptr<BiomeSurfaceMaterialAdjustmentData> create(ReadOnlyBinaryStream& stream) {
 		auto adjustments = std::vector<std::shared_ptr<BiomeElementData>>();
 		auto adjustmentsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < adjustmentsCount; ++i) {
+		const bool adjustmentsCountAvailable = stream.canReadCollection(adjustmentsCount);
+		for (std::size_t i = 0; i < adjustmentsCount && adjustmentsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    adjustments.push_back(stream.readObject<BiomeElementData>());
 		}
 		return std::make_shared<BiomeSurfaceMaterialAdjustmentData>(adjustments);

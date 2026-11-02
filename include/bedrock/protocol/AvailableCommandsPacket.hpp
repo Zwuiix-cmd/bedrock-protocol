@@ -148,35 +148,43 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto enumValuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < enumValuesCount; i++) {
+		const bool enumValuesCountAvailable = stream.canReadCollection(enumValuesCount);
+		for (std::size_t i = 0; i < enumValuesCount && enumValuesCountAvailable && !stream.hasOverflowed(); i++) {
 		    enumValues.push_back(stream.readString().value_or(""));
 		}
 		auto chainedSubCommandValuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < chainedSubCommandValuesCount; i++) {
+		const bool chainedSubCommandValuesCountAvailable = stream.canReadCollection(chainedSubCommandValuesCount);
+		for (std::size_t i = 0; i < chainedSubCommandValuesCount && chainedSubCommandValuesCountAvailable && !stream.hasOverflowed(); i++) {
 		    chainedSubCommandValues.push_back(stream.readString().value_or(""));
 		}
 		auto postfixesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < postfixesCount; i++) {
+		const bool postfixesCountAvailable = stream.canReadCollection(postfixesCount);
+		for (std::size_t i = 0; i < postfixesCount && postfixesCountAvailable && !stream.hasOverflowed(); i++) {
 		    postfixes.push_back(stream.readString().value_or(""));
 		}
 		auto enumsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < enumsCount; i++) {
+		const bool enumsCountAvailable = stream.canReadCollection(enumsCount);
+		for (std::size_t i = 0; i < enumsCount && enumsCountAvailable && !stream.hasOverflowed(); i++) {
 		    enums.push_back(stream.readObject<CommandEnumRawData>());
 		}
 		auto chainedSubCommandDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < chainedSubCommandDataCount; i++) {
+		const bool chainedSubCommandDataCountAvailable = stream.canReadCollection(chainedSubCommandDataCount);
+		for (std::size_t i = 0; i < chainedSubCommandDataCount && chainedSubCommandDataCountAvailable && !stream.hasOverflowed(); i++) {
 		    chainedSubCommandData.push_back(stream.readObject<ChainedSubCommandRawData>());
 		}
 		auto commandDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < commandDataCount; i++) {
+		const bool commandDataCountAvailable = stream.canReadCollection(commandDataCount);
+		for (std::size_t i = 0; i < commandDataCount && commandDataCountAvailable && !stream.hasOverflowed(); i++) {
 		    commandData.push_back(stream.readObject<CommandRawData>());
 		}
 		auto softEnumsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < softEnumsCount; i++) {
+		const bool softEnumsCountAvailable = stream.canReadCollection(softEnumsCount);
+		for (std::size_t i = 0; i < softEnumsCount && softEnumsCountAvailable && !stream.hasOverflowed(); i++) {
 		    softEnums.push_back(stream.readObject<CommandSoftEnum>());
 		}
 		auto enumConstraintsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < enumConstraintsCount; i++) {
+		const bool enumConstraintsCountAvailable = stream.canReadCollection(enumConstraintsCount);
+		for (std::size_t i = 0; i < enumConstraintsCount && enumConstraintsCountAvailable && !stream.hasOverflowed(); i++) {
 		    enumConstraints.push_back(stream.readObject<CommandEnumConstraintRawData>());
 		}
     }

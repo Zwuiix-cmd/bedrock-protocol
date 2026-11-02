@@ -85,6 +85,7 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         }
         if ($countInit instanceof Node\Expr\Assign) {
             $lines[] = 'auto ' . $countName . ' = ' . $count . ';';
+            $lines[] = 'const bool ' . $countName . 'Available = stream.canReadCollection(' . $countName . ');';
         }
         $counterType = $countInit instanceof Node\Expr\Assign
             ? $this->inferredCPPType($countInit->expr, $declaration)
@@ -92,7 +93,13 @@ private function listLoop(Node\Stmt\For_ $statement, array $declaration, array $
         $indexType = in_array($counterType, ['int8_t', 'int16_t', 'int32_t', 'int64_t'], true)
             ? $counterType
             : 'std::size_t';
-        $lines[] = 'for (' . $indexType . ' ' . $index . ' = 0; ' . $index . ' < ' . $countName . '; ' . $incrementText . ') {';
+        $conditionText = $index . ' < ' . $countName;
+        if ($countInit instanceof Node\Expr\Assign) {
+            $conditionText .= ' && ' . $countName . 'Available && !stream.hasOverflowed()';
+        } elseif (in_array(strtolower((string) ($method['name'] ?? '')), ['read', 'decode', 'decodepayload'], true)) {
+            $conditionText .= ' && !stream.hasOverflowed()';
+        }
+        $lines[] = 'for (' . $indexType . ' ' . $index . ' = 0; ' . $conditionText . '; ' . $incrementText . ') {';
         if ($body->expr->expr instanceof Node\Expr\Match_) {
             $match = $this->listMatchBody(
                 $body->expr->expr,

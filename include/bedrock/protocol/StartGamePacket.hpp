@@ -143,38 +143,44 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        actorUniqueId = stream.readActorUniqueID().value_or(0);
-        actorRuntimeId = stream.readActorRuntimeID().value_or(0);
-        playerGamemode = stream.readVarInt().value_or(0);
-        playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
-        pitch = stream.readFloat().value_or(0.0f);
-        yaw = stream.readFloat().value_or(0.0f);
-        levelId = stream.readString().value_or("");
-        worldName = stream.readString().value_or("");
-        premiumWorldTemplateId = stream.readString().value_or("");
-        isTrial = stream.readBool().value_or(false);
-        currentTick = stream.readUnsignedLong().value_or(0);
-        enchantmentSeed = stream.readVarInt().value_or(0);
-        multiplayerCorrelationId = stream.readString().value_or("");
-        enableNewInventorySystem = stream.readBool().value_or(false);
-        serverSoftwareVersion = stream.readString().value_or("");
-        blockPaletteChecksum = stream.readUnsignedLong().value_or(0);
-        enableClientSideChunkGeneration = stream.readBool().value_or(false);
-        blockNetworkIdsAreHashes = stream.readBool().value_or(false);
-        playerActorProperties = NetworkNbtSerializer::read(stream);
-        levelSettings = std::make_shared<LevelSettings>();
-        levelSettings->read(stream);
-        playerMovementSettings = std::make_shared<PlayerMovementSettings>();
-        playerMovementSettings->read(stream);
-        worldTemplateId = stream.readUUID().value_or("");
-        networkPermissions = std::make_shared<NetworkPermissions>();
-        networkPermissions->read(stream);
-        serverJoinInformation = stream.readOptional([&]() {
-            return stream.readObject<ServerJoinInformation>();
-        });
-        serverTelemetryData = std::make_shared<ServerTelemetryData>();
-        serverTelemetryData->read(stream);
-        blockPalette = stream.readObjectList<BlockPaletteEntry>();
+		actorUniqueId = stream.readActorUniqueID().value_or(0);
+		actorRuntimeId = stream.readActorRuntimeID().value_or(0);
+		playerGamemode = stream.readVarInt().value_or(0);
+		playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
+		pitch = stream.readFloat().value_or(0.0f);
+		yaw = stream.readFloat().value_or(0.0f);
+		levelSettings = std::make_shared<LevelSettings>();
+		levelSettings->read(stream);
+		levelId = stream.readString().value_or("");
+		worldName = stream.readString().value_or("");
+		premiumWorldTemplateId = stream.readString().value_or("");
+		isTrial = stream.readBool().value_or(false);
+		playerMovementSettings = std::make_shared<PlayerMovementSettings>();
+		playerMovementSettings->read(stream);
+		currentTick = stream.readUnsignedLong().value_or(0);
+		enchantmentSeed = stream.readVarInt().value_or(0);
+		{
+		    auto len = stream.readUnsignedVarInt().value_or(0);
+		    const bool lenAvailable = stream.canReadCollection(len);
+		    for (std::size_t i = 0; (i < len) && !stream.hasOverflowed() && lenAvailable && !stream.hasOverflowed(); ++i) {
+				auto blockName = stream.readString().value_or("");
+				auto state = NetworkNbtSerializer::read(stream);
+				blockPalette.push_back(std::make_shared<BlockPaletteEntry>(blockName, state));
+		    }
+		}
+		multiplayerCorrelationId = stream.readString().value_or("");
+		enableNewInventorySystem = stream.readBool().value_or(false);
+		serverSoftwareVersion = stream.readString().value_or("");
+		playerActorProperties = NetworkNbtSerializer::read(stream);
+		blockPaletteChecksum = stream.readUnsignedLong().value_or(0);
+		worldTemplateId = stream.readUUID().value_or("");
+		enableClientSideChunkGeneration = stream.readBool().value_or(false);
+		blockNetworkIdsAreHashes = stream.readBool().value_or(false);
+		networkPermissions = std::make_shared<NetworkPermissions>();
+		networkPermissions->read(stream);
+		serverJoinInformation = stream.readOptional([&]() { return stream.readObject<ServerJoinInformation>(); });
+		serverTelemetryData = std::make_shared<ServerTelemetryData>();
+		serverTelemetryData->read(stream);
     }
 
     void write(BinaryStream& stream) override {

@@ -20,7 +20,8 @@ public:
         commandPermission = stream.readUnsignedByte().value_or(0);
 
         const auto layerCount = stream.readUnsignedByte().value_or(0);
-        for (uint8_t i = 0; i < layerCount; ++i) {
+        const bool layerCountAvailable = stream.canReadCollection(layerCount);
+        for (uint8_t i = 0; i < layerCount && layerCountAvailable && !stream.hasOverflowed(); ++i) {
             AbilitiesLayer layer;
             layer.read(stream);
             layers.push_back(layer);

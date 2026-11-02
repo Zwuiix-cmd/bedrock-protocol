@@ -15,8 +15,9 @@ public:
     void read(ReadOnlyBinaryStream& stream) {
         intProperties.clear();
         const auto intCount = stream.readUnsignedVarInt().value_or(0);
+        const bool intCountAvailable = stream.canReadCollection(intCount);
         intProperties.reserve(intCount);
-        for (uint32_t i = 0; i < intCount; ++i) {
+        for (uint32_t i = 0; i < intCount && intCountAvailable && !stream.hasOverflowed(); ++i) {
             intProperties.emplace_back(
                 stream.readUnsignedVarInt().value_or(0),
                 stream.readVarInt().value_or(0)
@@ -25,8 +26,9 @@ public:
 
         floatProperties.clear();
         const auto floatCount = stream.readUnsignedVarInt().value_or(0);
+        const bool floatCountAvailable = stream.canReadCollection(floatCount);
         floatProperties.reserve(floatCount);
-        for (uint32_t i = 0; i < floatCount; ++i) {
+        for (uint32_t i = 0; i < floatCount && floatCountAvailable && !stream.hasOverflowed(); ++i) {
             floatProperties.emplace_back(
                 stream.readUnsignedVarInt().value_or(0),
                 stream.readFloat().value_or(0.0f)

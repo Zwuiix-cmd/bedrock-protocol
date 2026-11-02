@@ -106,7 +106,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        identifiers = NetworkNbtSerializer::read(stream);
+		identifiers = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {

@@ -107,7 +107,8 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		playerActorRuntimeId = stream.readActorRuntimeID().value_or(0);
 		auto emoteIdsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < emoteIdsCount; ++i) {
+		const bool emoteIdsCountAvailable = stream.canReadCollection(emoteIdsCount);
+		for (std::size_t i = 0; i < emoteIdsCount && emoteIdsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    emoteIds.push_back(stream.readUUID().value_or(""));
 		}
     }

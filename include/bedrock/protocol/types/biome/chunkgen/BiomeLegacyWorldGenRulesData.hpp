@@ -18,7 +18,8 @@ public:
     static std::shared_ptr<BiomeLegacyWorldGenRulesData> create(ReadOnlyBinaryStream& stream) {
 		auto legacyPreHills = std::vector<std::shared_ptr<BiomeConditionalTransformationData>>();
 		auto legacyPreHillsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < legacyPreHillsCount; ++i) {
+		const bool legacyPreHillsCountAvailable = stream.canReadCollection(legacyPreHillsCount);
+		for (std::size_t i = 0; i < legacyPreHillsCount && legacyPreHillsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    legacyPreHills.push_back(stream.readObject<BiomeConditionalTransformationData>());
 		}
 		return std::make_shared<BiomeLegacyWorldGenRulesData>(legacyPreHills);

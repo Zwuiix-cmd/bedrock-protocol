@@ -17,7 +17,8 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         const auto experimentsCount = stream.readUnsignedInt().value_or(0);
-        for (std::size_t index = 0; index < experimentsCount; ++index) {
+        const bool experimentsCountAvailable = stream.canReadCollection(experimentsCount);
+        for (std::size_t index = 0; index < experimentsCount && experimentsCountAvailable && !stream.hasOverflowed(); ++index) {
             auto experimentsKey = stream.readString().value_or("");
             auto experimentsValue = stream.readBool().value_or(false);
             experiments.emplace(std::move(experimentsKey), std::move(experimentsValue));

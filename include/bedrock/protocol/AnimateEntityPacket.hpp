@@ -117,7 +117,8 @@ public:
 		controller = stream.readString().value_or("");
 		blendOutTime = stream.readFloat().value_or(0.0f);
 		auto actorRuntimeIdsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < actorRuntimeIdsCount; ++i) {
+		const bool actorRuntimeIdsCountAvailable = stream.canReadCollection(actorRuntimeIdsCount);
+		for (std::size_t i = 0; i < actorRuntimeIdsCount && actorRuntimeIdsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    actorRuntimeIds.push_back(stream.readActorRuntimeID().value_or(0));
 		}
     }

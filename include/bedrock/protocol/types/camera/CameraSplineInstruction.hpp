@@ -44,17 +44,20 @@ public:
 		auto easeType = stream.readUnsignedByte().value_or(0);
 		auto curve = std::vector<glm::vec3>();
 		auto curveCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < curveCount); ++i) {
+		    const bool curveCountAvailable = stream.canReadCollection(curveCount);
+		for (std::size_t i = 0; (i < curveCount) && !stream.hasOverflowed() && curveCountAvailable && !stream.hasOverflowed(); ++i) {
 			curve.push_back(stream.readVec3().value_or(glm::vec3(0.0f)));
 		}
 		auto progressKeyFrames = std::vector<std::shared_ptr<CameraProgressOption>>();
 		auto progressKeyFrameCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < progressKeyFrameCount); ++i) {
+		    const bool progressKeyFrameCountAvailable = stream.canReadCollection(progressKeyFrameCount);
+		for (std::size_t i = 0; (i < progressKeyFrameCount) && !stream.hasOverflowed() && progressKeyFrameCountAvailable && !stream.hasOverflowed(); ++i) {
 			progressKeyFrames.push_back(stream.readObject<CameraProgressOption>());
 		}
 		auto rotationOptions = std::vector<std::shared_ptr<CameraRotationOption>>();
 		auto rotationOptionCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < rotationOptionCount); ++i) {
+		    const bool rotationOptionCountAvailable = stream.canReadCollection(rotationOptionCount);
+		for (std::size_t i = 0; (i < rotationOptionCount) && !stream.hasOverflowed() && rotationOptionCountAvailable && !stream.hasOverflowed(); ++i) {
 			rotationOptions.push_back(stream.readObject<CameraRotationOption>());
 		}
 		auto splineIdentifier = stream.readString().value_or("");

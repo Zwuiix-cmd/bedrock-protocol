@@ -47,7 +47,8 @@ public:
     Map readMap(KeyReader&& keyReader, ValueReader&& valueReader) {
         Map result;
         const auto count = readUnsignedInt().value_or(0);
-        for (std::size_t index = 0; index < count; ++index) {
+        if (!canReadCollection(count)) return result;
+        for (std::size_t index = 0; index < count && !overflowed; ++index) {
             result.emplace(
                 std::forward<KeyReader>(keyReader)(),
                 std::forward<ValueReader>(valueReader)()
@@ -87,6 +88,13 @@ public:
     [[nodiscard]] std::size_t size() const noexcept { return bufferSize; }
     [[nodiscard]] std::string_view data() const noexcept {
         return std::string_view(reinterpret_cast<const char*>(bufferData), bufferSize);
+    }
+    [[nodiscard]] bool canReadCollection(std::size_t count) noexcept {
+        if (readPointer > bufferSize || count > bufferSize - readPointer) {
+            overflowed = true;
+            return false;
+        }
+        return true;
     }
     void seek(std::size_t pos, bool markOverflow = true) noexcept {
         readPointer = pos;
@@ -437,8 +445,9 @@ public:
         using Value = std::remove_cvref_t<std::invoke_result_t<Reader&>>;
         const uint32_t count = readUnsignedVarInt().value_or(0);
         std::vector<Value> values;
+        if (!canReadCollection(count)) return values;
         values.reserve(count);
-        for (uint32_t index = 0; index < count; ++index) {
+        for (uint32_t index = 0; index < count && !overflowed; ++index) {
             values.emplace_back(std::forward<Reader>(reader)());
         }
         return values;
@@ -455,8 +464,9 @@ public:
     std::vector<std::shared_ptr<T>> readObjectList() {
         const auto count = readUnsignedVarInt().value_or(0);
         std::vector<std::shared_ptr<T>> values;
+        if (!canReadCollection(count)) return values;
         values.reserve(count);
-        for (uint32_t index = 0; index < count; ++index) {
+        for (uint32_t index = 0; index < count && !overflowed; ++index) {
             auto value = std::make_shared<T>();
             value->read(*this);
             values.emplace_back(std::move(value));

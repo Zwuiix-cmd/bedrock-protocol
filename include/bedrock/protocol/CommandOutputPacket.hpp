@@ -128,12 +128,14 @@ public:
 		successCount = stream.readUnsignedInt().value_or(0);
 		{
 		    auto size = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < size); ++i) {
+		    const bool sizeAvailable = stream.canReadCollection(size);
+		    for (std::size_t i = 0; (i < size) && !stream.hasOverflowed() && sizeAvailable && !stream.hasOverflowed(); ++i) {
 				auto message = std::make_shared<CommandOutputMessage>();
 				message->messageId = stream.readString().value_or("");
 				message->isInternal = stream.readBool().value_or(false);
 				auto parametersCount = stream.readUnsignedVarInt().value_or(0);
-				for (std::size_t i = 0; i < parametersCount; ++i) {
+				const bool parametersCountAvailable = stream.canReadCollection(parametersCount);
+				for (std::size_t i = 0; i < parametersCount && parametersCountAvailable && !stream.hasOverflowed(); ++i) {
 				    message->parameters.push_back(stream.readString().value_or(""));
 				}
 				messages.push_back(message);

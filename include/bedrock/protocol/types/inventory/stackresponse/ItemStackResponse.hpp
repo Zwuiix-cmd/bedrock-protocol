@@ -42,7 +42,8 @@ public:
 		auto containerInfos = std::vector<std::shared_ptr<ItemStackResponseContainerInfo>>();
 		if (result == magic_enum::enum_integer(Result::Ok)) {
 			auto containerInfosCount = stream.readUnsignedVarInt().value_or(0);
-			for (std::size_t i = 0; i < containerInfosCount; ++i) {
+			const bool containerInfosCountAvailable = stream.canReadCollection(containerInfosCount);
+			for (std::size_t i = 0; i < containerInfosCount && containerInfosCountAvailable && !stream.hasOverflowed(); ++i) {
 			    containerInfos.push_back(stream.readObject<ItemStackResponseContainerInfo>());
 			}
 		}

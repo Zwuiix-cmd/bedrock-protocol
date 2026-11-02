@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto requestsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < requestsCount; ++i) {
+		const bool requestsCountAvailable = stream.canReadCollection(requestsCount);
+		for (std::size_t i = 0; i < requestsCount && requestsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    requests.push_back(stream.readObject<ItemStackRequest>());
 		}
     }

@@ -132,7 +132,8 @@ public:
 		headYaw = stream.readFloat().value_or(0.0f);
 		bodyYaw = stream.readFloat().value_or(0.0f);
 		auto attrCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < attrCount); ++i) {
+		    const bool attrCountAvailable = stream.canReadCollection(attrCount);
+		for (std::size_t i = 0; (i < attrCount) && !stream.hasOverflowed() && attrCountAvailable && !stream.hasOverflowed(); ++i) {
 			auto id = stream.readString().value_or("");
 			auto min = stream.readFloat().value_or(0.0f);
 			auto current = stream.readFloat().value_or(0.0f);
@@ -142,7 +143,8 @@ public:
 		metadata.read(stream);
 		syncedProperties = stream.readValue<PropertySyncData>();
 		auto linkCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < linkCount); ++i) {
+		    const bool linkCountAvailable = stream.canReadCollection(linkCount);
+		for (std::size_t i = 0; (i < linkCount) && !stream.hasOverflowed() && linkCountAvailable && !stream.hasOverflowed(); ++i) {
 			links.push_back(stream.readObject<EntityLink>());
 		}
     }

@@ -326,7 +326,11 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         if ($statement instanceof Node\Stmt\While_) {
             $previousDeclaredVariables = $this->declaredVariables;
-            $text = $prefix . 'while (' . $this->conditionExpression($statement->cond, $declaration, $method) . ") {\n";
+            $condition = $this->conditionExpression($statement->cond, $declaration, $method);
+            if (in_array(strtolower((string) ($method['name'] ?? '')), ['read', 'decode', 'decodepayload'], true)) {
+                $condition .= ' && !stream.hasOverflowed()';
+            }
+            $text = $prefix . 'while (' . $condition . ") {\n";
             foreach ($statement->stmts as $child) {
                 $text .= $this->statement($child, $declaration, $method, $indent + 1) . "\n";
             }
@@ -343,6 +347,10 @@ private function statement(Node $statement, array $declaration, array $method, i
             [$init, $prefixLines] = $this->forInitializer($statement->init, $declaration, $method);
             $condition = implode(' && ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->cond));
             $loop = implode(', ', array_map(fn (Node\Expr $expr): string => $this->expression($expr, $declaration, $method), $statement->loop));
+            if (in_array(strtolower((string) ($method['name'] ?? '')), ['read', 'decode', 'decodepayload'], true)
+                && str_contains($condition, '<')) {
+                $condition .= ' && !stream.hasOverflowed()';
+            }
             if (isset($statement->cond[0])
                 && $statement->cond[0] instanceof Node\Expr\BinaryOp\Smaller
                 && $statement->cond[0]->left instanceof Node\Expr\Variable
@@ -373,10 +381,43 @@ private function statement(Node $statement, array $declaration, array $method, i
                     $init,
                 );
             }
+            $countAvailableName = null;
+            if (isset($statement->cond[0])
+                && $statement->cond[0] instanceof Node\Expr\BinaryOp\Smaller
+                && $statement->cond[0]->right instanceof Node\Expr\Variable) {
+                $countVariable = $this->variableName((string) $statement->cond[0]->right->name, $declaration);
+                foreach ($prefixLines as $line) {
+                    if (str_contains($line, 'stream.read') && str_contains($line, $countVariable)) {
+                        $countAvailableName = $countVariable . 'Available';
+                        $condition .= ' && ' . $countAvailableName . ' && !stream.hasOverflowed()';
+                        break;
+                    }
+                }
+            }
             $hasPrefixScope = $prefixLines !== [];
             $text = $hasPrefixScope ? $prefix . "{\n" : '';
             foreach ($prefixLines as $line) {
                 $text .= $prefix . "    " . $line . "\n";
+            }
+            if ($countAvailableName !== null) {
+                $countVariable = $this->variableName((string) $statement->cond[0]->right->name, $declaration);
+                $text .= $prefix . "    const bool " . $countAvailableName
+                    . " = stream.canReadCollection(" . $countVariable . ");\n";
+            }
+            if ($countAvailableName === null
+                && in_array(strtolower((string) ($method['name'] ?? '')), ['read', 'decode', 'decodepayload'], true)
+                && isset($statement->cond[0])
+                && $statement->cond[0] instanceof Node\Expr\BinaryOp\Smaller
+                && $statement->cond[0]->right instanceof Node\Expr\Variable
+                && $this->methodReadsVariable(
+                    $method,
+                    (string) $statement->cond[0]->right->name,
+                )) {
+                $countVariable = $this->variableName((string) $statement->cond[0]->right->name, $declaration);
+                $countAvailableName = $countVariable . 'Available';
+                $condition .= ' && ' . $countAvailableName . ' && !stream.hasOverflowed()';
+                $text .= $prefix . "    const bool " . $countAvailableName
+                    . " = stream.canReadCollection(" . $countVariable . ");\n";
             }
             $text .= $prefix . ($hasPrefixScope ? '    ' : '') . 'for (' . $init . '; ' . $condition . '; ' . $loop . ") {\n";
             foreach ($statement->stmts as $child) {
@@ -514,6 +555,56 @@ private function statement(Node $statement, array $declaration, array $method, i
             return 'static_cast<' . $targetType . '>(' . $value . ')';
         }
         return $value;
+    }
+
+    private function methodReadsVariable(array $method, string $name): bool
+    {
+        $visit = function (mixed $node) use (&$visit, $name): bool {
+            if (!$node instanceof Node) {
+                if (is_array($node)) {
+                    foreach ($node as $item) {
+                        if ($visit($item)) return true;
+                    }
+                }
+                return false;
+            }
+            if ($node instanceof Node\Expr\Assign
+                && $node->var instanceof Node\Expr\Variable
+                && (string) $node->var->name === $name
+                && $this->containsReadExpression($node->expr)) {
+                return true;
+            }
+            foreach ($node->getSubNodeNames() as $subNodeName) {
+                if ($visit($node->{$subNodeName})) return true;
+            }
+            return false;
+        };
+
+        return $visit($method['body'] ?? []);
+    }
+
+    private function containsReadExpression(mixed $node): bool
+    {
+        if (!$node instanceof Node) {
+            if (is_array($node)) {
+                foreach ($node as $item) {
+                    if ($this->containsReadExpression($item)) return true;
+                }
+            }
+            return false;
+        }
+        if ($node instanceof Node\Expr\MethodCall || $node instanceof Node\Expr\StaticCall) {
+            $name = $node->name instanceof Node\Identifier
+                ? strtolower($node->name->toString())
+                : '';
+            if (str_starts_with($name, 'read') || str_starts_with($name, 'get')) {
+                return true;
+            }
+        }
+        foreach ($node->getSubNodeNames() as $subNodeName) {
+            if ($this->containsReadExpression($node->{$subNodeName})) return true;
+        }
+        return false;
     }
 
 private function optionalTernaryAssignment(

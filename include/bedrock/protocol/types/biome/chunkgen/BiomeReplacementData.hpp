@@ -35,7 +35,8 @@ public:
 		auto dimension = stream.readVarInt().value_or(0);
 		auto targetBiomes = std::vector<int16_t>();
 		auto targetBiomeCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < targetBiomeCount); ++i) {
+		    const bool targetBiomeCountAvailable = stream.canReadCollection(targetBiomeCount);
+		for (std::size_t i = 0; (i < targetBiomeCount) && !stream.hasOverflowed() && targetBiomeCountAvailable && !stream.hasOverflowed(); ++i) {
 			targetBiomes.push_back(stream.readShort().value_or(0));
 		}
 		auto amount = stream.readFloat().value_or(0.0f);

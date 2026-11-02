@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto shapesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < shapesCount; ++i) {
+		const bool shapesCountAvailable = stream.canReadCollection(shapesCount);
+		for (std::size_t i = 0; i < shapesCount && shapesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    shapes.push_back(stream.readObject<PacketShapeData>());
 		}
     }

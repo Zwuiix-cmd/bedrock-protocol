@@ -117,7 +117,8 @@ public:
 		).value_or(Type::Change);
 		{
 		    auto i2 = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < i2); ++i) {
+		    const bool i2Available = stream.canReadCollection(i2);
+		    for (std::size_t i = 0; (i < i2) && !stream.hasOverflowed() && i2Available && !stream.hasOverflowed(); ++i) {
 				auto entry = std::make_shared<ScorePacketEntry>();
 				entry->scoreboardId = stream.readVarLong().value_or(0);
 				entry->objectiveName = stream.readString().value_or("");

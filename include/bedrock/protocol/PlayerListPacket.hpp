@@ -116,7 +116,8 @@ public:
 			stream.readUnsignedByte().value_or(0)
 		).value_or(Type::Add);
 		auto count = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 			auto entry = std::make_shared<PlayerListEntry>();
 			if (type == Type::Add) {
 				entry->uuid = stream.readUUID().value_or("");
@@ -139,7 +140,8 @@ public:
 			entries.push_back(entry);
 		}
 		if (type == Type::Add) {
-			for (std::size_t i = 0; (i < count); ++i) {
+			    const bool countAvailable = stream.canReadCollection(count);
+			for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				entries[i]->skinData->isVerified = stream.readBool().value_or(false);
 			}
 		}

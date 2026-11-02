@@ -46,12 +46,14 @@ public:
 		auto aliasEnumIndex = stream.readInt().value_or(0);
 		auto chainedSubCommandDataIndexes = std::vector<uint32_t>();
 		auto chainedSubCommandDataIndexesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < chainedSubCommandDataIndexesCount; i++) {
+		const bool chainedSubCommandDataIndexesCountAvailable = stream.canReadCollection(chainedSubCommandDataIndexesCount);
+		for (std::size_t i = 0; i < chainedSubCommandDataIndexesCount && chainedSubCommandDataIndexesCountAvailable && !stream.hasOverflowed(); i++) {
 		    chainedSubCommandDataIndexes.push_back(stream.readUnsignedInt().value_or(0));
 		}
 		auto overloads = std::vector<std::shared_ptr<CommandOverloadRawData>>();
 		auto overloadsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < overloadsCount; i++) {
+		const bool overloadsCountAvailable = stream.canReadCollection(overloadsCount);
+		for (std::size_t i = 0; i < overloadsCount && overloadsCountAvailable && !stream.hasOverflowed(); i++) {
 		    overloads.push_back(stream.readObject<CommandOverloadRawData>());
 		}
 		return std::make_shared<CommandRawData>(name, description, static_cast<int32_t>(flags), permission, aliasEnumIndex, chainedSubCommandDataIndexes, overloads);

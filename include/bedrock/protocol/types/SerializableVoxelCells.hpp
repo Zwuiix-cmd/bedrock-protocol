@@ -33,7 +33,8 @@ public:
 		auto zSize = stream.readUnsignedByte().value_or(0);
 		auto storage = std::vector<uint8_t>();
 		auto storageCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < storageCount; ++i) {
+		const bool storageCountAvailable = stream.canReadCollection(storageCount);
+		for (std::size_t i = 0; i < storageCount && storageCountAvailable && !stream.hasOverflowed(); ++i) {
 		    storage.push_back(stream.readUnsignedByte().value_or(0));
 		}
 		return std::make_shared<SerializableVoxelCells>(static_cast<int32_t>(xSize), static_cast<int32_t>(ySize), static_cast<int32_t>(zSize), storage);

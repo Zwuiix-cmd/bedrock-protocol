@@ -111,11 +111,13 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto categoriesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < categoriesCount; ++i) {
+		const bool categoriesCountAvailable = stream.canReadCollection(categoriesCount);
+		for (std::size_t i = 0; i < categoriesCount && categoriesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    categories.push_back(stream.readObject<CameraAimAssistCategory>());
 		}
 		auto presetsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < presetsCount; ++i) {
+		const bool presetsCountAvailable = stream.canReadCollection(presetsCount);
+		for (std::size_t i = 0; i < presetsCount && presetsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    presets.push_back(stream.readObject<CameraAimAssistPreset>());
 		}
 		operation = stream.readUnsignedByte().value_or(0);

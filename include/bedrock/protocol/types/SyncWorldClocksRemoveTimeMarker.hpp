@@ -24,7 +24,8 @@ public:
 		auto clockId = stream.readUnsignedVarLong().value_or(0);
 		auto markerIds = std::vector<uint64_t>();
 		auto markerIdsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < markerIdsCount; ++i) {
+		const bool markerIdsCountAvailable = stream.canReadCollection(markerIdsCount);
+		for (std::size_t i = 0; i < markerIdsCount && markerIdsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    markerIds.push_back(stream.readUnsignedVarLong().value_or(0));
 		}
 		return std::make_shared<SyncWorldClocksRemoveTimeMarker>(static_cast<int32_t>(clockId), markerIds);

@@ -168,7 +168,8 @@ public function genericBody(array $declaration, bool $read, bool $returnShared =
                     $keyRead = $this->fallbackReadValue($arrayParts['key'], null, $declaration);
                     $valueRead = $this->fallbackReadValue($arrayParts['value'], null, $declaration);
                     $lines[] = '        const auto ' . $countName . ' = stream.readUnsignedInt().value_or(0);';
-                    $lines[] = '        for (std::size_t index = 0; index < ' . $countName . '; ++index) {';
+                    $lines[] = '        const bool ' . $countName . 'Available = stream.canReadCollection(' . $countName . ');';
+                    $lines[] = '        for (std::size_t index = 0; index < ' . $countName . ' && ' . $countName . 'Available && !stream.hasOverflowed(); ++index) {';
                     $lines[] = '            auto ' . $keyName . ' = ' . $keyRead . ';';
                     $lines[] = '            auto ' . $valueName . ' = ' . $valueRead . ';';
                     $lines[] = '            ' . $target . '.emplace(std::move(' . $keyName . '), std::move(' . $valueName . '));';

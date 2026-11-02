@@ -50,7 +50,8 @@ public:
 		auto id = stream.readString().value_or("");
 		auto modifiers = std::vector<std::shared_ptr<AttributeModifier>>();
 		auto modifiersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t j = 0; j < modifiersCount; j++) {
+		const bool modifiersCountAvailable = stream.canReadCollection(modifiersCount);
+		for (std::size_t j = 0; j < modifiersCount && modifiersCountAvailable && !stream.hasOverflowed(); j++) {
 		    modifiers.push_back(stream.readObject<AttributeModifier>());
 		}
 		return std::make_shared<UpdateAttribute>(id, min, max, current, defaultMin, defaultMax, default_, modifiers);

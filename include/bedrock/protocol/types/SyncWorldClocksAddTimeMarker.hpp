@@ -30,7 +30,8 @@ public:
 		auto clockId = stream.readUnsignedVarLong().value_or(0);
 		auto markers = std::vector<std::shared_ptr<SyncWorldClockMarkerData>>();
 		auto markersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < markersCount; ++i) {
+		const bool markersCountAvailable = stream.canReadCollection(markersCount);
+		for (std::size_t i = 0; i < markersCount && markersCountAvailable && !stream.hasOverflowed(); ++i) {
 		    markers.push_back(stream.readObject<SyncWorldClockMarkerData>());
 		}
 		return std::make_shared<SyncWorldClocksAddTimeMarker>(static_cast<int32_t>(clockId), markers);

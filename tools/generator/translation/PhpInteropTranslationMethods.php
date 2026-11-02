@@ -579,7 +579,9 @@ private function specialCodecExpression(string $class, string $name, bool $reade
             return null;
         }
         if ($reader && preg_match('/^([A-Za-z_][A-Za-z0-9_]*)::read\(stream\)$/', trim($body), $matches) === 1) {
-            return $this->readObject($matches[1]);
+            return $this->findDeclaration($matches[1]) !== null
+                ? $this->readObject($matches[1])
+                : $body;
         }
         $body = str_replace('%VALUE%', $arguments[1] ?? 'std::monostate{}', $body);
         foreach ($arguments as $index => $argument) {

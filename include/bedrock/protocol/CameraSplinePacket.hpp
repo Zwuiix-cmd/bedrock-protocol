@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto splinesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < splinesCount; ++i) {
+		const bool splinesCountAvailable = stream.canReadCollection(splinesCount);
+		for (std::size_t i = 0; i < splinesCount && splinesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    splines.push_back(stream.readObject<CameraSplineDefinition>());
 		}
     }

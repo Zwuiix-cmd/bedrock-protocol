@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto valuesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < valuesCount; ++i) {
+		const bool valuesCountAvailable = stream.canReadCollection(valuesCount);
+		for (std::size_t i = 0; i < valuesCount && valuesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    auto matchValue = stream.readUnsignedVarInt().value_or(0);
 		    if (matchValue == magic_enum::enum_integer(DataStoreType::Update)) {
 		        values.push_back(stream.readObject<DataStoreUpdate>());

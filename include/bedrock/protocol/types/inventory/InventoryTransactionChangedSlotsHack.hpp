@@ -20,7 +20,8 @@ public:
 		auto containerId = stream.readUnsignedByte().value_or(0);
 		auto changedSlots = std::vector<uint8_t>();
 		auto changedSlotsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < changedSlotsCount; ++i) {
+		const bool changedSlotsCountAvailable = stream.canReadCollection(changedSlotsCount);
+		for (std::size_t i = 0; i < changedSlotsCount && changedSlotsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    changedSlots.push_back(stream.readUnsignedByte().value_or(0));
 		}
 		return std::make_shared<InventoryTransactionChangedSlotsHack>(static_cast<int32_t>(containerId), changedSlots);

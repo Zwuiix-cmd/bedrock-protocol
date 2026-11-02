@@ -107,8 +107,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        isRouteToManager = stream.readBool().value_or(false);
-        payload = NetworkNbtSerializer::read(stream);
+		isRouteToManager = stream.readBool().value_or(false);
+		payload = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {

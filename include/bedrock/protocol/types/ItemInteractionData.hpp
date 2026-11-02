@@ -31,7 +31,8 @@ public:
 		auto requestChangedSlots = std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>();
 		if (requestId != 0) {
 			auto len = stream.readUnsignedVarInt().value_or(0);
-			for (std::size_t i = 0; (i < len); ++i) {
+			    const bool lenAvailable = stream.canReadCollection(len);
+			for (std::size_t i = 0; (i < len) && !stream.hasOverflowed() && lenAvailable && !stream.hasOverflowed(); ++i) {
 				requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
 			}
 		}

@@ -112,7 +112,8 @@ public:
 		if (count > (magic_enum::enum_integer(MapImage::Max::Height) * magic_enum::enum_integer(MapImage::Max::Width))) {
 			throw std::exception{};
 		}
-		for (std::size_t i = 0; (i < count); i++) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); i++) {
 			clientPixels.push_back(stream.readObject<MapInfoRequestPacketClientPixel>());
 		}
     }

@@ -105,7 +105,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto count = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 			entries.push_back(stream.readString().value_or(""));
 		}
     }

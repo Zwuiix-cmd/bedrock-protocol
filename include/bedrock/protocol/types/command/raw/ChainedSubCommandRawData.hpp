@@ -26,7 +26,8 @@ public:
 		auto name = stream.readString().value_or("");
 		auto valueData = std::vector<std::shared_ptr<ChainedSubCommandValueRawData>>();
 		auto valueDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < valueDataCount; i++) {
+		const bool valueDataCountAvailable = stream.canReadCollection(valueDataCount);
+		for (std::size_t i = 0; i < valueDataCount && valueDataCountAvailable && !stream.hasOverflowed(); i++) {
 		    valueData.push_back(stream.readObject<ChainedSubCommandValueRawData>());
 		}
 		return std::make_shared<ChainedSubCommandRawData>(name, valueData);

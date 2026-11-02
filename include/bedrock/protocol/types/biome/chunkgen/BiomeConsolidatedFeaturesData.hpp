@@ -18,7 +18,8 @@ public:
     static std::shared_ptr<BiomeConsolidatedFeaturesData> create(ReadOnlyBinaryStream& stream) {
 		auto features = std::vector<std::shared_ptr<BiomeConsolidatedFeatureData>>();
 		auto featuresCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < featuresCount; ++i) {
+		const bool featuresCountAvailable = stream.canReadCollection(featuresCount);
+		for (std::size_t i = 0; i < featuresCount && featuresCountAvailable && !stream.hasOverflowed(); ++i) {
 		    features.push_back(stream.readObject<BiomeConsolidatedFeatureData>());
 		}
 		return std::make_shared<BiomeConsolidatedFeaturesData>(features);

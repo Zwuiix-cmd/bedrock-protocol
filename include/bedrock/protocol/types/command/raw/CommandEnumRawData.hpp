@@ -21,7 +21,8 @@ public:
 		auto name = stream.readString().value_or("");
 		auto valueIndexes = std::vector<uint32_t>();
 		auto size = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; (i < size); i++) {
+		    const bool sizeAvailable = stream.canReadCollection(size);
+		for (std::size_t i = 0; (i < size) && !stream.hasOverflowed() && sizeAvailable && !stream.hasOverflowed(); i++) {
 			valueIndexes.push_back(stream.readUnsignedInt().value_or(0));
 		}
 		return std::make_shared<CommandEnumRawData>(name, valueIndexes);

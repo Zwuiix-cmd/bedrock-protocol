@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto priorityDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < priorityDataCount; ++i) {
+		const bool priorityDataCountAvailable = stream.canReadCollection(priorityDataCount);
+		for (std::size_t i = 0; i < priorityDataCount && priorityDataCountAvailable && !stream.hasOverflowed(); ++i) {
 		    priorityData.push_back(stream.readObject<CameraAimAssistActorPriorityData>());
 		}
     }

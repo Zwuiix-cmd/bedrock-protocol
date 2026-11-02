@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto removedContainersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < removedContainersCount; ++i) {
+		const bool removedContainersCountAvailable = stream.canReadCollection(removedContainersCount);
+		for (std::size_t i = 0; i < removedContainersCount && removedContainersCountAvailable && !stream.hasOverflowed(); ++i) {
 		    removedContainers.push_back(stream.readObject<FullContainerName>());
 		}
     }

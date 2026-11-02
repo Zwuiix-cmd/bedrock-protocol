@@ -29,7 +29,8 @@ public:
 		auto enumIndex = stream.readUnsignedInt().value_or(0);
 		auto constraints = std::vector<uint8_t>();
 		auto constraintsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < constraintsCount; i++) {
+		const bool constraintsCountAvailable = stream.canReadCollection(constraintsCount);
+		for (std::size_t i = 0; i < constraintsCount && constraintsCountAvailable && !stream.hasOverflowed(); i++) {
 		    constraints.push_back(stream.readUnsignedByte().value_or(0));
 		}
 		return std::make_shared<CommandEnumConstraintRawData>(static_cast<int32_t>(affectedValueIndex), static_cast<int32_t>(enumIndex), constraints);

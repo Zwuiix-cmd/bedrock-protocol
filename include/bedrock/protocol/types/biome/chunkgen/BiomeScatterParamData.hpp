@@ -43,7 +43,8 @@ public:
     static std::shared_ptr<BiomeScatterParamData> create(ReadOnlyBinaryStream& stream) {
 		auto coordinates = std::vector<std::shared_ptr<BiomeCoordinateData>>();
 		auto coordinatesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < coordinatesCount; ++i) {
+		const bool coordinatesCountAvailable = stream.canReadCollection(coordinatesCount);
+		for (std::size_t i = 0; i < coordinatesCount && coordinatesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    coordinates.push_back(stream.readObject<BiomeCoordinateData>());
 		}
 		auto evalOrder = stream.readVarInt().value_or(0);

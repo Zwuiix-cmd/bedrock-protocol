@@ -165,7 +165,8 @@ inline std::shared_ptr<GameRule> GameRule::create(ReadOnlyBinaryStream& stream, 
 inline std::map<std::string, std::shared_ptr<GameRule>> GameRule::readRules(ReadOnlyBinaryStream& stream, const bool& isStartGame) {
     std::map<std::string, std::shared_ptr<GameRule>> rules;
     const auto count = stream.readUnsignedVarInt().value_or(0);
-    for (uint32_t index = 0; index < count; ++index) {
+    const bool countAvailable = stream.canReadCollection(count);
+    for (uint32_t index = 0; index < count && countAvailable && !stream.hasOverflowed(); ++index) {
         auto name = stream.readString().value_or("");
         const auto isPlayerModifiable = stream.readBool().value_or(false);
         rules.emplace(std::move(name), GameRule::create(stream, isPlayerModifiable, isStartGame));

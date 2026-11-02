@@ -154,7 +154,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) {
         const uint32_t count = stream.readUnsignedVarInt().value_or(0);
-        for (uint32_t index = 0; index < count; ++index) {
+        const bool countAvailable = stream.canReadCollection(count);
+        for (uint32_t index = 0; index < count && countAvailable && !stream.hasOverflowed(); ++index) {
             const uint32_t key = stream.readUnsignedVarInt().value_or(0);
             if (properties.contains(key)) {
                 stream.seek(stream.size());

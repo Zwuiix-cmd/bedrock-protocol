@@ -119,7 +119,7 @@ public:
 		worldTemplateId = stream.readUUID().value_or("");
 		worldTemplateVersion = stream.readString().value_or("");
 		auto resourcePackCount = stream.readUnsignedShort().value_or(0);
-		while (resourcePackCount-- > 0) {
+		while (resourcePackCount-- > 0 && !stream.hasOverflowed()) {
 			resourcePackEntries.push_back(stream.readObject<ResourcePackInfoEntry>());
 		}
     }

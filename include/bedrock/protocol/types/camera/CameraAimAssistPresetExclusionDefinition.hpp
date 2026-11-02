@@ -30,22 +30,26 @@ public:
     static std::shared_ptr<CameraAimAssistPresetExclusionDefinition> create(ReadOnlyBinaryStream& stream) {
 		auto blocks = std::vector<std::string>();
 		auto blocksCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < blocksCount; ++i) {
+		const bool blocksCountAvailable = stream.canReadCollection(blocksCount);
+		for (std::size_t i = 0; i < blocksCount && blocksCountAvailable && !stream.hasOverflowed(); ++i) {
 		    blocks.push_back(stream.readString().value_or(""));
 		}
 		auto entities = std::vector<std::string>();
 		auto entitiesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < entitiesCount; ++i) {
+		const bool entitiesCountAvailable = stream.canReadCollection(entitiesCount);
+		for (std::size_t i = 0; i < entitiesCount && entitiesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    entities.push_back(stream.readString().value_or(""));
 		}
 		auto blockTags = std::vector<std::string>();
 		auto blockTagsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < blockTagsCount; ++i) {
+		const bool blockTagsCountAvailable = stream.canReadCollection(blockTagsCount);
+		for (std::size_t i = 0; i < blockTagsCount && blockTagsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    blockTags.push_back(stream.readString().value_or(""));
 		}
 		auto entityTypeFamilies = std::vector<std::string>();
 		auto entityTypeFamiliesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < entityTypeFamiliesCount; ++i) {
+		const bool entityTypeFamiliesCountAvailable = stream.canReadCollection(entityTypeFamiliesCount);
+		for (std::size_t i = 0; i < entityTypeFamiliesCount && entityTypeFamiliesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    entityTypeFamilies.push_back(stream.readString().value_or(""));
 		}
 		return std::make_shared<CameraAimAssistPresetExclusionDefinition>(blocks, entities, blockTags, entityTypeFamilies);

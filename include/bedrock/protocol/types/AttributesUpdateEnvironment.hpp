@@ -35,7 +35,8 @@ public:
 		auto dimension = stream.readUnsignedVarInt().value_or(0);
 		auto attributes = std::vector<std::shared_ptr<AttributeEnvironment>>();
 		auto attributesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < attributesCount; ++i) {
+		const bool attributesCountAvailable = stream.canReadCollection(attributesCount);
+		for (std::size_t i = 0; i < attributesCount && attributesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    attributes.push_back(stream.readObject<AttributeEnvironment>());
 		}
 		return std::make_shared<AttributesUpdateEnvironment>(name, static_cast<int32_t>(dimension), attributes);

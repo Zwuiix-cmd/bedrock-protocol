@@ -105,7 +105,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto fogLayersCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < fogLayersCount; ++i) {
+		const bool fogLayersCountAvailable = stream.canReadCollection(fogLayersCount);
+		for (std::size_t i = 0; i < fogLayersCount && fogLayersCountAvailable && !stream.hasOverflowed(); ++i) {
 		    fogLayers.push_back(stream.readString().value_or(""));
 		}
     }

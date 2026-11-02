@@ -27,7 +27,8 @@ public:
 		containerName->read(stream);
 		auto slots = std::vector<std::shared_ptr<ItemStackResponseSlotInfo>>();
 		auto slotsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < slotsCount; ++i) {
+		const bool slotsCountAvailable = stream.canReadCollection(slotsCount);
+		for (std::size_t i = 0; i < slotsCount && slotsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    slots.push_back(stream.readObject<ItemStackResponseSlotInfo>());
 		}
 		return std::make_shared<ItemStackResponseContainerInfo>(containerName, slots);

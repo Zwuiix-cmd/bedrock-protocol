@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto entriesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < entriesCount; i++) {
+		const bool entriesCountAvailable = stream.canReadCollection(entriesCount);
+		for (std::size_t i = 0; i < entriesCount && entriesCountAvailable && !stream.hasOverflowed(); i++) {
 		    entries.push_back(stream.readObject<FeatureRegistryPacketEntry>());
 		}
     }

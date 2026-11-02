@@ -117,7 +117,8 @@ public:
 		).value_or(Type::RegisterIdentity);
 		{
 		    auto count = stream.readUnsignedVarInt().value_or(0);
-		    for (std::size_t i = 0; (i < count); ++i) {
+		    const bool countAvailable = stream.canReadCollection(count);
+		    for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
 				auto entry = std::make_shared<ScoreboardIdentityPacketEntry>();
 				entry->scoreboardId = stream.readVarLong().value_or(0);
 				if (type == Type::RegisterIdentity) {

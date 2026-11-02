@@ -23,7 +23,8 @@ public:
     static std::shared_ptr<SyncWorldClocksInitializeRegistry> create(ReadOnlyBinaryStream& stream) {
 		auto clockData = std::vector<std::shared_ptr<SyncWorldClockData>>();
 		auto clockDataCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < clockDataCount; ++i) {
+		const bool clockDataCountAvailable = stream.canReadCollection(clockDataCount);
+		for (std::size_t i = 0; i < clockDataCount && clockDataCountAvailable && !stream.hasOverflowed(); ++i) {
 		    clockData.push_back(stream.readObject<SyncWorldClockData>());
 		}
 		return std::make_shared<SyncWorldClocksInitializeRegistry>(clockData);

@@ -107,7 +107,8 @@ public:
 
     void read(ReadOnlyBinaryStream& stream) override {
 		auto armorSlotAndDamagePairsCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < armorSlotAndDamagePairsCount; ++i) {
+		const bool armorSlotAndDamagePairsCountAvailable = stream.canReadCollection(armorSlotAndDamagePairsCount);
+		for (std::size_t i = 0; i < armorSlotAndDamagePairsCount && armorSlotAndDamagePairsCountAvailable && !stream.hasOverflowed(); ++i) {
 		    armorSlotAndDamagePairs.push_back(stream.readObject<ArmorSlotAndDamagePair>());
 		}
     }

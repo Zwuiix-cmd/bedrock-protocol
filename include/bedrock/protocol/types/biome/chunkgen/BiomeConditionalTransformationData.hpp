@@ -28,7 +28,8 @@ public:
     static std::shared_ptr<BiomeConditionalTransformationData> create(ReadOnlyBinaryStream& stream) {
 		auto weightedBiomes = std::vector<std::shared_ptr<BiomeWeightedData>>();
 		auto weightedBiomesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < weightedBiomesCount; ++i) {
+		const bool weightedBiomesCountAvailable = stream.canReadCollection(weightedBiomesCount);
+		for (std::size_t i = 0; i < weightedBiomesCount && weightedBiomesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    weightedBiomes.push_back(stream.readObject<BiomeWeightedData>());
 		}
 		auto conditionJSON = stream.readShort().value_or(0);

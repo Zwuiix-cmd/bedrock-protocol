@@ -125,7 +125,8 @@ public:
         spawnSettings = std::make_shared<SpawnSettings>();
         spawnSettings->read(stream);
         const auto gameRulesCount = stream.readUnsignedInt().value_or(0);
-        for (std::size_t index = 0; index < gameRulesCount; ++index) {
+        const bool gameRulesCountAvailable = stream.canReadCollection(gameRulesCount);
+        for (std::size_t index = 0; index < gameRulesCount && gameRulesCountAvailable && !stream.hasOverflowed(); ++index) {
             auto gameRulesKey = stream.readString().value_or("");
             auto gameRulesValue = GameRule::create(stream);
             gameRules.emplace(std::move(gameRulesKey), std::move(gameRulesValue));

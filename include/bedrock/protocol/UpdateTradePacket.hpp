@@ -115,16 +115,16 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        windowId = stream.readUnsignedByte().value_or(0);
-        windowType = stream.readUnsignedByte().value_or(0);
-        windowSlotCount = stream.readVarInt().value_or(0);
-        tradeTier = stream.readVarInt().value_or(0);
-        traderActorUniqueId = stream.readActorUniqueID().value_or(0);
-        playerActorUniqueId = stream.readActorUniqueID().value_or(0);
-        displayName = stream.readString().value_or("");
-        isV2Trading = stream.readBool().value_or(false);
-        isEconomyTrading = stream.readBool().value_or(false);
-        offers = NetworkNbtSerializer::read(stream);
+		windowId = stream.readUnsignedByte().value_or(0);
+		windowType = stream.readUnsignedByte().value_or(0);
+		windowSlotCount = stream.readVarInt().value_or(0);
+		tradeTier = stream.readVarInt().value_or(0);
+		traderActorUniqueId = stream.readActorUniqueID().value_or(0);
+		playerActorUniqueId = stream.readActorUniqueID().value_or(0);
+		displayName = stream.readString().value_or("");
+		isV2Trading = stream.readBool().value_or(false);
+		isEconomyTrading = stream.readBool().value_or(false);
+		offers = NetworkNbtSerializer::read(stream);
     }
 
     void write(BinaryStream& stream) override {

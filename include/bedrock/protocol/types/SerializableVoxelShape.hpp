@@ -32,17 +32,20 @@ public:
 		cells->read(stream);
 		auto xCoordinates = std::vector<float>();
 		auto xCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < xCoordinatesCount; ++i) {
+		const bool xCoordinatesCountAvailable = stream.canReadCollection(xCoordinatesCount);
+		for (std::size_t i = 0; i < xCoordinatesCount && xCoordinatesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    xCoordinates.push_back(stream.readFloat().value_or(0.0f));
 		}
 		auto yCoordinates = std::vector<float>();
 		auto yCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < yCoordinatesCount; ++i) {
+		const bool yCoordinatesCountAvailable = stream.canReadCollection(yCoordinatesCount);
+		for (std::size_t i = 0; i < yCoordinatesCount && yCoordinatesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    yCoordinates.push_back(stream.readFloat().value_or(0.0f));
 		}
 		auto zCoordinates = std::vector<float>();
 		auto zCoordinatesCount = stream.readUnsignedVarInt().value_or(0);
-		for (std::size_t i = 0; i < zCoordinatesCount; ++i) {
+		const bool zCoordinatesCountAvailable = stream.canReadCollection(zCoordinatesCount);
+		for (std::size_t i = 0; i < zCoordinatesCount && zCoordinatesCountAvailable && !stream.hasOverflowed(); ++i) {
 		    zCoordinates.push_back(stream.readFloat().value_or(0.0f));
 		}
 		return std::make_shared<SerializableVoxelShape>(cells, xCoordinates, yCoordinates, zCoordinates);

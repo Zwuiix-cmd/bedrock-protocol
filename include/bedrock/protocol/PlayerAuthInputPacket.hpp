@@ -165,7 +165,8 @@ public:
 		if (inputFlags.get(InputData::PERFORM_BLOCK_ACTIONS)) {
 			blockActions.emplace();
 			auto max = stream.readVarInt().value_or(0);
-			for (int32_t i = 0; (i < max); ++i) {
+			    const bool maxAvailable = stream.canReadCollection(max);
+			for (int32_t i = 0; (i < max) && !stream.hasOverflowed() && maxAvailable && !stream.hasOverflowed(); ++i) {
 				auto actionType = stream.readVarInt().value_or(0);
 				if (PlayerBlockAction::isValidActionType(actionType)) {
 					blockActions.value().push_back(PlayerBlockAction::decodeWithBlockInfo(stream, actionType));

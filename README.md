@@ -1,4 +1,4 @@
-# Bedrock Protocol
+# bedrock-protocol
 
 A C++20 library for the Minecraft Bedrock network protocol, generated from
 the PHP definitions in [axolotl-pm/BedrockProtocol](https://github.com/axolotl-pm/BedrockProtocol).

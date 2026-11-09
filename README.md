@@ -65,6 +65,10 @@ PacketPool::setup();
 auto packet = PacketPool::createPacket(PacketIds::SetTime);
 ```
 
+After `setup()`, use `PacketPool::unregisterPacket(PacketIds::CraftingData)` to
+disable a packet. Both ID and type lookups then return `nullptr` for that
+packet. Unregistering an absent packet is safe and leaves other packets enabled.
+
 ## Regenerating the protocol
 
 Generated C++ files are already included in `include/`.

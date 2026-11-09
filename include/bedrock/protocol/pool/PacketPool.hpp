@@ -19,6 +19,17 @@ public:
 
     static void setup() noexcept;
 
+    static inline void unregisterPacket(PacketIds id) noexcept {
+        std::unique_lock lock(s_mutex);
+        const auto it = s_byId.find(id);
+        if (it == s_byId.end()) return;
+        const Constructor constructor = it->second;
+        s_byId.erase(it);
+        std::erase_if(s_byType, [constructor](const auto& entry) {
+            return entry.second == constructor;
+        });
+    }
+
     static inline std::shared_ptr<Packet> createPacket(PacketIds id) noexcept {
         std::shared_lock lock(s_mutex);
         auto it = s_byId.find(id);

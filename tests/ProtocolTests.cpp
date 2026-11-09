@@ -1,4 +1,5 @@
 #include <bedrock/protocol/CameraInstructionPacket.hpp>
+#include <bedrock/protocol/CraftingDataPacket.hpp>
 #include <bedrock/protocol/InventoryTransactionPacket.hpp>
 #include <bedrock/protocol/LoginPacket.hpp>
 #include <bedrock/protocol/MobEffectPacket.hpp>
@@ -404,6 +405,17 @@ void testPacketPool() {
     generated_packet_tests::run(expect);
     expect(PacketPool::createPacket(PacketIds::Unknown) == nullptr, "PacketPool accepted Unknown packet ID");
     expect(PacketPool::createPacket<InventoryTransactionPacket>() != nullptr, "PacketPool type lookup failed");
+    expect(PacketPool::createPacket(PacketIds::CraftingData) != nullptr, "CraftingData was not registered");
+    expect(PacketPool::createPacket<CraftingDataPacket>() != nullptr, "CraftingData type was not registered");
+    PacketPool::unregisterPacket(PacketIds::CraftingData);
+    expect(PacketPool::createPacket(PacketIds::CraftingData) == nullptr, "CraftingData ID remained registered");
+    expect(PacketPool::createPacket<CraftingDataPacket>() == nullptr, "CraftingData type remained registered");
+    PacketPool::unregisterPacket(PacketIds::CraftingData);
+    PacketPool::unregisterPacket(PacketIds::Unknown);
+    PacketPool::setup();
+    expect(PacketPool::createPacket<CraftingDataPacket>() == nullptr, "setup restored an unregistered packet");
+    expect(PacketPool::createPacket<InventoryTransactionPacket>() != nullptr, "unregister removed another packet type");
+    expect(PacketPool::createPacket(PacketIds::InventoryTransaction) != nullptr, "unregister removed another packet ID");
 }
 
 } // namespace

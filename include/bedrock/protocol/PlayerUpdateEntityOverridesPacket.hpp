@@ -142,9 +142,9 @@ public:
 		if (magic_enum::enum_name(innerType) != magic_enum::enum_name(updateType)) {
 			throw std::exception{};
 		}
-		if (updateType == magic_enum::enum_name(OverrideUpdateType::SetIntOverride)) {
+		if (updateType == OverrideUpdateType::SetIntOverride) {
 			intOverrideValue = stream.readInt().value_or(0);
-		} else if (updateType == magic_enum::enum_name(OverrideUpdateType::SetFloatOverride)) {
+		} else if (updateType == OverrideUpdateType::SetFloatOverride) {
 			floatOverrideValue = stream.readFloat().value_or(0.0f);
 		}
     }
@@ -154,12 +154,12 @@ public:
 		stream.writeUnsignedVarInt(propertyIndex);
 		stream.writeUnsignedVarInt(magic_enum::enum_integer(updateType));
 		stream.writeString(magic_enum::enum_name(updateType));
-		if (updateType == magic_enum::enum_name(OverrideUpdateType::SetIntOverride)) {
+		if (updateType == OverrideUpdateType::SetIntOverride) {
 			if (!intOverrideValue) {
 				throw std::exception{};
 			}
 			stream.writeInt(*(intOverrideValue));
-		} else if (updateType == magic_enum::enum_name(OverrideUpdateType::SetFloatOverride)) {
+		} else if (updateType == OverrideUpdateType::SetFloatOverride) {
 			if (!floatOverrideValue) {
 				throw std::exception{};
 			}

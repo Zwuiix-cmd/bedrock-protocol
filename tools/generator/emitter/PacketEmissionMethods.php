@@ -84,7 +84,7 @@ trait PacketEmissionMethods
             $body = str_replace('#include <cstdint>', "#include <array>\n#include <cstdint>", $body);
         }
         $body .= $this->stringEnumCustomizations($packet);
-        $this->write($output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . $name . '.hpp', $body);
+        $this->write($output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . $name . '.hpp', $this->adapt26_60($name, $body));
     }
 
     private function propertyType(array $property, array $declaration, bool $packet): string

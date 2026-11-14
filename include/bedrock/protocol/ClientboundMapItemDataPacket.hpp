@@ -128,7 +128,7 @@ public:
     uint8_t dimensionId = 0;
     bool isLocked = false;
     glm::ivec3 origin;
-    std::optional<std::vector<int32_t>> parentMapIds;
+    std::optional<std::vector<int64_t>> parentMapIds;
     std::optional<uint8_t> scale;
     std::optional<std::vector<std::shared_ptr<MapTrackedObject>>> trackedEntities;
     std::optional<std::vector<std::shared_ptr<MapDecoration>>> decorations;
@@ -142,27 +142,69 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        mapId = stream.readActorUniqueID().value_or(0);
-        dimensionId = stream.readUnsignedByte().value_or(0);
-        isLocked = stream.readBool().value_or(false);
-        origin = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        scale = stream.readOptional([&]() {
-            return stream.readUnsignedByte().value_or(0);
-        });
-        xOffset = stream.readOptional([&]() {
-            return stream.readVarInt().value_or(0);
-        });
-        yOffset = stream.readOptional([&]() {
-            return stream.readVarInt().value_or(0);
-        });
-        parentMapIds = stream.readList([&]() {
-            return stream.readInt().value_or(0);
-        });
-        trackedEntities = stream.readObjectList<MapTrackedObject>();
-        decorations = stream.readObjectList<MapDecoration>();
-        colors = stream.readOptional([&]() {
-            return stream.readObject<MapImage>();
-        });
+		mapId = stream.readActorUniqueID().value_or(0);
+		dimensionId = stream.readUnsignedByte().value_or(0);
+		isLocked = stream.readBool().value_or(false);
+		origin = stream.readSignedBlockPos().value_or(glm::ivec3(0));
+		parentMapIds = stream.readOptional([&]() {
+			return stream.readList([&]() {
+				return stream.readActorUniqueID().value_or(0);
+			});
+		});
+		scale = stream.readOptional([&]() {
+			return stream.readUnsignedByte().value_or(0);
+		});
+		trackedEntities = stream.readOptional([&]() {
+			return stream.readList([&]() {
+						auto object = std::make_shared<MapTrackedObject>();
+						object->type = magic_enum::enum_cast<MapTrackedObject::Type>(
+					stream.readUnsignedInt().value_or(0)
+				).value_or(MapTrackedObject::Type::Entity);
+						object->actorUniqueId = stream.readOptional([&]() {
+					return stream.readActorUniqueID().value_or(0);
+				});
+						object->blockPosition = stream.readOptional([&]() {
+					return stream.readSignedBlockPos().value_or(glm::ivec3(0));
+				});
+						return object;
+					});
+		});
+		decorations = stream.readOptional([&]() {
+			return stream.readList([&]() {
+						auto icon = stream.readUnsignedByte().value_or(0);
+						auto rotation = stream.readUnsignedByte().value_or(0);
+						auto xOffsetValue = stream.readUnsignedByte().value_or(0);
+						auto yOffsetValue = stream.readUnsignedByte().value_or(0);
+						auto label = stream.readString().value_or("");
+						auto color = stream.readUnsignedInt().value_or(0);
+						return std::make_shared<MapDecoration>(icon, rotation, xOffsetValue, yOffsetValue, label, color);
+					});
+		});
+		auto width = stream.readOptional([&]() {
+			return stream.readVarInt().value_or(0);
+		});
+		auto height = stream.readOptional([&]() {
+			return stream.readVarInt().value_or(0);
+		});
+		xOffset = stream.readOptional([&]() {
+			return stream.readVarInt().value_or(0);
+		});
+		yOffset = stream.readOptional([&]() {
+			return stream.readVarInt().value_or(0);
+		});
+		colors = stream.readOptional([&]() {
+					if ((!width) || (!height)) {
+				throw std::exception{};
+			}
+					auto count = stream.readUnsignedVarInt().value_or(0);
+					if (count != (width.value() * height.value())) {
+				throw std::exception{};
+			}
+					return MapImage::create(stream, *(height), *(width));
+				});
+		if ((!colors) && (xOffset.has_value() || yOffset.has_value())) {
+			throw std::exception{};
+		}
     }
 
     void write(BinaryStream& stream) override {
@@ -170,26 +212,27 @@ public:
         stream.writeUnsignedByte(dimensionId);
         stream.writeBool(isLocked);
         stream.writeSignedBlockPos(origin);
-        stream.writeOptional(scale, [&](const auto& optionalValue) {
-            stream.writeUnsignedByte(optionalValue);
+        stream.writeOptional(parentMapIds, [&](const auto& ids) {
+            stream.writeList(ids, [&](int64_t id) { stream.writeActorUniqueID(id); });
         });
-        stream.writeOptional(xOffset, [&](const auto& optionalValue) {
-            stream.writeVarInt(optionalValue);
+        stream.writeOptional(scale, [&](uint8_t value) { stream.writeUnsignedByte(value); });
+        stream.writeOptional(trackedEntities, [&](const auto& entities) {
+            stream.writeList(entities, [&](const auto& entity) { entity->write(stream); });
         });
-        stream.writeOptional(yOffset, [&](const auto& optionalValue) {
-            stream.writeVarInt(optionalValue);
+        stream.writeOptional(decorations, [&](const auto& values) {
+            stream.writeList(values, [&](const auto& value) { value->write(stream); });
         });
-        stream.writeList(parentMapIds, [&](const auto& item) {
-            stream.writeInt(item);
-        });
-        stream.writeList(trackedEntities, [&](const auto& item) {
-            item->write(stream);
-        });
-        stream.writeList(decorations, [&](const auto& item) {
-            item->write(stream);
-        });
-        stream.writeOptional(colors, [&](const auto& optionalValue) {
-            optionalValue->write(stream);
+
+        const auto width = colors ? std::optional{(*colors)->width} : std::nullopt;
+        const auto height = colors ? std::optional{(*colors)->height} : std::nullopt;
+        const auto writeDimension = [&](int32_t value) { stream.writeVarInt(value); };
+        stream.writeOptional(width, writeDimension);
+        stream.writeOptional(height, writeDimension);
+        stream.writeOptional(xOffset, writeDimension);
+        stream.writeOptional(yOffset, writeDimension);
+        stream.writeOptional(colors, [&](const auto& image) {
+            stream.writeUnsignedVarInt(image->width * image->height);
+            image->write(stream);
         });
     }
 };

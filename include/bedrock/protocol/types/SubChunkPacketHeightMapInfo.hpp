@@ -2,6 +2,7 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <exception>
 #include <memory>
@@ -26,11 +27,17 @@ public:
     }
 
     static std::shared_ptr<SubChunkPacketHeightMapInfo> create(ReadOnlyBinaryStream& stream) {
-        auto result = std::make_shared<SubChunkPacketHeightMapInfo>();
-        result->heights = stream.readList([&]() {
-            return stream.readByte().value_or(0);
-        });
-        return result;
+		auto heights = std::vector<int8_t>();
+		for (std::size_t i = 0; (i < TOTAL_LENGTH) && !stream.hasOverflowed(); ++i) {
+			if ((i & (ROW_LENGTH - 1)) == 0) {
+				auto rowLength = stream.readUnsignedVarInt().value_or(0);
+				if (rowLength != ROW_LENGTH) {
+					throw std::exception{};
+				}
+			}
+			heights.push_back(stream.readByte().value_or(0));
+		}
+		return std::make_shared<SubChunkPacketHeightMapInfo>(heights);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
@@ -41,9 +48,14 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeList(heights, [&](const auto& item) {
-            stream.writeByte(item);
-        });
+		for (std::size_t i = 0; const auto& iValue : heights) {
+		    const auto& height = iValue;
+			if ((i & (ROW_LENGTH - 1)) == 0) {
+				stream.writeUnsignedVarInt(ROW_LENGTH);
+			}
+			stream.writeByte(height);
+		    ++i;
+		}
     }
 };
 

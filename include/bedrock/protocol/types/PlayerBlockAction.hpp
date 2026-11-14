@@ -12,12 +12,14 @@ namespace bedrock::protocol {
 
 
 struct PlayerBlockAction {
-    int32_t actionType = 0;
+    PlayerAction actionType = PlayerAction::StopBreak;
     glm::ivec3 blockPosition = glm::ivec3(0);
     int32_t face = 0;
 
+    PlayerBlockAction() = default;
+
     explicit PlayerBlockAction(
-        const int32_t& actionTypeValue,
+        const PlayerAction& actionTypeValue,
         const glm::ivec3& blockPositionValue,
         const int32_t& faceValue
     )
@@ -27,13 +29,17 @@ struct PlayerBlockAction {
     {}
 
     void write(BinaryStream& stream) const {
-        stream.writeVarInt(actionType);
+        stream.writeVarInt(static_cast<int32_t>(actionType));
         stream.writeSignedBlockPos(blockPosition);
         stream.writeVarInt(face);
     }
 
     void read(ReadOnlyBinaryStream& stream) {
-        actionType = stream.readVarInt().value_or(0);
+        actionType = static_cast<PlayerAction>(stream.readVarInt().value_or(0));
+        if (!isValidActionType(actionType)) {
+            stream.markOverflowed();
+            return;
+        }
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
         face = stream.readVarInt().value_or(0);
     }
@@ -48,11 +54,20 @@ struct PlayerBlockAction {
             || value == static_cast<int32_t>(PlayerAction::ContinueDestroyBlock);
     }
 
+    static bool isValidActionType(PlayerAction value) noexcept {
+        return isValidActionType(static_cast<int32_t>(value));
+    }
+
+    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, PlayerAction value) {
+        return PlayerBlockAction{
+            value,
+            stream.readSignedBlockPos().value_or(glm::ivec3(0)),
+            stream.readVarInt().value_or(0)
+        };
+    }
+
     static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
-        PlayerBlockAction result;
-        result.actionType = value;
-        result.read(stream);
-        return result;
+        return decodeWithBlockInfo(stream, static_cast<PlayerAction>(value));
     }
 };
 

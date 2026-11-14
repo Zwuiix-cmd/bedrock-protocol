@@ -25,9 +25,9 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeByte(xOffset);
-        stream.writeByte(yOffset);
-        stream.writeByte(zOffset);
+		stream.writeByte(xOffset);
+		stream.writeByte(yOffset);
+		stream.writeByte(zOffset);
     }
 };
 

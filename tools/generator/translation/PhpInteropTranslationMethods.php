@@ -75,6 +75,9 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
         if ($this->catalog->isSerializerClass($class)) {
             if ($name === 'readList') {
                 $callback = $arguments[1] ?? '[&]() { return std::monostate{}; }';
+                if (str_starts_with($callback, 'stream.')) {
+                    $callback = $this->callback('', 'return ' . $callback . ';');
+                }
                 return $stream . '.readList(' . $callback . ')';
             }
             if ($name === 'writeList') {
@@ -498,18 +501,20 @@ private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, arr
         $previousTypes = $this->expressionTypes;
         $previousAliases = $this->expressionAliases;
         $previousOptionals = $this->expressionOptionals;
+        $previousLocalVariables = $this->localVariables;
         $params = [];
         foreach ($closure->params as $parameter) {
             $parameterName = (string) $parameter->var->name;
             if ($parameterName === 'out' || $parameterName === 'in') {
                 continue;
             }
+            $this->localVariables[$parameterName] = true;
             $parameterType = $parameter->type?->toString() ?? '';
             if ($parameterType !== '') {
                 $this->expressionTypes[$parameterName] = CPPName::type($parameterType);
             }
             $mutable = str_ends_with($parameterType, 'Writer');
-            $params[] = ($mutable ? 'auto& ' : 'const auto& ') . CPPName::identifier($parameterName);
+            $params[] = ($mutable ? 'auto& ' : 'const auto& ') . $this->variableName($parameterName, $declaration);
         }
         if ($closure instanceof Node\Expr\ArrowFunction) {
             $expression = $this->expression($closure->expr, $declaration, $method);
@@ -518,8 +523,13 @@ private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, arr
             $this->expressionAliases = $previousAliases;
             $this->expressionTypes = $previousTypes;
             $this->expressionOptionals = $previousOptionals;
+            $this->localVariables = $previousLocalVariables;
             return $result;
         }
+        $previousDeclaredVariables = $this->declaredVariables;
+        $this->declaredVariables = [];
+        $this->localVariables += array_fill_keys($this->localVariableNames($closure->stmts), true);
+        $this->arrayScopes[] = $this->inferArrayScope($closure->stmts, $declaration);
         $body = [];
         foreach ($closure->stmts as $statement) {
             $translated = $this->statement($statement, $declaration, ['name' => 'closure', 'line' => $closure->getStartLine(), 'returnType' => $closure->returnType?->toString() ?? 'mixed', 'static' => true], 1);
@@ -527,6 +537,9 @@ private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, arr
                 $body[] = $translated;
             }
         }
+        array_pop($this->arrayScopes);
+        $this->declaredVariables = $previousDeclaredVariables;
+        $this->localVariables = $previousLocalVariables;
         $formattedBody = array_map(static function (string $line): string {
             $line = preg_replace_callback(
                 '/^(?: {4})+/',

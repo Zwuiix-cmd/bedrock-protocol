@@ -56,15 +56,15 @@ public:
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeString(text);
-        stream.writeBool(useRotation);
-        stream.writeOptional(backgroundColor, [&](const auto& optionalValue) {
-            stream.writeUnsignedInt(optionalValue);
-        });
-        stream.writeFloat(lineGapHeight);
-        stream.writeBool(depthTest);
-        stream.writeBool(showBackface);
-        stream.writeBool(showTextBackface);
+		stream.writeString(text);
+		stream.writeBool(useRotation);
+		stream.writeOptional(backgroundColor, [&](const auto& value) {
+			stream.writeUnsignedInt(value);
+		});
+		stream.writeFloat(lineGapHeight);
+		stream.writeBool(depthTest);
+		stream.writeBool(showBackface);
+		stream.writeBool(showTextBackface);
     }
 };
 

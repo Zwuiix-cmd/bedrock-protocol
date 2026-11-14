@@ -114,15 +114,13 @@ public:
         skinColor = stream.readUnsignedInt().value_or(0);
         personaPieces = stream.readObjectList<PersonaSkinPiece>();
         pieceTintColors = stream.readObjectList<PersonaPieceTintColor>();
-        const auto trustedSkinFlagRaw = stream.readString().value_or("");
-        trustedSkinFlag = magic_enum::enum_cast<TrustedSkinFlag>(
-            std::string_view(trustedSkinFlagRaw)
-        ).value_or(TrustedSkinFlag::Unset);
+
         premium = stream.readBool().value_or(false);
         persona = stream.readBool().value_or(false);
         personaCapeOnClassic = stream.readBool().value_or(false);
         isPrimaryUser = stream.readBool().value_or(false);
         override = stream.readBool().value_or(false);
+        trustedSkinFlag = magic_enum::enum_cast<TrustedSkinFlag>(stream.readString().value_or("")).value_or(TrustedSkinFlag::Unset);
         profileHash = stream.readString().value_or("");
     }
 
@@ -147,12 +145,13 @@ public:
         stream.writeList(pieceTintColors, [&](const auto& item) {
             item->write(stream);
         });
-        stream.writeString(magic_enum::enum_name(trustedSkinFlag));
+
         stream.writeBool(premium);
         stream.writeBool(persona);
         stream.writeBool(personaCapeOnClassic);
         stream.writeBool(isPrimaryUser);
         stream.writeBool(override);
+        stream.writeString(magic_enum::enum_name(trustedSkinFlag));
         stream.writeString(profileHash);
     }
 };

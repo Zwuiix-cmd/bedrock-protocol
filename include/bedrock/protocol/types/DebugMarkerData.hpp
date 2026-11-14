@@ -35,10 +35,10 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeString(text);
-        stream.writeVec3(position);
-        stream.writeUnsignedInt(color);
-        stream.writeUnsignedLong(durationMillis);
+		stream.writeString(text);
+		stream.writeVec3(position);
+		stream.writeUnsignedInt(color);
+		stream.writeUnsignedLong(durationMillis);
     }
 };
 

@@ -157,16 +157,16 @@ public:
 		headYaw = stream.readFloat().value_or(0.0f);
 		bodyYaw = stream.readFloat().value_or(0.0f);
 		attributes = stream.readList([&]() {
-					id = stream.readString().value_or("");
-					min = stream.readFloat().value_or(0.0f);
-					current = stream.readFloat().value_or(0.0f);
-					max = stream.readFloat().value_or(0.0f);
+					auto id = stream.readString().value_or("");
+					auto min = stream.readFloat().value_or(0.0f);
+					auto current = stream.readFloat().value_or(0.0f);
+					auto max = stream.readFloat().value_or(0.0f);
 					return std::make_shared<Attribute>(id, min, max, current);
 				});
 		metadata.read(stream);
 		syncedProperties = stream.readValue<PropertySyncData>();
 		links = stream.readList([&]() {
-			return EntityLink::read(stream);
+			return stream.readObject<EntityLink>();
 		});
 		passengerBlockData = stream.readOptional([&]() { return stream.readObject<PassengerOfBlockData>(); });
     }

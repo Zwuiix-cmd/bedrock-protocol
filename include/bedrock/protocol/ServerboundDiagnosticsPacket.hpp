@@ -178,21 +178,21 @@ public:
 		stream.writeFloat(avgRemainderTimePercent);
 		stream.writeFloat(avgUnaccountedTimePercent);
 		stream.writeList(memoryCategoryValues, [&](const auto& v) {
-			v.write(stream);
+			v->write(stream);
 		});
 		stream.writeList(entityDiagnostics, [&](const auto& v) {
-			v.write(stream);
+			v->write(stream);
 		});
 		stream.writeList(systemDiagnostics, [&](const auto& v) {
-			v.write(stream);
+			v->write(stream);
 		});
 		stream.writeOptional(systemCategories, [&](const auto& v) {
 			stream.writeList(v, [&](const auto& v) {
-				v.write(stream);
+				v->write(stream);
 			});
 		});
 		stream.writeList(whiskerScopes, [&](const auto& v) {
-			v.write(stream);
+			v->write(stream);
 		});
     }
 };

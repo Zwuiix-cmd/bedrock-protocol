@@ -142,7 +142,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		requestId = stream.readVarInt().value_or(0);
 		requestChangedSlots = stream.readOptional([&]() {
-					auto result = std::vector<int32_t>();
+					auto result = std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>();
 					auto resultCount = stream.readUnsignedVarInt().value_or(0);
 			const bool resultCountAvailable = stream.canReadCollection(resultCount);
 			for (std::size_t i = 0; i < resultCount && resultCountAvailable && !stream.hasOverflowed(); ++i) {

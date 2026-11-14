@@ -47,29 +47,32 @@ public:
     NetworkInventoryAction() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
-        stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeByte(optionalValue);
-        });
-        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeUnsignedVarInt(optionalValue);
-        });
-        stream.writeUnsignedVarInt(inventorySlot);
-        oldItem.write(stream);
-        newItem.write(stream);
+		sourceType = magic_enum::enum_cast<Source>(
+			stream.readUnsignedVarInt().value_or(0)
+		).value_or(Source::Container);
+		windowId = stream.readOptional([&]() {
+			return stream.readByte().value_or(0);
+		});
+		sourceFlags = stream.readOptional([&]() {
+			return stream.readUnsignedVarInt().value_or(0);
+		});
+		inventorySlot = stream.readUnsignedVarInt().value_or(0);
+		oldItem = stream.readValue<NetworkItemStack>();
+		newItem = stream.readValue<NetworkItemStack>();
+		return;
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
-        stream.writeOptional(windowId, [&](const auto& optionalValue) {
-            stream.writeByte(optionalValue);
-        });
-        stream.writeOptional(sourceFlags, [&](const auto& optionalValue) {
-            stream.writeUnsignedVarInt(optionalValue);
-        });
-        stream.writeUnsignedVarInt(inventorySlot);
-        oldItem.write(stream);
-        newItem.write(stream);
+		stream.writeUnsignedVarInt(magic_enum::enum_integer(sourceType));
+		stream.writeOptional(windowId, [&](const auto& value) {
+			stream.writeByte(value);
+		});
+		stream.writeOptional(sourceFlags, [&](const auto& value) {
+			stream.writeUnsignedVarInt(value);
+		});
+		stream.writeUnsignedVarInt(inventorySlot);
+		oldItem.write(stream);
+		newItem.write(stream);
     }
 };
 

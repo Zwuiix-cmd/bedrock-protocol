@@ -67,9 +67,7 @@ public:
 		}
 		auto splineIdentifier = stream.readString().value_or("");
 		auto loadFromJson = stream.readBool().value_or(false);
-		return std::make_shared<CameraSplineInstruction>(totalTime, magic_enum::enum_cast<CameraSetInstructionEaseType>(
-	easeType
-).value_or(CameraSetInstructionEaseType::Linear), curve, progressKeyFrames, rotationOptions, splineIdentifier, loadFromJson);
+		return std::make_shared<CameraSplineInstruction>(totalTime, easeType, curve, progressKeyFrames, rotationOptions, splineIdentifier, loadFromJson);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {

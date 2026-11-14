@@ -128,11 +128,11 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		gameRules = GameRule::readRules(stream, %ARG1%);
+		gameRules = GameRule::readRules(stream, false);
     }
 
     void write(BinaryStream& stream) override {
-		GameRule::writeRules(stream, gameRules, %ARG2%);
+		GameRule::writeRules(stream, gameRules, false);
     }
 };
 

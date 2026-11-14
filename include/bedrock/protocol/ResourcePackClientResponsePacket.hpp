@@ -135,7 +135,7 @@ public:
 		if (innerType != magic_enum::enum_name(status)) {
 			throw std::exception{};
 		}
-		if (status == magic_enum::enum_name(ResourcePackClientResponseStatus::SendPacks)) {
+		if (status == ResourcePackClientResponseStatus::SendPacks) {
 
 			auto packIdsCount = stream.readUnsignedVarInt().value_or(0);
 			const bool packIdsCountAvailable = stream.canReadCollection(packIdsCount);
@@ -148,7 +148,7 @@ public:
     void write(BinaryStream& stream) override {
 		stream.writeUnsignedVarInt(magic_enum::enum_integer(status));
 		stream.writeString(magic_enum::enum_name(status));
-		if (status == magic_enum::enum_name(ResourcePackClientResponseStatus::SendPacks)) {
+		if (status == ResourcePackClientResponseStatus::SendPacks) {
 			stream.writeUnsignedVarInt(packIds.size());
 			for (const auto& id : packIds) {
 				stream.writeString(id);

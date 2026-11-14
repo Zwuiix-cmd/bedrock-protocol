@@ -205,6 +205,8 @@ final class CPPTranslationCatalogDefaults
                 'Byte' => [
                     'readunsigned' => 'readUnsignedByte',
                     'writeunsigned' => 'writeUnsignedByte',
+                    'readsigned' => 'readByte',
+                    'writesigned' => 'writeByte',
                     'read' => 'readByte',
                     'write' => 'writeByte',
                 ],
@@ -230,7 +232,9 @@ final class CPPTranslationCatalogDefaults
             'specialCodecs' => [
                 'CommonTypes' => [
                     'putvector3nullable' => ['write' => 'stream.writeVec3(%VALUE%.value_or(glm::vec3(0.0f)))'],
-                    'getentitylink' => ['read' => 'EntityLink::read(stream)'],
+                    'readcolor' => ['read' => 'stream.readUnsignedInt().value_or(0)'],
+                    'writecolor' => ['write' => 'stream.writeUnsignedInt(%VALUE%)'],
+                    'getentitylink' => ['read' => 'stream.readObject<EntityLink>()'],
                     'putentitylink' => ['write' => '%VALUE%->write(stream)'],
                     'readhandslot' => ['read' => 'magic_enum::enum_cast<HandSlot>(stream.readUnsignedByte().value_or(0)).value_or(HandSlot::Mainhand)'],
                     'writehandslot' => ['write' => 'stream.writeUnsignedByte(static_cast<uint8_t>(%VALUE%))'],
@@ -242,8 +246,8 @@ final class CPPTranslationCatalogDefaults
                     'putitemstackwrapper' => ['write' => '%VALUE%.write(stream)'],
                     'getnbtcompoundroot' => ['read' => 'NetworkNbtSerializer::read(stream)'],
                     'putnbtcompoundroot' => ['write' => 'NetworkNbtSerializer::write(stream, %VALUE%)'],
-                    'getgamerules' => ['read' => 'GameRule::readRules(stream, %ARG1%)'],
-                    'putgamerules' => ['write' => 'GameRule::writeRules(stream, %VALUE%, %ARG2%)'],
+                    'getgamerules' => ['read' => 'GameRule::readRules(stream, false)'],
+                    'putgamerules' => ['write' => 'GameRule::writeRules(stream, %VALUE%, false)'],
                 ],
             ],
             'constructors' => [

@@ -133,13 +133,63 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        entries = stream.readObjectList<PlayerListEntry>();
+		auto count = stream.readUnsignedVarInt().value_or(0);
+		    const bool countAvailable = stream.canReadCollection(count);
+		for (std::size_t i = 0; (i < count) && !stream.hasOverflowed() && countAvailable && !stream.hasOverflowed(); ++i) {
+			auto entry = std::make_shared<PlayerListEntry>();
+			entry->type = stream.readUnsignedVarInt().value_or(0);
+			auto innerType = stream.readUnsignedByte().value_or(0);
+			const uint8_t expectedInnerType = entry->type == static_cast<uint32_t>(Type::Add) ? 0 : 1;
+			if (innerType != expectedInnerType) {
+				throw std::exception{};
+			}
+			if (entry->type == static_cast<uint32_t>(Type::Add)) {
+				entry->uuid = stream.readUUID().value_or("");
+				entry->actorUniqueId = stream.readActorUniqueID().value_or(0);
+				entry->username = stream.readString().value_or("");
+				entry->xboxUserId = stream.readString().value_or("");
+				entry->playFabId = stream.readString().value_or("");
+				entry->platformChatId = stream.readString().value_or("");
+				entry->buildPlatform = magic_enum::enum_cast<BuildPlatform>(
+					stream.readInt().value_or(0)
+				).value_or(BuildPlatform::Unknown);
+				entry->skinData = std::make_shared<SkinData>();
+				entry->skinData->read(stream);
+				entry->isTeacher = stream.readBool().value_or(false);
+				entry->isHost = stream.readBool().value_or(false);
+				entry->isSubClient = stream.readBool().value_or(false);
+				entry->color = stream.readUnsignedInt().value_or(0);
+			} else if (entry->type == static_cast<uint32_t>(Type::Remove)) {
+				entry->uuid = stream.readUUID().value_or("");
+			} else {
+				throw std::exception{};
+			}
+			entries.push_back(entry);
+		}
     }
 
     void write(BinaryStream& stream) override {
-        stream.writeList(entries, [&](const auto& item) {
-            item->write(stream);
-        });
+		stream.writeUnsignedVarInt(entries.size());
+		for (const auto& entry : entries) {
+			stream.writeUnsignedVarInt(entry->type);
+			stream.writeUnsignedByte(entry->type == static_cast<uint32_t>(Type::Add) ? 0 : 1);
+			if (entry->type == static_cast<uint32_t>(Type::Add)) {
+				stream.writeUUID(entry->uuid);
+				stream.writeActorUniqueID(entry->actorUniqueId);
+				stream.writeString(entry->username);
+				stream.writeString(entry->xboxUserId);
+				stream.writeString(entry->playFabId);
+				stream.writeString(entry->platformChatId);
+				stream.writeInt(magic_enum::enum_integer(entry->buildPlatform));
+				if (entry->skinData) entry->skinData->write(stream);
+				stream.writeBool(entry->isTeacher);
+				stream.writeBool(entry->isHost);
+				stream.writeBool(entry->isSubClient);
+				stream.writeUnsignedInt(entry->color.value_or(((static_cast<uint32_t>(255) << 24) | (static_cast<uint32_t>(255) << 16) | (static_cast<uint32_t>(255) << 8) | static_cast<uint32_t>(255))));
+			} else {
+				stream.writeUUID(entry->uuid);
+			}
+		}
     }
 };
 

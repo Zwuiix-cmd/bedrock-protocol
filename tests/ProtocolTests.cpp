@@ -188,19 +188,19 @@ void testInventoryTransactionTypes() {
     auto changedSlots = std::make_shared<InventoryTransactionChangedSlotsHack>();
     changedSlots->containerId = 5;
     changedSlots->changedSlotIndexes = {1, 200};
-    packet.requestChangedSlots.push_back(changedSlots);
+    packet.requestChangedSlots.emplace().push_back(changedSlots);
 
     BinaryStream output;
     packet.write(output);
-    const std::string expected{"\x01\x01\x05\x02\x01\xc8\x01\x00", 8};
+    const std::string expected{"\x01\x01\x01\x05\x02\x01\xc8\x01\x00", 9};
     expect(output.getBuffer() == expected, "inventory request ID did not use signed VarInt encoding");
 
     InventoryTransactionPacket decoded;
     ReadOnlyBinaryStream input(output.getBuffer());
     decoded.read(input);
     expect(decoded.requestId == -1, "signed inventory request ID did not roundtrip");
-    expect(decoded.requestChangedSlots.size() == 1, "changed slot list size changed");
-    expect(decoded.requestChangedSlots.front()->changedSlotIndexes == std::vector<uint8_t>({1, 200}), "changed slot values changed");
+    expect(decoded.requestChangedSlots && decoded.requestChangedSlots->size() == 1, "changed slot list size changed");
+    expect(decoded.requestChangedSlots->front()->changedSlotIndexes == std::vector<uint8_t>({1, 200}), "changed slot values changed");
 }
 
 void testStackRequestAndResponseIds() {
@@ -227,7 +227,7 @@ void testStackRequestAndResponseIds() {
     decodedResponse.read(responseInput);
     expect(decodedResponse.result == ItemStackResponse::Result::Error, "item stack response result changed");
     expect(decodedResponse.requestId == -1, "item stack response ID did not roundtrip");
-    expect(decodedResponse.containerInfos.empty(), "error item stack response read container data");
+    expect(!decodedResponse.containerInfos.has_value(), "error item stack response read container data");
     expect(!responseInput.hasOverflowed(), "item stack response overflowed");
 }
 
@@ -372,7 +372,7 @@ void testMalformedBuffers() {
         }
     }
 
-    const std::string unknownType{"\x00\x63", 2};
+    const std::string unknownType{"\x00\x00\x63", 3};
     ReadOnlyBinaryStream unknownInput(unknownType);
     InventoryTransactionPacket unknownPacket;
     bool rejected = false;

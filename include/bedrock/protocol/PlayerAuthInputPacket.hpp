@@ -187,7 +187,9 @@ public:
 		itemInteractionData = stream.readOptional([&]() { return stream.readObject<ItemInteractionData>(); });
 		itemStackRequest = stream.readOptional([&]() { return stream.readObject<ItemStackRequest>(); });
 		blockActions = stream.readOptional([&]() {
-			return stream.readList(stream.readValue<PlayerBlockAction>());
+			return stream.readList([&]() {
+				return stream.readValue<PlayerBlockAction>();
+			});
 		});
 		auto vehicleRotation = stream.readOptional([&]() {
 			return stream.readVec2().value_or(glm::vec2(0.0f));
@@ -198,7 +200,7 @@ public:
 		if (vehicleRotation.has_value() && vehicleActorUniqueId.has_value()) {
 			vehicleInfo = PlayerAuthInputVehicleInfo{*(vehicleRotation), *(vehicleActorUniqueId)};
 		} else if ((!vehicleRotation) && (!vehicleActorUniqueId)) {
-			vehicleInfo = nullptr;
+			vehicleInfo.reset();
 		} else {
 			throw std::exception{};
 		}
@@ -216,7 +218,7 @@ public:
 		stream.writeFloat(moveVecZ);
 		stream.writeFloat(headYaw);
 		auto flagsArray = std::vector<int32_t>();
-		for (std::size_t i = 0; (i < magic_enum::enum_integer(PlayerAuthInputFlags::Count)); ++i) {
+		for (std::size_t i = 0; (i < PlayerAuthInputFlags::Count); ++i) {
 			if (inputFlags.get(i)) {
 				flagsArray.push_back(i);
 			}

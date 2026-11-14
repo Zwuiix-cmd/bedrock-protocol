@@ -143,8 +143,8 @@ public:
 
     void write(BinaryStream& stream) override {
 		stream.writeString(magic_enum::enum_name(type));
-		stream.writeOptional(data, [&](const auto& data) {
-			data->write(stream);
+		stream.writeOptional(data, [&](const auto& dataValue) {
+			dataValue->write(stream);
 		});
     }
 };

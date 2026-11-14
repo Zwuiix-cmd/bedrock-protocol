@@ -35,14 +35,18 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         recipeId = stream.readUnsignedVarInt().value_or(0);
         repetitions = stream.readUnsignedByte().value_or(0);
-        ingredients = stream.readObjectList<RecipeIngredient>();
+        ingredients = stream.readList([&]() {
+            auto ingredient = std::make_shared<RecipeIngredient>();
+            ingredient->readStackRequest(stream);
+            return ingredient;
+        });
     }
 
     void write(BinaryStream& stream) const override {
         stream.writeUnsignedVarInt(recipeId);
         stream.writeUnsignedByte(repetitions);
         stream.writeList(ingredients, [&](const auto& item) {
-            item->write(stream);
+            item->writeStackRequest(stream);
         });
     }
 };

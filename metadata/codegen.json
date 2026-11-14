@@ -56,12 +56,6 @@
             "reason": "nullsafe method requires an adapter: write"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\DebugMarkerData",
-            "method": "write",
-            "line": 55,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\stackrequest\\DeprecatedCraftingResultsEntry",
             "method": "write",
             "line": 56,
@@ -98,40 +92,10 @@
             "reason": "static call requires an adapter: ItemStackRequest::readAction"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\LevelSettings",
-            "method": "write",
-            "line": 157,
-            "reason": "serializer call requires an adapter: Byte::writeSigned"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\LocatorBarWaypoint",
-            "method": "write",
-            "line": 77,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\MismatchTransactionData",
             "method": "decodeData",
             "line": 29,
             "reason": "property belongs to an omitted parent declaration: actions"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\NetworkInventoryAction",
-            "method": "read",
-            "line": 76,
-            "reason": "serializer call requires an adapter: Byte::readSigned"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\inventory\\NetworkInventoryAction",
-            "method": "write",
-            "line": 92,
-            "reason": "serializer call requires an adapter: Byte::writeSigned"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PacketShapeData",
-            "method": "write",
-            "line": 284,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PacketShapeData",
@@ -144,12 +108,6 @@
             "method": "write",
             "line": 284,
             "reason": "nullsafe method requires an adapter: write"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\shape\\PrimitiveShapeTextPayload",
-            "method": "write",
-            "line": 65,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapedRecipe",
@@ -182,46 +140,10 @@
             "reason": "serializer call requires an adapter: CommonTypes::putItemStackWithoutStackId"
         },
         {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketHeightMapInfo",
-            "method": "read",
-            "line": 46,
-            "reason": "serializer call requires an adapter: Byte::readSigned"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPacketHeightMapInfo",
-            "method": "write",
-            "line": 60,
-            "reason": "serializer call requires an adapter: Byte::writeSigned"
-        },
-        {
             "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPositionOffset",
             "method": "__construct",
             "line": 24,
             "reason": "static call requires an adapter: SubChunkPositionOffset::clampOffset"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\types\\SubChunkPositionOffset",
-            "method": "write",
-            "line": 54,
-            "reason": "serializer call requires an adapter: Byte::writeSigned"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerListPacket",
-            "method": "decodePayload",
-            "line": 56,
-            "reason": "serializer call requires an adapter: CommonTypes::readColor"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\PlayerListPacket",
-            "method": "encodePayload",
-            "line": 90,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
-            "method": "closure",
-            "line": 77,
-            "reason": "serializer call requires an adapter: CommonTypes::readColor"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
@@ -258,12 +180,6 @@
             "method": "closure",
             "line": 126,
             "reason": "method call on unknown generated value: getColor"
-        },
-        {
-            "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",
-            "method": "closure",
-            "line": 126,
-            "reason": "serializer call requires an adapter: CommonTypes::writeColor"
         },
         {
             "class": "pocketmine\\network\\mcpe\\protocol\\ClientboundMapItemDataPacket",

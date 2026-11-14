@@ -226,12 +226,16 @@ inline void GameRule::writeRules(BinaryStream& stream, const std::map<std::strin
         if (!rule) continue;
         stream.writeBool(rule->isPlayerModifiable);
         stream.writeUnsignedVarInt(static_cast<uint32_t>(rule->getTypeId()));
-        rule->write(stream, isStartGame);
+        rule->write(stream);
     }
 }
 
 inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::create(ReadOnlyBinaryStream& stream) {
-    switch (stream.readUnsignedVarInt().value_or(0)) {
+    return create(stream, stream.readUnsignedVarInt().value_or(0));
+}
+
+inline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::create(ReadOnlyBinaryStream& stream, uint32_t type) {
+    switch (type) {
         case 8: {
             auto value = std::make_shared<BeaconPaymentStackRequestAction>();
             value->read(stream);

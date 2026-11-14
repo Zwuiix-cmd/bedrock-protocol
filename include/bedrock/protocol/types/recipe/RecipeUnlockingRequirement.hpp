@@ -25,7 +25,7 @@ public:
     ) :
         unlockingContext(unlockingContextValue),
         unlockingIngredients(unlockingIngredientsValue) {
-		if ((unlockingContextValue != magic_enum::enum_integer(RecipeUnlockingContext::None)) && (unlockingIngredientsValue != nullptr)) {
+		if (unlockingContextValue != RecipeUnlockingContext::None && unlockingIngredientsValue.has_value()) {
 			throw std::exception{};
 		}
     }

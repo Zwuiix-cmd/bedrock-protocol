@@ -5,6 +5,7 @@
 #include <exception>
 #include <optional>
 #include <string>
+#include <vector>
 #include <bedrock/protocol/PacketIds.hpp>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
@@ -258,6 +259,12 @@ void run(Expect&& expect) {
         PacketIds::ServerboundRegisterAudioContent,
     };
 
+    const auto fixtures = [](PacketIds id) -> std::vector<std::string> {
+        switch (id) {
+            case PacketIds::ResourcePackClientResponse: return {std::string("\x00\x06" "cancel", 8)};
+            default: return {};
+        }
+    };
     for (const auto id : packetIds) {
         const auto packetName = std::string("packet ") + std::to_string(static_cast<int>(id));
         const auto packet = PacketPool::createPacket(id);
@@ -268,9 +275,12 @@ void run(Expect&& expect) {
         expect(packet->getId() == id, std::string(packetName) + ": packet has the wrong ID");
 
         bool roundtripSucceeded = false;
+        auto inputs = fixtures(id);
         for (const auto fill : std::array<uint8_t, 5>{0, 1, 2, 9, 17}) {
+            inputs.emplace_back(4096, static_cast<char>(fill));
+        }
+        for (const auto& fixture : inputs) {
             const auto candidate = PacketPool::createPacket(id);
-            const std::string fixture(4096, static_cast<char>(fill));
             ReadOnlyBinaryStream input(fixture);
             try {
                 candidate->read(input);

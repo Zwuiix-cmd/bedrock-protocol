@@ -156,65 +156,59 @@ public:
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeUnsignedLong(seed);
-        stream.writeVarInt(generator);
-        stream.writeVarInt(magic_enum::enum_integer(worldGamemode));
-        stream.writeBool(hardcore);
-        stream.writeVarInt(difficulty);
-        stream.writeSignedBlockPos(spawnPosition);
-        stream.writeBool(hasAchievementsDisabled);
-        stream.writeVarInt(magic_enum::enum_integer(editorWorldType));
-        stream.writeBool(createdInEditorMode);
-        stream.writeBool(exportedFromEditorMode);
-        stream.writeByte(magic_enum::enum_integer(editorLevelMigrationVersion));
-        stream.writeVarInt(time);
-        stream.writeUnsignedVarInt(eduEditionOffer);
-        stream.writeBool(hasEduFeaturesEnabled);
-        stream.writeString(eduProductUUID);
-        stream.writeFloat(rainLevel);
-        stream.writeFloat(lightningLevel);
-        stream.writeBool(hasConfirmedPlatformLockedContent);
-        stream.writeBool(isMultiplayerGame);
-        stream.writeBool(hasLANBroadcast);
-        stream.writeVarInt(xboxLiveBroadcastMode);
-        stream.writeVarInt(platformBroadcastMode);
-        stream.writeBool(commandsEnabled);
-        stream.writeBool(isTexturePacksRequired);
-        stream.writeBool(hasBonusChestEnabled);
-        stream.writeBool(hasStartWithMapEnabled);
-        stream.writeByte(magic_enum::enum_integer(defaultPlayerPermission));
-        stream.writeInt(serverChunkTickRadius);
-        stream.writeBool(hasLockedBehaviorPack);
-        stream.writeBool(hasLockedResourcePack);
-        stream.writeBool(isFromLockedWorldTemplate);
-        stream.writeBool(useMsaGamertagsOnly);
-        stream.writeBool(isFromWorldTemplate);
-        stream.writeBool(isWorldTemplateOptionLocked);
-        stream.writeBool(onlySpawnV1Villagers);
-        stream.writeBool(disablePersona);
-        stream.writeBool(disableCustomSkins);
-        stream.writeBool(muteEmoteAnnouncements);
-        stream.writeString(vanillaVersion);
-        stream.writeInt(limitedWorldWidth);
-        stream.writeInt(limitedWorldLength);
-        stream.writeBool(isNewNether);
-        stream.writeOptional(experimentalGameplayOverride, [&](const auto& optionalValue) {
-            stream.writeBool(optionalValue);
-        });
-        stream.writeUnsignedByte(magic_enum::enum_integer(chatRestrictionLevel));
-        stream.writeBool(disablePlayerInteractions);
-        stream.writeVarInt(serverEditorConnectionPolicy);
-        stream.writeBool(allowAnonymousBlockDropsInEditorWorlds);
-        spawnSettings->write(stream);
-        stream.writeUnsignedInt(gameRules.size());
-        for (const auto& [key, item] : gameRules) {
-            stream.writeString(key);
-            item->write(stream);
-        }
-        experiments->write(stream);
-        stream.writeOptional(eduSharedUriResource, [&](const auto& optionalValue) {
-            optionalValue->write(stream);
-        });
+		stream.writeUnsignedLong(seed);
+		spawnSettings->write(stream);
+		stream.writeVarInt(generator);
+		stream.writeVarInt(magic_enum::enum_integer(worldGamemode));
+		stream.writeBool(hardcore);
+		stream.writeVarInt(difficulty);
+		stream.writeSignedBlockPos(spawnPosition);
+		stream.writeBool(hasAchievementsDisabled);
+		stream.writeVarInt(magic_enum::enum_integer(editorWorldType));
+		stream.writeBool(createdInEditorMode);
+		stream.writeBool(exportedFromEditorMode);
+		stream.writeByte(magic_enum::enum_integer(editorLevelMigrationVersion));
+		stream.writeVarInt(time);
+		stream.writeUnsignedVarInt(eduEditionOffer);
+		stream.writeBool(hasEduFeaturesEnabled);
+		stream.writeString(eduProductUUID);
+		stream.writeFloat(rainLevel);
+		stream.writeFloat(lightningLevel);
+		stream.writeBool(hasConfirmedPlatformLockedContent);
+		stream.writeBool(isMultiplayerGame);
+		stream.writeBool(hasLANBroadcast);
+		stream.writeVarInt(xboxLiveBroadcastMode);
+		stream.writeVarInt(platformBroadcastMode);
+		stream.writeBool(commandsEnabled);
+		stream.writeBool(isTexturePacksRequired);
+		GameRule::writeRules(stream, gameRules, false);
+		experiments->write(stream);
+		stream.writeBool(hasBonusChestEnabled);
+		stream.writeBool(hasStartWithMapEnabled);
+		stream.writeByte(magic_enum::enum_integer(defaultPlayerPermission));
+		stream.writeInt(serverChunkTickRadius);
+		stream.writeBool(hasLockedBehaviorPack);
+		stream.writeBool(hasLockedResourcePack);
+		stream.writeBool(isFromLockedWorldTemplate);
+		stream.writeBool(useMsaGamertagsOnly);
+		stream.writeBool(isFromWorldTemplate);
+		stream.writeBool(isWorldTemplateOptionLocked);
+		stream.writeBool(onlySpawnV1Villagers);
+		stream.writeBool(disablePersona);
+		stream.writeBool(disableCustomSkins);
+		stream.writeBool(muteEmoteAnnouncements);
+		stream.writeString(vanillaVersion);
+		stream.writeInt(limitedWorldWidth);
+		stream.writeInt(limitedWorldLength);
+		stream.writeBool(isNewNether);
+		eduSharedUriResource.value_or(std::make_shared<EducationUriResource>("", ""))->write(stream);
+		stream.writeOptional(experimentalGameplayOverride, [&](const auto& value) {
+			stream.writeBool(value);
+		});
+		stream.writeUnsignedByte(magic_enum::enum_integer(chatRestrictionLevel));
+		stream.writeBool(disablePlayerInteractions);
+		stream.writeVarInt(serverEditorConnectionPolicy);
+		stream.writeBool(allowAnonymousBlockDropsInEditorWorlds);
     }
 };
 

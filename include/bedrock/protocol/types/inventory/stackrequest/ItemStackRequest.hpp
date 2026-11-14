@@ -37,6 +37,14 @@ public:
     std::vector<std::string> filterStrings;
     int32_t filterStringCause;
 
+    static uint8_t getInnerActionType(uint32_t type) {
+        if (type > 18) {
+            throw std::out_of_range("Invalid item stack request action");
+        }
+        // Inner discriminators 7 and 8 are reserved for retired actions.
+        return static_cast<uint8_t>(type < 7 ? type : type + 2);
+    }
+
     ItemStackRequest() = default;
     explicit ItemStackRequest(
         const int32_t& requestIdValue,
@@ -53,7 +61,13 @@ public:
         auto result = std::make_shared<ItemStackRequest>();
         result->requestId = stream.readVarInt().value_or(0);
         result->actions = stream.readList([&]() {
-            return ItemStackRequestAction::create(stream);
+            const auto type = stream.readUnsignedVarInt().value_or(0);
+            const auto innerType = stream.readUnsignedByte().value_or(0);
+            if (innerType != getInnerActionType(type)) {
+                stream.markOverflowed();
+                return std::shared_ptr<ItemStackRequestAction>{};
+            }
+            return ItemStackRequestAction::create(stream, type);
         });
         result->filterStrings = stream.readList([&]() {
             return stream.readString().value_or("");
@@ -73,7 +87,7 @@ public:
 		stream.writeVarInt(requestId);
 		stream.writeList(actions, [&](const auto& action) {
 					stream.writeUnsignedVarInt(action->getTypeId());
-					stream.writeUnsignedByte(ItemStackRequestActionType::INNER_TYPES[action->getTypeId()]);
+					stream.writeUnsignedByte(getInnerActionType(action->getTypeId()));
 					action->write(stream);
 				});
 		stream.writeList(filterStrings, [&](const auto& value) {

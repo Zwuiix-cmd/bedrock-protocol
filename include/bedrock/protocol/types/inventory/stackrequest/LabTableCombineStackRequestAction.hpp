@@ -10,7 +10,7 @@ namespace bedrock::protocol {
 
 class LabTableCombineStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 9;
+    static constexpr int64_t ID = 7;
 
 
     LabTableCombineStackRequestAction() = default;

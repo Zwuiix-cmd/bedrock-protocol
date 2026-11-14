@@ -26,18 +26,26 @@ public:
         inputItemMeta(inputItemMetaValue),
         outputs(outputsValue) {}
 
+    static std::shared_ptr<MaterialReducerRecipe> create(ReadOnlyBinaryStream& stream) {
+		auto inputIdAndData = stream.readVarInt().value_or(0);
+		auto inputId = (inputIdAndData >> 16);
+		auto inputMeta = (inputIdAndData & 32767);
+		auto outputs = stream.readList([&]() { return stream.readObject<MaterialReducerRecipeOutput>(); });
+		return std::make_shared<MaterialReducerRecipe>(inputId, inputMeta, outputs);
+    }
+
     virtual void read(ReadOnlyBinaryStream& stream) {
-        inputItemId = stream.readVarInt().value_or(0);
-        inputItemMeta = stream.readVarInt().value_or(0);
-        outputs = stream.readObjectList<MaterialReducerRecipeOutput>();
+        auto decoded = create(stream);
+        if (decoded) {
+            *this = *decoded;
+        }
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeVarInt(inputItemId);
-        stream.writeVarInt(inputItemMeta);
-        stream.writeList(outputs, [&](const auto& item) {
-            item->write(stream);
-        });
+		stream.writeVarInt(((inputItemId << 16) | inputItemMeta));
+		stream.writeList(outputs, [&](const auto& output) {
+			return output->write(stream);
+		});
     }
 };
 

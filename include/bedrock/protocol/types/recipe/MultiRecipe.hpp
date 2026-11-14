@@ -4,14 +4,12 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
-#include <memory>
 #include <string>
 
-#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 namespace bedrock::protocol {
 
 
-class MultiRecipe : public RecipeWithTypeId {
+class MultiRecipe {
 public:
     enum class Type : uint8_t {
         RepairItem = 0,
@@ -32,21 +30,14 @@ public:
     uint32_t recipeNetId;
 
     MultiRecipe() = default;
-    virtual ~MultiRecipe() = default;
-    explicit MultiRecipe(const int32_t& typeIdValue, const std::string& recipeIdValue, const uint32_t& recipeNetIdValue) : RecipeWithTypeId(typeIdValue), recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
+    explicit MultiRecipe(const std::string& recipeIdValue, const uint32_t& recipeNetIdValue) : recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
 
-    static std::shared_ptr<MultiRecipe> create(const int32_t& typeId, ReadOnlyBinaryStream& stream) {
-		auto uuid = stream.readUUID().value_or("");
-		auto recipeNetId = stream.readUnsignedVarInt().value_or(0);
-		return std::make_shared<MultiRecipe>(typeId, uuid, static_cast<int32_t>(recipeNetId));
-    }
-
-    void read(ReadOnlyBinaryStream& stream) override {
+    virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readUUID().value_or("");
         recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
+    virtual void write(BinaryStream& stream) const {
 		stream.writeUUID(recipeId);
 		stream.writeUnsignedVarInt(recipeNetId);
     }

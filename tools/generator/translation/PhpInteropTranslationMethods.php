@@ -39,8 +39,14 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
                 $this->expressionTypes[$callbackName] = $enumType;
             }
         }
-        $arguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method), $call->args);
-        $rawArguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method, false), $call->args);
+        $rawArguments = [];
+        $arguments = [];
+        foreach ($call->args as $index => $argument) {
+            $rawArguments[$index] = $this->argumentExpression($argument, $declaration, $method, false);
+            $arguments[$index] = $argument instanceof Node\Arg
+                ? $this->dereferenceOptionalArgument($argument->value, $rawArguments[$index], $declaration)
+                : $rawArguments[$index];
+        }
         if ($callbackName !== null && $callbackEnumType !== null && isset($arguments[2])) {
             $arguments[2] = preg_replace(
                 '/(stream\.write(?:Unsigned|Signed)?(?:Byte|Short|Int|Long|VarInt|VarLong)\()'
@@ -120,8 +126,7 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
                 if (isset($call->args[1]) && $call->args[1] instanceof Node\Arg && $this->isUnknownProperty($call->args[1]->value, $declaration)) {
                     $this->recordUnsupported($declaration, $method ?? ['name' => 'expression', 'line' => $call->getStartLine()], 'optional write of an unknown value');
                 }
-                $optionalArguments = array_map(fn (Node $argument): string => $this->argumentExpression($argument, $declaration, $method, false), $call->args);
-                $value = $optionalArguments[1] ?? 'std::monostate{}';
+                $value = $rawArguments[1] ?? 'std::monostate{}';
                 $value = preg_replace(
                     '/^magic_enum::enum_integer\((.*)\)$/s',
                     '$1',
@@ -187,8 +192,8 @@ private function staticCall(Node\Expr\StaticCall $call, array $declaration, ?arr
         $referenced = $this->findDeclaration($class === 'self' || $class === 'static' ? $declaration['name'] : $class);
         if (count($call->args) === 1
             && $this->isVariadicArgument($call->args[0])
-            && in_array($name, ['read', 'write'], true)) {
-            return $name === 'read'
+            && in_array($name, ['read', 'decode', 'write', 'encode'], true)) {
+            return in_array($name, ['read', 'decode'], true)
                 ? '[&]() { return ' . $this->readObject($cppClass) . '; }'
                 : '[&](const auto& value) { value->write(stream); }';
         }
@@ -517,7 +522,7 @@ private function closure(Node\Expr\Closure|Node\Expr\ArrowFunction $closure, arr
         }
         $body = [];
         foreach ($closure->stmts as $statement) {
-            $translated = $this->statement($statement, $declaration, $method ?? ['name' => 'closure', 'line' => 0], 1);
+            $translated = $this->statement($statement, $declaration, ['name' => 'closure', 'line' => $closure->getStartLine(), 'returnType' => $closure->returnType?->toString() ?? 'mixed', 'static' => true], 1);
             if ($translated !== '') {
                 $body[] = $translated;
             }
@@ -551,15 +556,19 @@ private function argumentExpression(Node $argument, array $declaration, ?array $
     {
         if ($argument instanceof Node\Arg) {
             $value = $this->expression($argument->value, $declaration, $method);
-            if ($dereferenceOptional && ($this->isOptionalProperty($argument->value, $declaration) || $this->isOptionalExpression($argument->value))) {
-                return '*(' . $value . ')';
-            }
-            return $value;
+            return $dereferenceOptional ? $this->dereferenceOptionalArgument($argument->value, $value, $declaration) : $value;
         }
         if ($argument instanceof Node\VariadicPlaceholder) {
             return '/* variadic callback */';
         }
         return 'std::monostate{}';
+    }
+
+private function dereferenceOptionalArgument(Node\Expr $expression, string $value, array $declaration): string
+    {
+        return $this->isOptionalProperty($expression, $declaration) || $this->isOptionalExpression($expression)
+            ? '*(' . $value . ')'
+            : $value;
     }
 
 private function isVariadicArgument(Node $argument): bool

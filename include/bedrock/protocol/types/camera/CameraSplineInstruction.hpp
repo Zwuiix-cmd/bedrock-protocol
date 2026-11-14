@@ -2,21 +2,22 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <magic_enum/magic_enum.hpp>
 #include <cstddef>
-#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include <bedrock/protocol/types/camera/CameraProgressOption.hpp>
 #include <bedrock/protocol/types/camera/CameraRotationOption.hpp>
+#include <bedrock/protocol/types/camera/CameraSetInstructionEaseType.hpp>
 namespace bedrock::protocol {
 
 
 class CameraSplineInstruction {
 public:
     float totalTime;
-    uint8_t easeType;
+    CameraSetInstructionEaseType easeType;
     std::vector<glm::vec3> curve;
     std::vector<std::shared_ptr<CameraProgressOption>> progressKeyFrames;
     std::vector<std::shared_ptr<CameraRotationOption>> rotationOptions;
@@ -26,7 +27,7 @@ public:
     CameraSplineInstruction() = default;
     explicit CameraSplineInstruction(
         const float& totalTimeValue,
-        const uint8_t& easeTypeValue,
+        const CameraSetInstructionEaseType& easeTypeValue,
         const std::vector<glm::vec3>& curveValue,
         const std::vector<std::shared_ptr<CameraProgressOption>>& progressKeyFramesValue,
         const std::vector<std::shared_ptr<CameraRotationOption>>& rotationOptionsValue,
@@ -43,7 +44,9 @@ public:
 
     static std::shared_ptr<CameraSplineInstruction> create(ReadOnlyBinaryStream& stream) {
 		auto totalTime = stream.readFloat().value_or(0.0f);
-		auto easeType = stream.readUnsignedByte().value_or(0);
+		auto easeType = magic_enum::enum_cast<CameraSetInstructionEaseType>(
+			stream.readUnsignedByte().value_or(0)
+		).value_or(CameraSetInstructionEaseType::Linear);
 		auto curve = std::vector<glm::vec3>();
 		auto curveCount = stream.readUnsignedVarInt().value_or(0);
 		    const bool curveCountAvailable = stream.canReadCollection(curveCount);
@@ -64,7 +67,9 @@ public:
 		}
 		auto splineIdentifier = stream.readString().value_or("");
 		auto loadFromJson = stream.readBool().value_or(false);
-		return std::make_shared<CameraSplineInstruction>(totalTime, static_cast<int32_t>(easeType), curve, progressKeyFrames, rotationOptions, splineIdentifier, loadFromJson);
+		return std::make_shared<CameraSplineInstruction>(totalTime, magic_enum::enum_cast<CameraSetInstructionEaseType>(
+	easeType
+).value_or(CameraSetInstructionEaseType::Linear), curve, progressKeyFrames, rotationOptions, splineIdentifier, loadFromJson);
     }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
@@ -76,7 +81,7 @@ public:
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeFloat(totalTime);
-		stream.writeUnsignedByte(easeType);
+		stream.writeUnsignedByte(magic_enum::enum_integer(easeType));
 		stream.writeUnsignedVarInt(curve.size());
 		for (const auto& point : curve) {
 			stream.writeVec3(point);

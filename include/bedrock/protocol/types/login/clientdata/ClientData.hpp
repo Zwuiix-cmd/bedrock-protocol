@@ -26,6 +26,8 @@ public:
     int32_t CapeImageHeight;
     int32_t CapeImageWidth;
     bool CapeOnClassicSkin;
+    int32_t ClientEditorConnectionIntent;
+    bool ClientIsEditorCapable;
     int32_t ClientRandomId;
     bool CompatibleWithClientSideChunkGen;
     int32_t CurrentInputMode;
@@ -33,15 +35,17 @@ public:
     std::string DeviceId;
     std::string DeviceModel;
     ::bedrock::protocol::BuildPlatform DeviceOS;
+    bool FilterProfanity;
     std::string GameVersion;
     ::bedrock::protocol::GraphicsMode GraphicsMode;
     int32_t GuiScale;
-    bool IsEditorMode;
     std::string LanguageCode;
     int32_t MaxViewDistance;
     int32_t MemoryTier;
+    std::string Nonce;
     bool OverrideSkin;
     std::string PartyId;
+    bool IsPartyLeader;
     std::vector<std::shared_ptr<ClientDataPersonaSkinPiece>> PersonaPieces;
     bool PersonaSkin;
     std::vector<std::shared_ptr<ClientDataPersonaPieceTintColor>> PieceTintColors;
@@ -50,6 +54,7 @@ public:
     int32_t PlatformType;
     std::string PlatformUserId;
     bool PremiumSkin = false;
+    std::string ProfileHash;
     std::string SelfSignedId;
     std::string ServerAddress;
     std::string SkinAnimationData;
@@ -75,6 +80,8 @@ public:
         CapeImageHeight = stream.readInt().value_or(0);
         CapeImageWidth = stream.readInt().value_or(0);
         CapeOnClassicSkin = stream.readBool().value_or(false);
+        ClientEditorConnectionIntent = stream.readInt().value_or(0);
+        ClientIsEditorCapable = stream.readBool().value_or(false);
         ClientRandomId = stream.readInt().value_or(0);
         CompatibleWithClientSideChunkGen = stream.readBool().value_or(false);
         CurrentInputMode = stream.readInt().value_or(0);
@@ -84,17 +91,19 @@ public:
         DeviceOS = magic_enum::enum_cast<::bedrock::protocol::BuildPlatform>(
             stream.readInt().value_or(0)
         ).value_or(BuildPlatform::Unknown);
+        FilterProfanity = stream.readBool().value_or(false);
         GameVersion = stream.readString().value_or("");
         GraphicsMode = magic_enum::enum_cast<::bedrock::protocol::GraphicsMode>(
             stream.readInt().value_or(0)
         ).value_or(bedrock::protocol::GraphicsMode::Simple);
         GuiScale = stream.readInt().value_or(0);
-        IsEditorMode = stream.readBool().value_or(false);
         LanguageCode = stream.readString().value_or("");
         MaxViewDistance = stream.readInt().value_or(0);
         MemoryTier = stream.readInt().value_or(0);
+        Nonce = stream.readString().value_or("");
         OverrideSkin = stream.readBool().value_or(false);
         PartyId = stream.readString().value_or("");
+        IsPartyLeader = stream.readBool().value_or(false);
         PersonaPieces = stream.readObjectList<ClientDataPersonaSkinPiece>();
         PersonaSkin = stream.readBool().value_or(false);
         PieceTintColors = stream.readObjectList<ClientDataPersonaPieceTintColor>();
@@ -103,6 +112,7 @@ public:
         PlatformType = stream.readInt().value_or(0);
         PlatformUserId = stream.readString().value_or("");
         PremiumSkin = stream.readBool().value_or(false);
+        ProfileHash = stream.readString().value_or("");
         SelfSignedId = stream.readString().value_or("");
         ServerAddress = stream.readString().value_or("");
         SkinAnimationData = stream.readString().value_or("");
@@ -131,6 +141,8 @@ public:
         stream.writeInt(CapeImageHeight);
         stream.writeInt(CapeImageWidth);
         stream.writeBool(CapeOnClassicSkin);
+        stream.writeInt(ClientEditorConnectionIntent);
+        stream.writeBool(ClientIsEditorCapable);
         stream.writeInt(ClientRandomId);
         stream.writeBool(CompatibleWithClientSideChunkGen);
         stream.writeInt(CurrentInputMode);
@@ -138,15 +150,17 @@ public:
         stream.writeString(DeviceId);
         stream.writeString(DeviceModel);
         stream.writeInt(magic_enum::enum_integer(DeviceOS));
+        stream.writeBool(FilterProfanity);
         stream.writeString(GameVersion);
         stream.writeInt(magic_enum::enum_integer(GraphicsMode));
         stream.writeInt(GuiScale);
-        stream.writeBool(IsEditorMode);
         stream.writeString(LanguageCode);
         stream.writeInt(MaxViewDistance);
         stream.writeInt(MemoryTier);
+        stream.writeString(Nonce);
         stream.writeBool(OverrideSkin);
         stream.writeString(PartyId);
+        stream.writeBool(IsPartyLeader);
         stream.writeList(PersonaPieces, [&](const auto& item) {
             item->write(stream);
         });
@@ -159,6 +173,7 @@ public:
         stream.writeInt(PlatformType);
         stream.writeString(PlatformUserId);
         stream.writeBool(PremiumSkin);
+        stream.writeString(ProfileHash);
         stream.writeString(SelfSignedId);
         stream.writeString(ServerAddress);
         stream.writeString(SkinAnimationData);

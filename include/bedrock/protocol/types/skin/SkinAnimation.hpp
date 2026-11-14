@@ -44,19 +44,19 @@ public:
         image = std::make_shared<SkinImage>();
         image->read(stream);
         type = magic_enum::enum_cast<Type>(
-            stream.readUnsignedInt().value_or(0)
+            stream.readUnsignedVarInt().value_or(0)
         ).value_or(Type::Head);
         frames = stream.readFloat().value_or(0.0f);
         expressionType = magic_enum::enum_cast<Expression>(
-            stream.readUnsignedInt().value_or(0)
+            stream.readUnsignedVarInt().value_or(0)
         ).value_or(Expression::Linear);
     }
 
     virtual void write(BinaryStream& stream) const {
         image->write(stream);
-        stream.writeUnsignedInt(magic_enum::enum_integer(type));
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(type));
         stream.writeFloat(frames);
-        stream.writeUnsignedInt(magic_enum::enum_integer(expressionType));
+        stream.writeUnsignedVarInt(magic_enum::enum_integer(expressionType));
     }
 };
 

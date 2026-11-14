@@ -3,6 +3,7 @@
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
+#include <optional>
 #include <string>
 
 namespace bedrock::protocol {
@@ -13,9 +14,9 @@ public:
     uint8_t slot;
     uint8_t hotbarSlot;
     uint8_t count;
-    int32_t itemStackId;
+    std::optional<int32_t> itemStackId;
     std::string customName;
-    std::string filteredCustomName;
+    std::optional<std::string> filteredCustomName;
     int32_t durabilityCorrection;
 
     ItemStackResponseSlotInfo() = default;
@@ -23,9 +24,9 @@ public:
         const uint8_t& slotValue,
         const uint8_t& hotbarSlotValue,
         const uint8_t& countValue,
-        const int32_t& itemStackIdValue,
+        const std::optional<int32_t>& itemStackIdValue,
         const std::string& customNameValue,
-        const std::string& filteredCustomNameValue,
+        const std::optional<std::string>& filteredCustomNameValue,
         const int32_t& durabilityCorrectionValue
     ) :
         slot(slotValue),
@@ -40,9 +41,13 @@ public:
         slot = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readUnsignedByte().value_or(0);
         count = stream.readUnsignedByte().value_or(0);
-        itemStackId = stream.readVarInt().value_or(0);
+        itemStackId = stream.readOptional([&]() {
+            return stream.readVarInt().value_or(0);
+        });
         customName = stream.readString().value_or("");
-        filteredCustomName = stream.readString().value_or("");
+        filteredCustomName = stream.readOptional([&]() {
+            return stream.readString().value_or("");
+        });
         durabilityCorrection = stream.readVarInt().value_or(0);
     }
 
@@ -50,9 +55,13 @@ public:
 		stream.writeUnsignedByte(slot);
 		stream.writeUnsignedByte(hotbarSlot);
 		stream.writeUnsignedByte(count);
-		stream.writeVarInt(itemStackId);
+		stream.writeOptional(itemStackId, [&](const auto& value) {
+			stream.writeVarInt(value);
+		});
 		stream.writeString(customName);
-		stream.writeString(filteredCustomName);
+		stream.writeOptional(filteredCustomName, [&](const auto& value) {
+			stream.writeString(value);
+		});
 		stream.writeVarInt(durabilityCorrection);
     }
 };

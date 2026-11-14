@@ -23,11 +23,11 @@ public:
 
     int32_t width;
     int32_t height;
-    std::vector<std::vector<uint32_t>> pixels;
+    std::vector<int32_t> pixels;
     mutable std::optional<std::string> encodedPixelCache;
 
     MapImage() = default;
-    explicit MapImage(const std::vector<std::vector<uint32_t>>& pixelsValue) : pixels(pixelsValue) {
+    explicit MapImage(const std::vector<int32_t>& pixelsValue) : pixels(pixelsValue) {
 		std::optional<std::size_t> rowLength;
 		for (const auto& row : pixelsValue) {
 			if (!rowLength) {
@@ -56,11 +56,11 @@ public:
 		if (height > magic_enum::enum_integer(Max::Height)) {
 			throw std::exception{};
 		}
-		auto pixels = std::vector<std::vector<uint32_t>>();
+		auto pixels = std::vector<int32_t>();
 		for (int32_t y = 0; (y < height) && !stream.hasOverflowed(); ++y) {
 			auto row = std::vector<uint32_t>();
 			for (int32_t x = 0; (x < width) && !stream.hasOverflowed(); ++x) {
-				row.push_back(static_cast<uint32_t>(BinaryStream::flipIntEndianness(stream.readUnsignedVarInt().value_or(0))));
+				row.push_back(static_cast<uint32_t>(stream.readIntBE().value_or(0)));
 			}
 			pixels.push_back(row);
 		}
@@ -69,9 +69,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         pixels = stream.readList([&]() {
-            return stream.readList([&]() {
-                return stream.readUnsignedInt().value_or(0);
-            });
+            return stream.readIntBE().value_or(0);
         });
         width = stream.readInt().value_or(0);
         height = stream.readInt().value_or(0);
@@ -85,7 +83,7 @@ public:
 			auto serializer = BinaryStream();
 			for (std::size_t y = 0; (y < height); ++y) {
 				for (std::size_t x = 0; (x < width); ++x) {
-					serializer.writeUnsignedVarInt(BinaryStream::flipIntEndianness(static_cast<uint32_t>(pixels[y][x])));
+					serializer.writeIntBE(static_cast<uint32_t>(pixels[y][x]));
 				}
 			}
 			encodedPixelCache = serializer.getBuffer();

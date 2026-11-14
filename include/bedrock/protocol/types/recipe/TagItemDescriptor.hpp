@@ -11,22 +11,23 @@ namespace bedrock::protocol {
 
 class TagItemDescriptor : public ItemDescriptor {
 public:
-    static constexpr int64_t ID = 3;
+    static constexpr int64_t DEFAULT_META = 32767;
 
     std::string tag;
+    int32_t meta = 32767;
 
     TagItemDescriptor() = default;
     virtual ~TagItemDescriptor() = default;
-    explicit TagItemDescriptor(const std::string& tagValue) : tag(tagValue) {}
-
-    int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
+    explicit TagItemDescriptor(const std::string& tagValue, const int32_t& metaValue) : tag(tagValue), meta(metaValue) {}
 
     void read(ReadOnlyBinaryStream& stream) override {
         tag = stream.readString().value_or("");
+        meta = stream.readVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeString(tag);
+		stream.writeVarInt(meta);
     }
 };
 

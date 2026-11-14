@@ -4,56 +4,39 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
-#include <string>
-#include <string_view>
+#include <exception>
+#include <variant>
 #include <vector>
 
+#include <bedrock/protocol/types/skin/PersonaSkinPieceType.hpp>
 namespace bedrock::protocol {
 
 
 class PersonaPieceTintColor {
 public:
-    enum class PieceType : uint8_t {
-        PersonaEyes = 0,
-        PersonaHair = 1,
-        PersonaMouth = 2,
-    };
+    static constexpr int64_t EXPECTED_COLOR_COUNT = 4;
 
-    PieceType pieceType;
-    std::vector<std::string> colors;
+    PersonaSkinPieceType pieceType;
+    std::vector<std::monostate> colors;
 
     PersonaPieceTintColor() = default;
-    explicit PersonaPieceTintColor(const PieceType& pieceTypeValue, const std::vector<std::string>& colorsValue) : pieceType(pieceTypeValue), colors(colorsValue) {}
+    explicit PersonaPieceTintColor(const PersonaSkinPieceType& pieceTypeValue, const std::vector<std::monostate>& colorsValue) : pieceType(pieceTypeValue), colors(colorsValue) {
+		if (colors.size() != EXPECTED_COLOR_COUNT) {
+			throw std::exception{};
+		}
+    }
 
     virtual void read(ReadOnlyBinaryStream& stream) {
-        const auto pieceTypeRaw = stream.readString().value_or("");
-        pieceType = magic_enum::enum_cast<PieceType>(
-            std::string_view(pieceTypeRaw)
-        ).value_or(PieceType::PersonaEyes);
-        colors = stream.readList([&]() {
-            return stream.readString().value_or("");
-        });
+        pieceType = magic_enum::enum_cast<PersonaSkinPieceType>(
+            stream.readString().value_or("")
+        ).value_or(PersonaSkinPieceType::Unknown);
+        colors = std::monostate{};
     }
 
     virtual void write(BinaryStream& stream) const {
-        stream.writeString(magic_enum::enum_name(pieceType));
-        stream.writeList(colors, [&](const auto& item) {
-            stream.writeString(item);
-        });
+        stream.writeString(magic_enum::enum_integer(pieceType));
+        (void)(colors);
     }
 };
 
 } // namespace bedrock::protocol
-
-namespace magic_enum::customize {
-
-template <> constexpr customize_t enum_name<::bedrock::protocol::PersonaPieceTintColor::PieceType>(::bedrock::protocol::PersonaPieceTintColor::PieceType value) noexcept {
-    switch (value) {
-        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaEyes: return "persona_eyes";
-        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaHair: return "persona_hair";
-        case ::bedrock::protocol::PersonaPieceTintColor::PieceType::PersonaMouth: return "persona_mouth";
-        default: return invalid_tag;
-    }
-}
-
-}

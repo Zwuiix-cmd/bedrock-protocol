@@ -148,6 +148,8 @@ enum class EntityMetadataProperties : uint8_t {
     AimAssistPriorityPresetId = 136,
     AimAssistPriorityCategoryId = 137,
     AimAssistPriorityActorId = 138,
+    Reserved139 = 139,
+    NameplateRenderDistanceMax = 140,
 };
 
 } // namespace bedrock::protocol

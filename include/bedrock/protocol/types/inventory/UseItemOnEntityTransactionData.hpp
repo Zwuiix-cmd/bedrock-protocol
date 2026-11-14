@@ -5,6 +5,7 @@
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
 
+#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/TransactionData.hpp>
 namespace bedrock::protocol {
@@ -23,6 +24,7 @@ public:
     uint64_t actorRuntimeId;
     Action actionType;
     int32_t hotbarSlot;
+    HandSlot hand;
     NetworkItemStack itemInHand;
     glm::vec3 playerPosition;
     glm::vec3 clickPosition;
@@ -36,9 +38,10 @@ public:
         actions = stream.readObjectList<NetworkInventoryAction>();
         actorRuntimeId = stream.readActorRuntimeID().value_or(0);
         actionType = magic_enum::enum_cast<Action>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readVarInt().value_or(0)
         ).value_or(Action::Interact);
         hotbarSlot = stream.readVarInt().value_or(0);
+        hand = magic_enum::enum_cast<HandSlot>(stream.readUnsignedByte().value_or(0)).value_or(HandSlot::Mainhand);
         itemInHand = stream.readValue<NetworkItemStack>();
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
@@ -49,8 +52,9 @@ public:
             item->write(stream);
         });
         stream.writeActorRuntimeID(actorRuntimeId);
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(actionType));
+        stream.writeVarInt(magic_enum::enum_integer(actionType));
         stream.writeVarInt(hotbarSlot);
+        stream.writeUnsignedByte(static_cast<uint8_t>(hand));
         itemInHand.write(stream);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);

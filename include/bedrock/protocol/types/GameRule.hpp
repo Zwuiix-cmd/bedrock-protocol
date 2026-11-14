@@ -18,7 +18,7 @@ public:
     explicit GameRule(const bool& isPlayerModifiableValue) : isPlayerModifiable(isPlayerModifiableValue) {}
 
     virtual int32_t getTypeId() const = 0;
-    virtual void write(BinaryStream& stream, const bool& isStartGame) const = 0;
+    virtual void write(BinaryStream& stream) const = 0;
     virtual void read(ReadOnlyBinaryStream& stream) = 0;
 
     static std::shared_ptr<GameRule> create(ReadOnlyBinaryStream& stream);

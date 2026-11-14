@@ -12,29 +12,25 @@ namespace bedrock::protocol {
 
 class StringIdMetaItemDescriptor : public ItemDescriptor {
 public:
-    static constexpr int64_t ID = 4;
-
     std::string id;
-    uint16_t meta;
+    int32_t meta;
 
     StringIdMetaItemDescriptor() = default;
     virtual ~StringIdMetaItemDescriptor() = default;
-    explicit StringIdMetaItemDescriptor(const std::string& idValue, const uint16_t& metaValue) : id(idValue), meta(metaValue) {
+    explicit StringIdMetaItemDescriptor(const std::string& idValue, const int32_t& metaValue) : id(idValue), meta(metaValue) {
 		if (metaValue < 0) {
 			throw std::exception{};
 		}
     }
 
-    int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
-
     void read(ReadOnlyBinaryStream& stream) override {
         id = stream.readString().value_or("");
-        meta = stream.readUnsignedShort().value_or(0);
+        meta = stream.readVarInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeString(id);
-		stream.writeUnsignedShort(meta);
+		stream.writeVarInt(meta);
     }
 };
 

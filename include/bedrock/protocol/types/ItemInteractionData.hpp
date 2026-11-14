@@ -2,62 +2,46 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
-#include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <vector>
 
-#include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 #include <bedrock/protocol/types/inventory/UseItemTransactionData.hpp>
+#include <bedrock/protocol/types/inventory/InventoryTransactionChangedSlotsHack.hpp>
 namespace bedrock::protocol {
 
 
 class ItemInteractionData {
 public:
     int32_t requestId;
-    std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>> requestChangedSlots;
+    std::optional<std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>> requestChangedSlots;
     std::shared_ptr<UseItemTransactionData> transactionData;
 
     ItemInteractionData() = default;
     explicit ItemInteractionData(
         const int32_t& requestIdValue,
-        const std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>& requestChangedSlotsValue,
+        const std::optional<std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>>& requestChangedSlotsValue,
         const std::shared_ptr<UseItemTransactionData>& transactionDataValue
     ) :
         requestId(requestIdValue),
         requestChangedSlots(requestChangedSlotsValue),
         transactionData(transactionDataValue) {}
 
-    static std::shared_ptr<ItemInteractionData> create(ReadOnlyBinaryStream& stream) {
-		auto requestId = stream.readVarInt().value_or(0);
-		auto requestChangedSlots = std::vector<std::shared_ptr<InventoryTransactionChangedSlotsHack>>();
-		if (requestId != 0) {
-			auto len = stream.readUnsignedVarInt().value_or(0);
-			    const bool lenAvailable = stream.canReadCollection(len);
-			for (std::size_t i = 0; (i < len) && !stream.hasOverflowed() && lenAvailable && !stream.hasOverflowed(); ++i) {
-				requestChangedSlots.push_back(stream.readObject<InventoryTransactionChangedSlotsHack>());
-			}
-		}
-		auto transactionData = std::make_shared<UseItemTransactionData>();
-		transactionData->read(stream);
-		return std::make_shared<ItemInteractionData>(requestId, requestChangedSlots, transactionData);
-    }
-
     virtual void read(ReadOnlyBinaryStream& stream) {
-        auto decoded = create(stream);
-        if (decoded) {
-            *this = *decoded;
-        }
+        requestId = stream.readVarInt().value_or(0);
+        requestChangedSlots = stream.readObjectList<InventoryTransactionChangedSlotsHack>();
+        transactionData = std::make_shared<UseItemTransactionData>();
+        transactionData->read(stream);
     }
 
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
-		if (requestId != 0) {
-			stream.writeUnsignedVarInt(requestChangedSlots.size());
-			for (const auto& changedSlot : requestChangedSlots) {
-				changedSlot->write(stream);
-			}
-		}
+		stream.writeOptional(requestChangedSlots, [&](const auto& list) {
+			stream.writeList(list, [&](const auto& v) {
+				v->write(stream);
+			});
+		});
 		transactionData->write(stream);
     }
 };

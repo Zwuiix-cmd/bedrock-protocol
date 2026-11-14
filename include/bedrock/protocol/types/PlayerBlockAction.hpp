@@ -12,41 +12,47 @@ namespace bedrock::protocol {
 
 
 struct PlayerBlockAction {
-    PlayerAction actionType = PlayerAction::StopBreak;
+    int32_t actionType = 0;
     glm::ivec3 blockPosition = glm::ivec3(0);
     int32_t face = 0;
 
+    explicit PlayerBlockAction(
+        const int32_t& actionTypeValue,
+        const glm::ivec3& blockPositionValue,
+        const int32_t& faceValue
+    )
+        : actionType(actionTypeValue),
+          blockPosition(blockPositionValue),
+          face(faceValue)
+    {}
 
     void write(BinaryStream& stream) const {
-        if (actionType != PlayerAction::StopBreak && isValidActionType(actionType)) {
-            stream.writeSignedBlockPos(blockPosition);
-            stream.writeVarInt(face);
-        }
+        stream.writeVarInt(actionType);
+        stream.writeSignedBlockPos(blockPosition);
+        stream.writeVarInt(face);
     }
 
     void read(ReadOnlyBinaryStream& stream) {
-        if (actionType != PlayerAction::StopBreak && isValidActionType(actionType)) {
-            blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-            face = stream.readVarInt().value_or(0);
-        }
-    }
-
-    static bool isValidActionType(PlayerAction value) noexcept {
-        return value == PlayerAction::AbortBreak || value == PlayerAction::StartBreak || value == PlayerAction::CrackBreak || value == PlayerAction::PredictDestroyBlock || value == PlayerAction::ContinueDestroyBlock;
+        actionType = stream.readVarInt().value_or(0);
+        blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
+        face = stream.readVarInt().value_or(0);
     }
 
     static bool isValidActionType(int32_t value) noexcept {
-        return isValidActionType(static_cast<PlayerAction>(value));
+        return
+            value == static_cast<int32_t>(PlayerAction::StopBreak)
+            || value == static_cast<int32_t>(PlayerAction::AbortBreak)
+            || value == static_cast<int32_t>(PlayerAction::StartBreak)
+            || value == static_cast<int32_t>(PlayerAction::CrackBreak)
+            || value == static_cast<int32_t>(PlayerAction::PredictDestroyBlock)
+            || value == static_cast<int32_t>(PlayerAction::ContinueDestroyBlock);
     }
 
-    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, PlayerAction value) {
+    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
         PlayerBlockAction result;
         result.actionType = value;
         result.read(stream);
         return result;
-    }
-    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
-        return decodeWithBlockInfo(stream, static_cast<PlayerAction>(value));
     }
 };
 

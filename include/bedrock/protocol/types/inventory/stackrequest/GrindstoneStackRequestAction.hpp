@@ -10,7 +10,7 @@ namespace bedrock::protocol {
 
 class GrindstoneStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 16;
+    static constexpr int64_t ID = 14;
 
     uint32_t recipeId;
     int32_t repairCost;
@@ -23,15 +23,15 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        recipeId = stream.readUnsignedVarInt().value_or(0);
+        recipeId = stream.readUnsignedInt().value_or(0);
         repairCost = stream.readVarInt().value_or(0);
         repetitions = stream.readUnsignedByte().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
-		stream.writeUnsignedVarInt(recipeId);
-		stream.writeVarInt(repairCost);
+		stream.writeUnsignedInt(recipeId);
 		stream.writeUnsignedByte(repetitions);
+		stream.writeVarInt(repairCost);
     }
 };
 

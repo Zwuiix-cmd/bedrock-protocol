@@ -314,17 +314,22 @@ void testMobEffectIdType() {
 
 void testGeneratedCodecFixes() {
     UpdateBlockSyncedPacket synced;
+    synced.blockPosition = {1, -2, 3};
+    synced.blockRuntimeId = 7;
+    synced.flags = static_cast<UpdateBlockPacket::Flag>(3);
     synced.actorUniqueId = 300;
     synced.updateType = UpdateBlockSyncedPacket::Type::Create;
 
     BinaryStream syncedOutput;
     synced.write(syncedOutput);
-    const std::string expectedSynced{"\xac\x02\x01", 3};
+    const std::string expectedSynced{"\x02\x03\x06\x07\x03\x00\xac\x02\x01", 9};
     expect(syncedOutput.getBuffer() == expectedSynced, "UpdateBlockSynced used the wrong VarLong codec");
 
     UpdateBlockSyncedPacket decodedSynced;
     ReadOnlyBinaryStream syncedInput(syncedOutput.getBuffer());
     decodedSynced.read(syncedInput);
+    expect(decodedSynced.blockPosition == synced.blockPosition, "UpdateBlockSynced lost its block position");
+    expect(decodedSynced.flags == synced.flags, "UpdateBlockSynced changed combined block flags");
     expect(decodedSynced.actorUniqueId == synced.actorUniqueId, "UpdateBlockSynced actor ID changed");
     expect(decodedSynced.updateType == synced.updateType, "UpdateBlockSynced update type changed");
 

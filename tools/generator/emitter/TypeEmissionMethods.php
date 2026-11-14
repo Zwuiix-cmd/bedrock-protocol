@@ -186,14 +186,15 @@ trait TypeEmissionMethods
         }
         $signature = "\ninline std::shared_ptr<" . $baseName . "> " . $baseName . "::create(ReadOnlyBinaryStream& stream) {\n";
         $dispatch = "    switch (stream.readUnsignedVarInt().value_or(0)) {\n";
-        if ($baseName === 'ItemStackRequestAction') {
-            $signature .= "    return create(stream, stream.readUnsignedVarInt().value_or(0));\n}\n";
-            $signature .= "\ninline std::shared_ptr<ItemStackRequestAction> ItemStackRequestAction::create(ReadOnlyBinaryStream& stream, uint32_t type) {\n";
+        if (in_array($baseName, ['ItemStackRequestAction', 'DynamicValue'], true)) {
+            $readType = $baseName === 'DynamicValue' ? 'readUnsignedInt' : 'readUnsignedVarInt';
+            $signature .= "    return create(stream, stream." . $readType . "().value_or(0));\n}\n";
+            $signature .= "\ninline std::shared_ptr<" . $baseName . "> " . $baseName . "::create(ReadOnlyBinaryStream& stream, uint32_t type) {\n";
             $dispatch = "    switch (type) {\n";
         }
         return $signature . $dispatch
             . implode('', $cases)
-            . "        default:\n            return nullptr;\n"
+            . ($baseName === 'DynamicValue' ? "        case 0: return nullptr;\n        default: stream.markOverflowed(); return nullptr;\n" : "        default:\n            return nullptr;\n")
             . "    }\n}\n";
     }
 

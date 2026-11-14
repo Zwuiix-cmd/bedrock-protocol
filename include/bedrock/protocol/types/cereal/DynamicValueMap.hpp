@@ -26,24 +26,24 @@ public:
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        const auto valueCount = stream.readUnsignedInt().value_or(0);
+        value.clear();
+        const auto valueCount = stream.readUnsignedVarInt().value_or(0);
         const bool valueCountAvailable = stream.canReadCollection(valueCount);
         for (std::size_t index = 0; index < valueCount && valueCountAvailable && !stream.hasOverflowed(); ++index) {
             auto valueKey = stream.readString().value_or("");
-            auto valueValue = stream.readOptional([&]() {
-	return DynamicValue::create(stream);
-});
-            value.emplace(std::move(valueKey), std::move(valueValue));
+            auto valueValue = DynamicValue::readTyped(stream);
+            if (!value.emplace(std::move(valueKey), std::move(valueValue)).second) {
+                stream.markOverflowed();
+                return;
+            }
         }
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeUnsignedInt(value.size());
+        stream.writeUnsignedVarInt(static_cast<uint32_t>(value.size()));
         for (const auto& [key, item] : value) {
             stream.writeString(key);
-            stream.writeOptional(item, [&](const auto& optionalValue) {
-            optionalValue->write(stream);
-        });
+            DynamicValue::writeTyped(stream, item);
         }
     }
 };

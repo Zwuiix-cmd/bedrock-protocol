@@ -134,7 +134,11 @@ inline std::shared_ptr<DataStoreUpdateValue> DataStoreUpdateValue::create(ReadOn
 }
 
 inline std::shared_ptr<DynamicValue> DynamicValue::create(ReadOnlyBinaryStream& stream) {
-    switch (stream.readUnsignedVarInt().value_or(0)) {
+    return create(stream, stream.readUnsignedInt().value_or(0));
+}
+
+inline std::shared_ptr<DynamicValue> DynamicValue::create(ReadOnlyBinaryStream& stream, uint32_t type) {
+    switch (type) {
         case 1: {
             auto value = std::make_shared<DynamicValueBool>();
             value->read(stream);
@@ -165,8 +169,8 @@ inline std::shared_ptr<DynamicValue> DynamicValue::create(ReadOnlyBinaryStream& 
             value->read(stream);
             return value;
         }
-        default:
-            return nullptr;
+        case 0: return nullptr;
+        default: stream.markOverflowed(); return nullptr;
     }
 }
 

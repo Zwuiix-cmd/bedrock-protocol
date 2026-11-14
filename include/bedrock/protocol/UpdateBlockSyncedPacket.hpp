@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <variant>
 #include <vector>
-#include <bedrock/protocol/Packet.hpp>
+#include <bedrock/protocol/UpdateBlockPacket.hpp>
 #include <bedrock/protocol/types/ActorEvent.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentPayloadType.hpp>
 #include <bedrock/protocol/types/AttributeLayerSettingsWeightType.hpp>
@@ -109,7 +109,7 @@
 namespace bedrock::protocol {
 
 
-class UpdateBlockSyncedPacket : public Packet {
+class UpdateBlockSyncedPacket : public UpdateBlockPacket {
 public:
     static constexpr PacketIds ID = PacketIds::UpdateBlockSynced;
 
@@ -133,6 +133,7 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
+        UpdateBlockPacket::read(stream);
         actorUniqueId = stream.readUnsignedVarLong().value_or(0);
         updateType = magic_enum::enum_cast<Type>(
             stream.readUnsignedVarLong().value_or(0)
@@ -140,6 +141,7 @@ public:
     }
 
     void write(BinaryStream& stream) override {
+        UpdateBlockPacket::write(stream);
         stream.writeUnsignedVarLong(actorUniqueId);
         stream.writeUnsignedVarLong(magic_enum::enum_integer(updateType));
     }

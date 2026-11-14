@@ -40,18 +40,20 @@ public:
         name = stream.readString().value_or("");
         property = stream.readString().value_or("");
         updateCount = stream.readUnsignedInt().value_or(0);
-        data = stream.readOptional([&]() {
-            return DynamicValue::create(stream);
-        });
+        const auto type = stream.readUnsignedInt().value_or(0);
+        auto value = DynamicValue::create(stream, type);
+        data = value ? std::optional{std::move(value)} : std::nullopt;
     }
 
     void write(BinaryStream& stream) const override {
         stream.writeString(name);
         stream.writeString(property);
         stream.writeUnsignedInt(updateCount);
-        stream.writeOptional(data, [&](const auto& optionalValue) {
-            optionalValue->write(stream);
-        });
+        const auto* value = data ? data->get() : nullptr;
+        stream.writeUnsignedInt(value ? value->getTypeId() : 0);
+        if (value) {
+            value->write(stream);
+        }
     }
 };
 

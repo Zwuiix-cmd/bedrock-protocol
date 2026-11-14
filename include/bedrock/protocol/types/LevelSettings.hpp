@@ -81,6 +81,7 @@ public:
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         seed = stream.readUnsignedLong().value_or(0);
+        spawnSettings = stream.readObject<SpawnSettings>();
         generator = stream.readVarInt().value_or(0);
         worldGamemode = magic_enum::enum_cast<GameMode>(
             stream.readVarInt().value_or(0)
@@ -110,6 +111,8 @@ public:
         platformBroadcastMode = stream.readVarInt().value_or(0);
         commandsEnabled = stream.readBool().value_or(false);
         isTexturePacksRequired = stream.readBool().value_or(false);
+        gameRules = GameRule::readRules(stream, false);
+        experiments = stream.readObject<Experiments>();
         hasBonusChestEnabled = stream.readBool().value_or(false);
         hasStartWithMapEnabled = stream.readBool().value_or(false);
         defaultPlayerPermission = magic_enum::enum_cast<PlayerPermissions>(
@@ -130,6 +133,7 @@ public:
         limitedWorldWidth = stream.readInt().value_or(0);
         limitedWorldLength = stream.readInt().value_or(0);
         isNewNether = stream.readBool().value_or(false);
+        eduSharedUriResource = stream.readObject<EducationUriResource>();
         experimentalGameplayOverride = stream.readOptional([&]() {
             return stream.readBool().value_or(false);
         });
@@ -139,20 +143,7 @@ public:
         disablePlayerInteractions = stream.readBool().value_or(false);
         serverEditorConnectionPolicy = stream.readVarInt().value_or(0);
         allowAnonymousBlockDropsInEditorWorlds = stream.readBool().value_or(false);
-        spawnSettings = std::make_shared<SpawnSettings>();
-        spawnSettings->read(stream);
-        const auto gameRulesCount = stream.readUnsignedInt().value_or(0);
-        const bool gameRulesCountAvailable = stream.canReadCollection(gameRulesCount);
-        for (std::size_t index = 0; index < gameRulesCount && gameRulesCountAvailable && !stream.hasOverflowed(); ++index) {
-            auto gameRulesKey = stream.readString().value_or("");
-            auto gameRulesValue = GameRule::create(stream);
-            gameRules.emplace(std::move(gameRulesKey), std::move(gameRulesValue));
-        }
-        experiments = std::make_shared<Experiments>();
-        experiments->read(stream);
-        eduSharedUriResource = stream.readOptional([&]() {
-            return stream.readObject<EducationUriResource>();
-        });
+
     }
 
     virtual void write(BinaryStream& stream) const {

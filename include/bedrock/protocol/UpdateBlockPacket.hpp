@@ -144,9 +144,7 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
 		blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
-		flags = magic_enum::enum_cast<Flag>(
-			stream.readUnsignedVarInt().value_or(0)
-		).value_or(Flag::None);
+		flags = static_cast<Flag>(stream.readUnsignedVarInt().value_or(0));
 		dataLayerId = magic_enum::enum_cast<Layer>(
 			stream.readUnsignedVarInt().value_or(0)
 		).value_or(Layer{});

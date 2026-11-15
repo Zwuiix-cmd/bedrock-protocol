@@ -29,13 +29,13 @@ public:
         containerName = std::make_shared<FullContainerName>();
         containerName->read(stream);
         slotId = stream.readUnsignedByte().value_or(0);
-        stackId = stream.readVarInt().value_or(0);
+        stackId = stream.readInt().value_or(0);
     }
 
     virtual void write(BinaryStream& stream) const {
 		containerName->write(stream);
 		stream.writeUnsignedByte(slotId);
-		stream.writeVarInt(stackId);
+		stream.writeInt(stackId);
     }
 };
 

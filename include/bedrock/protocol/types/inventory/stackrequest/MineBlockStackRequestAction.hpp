@@ -25,13 +25,13 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         hotbarSlot = stream.readVarInt().value_or(0);
         predictedDurability = stream.readVarInt().value_or(0);
-        stackId = stream.readVarInt().value_or(0);
+        stackId = stream.readInt().value_or(0);
     }
 
     void write(BinaryStream& stream) const override {
 		stream.writeVarInt(hotbarSlot);
 		stream.writeVarInt(predictedDurability);
-		stream.writeVarInt(stackId);
+		stream.writeInt(stackId);
     }
 };
 

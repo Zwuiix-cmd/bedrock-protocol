@@ -38,22 +38,9 @@ public:
 
     CommandOriginData() = default;
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        const auto typeRaw = stream.readString().value_or("");
-        type = magic_enum::enum_cast<Type>(
-            std::string_view(typeRaw)
-        ).value_or(Type::Player);
-        requestId = stream.readString().value_or("");
-        playerActorUniqueId = stream.readLong().value_or(0);
-        uuid = stream.readUUID().value_or("");
-    }
+    virtual void read(ReadOnlyBinaryStream& stream);
 
-    virtual void write(BinaryStream& stream) const {
-        stream.writeString(magic_enum::enum_name(type));
-        stream.writeString(requestId);
-        stream.writeLong(playerActorUniqueId);
-        stream.writeUUID(uuid);
-    }
+    virtual void write(BinaryStream& stream) const;
 };
 
 } // namespace bedrock::protocol
@@ -83,3 +70,24 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::CommandOriginDa
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void CommandOriginData::read(ReadOnlyBinaryStream& stream) {
+        const auto typeRaw = stream.readString().value_or("");
+        type = magic_enum::enum_cast<Type>(
+            std::string_view(typeRaw)
+        ).value_or(Type::Player);
+        requestId = stream.readString().value_or("");
+        playerActorUniqueId = stream.readLong().value_or(0);
+        uuid = stream.readUUID().value_or("");
+}
+
+inline void CommandOriginData::write(BinaryStream& stream) const {
+        stream.writeString(magic_enum::enum_name(type));
+        stream.writeString(requestId);
+        stream.writeLong(playerActorUniqueId);
+        stream.writeUUID(uuid);
+}
+
+} // namespace bedrock::protocol

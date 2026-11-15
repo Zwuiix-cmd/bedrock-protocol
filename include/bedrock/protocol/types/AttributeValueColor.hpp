@@ -35,19 +35,9 @@ public:
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
-    void read(ReadOnlyBinaryStream& stream) override {
-        value = AttributeValueColorValue::create(stream);
-        const auto operationRaw = stream.readString().value_or("");
-        operation = magic_enum::enum_cast<Operation>(
-            std::string_view(operationRaw)
-        ).value_or(Operation::Override);
-    }
+    void read(ReadOnlyBinaryStream& stream) override;
 
-    void write(BinaryStream& stream) const override {
-		stream.writeUnsignedVarInt(value->getTypeId());
-		value->write(stream);
-		stream.writeString(magic_enum::enum_name(operation));
-    }
+    void write(BinaryStream& stream) const override;
 };
 
 } // namespace bedrock::protocol
@@ -66,3 +56,21 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::AttributeValueC
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void AttributeValueColor::read(ReadOnlyBinaryStream& stream) {
+        value = AttributeValueColorValue::create(stream);
+        const auto operationRaw = stream.readString().value_or("");
+        operation = magic_enum::enum_cast<Operation>(
+            std::string_view(operationRaw)
+        ).value_or(Operation::Override);
+}
+
+inline void AttributeValueColor::write(BinaryStream& stream) const {
+		stream.writeUnsignedVarInt(value->getTypeId());
+		value->write(stream);
+		stream.writeString(magic_enum::enum_name(operation));
+}
+
+} // namespace bedrock::protocol

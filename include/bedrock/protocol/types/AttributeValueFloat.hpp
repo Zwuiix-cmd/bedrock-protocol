@@ -33,18 +33,9 @@ public:
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
-    void read(ReadOnlyBinaryStream& stream) override {
-        value = stream.readFloat().value_or(0.0f);
-        const auto operationRaw = stream.readString().value_or("");
-        operation = magic_enum::enum_cast<Operation>(
-            std::string_view(operationRaw)
-        ).value_or(Operation::Override);
-    }
+    void read(ReadOnlyBinaryStream& stream) override;
 
-    void write(BinaryStream& stream) const override {
-		stream.writeFloat(value);
-		stream.writeString(magic_enum::enum_name(operation));
-    }
+    void write(BinaryStream& stream) const override;
 };
 
 } // namespace bedrock::protocol
@@ -65,3 +56,20 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::AttributeValueF
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void AttributeValueFloat::read(ReadOnlyBinaryStream& stream) {
+        value = stream.readFloat().value_or(0.0f);
+        const auto operationRaw = stream.readString().value_or("");
+        operation = magic_enum::enum_cast<Operation>(
+            std::string_view(operationRaw)
+        ).value_or(Operation::Override);
+}
+
+inline void AttributeValueFloat::write(BinaryStream& stream) const {
+		stream.writeFloat(value);
+		stream.writeString(magic_enum::enum_name(operation));
+}
+
+} // namespace bedrock::protocol

@@ -141,7 +141,30 @@ public:
         return magic_enum::enum_name(ID);
     }
 
-    void read(ReadOnlyBinaryStream& stream) override {
+    void read(ReadOnlyBinaryStream& stream) override;
+
+    void write(BinaryStream& stream) override;
+};
+
+} // namespace bedrock::protocol
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<::bedrock::protocol::CommandOutputPacket::OutputType>(::bedrock::protocol::CommandOutputPacket::OutputType value) noexcept {
+    switch (value) {
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::Last: return "lastoutput";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::Silent: return "silent";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::All: return "alloutput";
+        case ::bedrock::protocol::CommandOutputPacket::OutputType::DataSet: return "dataset";
+        default: return invalid_tag;
+    }
+}
+
+}
+
+namespace bedrock::protocol {
+
+inline void CommandOutputPacket::read(ReadOnlyBinaryStream& stream) {
 		originData = std::make_shared<CommandOriginData>();
 		originData->read(stream);
 		outputType = magic_enum::enum_cast<CommandOutputPacket::OutputType>(
@@ -166,9 +189,9 @@ public:
 		data = stream.readOptional([&]() {
 			return stream.readString().value_or("");
 		});
-    }
+}
 
-    void write(BinaryStream& stream) override {
+inline void CommandOutputPacket::write(BinaryStream& stream) {
 		if (originData) originData->write(stream);
 		stream.writeString(magic_enum::enum_name(outputType));
 		stream.writeUnsignedInt(successCount);
@@ -184,21 +207,6 @@ public:
 		stream.writeOptional(data, [&](const auto& value) {
 			stream.writeString(value);
 		});
-    }
-};
+}
 
 } // namespace bedrock::protocol
-
-namespace magic_enum::customize {
-
-template <> constexpr customize_t enum_name<::bedrock::protocol::CommandOutputPacket::OutputType>(::bedrock::protocol::CommandOutputPacket::OutputType value) noexcept {
-    switch (value) {
-        case ::bedrock::protocol::CommandOutputPacket::OutputType::Last: return "lastoutput";
-        case ::bedrock::protocol::CommandOutputPacket::OutputType::Silent: return "silent";
-        case ::bedrock::protocol::CommandOutputPacket::OutputType::All: return "alloutput";
-        case ::bedrock::protocol::CommandOutputPacket::OutputType::DataSet: return "dataset";
-        default: return invalid_tag;
-    }
-}
-
-}

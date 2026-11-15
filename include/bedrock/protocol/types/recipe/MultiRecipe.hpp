@@ -32,15 +32,9 @@ public:
     MultiRecipe() = default;
     explicit MultiRecipe(const std::string& recipeIdValue, const uint32_t& recipeNetIdValue) : recipeId(recipeIdValue), recipeNetId(recipeNetIdValue) {}
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        recipeId = stream.readUUID().value_or("");
-        recipeNetId = stream.readUnsignedVarInt().value_or(0);
-    }
+    virtual void read(ReadOnlyBinaryStream& stream);
 
-    virtual void write(BinaryStream& stream) const {
-		stream.writeUUID(recipeId);
-		stream.writeUnsignedVarInt(recipeNetId);
-    }
+    virtual void write(BinaryStream& stream) const;
 };
 
 } // namespace bedrock::protocol
@@ -66,3 +60,17 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::MultiRecipe::Ty
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void MultiRecipe::read(ReadOnlyBinaryStream& stream) {
+        recipeId = stream.readUUID().value_or("");
+        recipeNetId = stream.readUnsignedVarInt().value_or(0);
+}
+
+inline void MultiRecipe::write(BinaryStream& stream) const {
+		stream.writeUUID(recipeId);
+		stream.writeUnsignedVarInt(recipeNetId);
+}
+
+} // namespace bedrock::protocol

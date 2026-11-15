@@ -11,6 +11,27 @@ use RuntimeException;
 
 trait TypeDefinitionEmissionMethods
 {
+    private function placeSerializersAfterEnumCustomizations(string $name, string $body): string
+    {
+        if (!str_contains($body, 'namespace magic_enum::customize {')) {
+            return $body;
+        }
+
+        // Nested enum names must be specialized before the serializers use them.
+        $definitions = '';
+        $body = preg_replace_callback(
+            '/^    (?:virtual )?void (read|write)(\([^\n]*\)(?: const)?)( override)? \{\n(.*?)^    \}/ms',
+            static function (array $match) use ($name, &$definitions): string {
+                $definitions .= "\ninline void " . $name . '::' . $match[1] . $match[2] . " {\n"
+                    . $match[4] . "}\n";
+                return substr($match[0], 0, strpos($match[0], " {\n")) . ';';
+            },
+            $body,
+        ) ?? throw new RuntimeException('Cannot emit serializers for ' . $name);
+        return $definitions === '' ? $body
+            : $body . "\n" . $this->protocolNamespaceOpen() . $definitions . $this->protocolNamespaceClose();
+    }
+
     private function adapt26_60(string $name, string $body): string
     {
         $adapter = __DIR__ . '/bedrock_26_60/' . $name . '.inc';

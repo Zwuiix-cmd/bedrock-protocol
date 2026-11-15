@@ -95,7 +95,29 @@ public:
 
     }
 
-    virtual void read(ReadOnlyBinaryStream& stream) {
+    virtual void read(ReadOnlyBinaryStream& stream);
+
+    virtual void write(BinaryStream& stream) const;
+};
+
+} // namespace bedrock::protocol
+
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<::bedrock::protocol::SkinData::TrustedSkinFlag>(::bedrock::protocol::SkinData::TrustedSkinFlag value) noexcept {
+    switch (value) {
+        case ::bedrock::protocol::SkinData::TrustedSkinFlag::Unset: return "unset";
+        case ::bedrock::protocol::SkinData::TrustedSkinFlag::False: return "false";
+        case ::bedrock::protocol::SkinData::TrustedSkinFlag::True: return "true";
+        default: return invalid_tag;
+    }
+}
+
+}
+
+namespace bedrock::protocol {
+
+inline void SkinData::read(ReadOnlyBinaryStream& stream) {
         skinId = stream.readString().value_or("");
         resourcePatch = stream.readString().value_or("");
         skinImage = std::make_shared<SkinImage>();
@@ -122,9 +144,9 @@ public:
         override = stream.readBool().value_or(false);
         trustedSkinFlag = magic_enum::enum_cast<TrustedSkinFlag>(stream.readString().value_or("")).value_or(TrustedSkinFlag::Unset);
         profileHash = stream.readString().value_or("");
-    }
+}
 
-    virtual void write(BinaryStream& stream) const {
+inline void SkinData::write(BinaryStream& stream) const {
         stream.writeString(skinId);
         stream.writeString(resourcePatch);
         skinImage->write(stream);
@@ -153,20 +175,6 @@ public:
         stream.writeBool(override);
         stream.writeString(magic_enum::enum_name(trustedSkinFlag));
         stream.writeString(profileHash);
-    }
-};
+}
 
 } // namespace bedrock::protocol
-
-namespace magic_enum::customize {
-
-template <> constexpr customize_t enum_name<::bedrock::protocol::SkinData::TrustedSkinFlag>(::bedrock::protocol::SkinData::TrustedSkinFlag value) noexcept {
-    switch (value) {
-        case ::bedrock::protocol::SkinData::TrustedSkinFlag::Unset: return "unset";
-        case ::bedrock::protocol::SkinData::TrustedSkinFlag::False: return "false";
-        case ::bedrock::protocol::SkinData::TrustedSkinFlag::True: return "true";
-        default: return invalid_tag;
-    }
-}
-
-}

@@ -139,28 +139,9 @@ public:
         return magic_enum::enum_name(ID);
     }
 
-    void read(ReadOnlyBinaryStream& stream) override {
-        const auto photoNameRaw = stream.readString().value_or("");
-        photoName = magic_enum::enum_cast<PhotoName>(
-            std::string_view(photoNameRaw)
-        ).value_or(PhotoName::Extension);
-        photoData = stream.readByteArray(0).value_or("");
-        bookId = stream.readString().value_or("");
-        type = stream.readUnsignedByte().value_or(0);
-        sourceType = stream.readUnsignedByte().value_or(0);
-        ownerActorUniqueId = stream.readLong().value_or(0);
-        newPhotoName = stream.readString().value_or("");
-    }
+    void read(ReadOnlyBinaryStream& stream) override;
 
-    void write(BinaryStream& stream) override {
-		stream.writeString(magic_enum::enum_name(photoName));
-		stream.writeString(photoData);
-		stream.writeString(bookId);
-		stream.writeUnsignedByte(type);
-		stream.writeUnsignedByte(sourceType);
-		stream.writeLong(ownerActorUniqueId);
-		stream.writeString(newPhotoName);
-    }
+    void write(BinaryStream& stream) override;
 };
 
 } // namespace bedrock::protocol
@@ -175,3 +156,30 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::PhotoTransferPa
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void PhotoTransferPacket::read(ReadOnlyBinaryStream& stream) {
+        const auto photoNameRaw = stream.readString().value_or("");
+        photoName = magic_enum::enum_cast<PhotoName>(
+            std::string_view(photoNameRaw)
+        ).value_or(PhotoName::Extension);
+        photoData = stream.readByteArray(0).value_or("");
+        bookId = stream.readString().value_or("");
+        type = stream.readUnsignedByte().value_or(0);
+        sourceType = stream.readUnsignedByte().value_or(0);
+        ownerActorUniqueId = stream.readLong().value_or(0);
+        newPhotoName = stream.readString().value_or("");
+}
+
+inline void PhotoTransferPacket::write(BinaryStream& stream) {
+		stream.writeString(magic_enum::enum_name(photoName));
+		stream.writeString(photoData);
+		stream.writeString(bookId);
+		stream.writeUnsignedByte(type);
+		stream.writeUnsignedByte(sourceType);
+		stream.writeLong(ownerActorUniqueId);
+		stream.writeString(newPhotoName);
+}
+
+} // namespace bedrock::protocol

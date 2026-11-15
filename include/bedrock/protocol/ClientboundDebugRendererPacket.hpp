@@ -134,19 +134,9 @@ public:
         return magic_enum::enum_name(ID);
     }
 
-    void read(ReadOnlyBinaryStream& stream) override {
-		type = magic_enum::enum_cast<ClientboundDebugRendererPacket::Type>(
-			std::string_view(stream.readString().value_or(""))
-		).value_or(ClientboundDebugRendererPacket::Type::Clear);
-		data = stream.readOptional([&]() { return stream.readObject<DebugMarkerData>(); });
-    }
+    void read(ReadOnlyBinaryStream& stream) override;
 
-    void write(BinaryStream& stream) override {
-		stream.writeString(magic_enum::enum_name(type));
-		stream.writeOptional(data, [&](const auto& dataValue) {
-			dataValue->write(stream);
-		});
-    }
+    void write(BinaryStream& stream) override;
 };
 
 } // namespace bedrock::protocol
@@ -162,3 +152,21 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::ClientboundDebu
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void ClientboundDebugRendererPacket::read(ReadOnlyBinaryStream& stream) {
+		type = magic_enum::enum_cast<ClientboundDebugRendererPacket::Type>(
+			std::string_view(stream.readString().value_or(""))
+		).value_or(ClientboundDebugRendererPacket::Type::Clear);
+		data = stream.readOptional([&]() { return stream.readObject<DebugMarkerData>(); });
+}
+
+inline void ClientboundDebugRendererPacket::write(BinaryStream& stream) {
+		stream.writeString(magic_enum::enum_name(type));
+		stream.writeOptional(data, [&](const auto& dataValue) {
+			dataValue->write(stream);
+		});
+}
+
+} // namespace bedrock::protocol

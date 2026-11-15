@@ -141,25 +141,9 @@ public:
         return magic_enum::enum_name(ID);
     }
 
-    void read(ReadOnlyBinaryStream& stream) override {
-		displaySlot = magic_enum::enum_cast<SetDisplayObjectivePacket::DisplaySlot>(
-			std::string_view(stream.readString().value_or(""))
-		).value_or(SetDisplayObjectivePacket::DisplaySlot::List);
-		objectiveName = stream.readString().value_or("");
-		displayName = stream.readString().value_or("");
-		criteriaName = stream.readString().value_or("");
-		sortOrder = magic_enum::enum_cast<Order>(
-			stream.readVarInt().value_or(0)
-		).value_or(Order{});
-    }
+    void read(ReadOnlyBinaryStream& stream) override;
 
-    void write(BinaryStream& stream) override {
-		stream.writeString(magic_enum::enum_name(displaySlot));
-		stream.writeString(objectiveName);
-		stream.writeString(displayName);
-		stream.writeString(criteriaName);
-		stream.writeVarInt(magic_enum::enum_integer(sortOrder));
-    }
+    void write(BinaryStream& stream) override;
 };
 
 } // namespace bedrock::protocol
@@ -176,3 +160,27 @@ template <> constexpr customize_t enum_name<::bedrock::protocol::SetDisplayObjec
 }
 
 }
+
+namespace bedrock::protocol {
+
+inline void SetDisplayObjectivePacket::read(ReadOnlyBinaryStream& stream) {
+		displaySlot = magic_enum::enum_cast<SetDisplayObjectivePacket::DisplaySlot>(
+			std::string_view(stream.readString().value_or(""))
+		).value_or(SetDisplayObjectivePacket::DisplaySlot::List);
+		objectiveName = stream.readString().value_or("");
+		displayName = stream.readString().value_or("");
+		criteriaName = stream.readString().value_or("");
+		sortOrder = magic_enum::enum_cast<Order>(
+			stream.readVarInt().value_or(0)
+		).value_or(Order{});
+}
+
+inline void SetDisplayObjectivePacket::write(BinaryStream& stream) {
+		stream.writeString(magic_enum::enum_name(displaySlot));
+		stream.writeString(objectiveName);
+		stream.writeString(displayName);
+		stream.writeString(criteriaName);
+		stream.writeVarInt(magic_enum::enum_integer(sortOrder));
+}
+
+} // namespace bedrock::protocol

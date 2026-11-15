@@ -4,16 +4,16 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 namespace bedrock::protocol {
 
 
-class ShapelessRecipe : public RecipeWithTypeId {
+class ShapelessRecipe {
 public:
     std::string recipeId;
     std::vector<std::shared_ptr<RecipeIngredient>> inputs;
@@ -21,23 +21,20 @@ public:
     std::string uuid;
     std::string blockName;
     int32_t priority;
-    std::shared_ptr<RecipeUnlockingRequirement> unlockingRequirement;
+    std::optional<std::shared_ptr<RecipeUnlockingRequirement>> unlockingRequirement;
     uint32_t recipeNetId;
 
     ShapelessRecipe() = default;
-    virtual ~ShapelessRecipe() = default;
     explicit ShapelessRecipe(
-        const int32_t& typeIdValue,
         const std::string& recipeIdValue,
         const std::vector<std::shared_ptr<RecipeIngredient>>& inputsValue,
         const std::vector<NetworkItemDescriptor>& outputsValue,
         const std::string& uuidValue,
         const std::string& blockNameValue,
         const int32_t& priorityValue,
-        const std::shared_ptr<RecipeUnlockingRequirement>& unlockingRequirementValue,
+        const std::optional<std::shared_ptr<RecipeUnlockingRequirement>>& unlockingRequirementValue,
         const uint32_t& recipeNetIdValue
     ) :
-        RecipeWithTypeId(typeIdValue),
         recipeId(recipeIdValue),
         inputs(inputsValue),
         outputs(outputsValue),
@@ -47,23 +44,7 @@ public:
         unlockingRequirement(unlockingRequirementValue),
         recipeNetId(recipeNetIdValue) {}
 
-    static std::shared_ptr<ShapelessRecipe> create(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
-        auto result = std::make_shared<ShapelessRecipe>();
-        result->recipeId = stream.readString().value_or("");
-        result->inputs = stream.readObjectList<RecipeIngredient>();
-        result->outputs = stream.readList([&]() {
-            return stream.readValue<NetworkItemDescriptor>();
-        });
-        result->uuid = stream.readUUID().value_or("");
-        result->blockName = stream.readString().value_or("");
-        result->priority = stream.readVarInt().value_or(0);
-        result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
-        result->unlockingRequirement->read(stream);
-        result->recipeNetId = stream.readUnsignedVarInt().value_or(0);
-        return result;
-    }
-
-    void read(ReadOnlyBinaryStream& stream) override {
+    virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readString().value_or("");
         inputs = stream.readObjectList<RecipeIngredient>();
         outputs = stream.readList([&]() {
@@ -72,12 +53,13 @@ public:
         uuid = stream.readUUID().value_or("");
         blockName = stream.readString().value_or("");
         priority = stream.readVarInt().value_or(0);
-        unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
-        unlockingRequirement->read(stream);
+        unlockingRequirement = stream.readOptional([&]() {
+            return stream.readObject<RecipeUnlockingRequirement>();
+        });
         recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
+    virtual void write(BinaryStream& stream) const {
         stream.writeString(recipeId);
         stream.writeList(inputs, [&](const auto& item) {
             item->write(stream);
@@ -88,7 +70,9 @@ public:
         stream.writeUUID(uuid);
         stream.writeString(blockName);
         stream.writeVarInt(priority);
-        unlockingRequirement->write(stream);
+        stream.writeOptional(unlockingRequirement, [&](const auto& optionalValue) {
+            optionalValue->write(stream);
+        });
         stream.writeUnsignedVarInt(recipeNetId);
     }
 };

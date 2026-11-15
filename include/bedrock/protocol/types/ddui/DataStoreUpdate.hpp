@@ -1,0 +1,67 @@
+#pragma once
+
+#include <bedrock/protocol/io/BinaryStream.hpp>
+#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include <bedrock/protocol/types/ddui/update/DataStoreUpdateValue.hpp>
+#include <bedrock/protocol/types/ddui/update/BoolDataStoreUpdateValue.hpp>
+#include <bedrock/protocol/types/ddui/update/DoubleDataStoreUpdateValue.hpp>
+#include <bedrock/protocol/types/ddui/update/StringDataStoreUpdateValue.hpp>
+#include <bedrock/protocol/types/ddui/DataStoreOperation.hpp>
+namespace bedrock::protocol {
+
+
+class DataStoreUpdate : public DataStoreOperation {
+public:
+    static constexpr int64_t ID = 0;
+
+    std::string name;
+    std::string property;
+    std::string path;
+    std::shared_ptr<DataStoreUpdateValue> data;
+    uint32_t updateCount;
+    uint32_t pathUpdateCount;
+
+    DataStoreUpdate() = default;
+    virtual ~DataStoreUpdate() = default;
+    explicit DataStoreUpdate(
+        const std::string& nameValue,
+        const std::string& propertyValue,
+        const std::string& pathValue,
+        const std::shared_ptr<DataStoreUpdateValue>& dataValue,
+        const uint32_t& updateCountValue,
+        const uint32_t& pathUpdateCountValue
+    ) :
+        name(nameValue),
+        property(propertyValue),
+        path(pathValue),
+        data(dataValue),
+        updateCount(updateCountValue),
+        pathUpdateCount(pathUpdateCountValue) {}
+
+    int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
+
+    void read(ReadOnlyBinaryStream& stream) override {
+        name = stream.readString().value_or("");
+        property = stream.readString().value_or("");
+        path = stream.readString().value_or("");
+        data = DataStoreUpdateValue::create(stream);
+        updateCount = stream.readUnsignedInt().value_or(0);
+        pathUpdateCount = stream.readUnsignedInt().value_or(0);
+    }
+
+    void write(BinaryStream& stream) const override {
+		stream.writeString(name);
+		stream.writeString(property);
+		stream.writeString(path);
+		stream.writeUnsignedVarInt(data->getTypeId());
+		data->write(stream);
+		stream.writeUnsignedInt(updateCount);
+		stream.writeUnsignedInt(pathUpdateCount);
+    }
+};
+
+} // namespace bedrock::protocol

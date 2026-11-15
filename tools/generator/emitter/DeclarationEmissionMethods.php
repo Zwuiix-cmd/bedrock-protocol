@@ -403,7 +403,7 @@ trait DeclarationEmissionMethods
             $this->standardTypeIncludes($body),
             $body,
         );
-        $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($body));
+        $this->write($this->typePath($output, $name, $declaration), $this->uniqueIncludes($this->adapt26_60($name, $body)));
     }
 
     private function hasReadControlFlow(array $method): bool

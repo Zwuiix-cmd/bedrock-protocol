@@ -121,10 +121,12 @@ public function cppPropertyType(array $property, array $declaration): string
             if ($arrayParts !== null && $arrayParts['key'] === null) {
                 $elementType = (string) $arrayParts['value'];
                 $elementDeclaration = $this->findDeclaration(CPPName::type($elementType));
-                $semanticElementType = $elementDeclaration !== null
+                $semanticElementType = $this->arrayTypeParts($elementType, null) !== null
+                    ? $this->cppType($elementType)
+                    : ($elementDeclaration !== null
                     && in_array($elementDeclaration['kind'] ?? null, ['class', 'enum', 'interface'], true)
                     ? $this->cppType($elementType)
-                    : $inferredType;
+                    : $inferredType);
                 $result = 'std::vector<' . $semanticElementType . '>';
                 return $this->nullableType($sourceType) ? 'std::optional<' . $result . '>' : $result;
             }
@@ -214,6 +216,12 @@ private function arrayTypeParts(?string $type, ?string $doc): ?array
         }
         if ($candidate === '') {
             return null;
+        }
+        if (preg_match('/^array\{(.+)\}$/i', $candidate, $shape) === 1) {
+            $elements = array_unique($this->splitTypeParts($shape[1], ','));
+            if (count($elements) === 1) {
+                return ['key' => null, 'value' => reset($elements)];
+            }
         }
         if (preg_match('/^(array|list)\s*<(.+)>$/is', $candidate, $matches) === 1) {
             $contents = trim($matches[2]);

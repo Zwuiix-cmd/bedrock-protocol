@@ -36,9 +36,9 @@ CPP;
 
         foreach ($properties as $property) {
             $name = CPPName::identifier((string) $property['name']);
-            $type = $this->runtimePropertyType($property);
+            $type = $name === 'actionType' ? 'PlayerAction' : $this->runtimePropertyType($property);
             $body .= '    ' . $type . ' ' . $name;
-            $default = CPPDefaultValueResolver::member($type);
+            $default = $name === 'actionType' ? 'PlayerAction::StopBreak' : CPPDefaultValueResolver::member($type);
             $body .= $default === null ? ";\n" : ' = ' . $default . ";\n";
         }
 
@@ -47,9 +47,11 @@ CPP;
             $initializers = [];
             foreach ($properties as $property) {
                 $name = CPPName::identifier((string) $property['name']);
-                $parameters[] = 'const ' . $this->runtimePropertyType($property) . '& ' . $name . 'Value';
+                $type = $name === 'actionType' ? 'PlayerAction' : $this->runtimePropertyType($property);
+                $parameters[] = 'const ' . $type . '& ' . $name . 'Value';
                 $initializers[] = $name . '(' . $name . 'Value)';
             }
+            $body .= "\n    PlayerBlockAction() = default;\n";
             $body .= "\n    explicit PlayerBlockAction(\n        "
                 . implode(",\n        ", $parameters)
                 . "\n    )\n        : "
@@ -60,12 +62,16 @@ CPP;
         $body .= "\n    void write(BinaryStream& stream) const {\n";
         foreach ($properties as $property) {
             $name = CPPName::identifier((string) $property['name']);
-            $body .= '        ' . $this->runtimeWriteExpression($property, $name, true) . "\n";
+            $body .= $name === 'actionType'
+                ? "        stream.writeVarInt(static_cast<int32_t>(actionType));\n"
+                : '        ' . $this->runtimeWriteExpression($property, $name, true) . "\n";
         }
         $body .= "    }\n\n    void read(ReadOnlyBinaryStream& stream) {\n";
         foreach ($properties as $property) {
             $name = CPPName::identifier((string) $property['name']);
-            $body .= '        ' . $name . ' = ' . $this->runtimeReadExpression($property, true) . ";\n";
+            $body .= $name === 'actionType'
+                ? "        actionType = static_cast<PlayerAction>(stream.readVarInt().value_or(0));\n        if (!isValidActionType(actionType)) {\n            stream.markOverflowed();\n            return;\n        }\n"
+                : '        ' . $name . ' = ' . $this->runtimeReadExpression($property, true) . ";\n";
         }
         $body .= "    }\n\n    static bool isValidActionType(int32_t value) noexcept {\n";
         $checks = array_map(
@@ -79,11 +85,20 @@ CPP;
         }
         $body .= "    }\n\n";
         $body .= <<<'CPP'
+    static bool isValidActionType(PlayerAction value) noexcept {
+        return isValidActionType(static_cast<int32_t>(value));
+    }
+
+    static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, PlayerAction value) {
+        return PlayerBlockAction{
+            value,
+            stream.readSignedBlockPos().value_or(glm::ivec3(0)),
+            stream.readVarInt().value_or(0)
+        };
+    }
+
     static PlayerBlockAction decodeWithBlockInfo(ReadOnlyBinaryStream& stream, int32_t value) {
-        PlayerBlockAction result;
-        result.actionType = value;
-        result.read(stream);
-        return result;
+        return decodeWithBlockInfo(stream, static_cast<PlayerAction>(value));
     }
 };
 CPP;

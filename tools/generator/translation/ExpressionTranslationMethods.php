@@ -258,7 +258,9 @@ public function expression(?Node $expression, array $declaration, ?array $method
                 $left = $this->expression($expression->left, $declaration, $method);
                 $right = $this->expression($expression->right, $declaration, $method);
                 if ($this->isOptionalProperty($expression->left, $declaration)) {
-                    return $left . '.value_or(' . $right . ')';
+                    return $expression->right instanceof Node\Expr\Throw_
+                        ? '(' . $left . ' ? *' . $left . ' : ' . rtrim($right, ';') . ')'
+                        : $left . '.value_or(' . $right . ')';
                 }
                 return '(' . $left . ' ? ' . $left . ' : ' . $right . ')';
             }
@@ -304,10 +306,10 @@ public function expression(?Node $expression, array $declaration, ?array $method
             }
             $leftEnum = $this->enumExpressionType($expression->left, $declaration);
             $rightEnum = $this->enumExpressionType($expression->right, $declaration);
-            if ($expression->left instanceof Node\Expr\ClassConstFetch) {
+            if ($expression->left instanceof Node\Expr\ClassConstFetch && ($leftEnum === null || $leftEnum !== $rightEnum)) {
                 $left = $this->enumStorageClassConstant($expression->left, $left, $declaration);
             }
-            if ($expression->right instanceof Node\Expr\ClassConstFetch) {
+            if ($expression->right instanceof Node\Expr\ClassConstFetch && ($rightEnum === null || $rightEnum !== $leftEnum)) {
                 $right = $this->enumStorageClassConstant($expression->right, $right, $declaration);
             }
             $bitwise = $expression instanceof Node\Expr\BinaryOp\BitwiseAnd

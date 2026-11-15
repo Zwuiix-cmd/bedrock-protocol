@@ -68,6 +68,7 @@ enum class ActorEvent : uint8_t {
     DrinkMilk = 78,
     ShakeWetnessStop = 79,
     KineticDamageDealt = 80,
+    HurtWithoutReceivingDamage = 81,
 };
 
 } // namespace bedrock::protocol

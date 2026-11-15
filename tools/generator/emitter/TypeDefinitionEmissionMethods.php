@@ -11,6 +11,25 @@ use RuntimeException;
 
 trait TypeDefinitionEmissionMethods
 {
+    private function adapt26_60(string $name, string $body): string
+    {
+        $adapter = __DIR__ . '/bedrock_26_60/' . $name . '.inc';
+        if (!is_file($adapter)) {
+            return $body;
+        }
+        $replace = require $adapter;
+        foreach ($replace as [$source, $replacement]) {
+            $tokens = preg_split('/\s+/', trim($source));
+            $pattern = '~' . implode('\s+', array_map(static fn (string $token): string => preg_quote($token, '~'), $tokens)) . '~';
+            $body = preg_replace_callback($pattern, static fn (): string => trim($replacement), $body, -1, $count)
+                ?? throw new RuntimeException('Invalid Bedrock 26.60 adapter for ' . $name);
+            if ($count === 0) {
+                throw new RuntimeException('Cannot apply the Bedrock 26.60 adapter for ' . $name . ': ' . substr($source, 0, 70));
+            }
+        }
+        return preg_replace('/^[ \t]+$/m', '', $body) ?? $body;
+    }
+
     private function writeTypeDefinitions(string $output, array $enums, array $classes): void
     {
         $base = $output . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bedrock' . DIRECTORY_SEPARATOR . 'protocol' . DIRECTORY_SEPARATOR . 'types';
@@ -110,7 +129,7 @@ trait TypeDefinitionEmissionMethods
             . "        if (!rule) continue;\n"
             . "        stream.writeBool(rule->isPlayerModifiable);\n"
             . "        stream.writeUnsignedVarInt(static_cast<uint32_t>(rule->getTypeId()));\n"
-            . "        rule->write(stream, isStartGame);\n"
+            . "        rule->write(stream);\n"
             . "    }\n"
             . "}\n";
         return $body;

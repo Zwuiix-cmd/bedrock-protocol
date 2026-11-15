@@ -10,7 +10,7 @@ namespace bedrock::protocol {
 
 class DeprecatedCraftingNonImplementedStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 18;
+    static constexpr int64_t ID = 17;
 
 
     DeprecatedCraftingNonImplementedStackRequestAction() = default;

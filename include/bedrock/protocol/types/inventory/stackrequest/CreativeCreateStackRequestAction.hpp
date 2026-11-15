@@ -10,7 +10,7 @@ namespace bedrock::protocol {
 
 class CreativeCreateStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 14;
+    static constexpr int64_t ID = 12;
 
     uint32_t creativeItemId;
     uint8_t repetitions;

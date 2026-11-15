@@ -42,6 +42,8 @@ public:
     std::optional<bool> playerEffects;
     std::optional<std::shared_ptr<CameraPresetAimAssist>> aimAssist;
     std::optional<ControlScheme> controlScheme;
+    bool applyInheritedStartingRotation;
+    std::optional<glm::vec2> startingRotation;
 
     CameraPreset() = default;
     explicit CameraPreset(
@@ -66,7 +68,9 @@ public:
         const std::optional<uint8_t>& audioListenerTypeValue,
         const std::optional<bool>& playerEffectsValue,
         const std::optional<std::shared_ptr<CameraPresetAimAssist>>& aimAssistValue,
-        const std::optional<ControlScheme>& controlSchemeValue
+        const std::optional<ControlScheme>& controlSchemeValue,
+        const bool& applyInheritedStartingRotationValue,
+        const std::optional<glm::vec2>& startingRotationValue
     ) :
         name(nameValue),
         parent(parentValue),
@@ -89,7 +93,9 @@ public:
         audioListenerType(audioListenerTypeValue),
         playerEffects(playerEffectsValue),
         aimAssist(aimAssistValue),
-        controlScheme(controlSchemeValue) {}
+        controlScheme(controlSchemeValue),
+        applyInheritedStartingRotation(applyInheritedStartingRotationValue),
+        startingRotation(startingRotationValue) {}
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         name = stream.readString().value_or("");
@@ -156,6 +162,10 @@ public:
             stream.readUnsignedByte().value_or(0)
         ).value_or(ControlScheme::LockedPlayerRelativeStrafe);
         });
+        applyInheritedStartingRotation = stream.readBool().value_or(false);
+        startingRotation = stream.readOptional([&]() {
+            return stream.readVec2().value_or(glm::vec2(0.0f));
+        });
     }
 
     virtual void write(BinaryStream& stream) const {
@@ -220,6 +230,10 @@ public:
 		});
 		stream.writeOptional(controlScheme, [&](const auto& v) {
 			stream.writeUnsignedByte(magic_enum::enum_integer(v));
+		});
+		stream.writeBool(applyInheritedStartingRotation);
+		stream.writeOptional(startingRotation, [&](const auto& value) {
+			stream.writeVec2(value);
 		});
     }
 };

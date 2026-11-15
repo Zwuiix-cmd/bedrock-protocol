@@ -4,16 +4,16 @@
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include <bedrock/protocol/types/recipe/RecipeUnlockingRequirement.hpp>
 #include <bedrock/protocol/types/recipe/RecipeIngredient.hpp>
-#include <bedrock/protocol/types/recipe/RecipeWithTypeId.hpp>
 namespace bedrock::protocol {
 
 
-class ShapedRecipe : public RecipeWithTypeId {
+class ShapedRecipe {
 public:
     std::string blockName;
     std::string recipeId;
@@ -22,63 +22,69 @@ public:
     std::string uuid;
     int32_t priority;
     bool symmetric;
-    std::shared_ptr<RecipeUnlockingRequirement> unlockingRequirement;
+    std::optional<std::shared_ptr<RecipeUnlockingRequirement>> unlockingRequirement;
     uint32_t recipeNetId;
 
     ShapedRecipe() = default;
-    virtual ~ShapedRecipe() = default;
 
-    static std::shared_ptr<ShapedRecipe> create(const int32_t& recipeType, ReadOnlyBinaryStream& stream) {
-        auto result = std::make_shared<ShapedRecipe>();
-        result->blockName = stream.readString().value_or("");
-        result->recipeId = stream.readString().value_or("");
-        result->input = stream.readList([&]() {
-            return stream.readObjectList<RecipeIngredient>();
-        });
-        result->output = stream.readList([&]() {
-            return stream.readValue<NetworkItemDescriptor>();
-        });
-        result->uuid = stream.readUUID().value_or("");
-        result->priority = stream.readVarInt().value_or(0);
-        result->symmetric = stream.readBool().value_or(false);
-        result->unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
-        result->unlockingRequirement->read(stream);
-        result->recipeNetId = stream.readUnsignedVarInt().value_or(0);
-        return result;
-    }
-
-    void read(ReadOnlyBinaryStream& stream) override {
-        blockName = stream.readString().value_or("");
+    virtual void read(ReadOnlyBinaryStream& stream) {
         recipeId = stream.readString().value_or("");
-        input = stream.readList([&]() {
-            return stream.readObjectList<RecipeIngredient>();
-        });
+        const auto width = stream.readVarInt().value_or(0);
+        const auto height = stream.readVarInt().value_or(0);
+        const auto count = stream.readUnsignedVarInt().value_or(0);
+        if (width < 0 || height < 1 || height > 3
+            || count != static_cast<uint64_t>(width) * height
+            || !stream.canReadCollection(count)) {
+            stream.markOverflowed();
+            return;
+        }
+        input.assign(static_cast<std::size_t>(height), {});
+        for (auto& row : input) {
+            row.reserve(static_cast<std::size_t>(width));
+            for (int32_t column = 0; column < width && !stream.hasOverflowed(); ++column) {
+                row.push_back(stream.readObject<RecipeIngredient>());
+            }
+        }
         output = stream.readList([&]() {
             return stream.readValue<NetworkItemDescriptor>();
         });
         uuid = stream.readUUID().value_or("");
+        blockName = stream.readString().value_or("");
         priority = stream.readVarInt().value_or(0);
         symmetric = stream.readBool().value_or(false);
-        unlockingRequirement = std::make_shared<RecipeUnlockingRequirement>();
-        unlockingRequirement->read(stream);
+        unlockingRequirement = stream.readOptional([&]() {
+            return stream.readObject<RecipeUnlockingRequirement>();
+        });
         recipeNetId = stream.readUnsignedVarInt().value_or(0);
     }
 
-    void write(BinaryStream& stream) const override {
-        stream.writeString(blockName);
+    virtual void write(BinaryStream& stream) const {
         stream.writeString(recipeId);
-        stream.writeList(input, [&](const auto& item) {
-            stream.writeList(item, [&](const auto& item) {
-                item->write(stream);
-            });
-        });
+        if (input.empty() || input.size() > 3) {
+            throw std::invalid_argument("Invalid shaped recipe height");
+        }
+        const auto width = input.front().size();
+        stream.writeVarInt(static_cast<int32_t>(width));
+        stream.writeVarInt(static_cast<int32_t>(input.size()));
+        stream.writeUnsignedVarInt(static_cast<uint32_t>(width * input.size()));
+        for (const auto& row : input) {
+            if (row.size() != width) {
+                throw std::invalid_argument("Inconsistent shaped recipe row width");
+            }
+            for (const auto& ingredient : row) {
+                ingredient->write(stream);
+            }
+        }
         stream.writeList(output, [&](const auto& item) {
             item.write(stream);
         });
         stream.writeUUID(uuid);
+        stream.writeString(blockName);
         stream.writeVarInt(priority);
         stream.writeBool(symmetric);
-        unlockingRequirement->write(stream);
+        stream.writeOptional(unlockingRequirement, [&](const auto& optionalValue) {
+            optionalValue->write(stream);
+        });
         stream.writeUnsignedVarInt(recipeNetId);
     }
 };

@@ -1,31 +1,33 @@
 #pragma once
 
-#include <bedrock/protocol/io/BinaryStream.hpp>
-#include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
 #include <cstdint>
+#include <magic_enum/magic_enum.hpp>
+#include <string_view>
 
 namespace bedrock::protocol {
 
-
-class CommandPermissions {
-public:
-    static constexpr int64_t NORMAL = 0;
-    static constexpr int64_t OPERATOR = 1;
-    static constexpr int64_t AUTOMATION = 2;
-    static constexpr int64_t HOST = 3;
-    static constexpr int64_t OWNER = 4;
-    static constexpr int64_t INTERNAL = 5;
-
-
-    CommandPermissions() = default;
-
-    virtual void read(ReadOnlyBinaryStream& stream) {
-        (void)stream;
-    }
-
-    virtual void write(BinaryStream& stream) const {
-        (void)stream;
-    }
+enum class CommandPermissions : uint16_t {
+    Normal = 0,
+    Operator = 1,
+    Automation = 2,
+    Host = 3,
+    Owner = 4,
+    Internal = 5,
 };
 
 } // namespace bedrock::protocol
+namespace magic_enum::customize {
+
+template <> constexpr customize_t enum_name<::bedrock::protocol::CommandPermissions>(::bedrock::protocol::CommandPermissions value) noexcept {
+    switch (value) {
+        case ::bedrock::protocol::CommandPermissions::Normal: return "any";
+        case ::bedrock::protocol::CommandPermissions::Operator: return "gamedirectors";
+        case ::bedrock::protocol::CommandPermissions::Automation: return "admin";
+        case ::bedrock::protocol::CommandPermissions::Host: return "host";
+        case ::bedrock::protocol::CommandPermissions::Owner: return "owner";
+        case ::bedrock::protocol::CommandPermissions::Internal: return "internal";
+        default: return invalid_tag;
+    }
+}
+
+}

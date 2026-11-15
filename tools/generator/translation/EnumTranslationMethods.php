@@ -306,7 +306,7 @@ private function enumExpressionType(Node $expression, array $declaration): ?stri
                 ? CPPName::type($class)
                 : null;
         }
-        if ($expression instanceof Node\Expr\PropertyFetch) {
+        if ($expression instanceof Node\Expr\PropertyFetch || $expression instanceof Node\Expr\Variable) {
             $type = $this->expressionType($expression, $declaration);
             if ($type !== null && $this->isEnumLikeDeclaration($this->findDeclaration(CPPName::type($type)) ?? [])) {
                 return CPPName::type($type);

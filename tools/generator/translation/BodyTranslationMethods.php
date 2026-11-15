@@ -13,7 +13,7 @@ public function methodBody(array $method, array $declaration, bool $returnShared
     {
         $statements = $method['body'] ?? [];
         if ($statements === []) {
-            return $this->genericBody($declaration, $method['static'] || str_contains((string) $method['name'], 'decode'), $returnShared);
+            return $this->genericBody($declaration, in_array(strtolower((string) $method['name']), ['read', 'decode', 'readpayload', 'decodepayload', 'decodedata'], true), $returnShared);
         }
         $previousLocalVariables = $this->localVariables;
         $previousDeclaredVariables = $this->declaredVariables;
@@ -40,7 +40,7 @@ public function methodBody(array $method, array $declaration, bool $returnShared
         if ($lines === []) {
             $this->localVariables = $previousLocalVariables;
             $this->declaredVariables = $previousDeclaredVariables;
-            return $this->genericBody($declaration, $method['static'] || str_contains((string) $method['name'], 'decode'), $returnShared);
+            return $this->genericBody($declaration, in_array(strtolower((string) $method['name']), ['read', 'decode', 'readpayload', 'decodepayload', 'decodedata'], true), $returnShared);
         }
         $body = implode("\n", $lines);
         if (str_contains($body, 'std::monostate')) {
@@ -644,12 +644,6 @@ private function sourceCodecBody(array $declaration, bool $read, bool $returnSha
             return null;
         }
         $body = implode("\n", $lines);
-        if (str_contains($body, 'std::monostate')) {
-            $fallback = $this->genericBody($declaration, $read, $returnShared);
-            if (!str_contains($fallback, 'std::monostate')) {
-                return $fallback;
-            }
-        }
         return $body;
     }
 

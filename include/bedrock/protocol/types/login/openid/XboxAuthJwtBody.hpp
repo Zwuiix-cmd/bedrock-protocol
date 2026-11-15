@@ -2,6 +2,7 @@
 
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
+#include <cstdint>
 #include <string>
 
 #include <bedrock/protocol/types/login/JwtBodyRfc7519.hpp>
@@ -16,6 +17,7 @@ public:
     std::string mid;
     std::string xid;
     std::string xname;
+    int32_t ap;
     std::string cpk;
     std::string pid;
     std::string pname;
@@ -30,6 +32,7 @@ public:
         mid = stream.readString().value_or("");
         xid = stream.readString().value_or("");
         xname = stream.readString().value_or("");
+        ap = stream.readInt().value_or(0);
         cpk = stream.readString().value_or("");
         pid = stream.readString().value_or("");
         pname = stream.readString().value_or("");
@@ -42,6 +45,7 @@ public:
         stream.writeString(mid);
         stream.writeString(xid);
         stream.writeString(xname);
+        stream.writeInt(ap);
         stream.writeString(cpk);
         stream.writeString(pid);
         stream.writeString(pname);

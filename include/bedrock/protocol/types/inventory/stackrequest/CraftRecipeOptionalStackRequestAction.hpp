@@ -10,7 +10,7 @@ namespace bedrock::protocol {
 
 class CraftRecipeOptionalStackRequestAction : public ItemStackRequestAction {
 public:
-    static constexpr int64_t ID = 15;
+    static constexpr int64_t ID = 13;
 
     uint32_t recipeId;
     int32_t filterStringIndex;

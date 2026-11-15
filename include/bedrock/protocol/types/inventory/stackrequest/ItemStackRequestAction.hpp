@@ -19,6 +19,7 @@ public:
     virtual void read(ReadOnlyBinaryStream& stream) = 0;
 
     static std::shared_ptr<ItemStackRequestAction> create(ReadOnlyBinaryStream& stream);
+    static std::shared_ptr<ItemStackRequestAction> create(ReadOnlyBinaryStream& stream, uint32_t type);
 };
 
 } // namespace bedrock::protocol

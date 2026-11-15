@@ -39,6 +39,7 @@ trait ManifestEmissionMethods
         $files = array_merge(
             $files,
             glob($generatorRoot . DIRECTORY_SEPARATOR . '*/*.php') ?: [],
+            glob(__DIR__ . DIRECTORY_SEPARATOR . 'bedrock_26_60/*.inc') ?: [],
         );
         $files[] = dirname($generatorRoot) . DIRECTORY_SEPARATOR . 'generate.php';
         sort($files);

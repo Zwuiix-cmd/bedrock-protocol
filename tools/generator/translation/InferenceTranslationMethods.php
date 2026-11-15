@@ -117,6 +117,9 @@ private function inferredCPPType(Node $expression, array $declaration): ?string
                 return 'uint32_t';
             }
             if ($this->catalog->isSerializerClass($class)) {
+                if ($class === 'CommonTypes' && $name === 'readcolor') {
+                    return 'uint32_t';
+                }
                 $codec = $this->codecForCall($class, $name);
                 if ($codec !== null) {
                     return $codec['type'];
@@ -137,7 +140,8 @@ private function inferredCPPType(Node $expression, array $declaration): ?string
             }
         }
         if ($expression instanceof Node\Expr\New_ && $expression->class instanceof Node\Name) {
-            return 'std::shared_ptr<' . CPPName::type($expression->class->getLast()) . '>';
+            $class = $expression->class->getLast();
+            return $this->catalog->constructor($class) ?? ('std::shared_ptr<' . CPPName::type($class) . '>');
         }
         return null;
     }

@@ -312,13 +312,17 @@ private function statement(Node $statement, array $declaration, array $method, i
             if ($key !== null && $isMap) {
                 $text = $prefix . 'for (const auto& [' . $key . ', ' . $value . '] : ' . $collection . ") {\n";
             } else {
-                $text = $prefix . 'for (const auto& ' . ($key === null ? $value : $key . 'Value') . ' : ' . $collection . ") {\n";
+                $text = $prefix . 'for (' . ($key === null ? '' : 'std::size_t ' . $key . ' = 0; ')
+                    . 'const auto& ' . ($key === null ? $value : $key . 'Value') . ' : ' . $collection . ") {\n";
                 if ($key !== null) {
                     $text .= $prefix . '    const auto& ' . $value . ' = ' . $key . 'Value' . ";\n";
                 }
             }
             foreach ($statement->stmts as $child) {
                 $text .= $this->statement($child, $declaration, $method, $indent + 1) . "\n";
+            }
+            if ($key !== null && !$isMap) {
+                $text .= $prefix . '    ++' . $key . ";\n";
             }
             $this->localVariables = $previousLocalVariables;
             $this->declaredVariables = $previousDeclaredVariables;
@@ -541,7 +545,11 @@ private function statement(Node $statement, array $declaration, array $method, i
         }
         $enumType = $this->propertyEnumType($property, $declaration);
         if ($enumType !== null) {
-            return $this->enumReadValue($enumType, $value, $declaration);
+            return $this->enumExpressionType($argument->value, $declaration) === $enumType
+                || ($argument->value instanceof Node\Expr\Variable
+                    && ($this->expressionTypes[(string) $argument->value->name] ?? null) === $enumType)
+                ? $value
+                : $this->enumReadValue($enumType, $value, $declaration);
         }
         $targetType = $this->cppType(
             (string) ($property['type'] ?? 'mixed'),

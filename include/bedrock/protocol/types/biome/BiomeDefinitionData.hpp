@@ -79,9 +79,9 @@ public:
 		stream.writeFloat(scale);
 		stream.writeUnsignedInt(static_cast<uint32_t>(mapWaterColor));
 		stream.writeBool(rain);
-		stream.writeOptional(tagIndexes, [&](const auto& tagIndexes) {
-					stream.writeUnsignedVarInt(tagIndexes.size());
-					for (const auto& tag : tagIndexes) {
+		stream.writeOptional(tagIndexes, [&](const auto& tagIndexesValue) {
+					stream.writeUnsignedVarInt(tagIndexesValue.size());
+					for (const auto& tag : tagIndexesValue) {
 				stream.writeUnsignedShort(tag);
 			}
 				});

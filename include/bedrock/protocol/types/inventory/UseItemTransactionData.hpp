@@ -5,6 +5,7 @@
 #include <magic_enum/magic_enum.hpp>
 #include <cstdint>
 
+#include <bedrock/protocol/types/inventory/HandSlot.hpp>
 #include <bedrock/protocol/types/inventory/NetworkItemStack.hpp>
 #include <bedrock/protocol/types/inventory/PredictedResult.hpp>
 #include <bedrock/protocol/types/inventory/TriggerType.hpp>
@@ -26,8 +27,9 @@ public:
     Action actionType;
     TriggerType triggerType;
     glm::ivec3 blockPosition;
-    int32_t face;
+    uint8_t face;
     int32_t hotbarSlot;
+    HandSlot hand;
     NetworkItemStack itemInHand;
     glm::vec3 playerPosition;
     glm::vec3 clickPosition;
@@ -43,20 +45,21 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         actions = stream.readObjectList<NetworkInventoryAction>();
         actionType = magic_enum::enum_cast<Action>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readVarInt().value_or(0)
         ).value_or(Action::ClickBlock);
         triggerType = magic_enum::enum_cast<TriggerType>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readUnsignedByte().value_or(0)
         ).value_or(TriggerType::Unknown);
         blockPosition = stream.readSignedBlockPos().value_or(glm::ivec3(0));
-        face = stream.readVarInt().value_or(0);
+        face = stream.readUnsignedByte().value_or(0);
         hotbarSlot = stream.readVarInt().value_or(0);
+        hand = magic_enum::enum_cast<HandSlot>(stream.readUnsignedByte().value_or(0)).value_or(HandSlot::Mainhand);
         itemInHand = stream.readValue<NetworkItemStack>();
         playerPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         clickPosition = stream.readVec3().value_or(glm::vec3(0.0f));
         blockRuntimeId = stream.readUnsignedVarInt().value_or(0);
         clientInteractPrediction = magic_enum::enum_cast<PredictedResult>(
-            stream.readUnsignedVarInt().value_or(0)
+            stream.readUnsignedByte().value_or(0)
         ).value_or(PredictedResult::Failure);
         clientCooldownState = stream.readUnsignedByte().value_or(0);
     }
@@ -65,16 +68,17 @@ public:
         stream.writeList(actions, [&](const auto& item) {
             item->write(stream);
         });
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(actionType));
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(triggerType));
+        stream.writeVarInt(magic_enum::enum_integer(actionType));
+        stream.writeUnsignedByte(magic_enum::enum_integer(triggerType));
         stream.writeSignedBlockPos(blockPosition);
-        stream.writeVarInt(face);
+        stream.writeUnsignedByte(face);
         stream.writeVarInt(hotbarSlot);
+        stream.writeUnsignedByte(static_cast<uint8_t>(hand));
         itemInHand.write(stream);
         stream.writeVec3(playerPosition);
         stream.writeVec3(clickPosition);
         stream.writeUnsignedVarInt(blockRuntimeId);
-        stream.writeUnsignedVarInt(magic_enum::enum_integer(clientInteractPrediction));
+        stream.writeUnsignedByte(magic_enum::enum_integer(clientInteractPrediction));
         stream.writeUnsignedByte(clientCooldownState);
     }
 };

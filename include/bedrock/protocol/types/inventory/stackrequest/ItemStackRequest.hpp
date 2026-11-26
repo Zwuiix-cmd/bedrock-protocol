@@ -61,12 +61,7 @@ public:
         auto result = std::make_shared<ItemStackRequest>();
         result->requestId = stream.readVarInt().value_or(0);
         result->actions = stream.readList([&]() {
-            const auto type = stream.readUnsignedVarInt().value_or(0);
-            const auto innerType = stream.readUnsignedByte().value_or(0);
-            if (innerType != getInnerActionType(type)) {
-                stream.markOverflowed();
-                return std::shared_ptr<ItemStackRequestAction>{};
-            }
+            const auto type = stream.readUnsignedByte().value_or(0);
             return ItemStackRequestAction::create(stream, type);
         });
         result->filterStrings = stream.readList([&]() {
@@ -86,8 +81,7 @@ public:
     virtual void write(BinaryStream& stream) const {
 		stream.writeVarInt(requestId);
 		stream.writeList(actions, [&](const auto& action) {
-					stream.writeUnsignedVarInt(action->getTypeId());
-					stream.writeUnsignedByte(getInnerActionType(action->getTypeId()));
+					stream.writeUnsignedByte(static_cast<uint8_t>(action->getTypeId()));
 					action->write(stream);
 				});
 		stream.writeList(filterStrings, [&](const auto& value) {

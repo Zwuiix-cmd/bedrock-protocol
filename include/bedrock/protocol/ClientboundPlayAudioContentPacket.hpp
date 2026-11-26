@@ -13,6 +13,7 @@
 #include <variant>
 #include <vector>
 #include <bedrock/protocol/Packet.hpp>
+#include <bedrock/protocol/PlaySoundPacket.hpp>
 #include <bedrock/protocol/types/sound/AudioContentPlaybackType.hpp>
 #include <bedrock/protocol/types/ActorEvent.hpp>
 #include <bedrock/protocol/types/AttributeEnvironmentPayloadType.hpp>
@@ -122,8 +123,8 @@ public:
 public:
     std::string sharedMetadata;
     std::string playbackContent;
-    AudioContentPlaybackType playbackType;
-    std::monostate playSound;
+    std::string playbackType;
+    PlaySoundPacket playSound;
 
 public:
     std::string_view getName() override {
@@ -133,17 +134,15 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
         sharedMetadata = stream.readString().value_or("");
         playbackContent = stream.readString().value_or("");
-        playbackType = magic_enum::enum_cast<AudioContentPlaybackType>(
-            stream.readUnsignedByte().value_or(0)
-        ).value_or(AudioContentPlaybackType::Music);
-        playSound = std::monostate{};
+        playbackType = stream.readString().value_or("");
+        playSound.read(stream);
     }
 
     void write(BinaryStream& stream) override {
         stream.writeString(sharedMetadata);
         stream.writeString(playbackContent);
-        stream.writeUnsignedByte(magic_enum::enum_integer(playbackType));
-        (void)(playSound);
+        stream.writeString(playbackType);
+        playSound.write(stream);
     }
 };
 

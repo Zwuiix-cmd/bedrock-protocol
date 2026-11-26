@@ -130,11 +130,11 @@ public:
     void read(ReadOnlyBinaryStream& stream) override {
 		eventId = stream.readVarInt().value_or(0);
 		auto offset = stream.position();
-		try {
-			eventData = NetworkNbtSerializer::readHeadless(stream.data(), NbtTagType::Compound, offset);
-		} catch (const std::exception& e) {
-			throw;
+		if (offset >= stream.size()) {
+			eventData = std::make_shared<CompoundTag>();
+			return;
 		}
+		eventData = NetworkNbtSerializer::readHeadless(stream.data(), NbtTagType::Compound, offset);
 		stream.seek(offset, false);
     }
 

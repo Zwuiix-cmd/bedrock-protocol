@@ -133,6 +133,15 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 		p.NewPhotoName = ""
 	case *packet.StructureTemplateDataRequest:
 		p.RequestType = 1
+	case *packet.PlayerSkin:
+		p.Skin.SkinImageWidth = 0
+		p.Skin.SkinImageHeight = 0
+		p.Skin.SkinData = nil
+		p.Skin.CapeImageWidth = 0
+		p.Skin.CapeImageHeight = 0
+		p.Skin.CapeData = nil
+	case *packet.PrimitiveShapes:
+		p.Shapes = nil
 	case *packet.SetDisplayObjective:
 		p.SortOrder = 0
 		p.DisplaySlot = "list"

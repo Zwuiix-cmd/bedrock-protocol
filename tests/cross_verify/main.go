@@ -110,8 +110,17 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 		p.ActionType = packet.AnimateActionSwingArm
 	case *packet.SimpleEvent:
 		p.EventType = packet.SimpleEventCommandsEnabled
+	case *packet.CreativeContent:
+		p.Groups = nil
+		p.Items = nil
+	case *packet.CommandRequest:
+		p.CommandOrigin = protocol.CommandOrigin{Origin: protocol.CommandOriginPlayer}
 	case *packet.CommandOutput:
+		p.CommandOrigin = protocol.CommandOrigin{Origin: protocol.CommandOriginPlayer}
 		p.OutputType = 3
+		p.OutputMessages = nil
+	case *packet.StructureBlockUpdate:
+		p.Settings.Integrity = 100.0
 	case *packet.PhotoTransfer:
 		p.PhotoName = ".jpeg"
 	case *packet.SetDisplayObjective:

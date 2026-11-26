@@ -16,7 +16,7 @@ test: build
 	@$(MAKE) --no-print-directory cross-test
 
 cross-test:
-	@go -C tests/cross_verify run . ../../$(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe
+	@python tests/cross_verify/report.py $(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe
 
 clean:
 	cmake -E remove_directory $(BUILD_DIR)

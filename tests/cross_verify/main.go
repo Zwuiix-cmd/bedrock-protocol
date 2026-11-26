@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -16,10 +17,19 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 )
 
+type PacketResult struct {
+	ID     uint32 `json:"id"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	InHex  string `json:"in_hex,omitempty"`
+	OutHex string `json:"out_hex,omitempty"`
+	Error  string `json:"error,omitempty"`
+}
+
 func safeMarshal(pk packet.Packet) (data []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("panic: %v", r)
+			err = fmt.Errorf("%v", r)
 		}
 	}()
 	var buf bytes.Buffer
@@ -31,7 +41,7 @@ func safeMarshal(pk packet.Packet) (data []byte, err error) {
 func safeUnmarshal(pk packet.Packet, data []byte) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("panic: %v", r)
+			err = fmt.Errorf("%v", r)
 		}
 	}()
 	r := protocol.NewReader(bytes.NewReader(data), 0, false)
@@ -74,19 +84,20 @@ func main() {
 	scanner := bufio.NewScanner(stdout)
 	scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 
-	var okCount, mismatchCount, overflowCount, exceptionCount, unsupportedCount, goPanicCount int
+	results := make([]PacketResult, 0, len(ids))
 
-	fmt.Println("\033[36m=== bedrock-protocol <-> gophertunnel Cross-Verify ===\033[0m")
 	for _, id := range ids {
 		pk := pool[id]()
 		name := reflect.TypeOf(pk).Elem().Name()
 		raw, err := safeMarshal(pk)
 		if err != nil {
-			goPanicCount++
+			results = append(results, PacketResult{ID: id, Name: name, Status: "go_panic", Error: err.Error()})
 			continue
 		}
-		fmt.Fprintf(stdin, "%d %s\n", id, hex.EncodeToString(raw))
+		inHex := hex.EncodeToString(raw)
+		fmt.Fprintf(stdin, "%d %s\n", id, inHex)
 		if !scanner.Scan() {
+			results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: "eof from cpp"})
 			break
 		}
 		resp := scanner.Text()
@@ -95,27 +106,29 @@ func main() {
 			outBytes, _ := hex.DecodeString(outHex)
 			pk2 := pool[id]()
 			if err := safeUnmarshal(pk2, outBytes); err != nil {
-				mismatchCount++
-				fmt.Printf("  \033[31m[GO_DECODE_FAIL]\033[0m %-4d %-34s %v\n", id, name, err)
+				results = append(results, PacketResult{ID: id, Name: name, Status: "go_decode_fail", InHex: inHex, OutHex: outHex, Error: err.Error()})
 				continue
 			}
-			if outHex == hex.EncodeToString(raw) {
-				okCount++
+			if outHex == inHex {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "ok"})
 			} else {
-				mismatchCount++
+				results = append(results, PacketResult{ID: id, Name: name, Status: "mismatch", InHex: inHex, OutHex: outHex})
 			}
 		} else if resp == "OVERFLOW" {
-			overflowCount++
+			results = append(results, PacketResult{ID: id, Name: name, Status: "overflow", InHex: inHex})
 		} else if strings.HasPrefix(resp, "EXCEPTION ") {
-			exceptionCount++
+			results = append(results, PacketResult{ID: id, Name: name, Status: "exception", Error: strings.TrimPrefix(resp, "EXCEPTION ")})
 		} else if strings.HasPrefix(resp, "UNSUPPORTED ") {
-			unsupportedCount++
+			results = append(results, PacketResult{ID: id, Name: name, Status: "unsupported"})
+		} else {
+			results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: resp})
 		}
 	}
 
 	stdin.Close()
 	cmd.Wait()
 
-	fmt.Printf("\n\033[1mSummary:\033[0m Total=\033[36m%d\033[0m | \033[32mExactOK=%d\033[0m | \033[33mMismatch=%d\033[0m | \033[31mOverflow=%d\033[0m | \033[31mException=%d\033[0m | \033[90mUnsupported=%d\033[0m | \033[90mGoPanic=%d\033[0m\n",
-		len(ids), okCount, mismatchCount, overflowCount, exceptionCount, unsupportedCount, goPanicCount)
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	_ = enc.Encode(results)
 }

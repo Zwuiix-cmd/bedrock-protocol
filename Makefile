@@ -1,7 +1,7 @@
 BUILD_DIR ?= build
 CONFIG ?= Release
 
-.PHONY: all configure build test clean
+.PHONY: all configure build test cross-test clean
 
 all: build test
 
@@ -13,6 +13,10 @@ build: configure
 
 test: build
 	ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure
+	$(MAKE) cross-test
+
+cross-test: build
+	go -C tests/cross_verify run . ../../$(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe
 
 clean:
 	cmake -E remove_directory $(BUILD_DIR)

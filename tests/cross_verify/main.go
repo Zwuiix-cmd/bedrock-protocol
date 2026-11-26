@@ -121,6 +121,9 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 		p.OutputMessages = nil
 	case *packet.StructureBlockUpdate:
 		p.Settings.Integrity = 100.0
+	case *packet.Login:
+		p.ClientProtocol = 0
+		p.ConnectionRequest = []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	case *packet.AvailableActorIdentifiers:
 		p.SerialisedEntityIdentifiers = []byte{0x0a, 0x00, 0x00}
 	case *packet.PhotoTransfer:
@@ -128,6 +131,8 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 		p.BookID = ""
 		p.SourceType = 0
 		p.NewPhotoName = ""
+	case *packet.StructureTemplateDataRequest:
+		p.RequestType = 1
 	case *packet.SetDisplayObjective:
 		p.SortOrder = 0
 		p.DisplaySlot = "list"

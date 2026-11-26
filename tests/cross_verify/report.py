@@ -16,39 +16,59 @@ RED = "\033[31m"
 GRAY = "\033[90m"
 
 
-def main() -> int:
-    if os.name == "nt":
-        os.system("")
-
-    here = os.path.dirname(os.path.abspath(__file__))
-    cpp_exe = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(here, "..", "..", "build", "Release", "bedrock-protocol-cross-verify.exe")
-
-    print(f"\n{BOLD}{CYAN}=== bedrock-protocol Verification ==={RESET}")
-    print(f"  {GREEN}[✓]{RESET} C++ Build & Unit Tests")
-
+def run_step(label: str, cmd: list[str], cwd: str | None = None) -> subprocess.CompletedProcess[str]:
     done = threading.Event()
 
     def spin() -> None:
         for ch in itertools.cycle(["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]):
             if done.is_set():
                 break
-            sys.stdout.write(f"\r  {CYAN}{ch}{RESET} Running bidirectional protocol checks...")
+            sys.stdout.write(f"\r  {CYAN}{ch}{RESET} {label}...")
             sys.stdout.flush()
             time.sleep(0.08)
 
     t = threading.Thread(target=spin, daemon=True)
     t.start()
-
-    proc = subprocess.run(
-        ["go", "-C", here, "run", ".", cpp_exe],
-        capture_output=True,
-        text=True,
-    )
+    proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
     done.set()
     t.join()
 
+    if proc.returncode == 0:
+        sys.stdout.write(f"\r  {GREEN}[✓]{RESET} {label}   \n")
+    else:
+        sys.stdout.write(f"\r  {RED}[✗]{RESET} {label}   \n")
+    sys.stdout.flush()
+    return proc
+
+
+def main() -> int:
+    if os.name == "nt":
+        os.system("")
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.abspath(os.path.join(here, "..", ".."))
+
+    print(f"\n{BOLD}{CYAN}=== bedrock-protocol Verification ==={RESET}")
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--all":
+        build_dir = sys.argv[2] if len(sys.argv) > 2 else "build"
+        config = sys.argv[3] if len(sys.argv) > 3 else "Release"
+        cpp_exe = os.path.join(root, build_dir, config, "bedrock-protocol-cross-verify.exe")
+
+        for label, cmd in [
+            ("Configuring CMake", ["cmake", "-S", ".", "-B", build_dir, "-DBEDROCK_PROTOCOL_BUILD_POOL=ON", "-DBEDROCK_PROTOCOL_BUILD_TESTS=ON"]),
+            ("Building C++ library & tests", ["cmake", "--build", build_dir, "--config", config, "-j", "8"]),
+            ("Running C++ unit tests", ["ctest", "--test-dir", build_dir, "-C", config, "--output-on-failure"]),
+        ]:
+            proc = run_step(label, cmd, cwd=root)
+            if proc.returncode != 0:
+                print(proc.stdout or proc.stderr, file=sys.stderr)
+                return proc.returncode
+    else:
+        cpp_exe = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(root, "build", "Release", "bedrock-protocol-cross-verify.exe")
+
+    proc = run_step("Running bidirectional protocol checks", ["go", "-C", here, "run", ".", cpp_exe])
     if proc.returncode != 0:
-        sys.stdout.write(f"\r  {RED}[✗]{RESET} Bidirectional protocol checks failed\n")
         print(proc.stderr, file=sys.stderr)
         return proc.returncode
 
@@ -60,8 +80,7 @@ def main() -> int:
     total = len(results)
     ok = counts.get("ok", 0)
     pct = (ok / total * 100.0) if total else 0.0
-    sys.stdout.write(f"\r  {GREEN}[✓]{RESET} Bidirectional protocol checks ({ok}/{total} exact, {pct:.1f}%)\n\n")
-    sys.stdout.flush()
+    print(f"  {GREEN}[✓]{RESET} Parity: {ok}/{total} exact ({pct:.1f}%)\n")
 
     sections = [
         ("go_decode_fail", "DECODE FAIL", RED, "✗"),

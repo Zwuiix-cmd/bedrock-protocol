@@ -11,9 +11,8 @@ configure:
 build: configure
 	@cmake --build $(BUILD_DIR) --config $(CONFIG) -j 8 > nul
 
-test: build
-	@ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure > nul
-	@$(MAKE) --no-print-directory cross-test
+test:
+	@python tests/cross_verify/report.py --all $(BUILD_DIR) $(CONFIG)
 
 cross-test:
 	@python tests/cross_verify/report.py $(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe

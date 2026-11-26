@@ -76,6 +76,7 @@ func main() {
 
 	var okCount, mismatchCount, overflowCount, exceptionCount, unsupportedCount, goPanicCount int
 
+	fmt.Println("\033[36m=== bedrock-protocol <-> gophertunnel Cross-Verify ===\033[0m")
 	for _, id := range ids {
 		pk := pool[id]()
 		name := reflect.TypeOf(pk).Elem().Name()
@@ -92,11 +93,10 @@ func main() {
 		if strings.HasPrefix(resp, "OK ") {
 			outHex := strings.TrimPrefix(resp, "OK ")
 			outBytes, _ := hex.DecodeString(outHex)
-			// Verify Go can decode what C++ encoded!
 			pk2 := pool[id]()
 			if err := safeUnmarshal(pk2, outBytes); err != nil {
 				mismatchCount++
-				fmt.Printf("[GO_DECODE_FAIL] %d %s: %v\n", id, name, err)
+				fmt.Printf("  \033[31m[GO_DECODE_FAIL]\033[0m %-4d %-34s %v\n", id, name, err)
 				continue
 			}
 			if outHex == hex.EncodeToString(raw) {
@@ -116,6 +116,6 @@ func main() {
 	stdin.Close()
 	cmd.Wait()
 
-	fmt.Printf("Cross-verify summary: Total=%d | ExactOK=%d | Mismatch=%d | Overflow=%d | Exception=%d | Unsupported=%d | GoPanic=%d\n",
+	fmt.Printf("\n\033[1mSummary:\033[0m Total=\033[36m%d\033[0m | \033[32mExactOK=%d\033[0m | \033[33mMismatch=%d\033[0m | \033[31mOverflow=%d\033[0m | \033[31mException=%d\033[0m | \033[90mUnsupported=%d\033[0m | \033[90mGoPanic=%d\033[0m\n",
 		len(ids), okCount, mismatchCount, overflowCount, exceptionCount, unsupportedCount, goPanicCount)
 }

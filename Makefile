@@ -6,17 +6,17 @@ CONFIG ?= Release
 all: build test
 
 configure:
-	cmake -S . -B $(BUILD_DIR) -DBEDROCK_PROTOCOL_BUILD_POOL=ON -DBEDROCK_PROTOCOL_BUILD_TESTS=ON
+	@cmake -S . -B $(BUILD_DIR) -DBEDROCK_PROTOCOL_BUILD_POOL=ON -DBEDROCK_PROTOCOL_BUILD_TESTS=ON > nul
 
 build: configure
-	cmake --build $(BUILD_DIR) --config $(CONFIG) -j 8
+	@cmake --build $(BUILD_DIR) --config $(CONFIG) -j 8 -- /nologo /verbosity:minimal
 
 test: build
-	ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure
-	$(MAKE) cross-test
+	@ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure
+	@$(MAKE) --no-print-directory cross-test
 
-cross-test: build
-	go -C tests/cross_verify run . ../../$(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe
+cross-test:
+	@go -C tests/cross_verify run . ../../$(BUILD_DIR)/$(CONFIG)/bedrock-protocol-cross-verify.exe
 
 clean:
 	cmake -E remove_directory $(BUILD_DIR)

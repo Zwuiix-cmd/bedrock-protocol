@@ -1,13 +1,13 @@
 module bedrock-protocol-cross-verify
 
-go 1.25
+go 1.25.0
 
-require github.com/sandertv/gophertunnel v1.50.0
+require github.com/sandertv/gophertunnel v1.63.0
 
 require (
 	github.com/go-gl/mathgl v1.1.0 // indirect
-	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/klauspost/compress v1.18.1 // indirect
+	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/image v0.21.0 // indirect
 )

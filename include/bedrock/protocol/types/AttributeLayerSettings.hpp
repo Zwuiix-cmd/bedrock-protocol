@@ -13,17 +13,7 @@ public:
     bool enabled = false;
     bool transitionsPaused = false;
 
-    AttributeLayerSettings() = default;
-    explicit AttributeLayerSettings(
-        int32_t priorityValue,
-        float floatWeightValue,
-        bool enabledValue,
-        bool transitionsPausedValue
-    ) :
-        priority(priorityValue),
-        floatWeight(floatWeightValue),
-        enabled(enabledValue),
-        transitionsPaused(transitionsPausedValue) {}
+    virtual ~AttributeLayerSettings() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         priority = stream.readInt().value_or(0);

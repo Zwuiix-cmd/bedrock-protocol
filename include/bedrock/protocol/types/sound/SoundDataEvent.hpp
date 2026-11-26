@@ -20,21 +20,7 @@ public:
     std::optional<float> targetVolume;
     std::optional<float> seconds;
 
-    SoundDataEvent() = default;
-    explicit SoundDataEvent(
-        const SoundDataEventType& typeValue,
-        const std::optional<float>& volumeValue = std::nullopt,
-        const std::optional<float>& pitchValue = std::nullopt,
-        const std::optional<float>& durationValue = std::nullopt,
-        const std::optional<float>& targetVolumeValue = std::nullopt,
-        const std::optional<float>& secondsValue = std::nullopt
-    ) :
-        type(typeValue),
-        volume(volumeValue),
-        pitch(pitchValue),
-        duration(durationValue),
-        targetVolume(targetVolumeValue),
-        seconds(secondsValue) {}
+    virtual ~SoundDataEvent() = default;
 
     virtual void read(ReadOnlyBinaryStream& stream) {
         const auto rawType = stream.readUnsignedByte().value_or(0);

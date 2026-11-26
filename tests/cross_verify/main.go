@@ -5,7 +5,9 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,6 +15,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/go-gl/mathgl/mgl32"
+	"github.com/google/uuid"
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 )
@@ -26,7 +30,67 @@ type PacketResult struct {
 	Error  string `json:"error,omitempty"`
 }
 
-func populatePacket(pk packet.Packet) {
+func fuzzValue(v reflect.Value, rng *rand.Rand, depth int) {
+	if !v.CanSet() || depth > 3 {
+		return
+	}
+	t := v.Type()
+	switch t {
+	case reflect.TypeOf(uuid.UUID{}):
+		var u uuid.UUID
+		rng.Read(u[:])
+		v.Set(reflect.ValueOf(u))
+		return
+	case reflect.TypeOf(mgl32.Vec2{}):
+		v.Set(reflect.ValueOf(mgl32.Vec2{float32(rng.Intn(100)), float32(rng.Intn(100))}))
+		return
+	case reflect.TypeOf(mgl32.Vec3{}):
+		v.Set(reflect.ValueOf(mgl32.Vec3{float32(rng.Intn(100)), float32(rng.Intn(100)), float32(rng.Intn(100))}))
+		return
+	case reflect.TypeOf(protocol.BlockPos{}):
+		v.Set(reflect.ValueOf(protocol.BlockPos{int32(rng.Intn(50)), int32(rng.Intn(50)), int32(rng.Intn(50))}))
+		return
+	}
+
+	switch v.Kind() {
+	case reflect.Bool:
+		v.SetBool(rng.Intn(2) == 1)
+	case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		v.SetInt(int64(rng.Intn(5) + 1))
+	case reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		v.SetUint(uint64(rng.Intn(5) + 1))
+	case reflect.Float32, reflect.Float64:
+		v.SetFloat(float64(rng.Intn(50)) + 0.5)
+	case reflect.String:
+		v.SetString(fmt.Sprintf("s%d", rng.Intn(100)))
+	case reflect.Array:
+		for i := 0; i < v.Len(); i++ {
+			fuzzValue(v.Index(i), rng, depth+1)
+		}
+	case reflect.Slice:
+		if depth < 2 {
+			n := 1
+			sl := reflect.MakeSlice(t, n, n)
+			for i := 0; i < n; i++ {
+				fuzzValue(sl.Index(i), rng, depth+1)
+			}
+			v.Set(sl)
+		}
+	case reflect.Map:
+		if t == reflect.TypeOf(map[string]any{}) {
+			v.Set(reflect.ValueOf(map[string]any{"k": int32(rng.Intn(10))}))
+		} else if t == reflect.TypeOf(map[uint32]any{}) {
+			v.Set(reflect.ValueOf(map[uint32]any{0: int64(1), 4: "kodiak"}))
+		}
+	case reflect.Struct:
+		for i := 0; i < v.NumField(); i++ {
+			fuzzValue(v.Field(i), rng, depth+1)
+		}
+	}
+}
+
+func populatePacket(pk packet.Packet, rng *rand.Rand) {
+	fuzzValue(reflect.ValueOf(pk).Elem(), rng, 0)
 	switch p := pk.(type) {
 	case *packet.Text:
 		p.TextType = packet.TextTypeRaw
@@ -34,6 +98,7 @@ func populatePacket(pk packet.Packet) {
 	case *packet.InventoryTransaction:
 		p.TransactionData = &protocol.NormalTransactionData{}
 	case *packet.RequestAbility:
+		p.Ability = 18
 		p.Value = false
 	case *packet.ClientMovementPredictionSync:
 		p.ActorFlags = protocol.NewBitset(131)
@@ -85,9 +150,13 @@ func safeUnmarshal(pk packet.Packet, data []byte) (err error) {
 }
 
 func main() {
+	seed := flag.Int64("seed", 42, "RNG seed")
+	iterations := flag.Int("iterations", 1, "Fuzz iterations per packet")
+	flag.Parse()
+
 	cppExe := filepath.Join("..", "..", "build", "Release", "bedrock-protocol-cross-verify.exe")
-	if len(os.Args) > 1 {
-		cppExe = os.Args[1]
+	if flag.NArg() > 0 {
+		cppExe = flag.Arg(0)
 	}
 
 	cmd := exec.Command(cppExe)
@@ -119,45 +188,48 @@ func main() {
 	scanner := bufio.NewScanner(stdout)
 	scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 
-	results := make([]PacketResult, 0, len(ids))
+	rng := rand.New(rand.NewSource(*seed))
+	results := make([]PacketResult, 0, len(ids)*(*iterations))
 
 	for _, id := range ids {
-		pk := pool[id]()
-		populatePacket(pk)
-		name := reflect.TypeOf(pk).Elem().Name()
-		raw, err := safeMarshal(pk)
-		if err != nil {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "go_panic", Error: err.Error()})
-			continue
-		}
-		inHex := hex.EncodeToString(raw)
-		fmt.Fprintf(stdin, "%d %s\n", id, inHex)
-		if !scanner.Scan() {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: "eof from cpp"})
-			break
-		}
-		resp := scanner.Text()
-		if strings.HasPrefix(resp, "OK ") {
-			outHex := strings.TrimPrefix(resp, "OK ")
-			outBytes, _ := hex.DecodeString(outHex)
-			pk2 := pool[id]()
-			if err := safeUnmarshal(pk2, outBytes); err != nil {
-				results = append(results, PacketResult{ID: id, Name: name, Status: "go_decode_fail", InHex: inHex, OutHex: outHex, Error: err.Error()})
+		for it := 0; it < *iterations; it++ {
+			pk := pool[id]()
+			populatePacket(pk, rng)
+			name := reflect.TypeOf(pk).Elem().Name()
+			raw, err := safeMarshal(pk)
+			if err != nil {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "go_panic", Error: err.Error()})
 				continue
 			}
-			if outHex == inHex {
-				results = append(results, PacketResult{ID: id, Name: name, Status: "ok"})
-			} else {
-				results = append(results, PacketResult{ID: id, Name: name, Status: "mismatch", InHex: inHex, OutHex: outHex})
+			inHex := hex.EncodeToString(raw)
+			fmt.Fprintf(stdin, "%d %s\n", id, inHex)
+			if !scanner.Scan() {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: "eof from cpp"})
+				break
 			}
-		} else if resp == "OVERFLOW" {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "overflow", InHex: inHex})
-		} else if strings.HasPrefix(resp, "EXCEPTION ") {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "exception", Error: strings.TrimPrefix(resp, "EXCEPTION ")})
-		} else if strings.HasPrefix(resp, "UNSUPPORTED ") {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "unsupported"})
-		} else {
-			results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: resp})
+			resp := scanner.Text()
+			if strings.HasPrefix(resp, "OK ") {
+				outHex := strings.TrimPrefix(resp, "OK ")
+				outBytes, _ := hex.DecodeString(outHex)
+				pk2 := pool[id]()
+				if err := safeUnmarshal(pk2, outBytes); err != nil {
+					results = append(results, PacketResult{ID: id, Name: name, Status: "go_decode_fail", InHex: inHex, OutHex: outHex, Error: err.Error()})
+					continue
+				}
+				if outHex == inHex {
+					results = append(results, PacketResult{ID: id, Name: name, Status: "ok"})
+				} else {
+					results = append(results, PacketResult{ID: id, Name: name, Status: "mismatch", InHex: inHex, OutHex: outHex})
+				}
+			} else if resp == "OVERFLOW" {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "overflow", InHex: inHex})
+			} else if strings.HasPrefix(resp, "EXCEPTION ") {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "exception", Error: strings.TrimPrefix(resp, "EXCEPTION ")})
+			} else if strings.HasPrefix(resp, "UNSUPPORTED ") {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "unsupported"})
+			} else {
+				results = append(results, PacketResult{ID: id, Name: name, Status: "error", Error: resp})
+			}
 		}
 	}
 

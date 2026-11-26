@@ -146,9 +146,12 @@ public:
         PiglinBarter = 24,
     };
 
-    uint64_t playerRuntimeId;
-    int32_t eventData;
-    Type type;
+    int64_t playerRuntimeId = 0;
+    int32_t eventData = 0;
+    Type type = Type::AchievementAwarded;
+    bool usePlayerId = false;
+    uint32_t eventOrdinal = 0;
+    std::string eventPayload;
 
 public:
     std::string_view getName() override {
@@ -156,17 +159,31 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		playerRuntimeId = stream.readActorRuntimeID().value_or(0);
-		eventData = stream.readVarInt().value_or(0);
-		type = magic_enum::enum_cast<Type>(
-			stream.readUnsignedByte().value_or(0)
-		).value_or(Type::AchievementAwarded);
+        playerRuntimeId = stream.readVarLong().value_or(0);
+        eventData = stream.readVarInt().value_or(0);
+        type = magic_enum::enum_cast<Type>(
+            static_cast<uint8_t>(eventData)
+        ).value_or(Type::AchievementAwarded);
+        usePlayerId = stream.readBool().value_or(false);
+        eventOrdinal = stream.readUnsignedVarInt().value_or(0);
+        const auto pos = stream.position();
+        if (pos < stream.size()) {
+            const auto& buf = stream.data();
+            eventPayload.assign(buf.begin() + static_cast<std::ptrdiff_t>(pos), buf.end());
+            stream.seek(stream.size(), false);
+        } else {
+            eventPayload.clear();
+        }
     }
 
     void write(BinaryStream& stream) override {
-		stream.writeActorRuntimeID(playerRuntimeId);
-		stream.writeVarInt(eventData);
-		stream.writeUnsignedByte(magic_enum::enum_integer(type));
+        stream.writeVarLong(playerRuntimeId);
+        stream.writeVarInt(eventData);
+        stream.writeBool(usePlayerId);
+        stream.writeUnsignedVarInt(eventOrdinal);
+        if (!eventPayload.empty()) {
+            stream.writeBuffer(eventPayload);
+        }
     }
 };
 

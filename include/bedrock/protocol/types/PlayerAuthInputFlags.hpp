@@ -80,19 +80,21 @@ enum class InputData : int {
 };
 
 struct PlayerAuthInputFlags {
-    static constexpr std::size_t Count =        66;
+    static constexpr std::size_t Count = 66;
+    static constexpr std::size_t MaxCount = 131;
 
-    std::bitset<Count> flags;
+    std::size_t length = Count;
+    std::bitset<MaxCount> flags;
 
     PlayerAuthInputFlags() = default;
-    explicit PlayerAuthInputFlags(std::size_t) {}
+    explicit PlayerAuthInputFlags(std::size_t bitLength) : length(bitLength <= MaxCount ? bitLength : MaxCount) {}
 
     [[nodiscard]] bool hasFlag(InputData flag) const noexcept {
-        return flags.test(static_cast<std::size_t>(flag));
+        return get(static_cast<std::size_t>(flag));
     }
 
     [[nodiscard]] bool get(std::size_t flag) const noexcept {
-        return flag < Count && flags.test(flag);
+        return flag < length && flags.test(flag);
     }
 
     [[nodiscard]] bool get(InputData flag) const noexcept {
@@ -100,15 +102,15 @@ struct PlayerAuthInputFlags {
     }
 
     [[nodiscard]] std::size_t getLength() const noexcept {
-        return Count;
+        return length;
     }
 
     void setFlag(InputData flag, bool state) noexcept {
-        flags.set(static_cast<std::size_t>(flag), state);
+        set(static_cast<std::size_t>(flag), state);
     }
 
     void set(std::size_t flag, bool state) noexcept {
-        if (flag < Count) {
+        if (flag < length) {
             flags.set(flag, state);
         }
     }
@@ -122,14 +124,27 @@ struct PlayerAuthInputFlags {
     }
 
     void write(BinaryStream& stream) const {
-        for (std::size_t offset = 0; offset < Count; offset += 7) {
+        std::size_t highestBit = 0;
+        bool anySet = false;
+        for (std::size_t i = length; i > 0; --i) {
+            if (flags.test(i - 1)) {
+                highestBit = i - 1;
+                anySet = true;
+                break;
+            }
+        }
+        if (!anySet) {
+            stream.writeByte(0);
+            return;
+        }
+        for (std::size_t offset = 0; offset <= highestBit; offset += 7) {
             uint8_t byte = 0;
-            for (std::size_t bit = 0; bit < 7 && offset + bit < Count; ++bit) {
+            for (std::size_t bit = 0; bit < 7 && offset + bit <= highestBit; ++bit) {
                 if (flags.test(offset + bit)) {
                     byte |= static_cast<uint8_t>(uint8_t{1} << bit);
                 }
             }
-            if (offset + 7 < Count) {
+            if (offset + 7 <= highestBit) {
                 byte |= uint8_t{0x80};
             }
             stream.writeByte(static_cast<int8_t>(byte));
@@ -138,10 +153,10 @@ struct PlayerAuthInputFlags {
 
     void read(ReadOnlyBinaryStream& stream) {
         flags.reset();
-        for (std::size_t offset = 0; offset < Count; offset += 7) {
+        for (std::size_t offset = 0; offset < length; offset += 7) {
             const uint8_t byte = static_cast<uint8_t>(stream.readByte().value_or(0));
             const uint8_t payload = static_cast<uint8_t>(byte & uint8_t{0x7f});
-            for (std::size_t bit = 0; bit < 7 && offset + bit < Count; ++bit) {
+            for (std::size_t bit = 0; bit < 7 && offset + bit < length; ++bit) {
                 if ((payload & static_cast<uint8_t>(uint8_t{1} << bit)) != 0) {
                     flags.set(offset + bit);
                 }

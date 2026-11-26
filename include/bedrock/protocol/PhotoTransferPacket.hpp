@@ -164,7 +164,7 @@ inline void PhotoTransferPacket::read(ReadOnlyBinaryStream& stream) {
         photoName = magic_enum::enum_cast<PhotoName>(
             std::string_view(photoNameRaw)
         ).value_or(PhotoName::Extension);
-        photoData = stream.readByteArray(0).value_or("");
+        photoData = stream.readString().value_or("");
         bookId = stream.readString().value_or("");
         type = stream.readUnsignedByte().value_or(0);
         sourceType = stream.readUnsignedByte().value_or(0);

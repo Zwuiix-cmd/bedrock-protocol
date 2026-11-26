@@ -143,7 +143,8 @@ public:
     }
 
     void read(ReadOnlyBinaryStream& stream) override {
-		flags = stream.readValue<PlayerAuthInputFlags>();
+		flags = PlayerAuthInputFlags{static_cast<std::size_t>(FLAG_LENGTH)};
+		flags.read(stream);
 		scale = stream.readFloat().value_or(0.0f);
 		width = stream.readFloat().value_or(0.0f);
 		height = stream.readFloat().value_or(0.0f);

@@ -142,6 +142,10 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 		p.Skin.CapeData = nil
 	case *packet.PrimitiveShapes:
 		p.Shapes = nil
+	case *packet.Event:
+		p.Event = &protocol.AchievementAwardedEvent{}
+	case *packet.ServerBoundPackSettingChange:
+		p.PackSetting = protocol.PackSetting{Name: "s", Value: float32(1.0)}
 	case *packet.SetDisplayObjective:
 		p.SortOrder = 0
 		p.DisplaySlot = "list"

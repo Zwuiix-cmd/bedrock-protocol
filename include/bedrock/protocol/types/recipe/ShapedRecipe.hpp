@@ -32,7 +32,7 @@ public:
         const auto width = stream.readVarInt().value_or(0);
         const auto height = stream.readVarInt().value_or(0);
         const auto count = stream.readUnsignedVarInt().value_or(0);
-        if (width < 0 || height < 1 || height > 3
+        if (width < 0 || height < 0 || height > 3
             || count != static_cast<uint64_t>(width) * height
             || !stream.canReadCollection(count)) {
             stream.markOverflowed();
@@ -60,10 +60,10 @@ public:
 
     virtual void write(BinaryStream& stream) const {
         stream.writeString(recipeId);
-        if (input.empty() || input.size() > 3) {
+        if (input.size() > 3) {
             throw std::invalid_argument("Invalid shaped recipe height");
         }
-        const auto width = input.front().size();
+        const auto width = input.empty() ? 0 : input.front().size();
         stream.writeVarInt(static_cast<int32_t>(width));
         stream.writeVarInt(static_cast<int32_t>(input.size()));
         stream.writeUnsignedVarInt(static_cast<uint32_t>(width * input.size()));

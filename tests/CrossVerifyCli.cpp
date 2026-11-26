@@ -51,10 +51,11 @@ int main() {
         std::istringstream iss(line);
         int32_t id = 0;
         std::string hex;
-        if (!(iss >> id >> hex)) {
+        if (!(iss >> id)) {
             std::cout << "ERROR invalid_input\n";
             continue;
         }
+        iss >> hex; // optional for 0-byte packets
 
         auto packet = PacketPool::createPacket(static_cast<PacketIds>(id));
         if (!packet) {

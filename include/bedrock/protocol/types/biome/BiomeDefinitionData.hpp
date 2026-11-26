@@ -61,8 +61,10 @@ public:
         scale = stream.readFloat().value_or(0.0f);
         mapWaterColor = stream.readUnsignedInt().value_or(0);
         rain = stream.readBool().value_or(false);
-        tagIndexes = stream.readList([&]() {
-            return stream.readInt().value_or(0);
+        tagIndexes = stream.readOptional([&]() {
+            return stream.readList([&]() {
+                return static_cast<int32_t>(stream.readUnsignedShort().value_or(0));
+            });
         });
         chunkGenData = stream.readOptional([&]() {
             return stream.readObject<BiomeDefinitionChunkGenData>();

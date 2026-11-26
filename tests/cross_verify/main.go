@@ -56,9 +56,9 @@ func fuzzValue(v reflect.Value, rng *rand.Rand, depth int) {
 	case reflect.Bool:
 		v.SetBool(rng.Intn(2) == 1)
 	case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		v.SetInt(int64(rng.Intn(5) + 1))
+		v.SetInt(int64(rng.Intn(2)))
 	case reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		v.SetUint(uint64(rng.Intn(5) + 1))
+		v.SetUint(uint64(rng.Intn(2)))
 	case reflect.Float32, reflect.Float64:
 		v.SetFloat(float64(rng.Intn(50)) + 0.5)
 	case reflect.String:

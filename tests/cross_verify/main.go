@@ -26,6 +26,41 @@ type PacketResult struct {
 	Error  string `json:"error,omitempty"`
 }
 
+func populatePacket(pk packet.Packet) {
+	switch p := pk.(type) {
+	case *packet.Text:
+		p.TextType = packet.TextTypeRaw
+		p.Message = "hello"
+	case *packet.InventoryTransaction:
+		p.TransactionData = &protocol.NormalTransactionData{}
+	case *packet.RequestAbility:
+		p.Value = false
+	case *packet.ClientMovementPredictionSync:
+		p.ActorFlags = protocol.NewBitset(131)
+	case *packet.Interact:
+		p.ActionType = packet.InteractActionLeaveVehicle
+	case *packet.MobEffect:
+		p.Operation = packet.MobEffectAdd
+	case *packet.Animate:
+		p.ActionType = packet.AnimateActionSwingArm
+	case *packet.SimpleEvent:
+		p.EventType = packet.SimpleEventCommandsEnabled
+	case *packet.CommandOutput:
+		p.OutputType = 3
+	case *packet.PhotoTransfer:
+		p.PhotoName = ".jpeg"
+	case *packet.SetDisplayObjective:
+		p.SortOrder = 0
+		p.DisplaySlot = "list"
+	case *packet.AgentAction:
+		p.Action = 1
+	case *packet.UpdateTrade:
+		p.SerialisedOffers = []byte{0x0a, 0x00, 0x00}
+	case *packet.UpdateEquip:
+		p.SerialisedInventoryData = []byte{0x0a, 0x00, 0x00}
+	}
+}
+
 func safeMarshal(pk packet.Packet) (data []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -88,6 +123,7 @@ func main() {
 
 	for _, id := range ids {
 		pk := pool[id]()
+		populatePacket(pk)
 		name := reflect.TypeOf(pk).Elem().Name()
 		raw, err := safeMarshal(pk)
 		if err != nil {

@@ -9,10 +9,10 @@ configure:
 	@cmake -S . -B $(BUILD_DIR) -DBEDROCK_PROTOCOL_BUILD_POOL=ON -DBEDROCK_PROTOCOL_BUILD_TESTS=ON > nul
 
 build: configure
-	@cmake --build $(BUILD_DIR) --config $(CONFIG) -j 8 -- /nologo /verbosity:minimal
+	@cmake --build $(BUILD_DIR) --config $(CONFIG) -j 8 > nul
 
 test: build
-	@ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure
+	@ctest --test-dir $(BUILD_DIR) -C $(CONFIG) --output-on-failure > nul
 	@$(MAKE) --no-print-directory cross-test
 
 cross-test:

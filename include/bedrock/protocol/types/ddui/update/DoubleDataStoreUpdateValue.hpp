@@ -12,20 +12,20 @@ class DoubleDataStoreUpdateValue : public DataStoreUpdateValue {
 public:
     static constexpr int64_t ID = 0;
 
-    float value;
+    double value;
 
     DoubleDataStoreUpdateValue() = default;
     virtual ~DoubleDataStoreUpdateValue() = default;
-    explicit DoubleDataStoreUpdateValue(const float& valueValue) : value(valueValue) {}
+    explicit DoubleDataStoreUpdateValue(const double& valueValue) : value(valueValue) {}
 
     int32_t getTypeId() const override { return static_cast<int32_t>(ID); }
 
     void read(ReadOnlyBinaryStream& stream) override {
-        value = stream.readFloat().value_or(0.0f);
+        value = stream.readDouble().value_or(0.0);
     }
 
     void write(BinaryStream& stream) const override {
-        stream.writeFloat(value);
+        stream.writeDouble(value);
     }
 };
 

@@ -12,6 +12,7 @@
 #include <bedrock/protocol/types/NetworkNbt.hpp>
 #include <bedrock/protocol/types/entity/EntityMetadataFlags.hpp>
 #include <bedrock/protocol/types/entity/EntityMetadataProperties.hpp>
+#include <bedrock/protocol/util/ProtocolUtil.hpp>
 
 namespace bedrock::protocol {
 
@@ -44,7 +45,7 @@ public:
     std::map<uint32_t, EntityMetadataValue> properties;
 
     [[nodiscard]] static constexpr EntityMetadataType getType(const EntityMetadataValue& value) noexcept {
-        return static_cast<EntityMetadataType>(value.index());
+        return util::fromUnderlying<EntityMetadataType>(value.index());
     }
 
     template <typename T>
@@ -58,7 +59,7 @@ public:
 
     template <typename T>
     [[nodiscard]] const T* get(EntityMetadataProperties key) const noexcept {
-        return get<T>(static_cast<uint32_t>(key));
+        return get<T>(util::toUnderlying(key));
     }
 
     template <typename T>
@@ -68,11 +69,11 @@ public:
 
     template <typename T>
     void set(EntityMetadataProperties key, T value) {
-        set<T>(static_cast<uint32_t>(key), std::move(value));
+        set<T>(util::toUnderlying(key), std::move(value));
     }
 
     [[nodiscard]] bool getFlag(EntityMetadataFlags flag) const noexcept {
-        const auto idx = static_cast<uint32_t>(flag);
+        const auto idx = util::toUnderlying(flag);
         const auto prop = idx < 64 ? EntityMetadataProperties::Flags : EntityMetadataProperties::Flags2;
         const auto bit = idx < 64 ? idx : (idx - 64);
         const auto* val = get<int64_t>(prop);
@@ -80,7 +81,7 @@ public:
     }
 
     void setFlag(EntityMetadataFlags flag, bool enabled) {
-        const auto idx = static_cast<uint32_t>(flag);
+        const auto idx = util::toUnderlying(flag);
         const auto prop = idx < 64 ? EntityMetadataProperties::Flags : EntityMetadataProperties::Flags2;
         const auto bit = idx < 64 ? idx : (idx - 64);
         const auto* existing = get<int64_t>(prop);
@@ -107,11 +108,11 @@ public:
             }
             const uint32_t rawType = stream.readUnsignedVarInt().value_or(0);
             const uint8_t innerType = stream.readUnsignedByte().value_or(0);
-            if (rawType > 8 || innerType != static_cast<uint8_t>(rawType)) {
+            if (rawType > 8 || innerType != util::narrow<uint8_t>(rawType)) {
                 stream.markOverflowed();
                 return;
             }
-            switch (static_cast<EntityMetadataType>(rawType)) {
+            switch (util::fromUnderlying<EntityMetadataType>(rawType)) {
                 case EntityMetadataType::BYTE:
                     properties.emplace(key, stream.readByte().value_or(0));
                     break;
@@ -144,12 +145,12 @@ public:
     }
 
     void write(BinaryStream& stream) const {
-        stream.writeUnsignedVarInt(static_cast<uint32_t>(properties.size()));
+        stream.writeUnsignedVarInt(util::narrow<uint32_t>(properties.size()));
         for (const auto& [key, value] : properties) {
-            const auto type = static_cast<uint32_t>(value.index());
+            const auto type = util::narrow<uint32_t>(value.index());
             stream.writeUnsignedVarInt(key);
             stream.writeUnsignedVarInt(type);
-            stream.writeUnsignedByte(static_cast<uint8_t>(type));
+            stream.writeUnsignedByte(util::narrow<uint8_t>(type));
             std::visit([&](const auto& v) {
                 using T = std::decay_t<decltype(v)>;
                 if constexpr (std::is_same_v<T, int8_t>) {

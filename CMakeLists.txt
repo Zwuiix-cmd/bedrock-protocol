@@ -129,6 +129,12 @@ if(BEDROCK_PROTOCOL_BUILD_TESTS AND BUILD_TESTING)
     target_compile_features(bedrock-protocol-tests PRIVATE cxx_std_20)
     target_link_libraries(bedrock-protocol-tests PRIVATE bedrock-protocol)
     add_test(NAME bedrock-protocol-tests COMMAND bedrock-protocol-tests)
+
+    add_executable(bedrock-protocol-cross-verify
+        tests/CrossVerifyCli.cpp
+    )
+    target_compile_features(bedrock-protocol-cross-verify PRIVATE cxx_std_20)
+    target_link_libraries(bedrock-protocol-cross-verify PRIVATE bedrock-protocol)
 endif()
 
 install(

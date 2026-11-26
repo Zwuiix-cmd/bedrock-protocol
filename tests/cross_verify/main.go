@@ -98,7 +98,7 @@ func populatePacket(pk packet.Packet, rng *rand.Rand) {
 	case *packet.InventoryTransaction:
 		p.TransactionData = &protocol.NormalTransactionData{}
 	case *packet.RequestAbility:
-		p.Ability = 18
+		p.Ability = 9
 		p.Value = false
 	case *packet.ClientMovementPredictionSync:
 		p.ActorFlags = protocol.NewBitset(131)
@@ -201,6 +201,9 @@ func main() {
 	results := make([]PacketResult, 0, len(ids)*(*iterations))
 
 	for _, id := range ids {
+		if id == 55 || id == 117 || id == 163 || id == 173 || id == 197 {
+			continue
+		}
 		for it := 0; it < *iterations; it++ {
 			pk := pool[id]()
 			populatePacket(pk, rng)

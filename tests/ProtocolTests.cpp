@@ -1,11 +1,33 @@
+#include <bedrock/protocol/ActorEventPacket.hpp>
+#include <bedrock/protocol/AnimatePacket.hpp>
+#include <bedrock/protocol/BlockEventPacket.hpp>
 #include <bedrock/protocol/CameraInstructionPacket.hpp>
+#include <bedrock/protocol/ChunkRadiusUpdatedPacket.hpp>
+#include <bedrock/protocol/ContainerClosePacket.hpp>
+#include <bedrock/protocol/ContainerOpenPacket.hpp>
 #include <bedrock/protocol/CraftingDataPacket.hpp>
+#include <bedrock/protocol/InteractPacket.hpp>
 #include <bedrock/protocol/InventoryTransactionPacket.hpp>
+#include <bedrock/protocol/ItemStackRequestPacket.hpp>
+#include <bedrock/protocol/LevelEventPacket.hpp>
 #include <bedrock/protocol/LoginPacket.hpp>
 #include <bedrock/protocol/MobEffectPacket.hpp>
+#include <bedrock/protocol/MovePlayerPacket.hpp>
+#include <bedrock/protocol/NetworkStackLatencyPacket.hpp>
 #include <bedrock/protocol/PacketIds.hpp>
+#include <bedrock/protocol/PlayerActionPacket.hpp>
 #include <bedrock/protocol/PlayerAuthInputPacket.hpp>
+#include <bedrock/protocol/PlaySoundPacket.hpp>
+#include <bedrock/protocol/RequestChunkRadiusPacket.hpp>
+#include <bedrock/protocol/SetActorDataPacket.hpp>
+#include <bedrock/protocol/SetDifficultyPacket.hpp>
+#include <bedrock/protocol/SetHealthPacket.hpp>
 #include <bedrock/protocol/SetHudPacket.hpp>
+#include <bedrock/protocol/SetPlayerGameTypePacket.hpp>
+#include <bedrock/protocol/SetTimePacket.hpp>
+#include <bedrock/protocol/StopSoundPacket.hpp>
+#include <bedrock/protocol/SubChunkPacket.hpp>
+#include <bedrock/protocol/TransferPacket.hpp>
 #include <bedrock/protocol/UpdateBlockSyncedPacket.hpp>
 #include <bedrock/protocol/io/BinaryStream.hpp>
 #include <bedrock/protocol/io/ReadOnlyBinaryStream.hpp>
@@ -423,6 +445,78 @@ void testPacketPool() {
     expect(PacketPool::createPacket(PacketIds::InventoryTransaction) != nullptr, "unregister removed another packet ID");
 }
 
+std::string fromHex(std::string_view hex) {
+    auto nibble = [](char c) -> uint8_t {
+        if (c >= '0' && c <= '9') return static_cast<uint8_t>(c - '0');
+        if (c >= 'a' && c <= 'f') return static_cast<uint8_t>(c - 'a' + 10);
+        if (c >= 'A' && c <= 'F') return static_cast<uint8_t>(c - 'A' + 10);
+        throw std::runtime_error("invalid hex char");
+    };
+    std::string out;
+    out.reserve(hex.size() / 2);
+    for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
+        out.push_back(static_cast<char>((nibble(hex[i]) << 4) | nibble(hex[i + 1])));
+    }
+    return out;
+}
+
+template <typename TPacket>
+void verifyGophertunnelRoundtrip(std::string_view name, std::string_view hex) {
+    const auto raw = fromHex(hex);
+    ReadOnlyBinaryStream input(raw);
+    TPacket packet;
+    packet.read(input);
+    expect(!input.hasOverflowed(), std::string(name) + ": overflowed while reading gophertunnel bytes");
+
+    BinaryStream output;
+    packet.write(output);
+    expect(output.getBuffer() == raw, std::string(name) + ": re-encoded bytes differ from gophertunnel");
+}
+
+void testGophertunnelParity() {
+    verifyGophertunnelRoundtrip<NetworkStackLatencyPacket>(
+        "NetworkStackLatency",
+        "15cd5b070000000001");
+    verifyGophertunnelRoundtrip<InteractPacket>(
+        "Interact",
+        "042a010000c03f00008042000060c0");
+    verifyGophertunnelRoundtrip<MovePlayerPacket>(
+        "MovePlayer",
+        "0a0000204100008c420000a041000070410000b4420000b4420001000064");
+    verifyGophertunnelRoundtrip<ItemStackRequestPacket>(
+        "ItemStackRequest",
+        "0102020a0c37010000040d0032000000001c0000000000000000000000");
+    verifyGophertunnelRoundtrip<SubChunkPacket>(
+        "SubChunk",
+        "00000100000004000000feffffff0100000001010308010201011000000000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000001000000000000000000000000000000000000000");
+    verifyGophertunnelRoundtrip<SetActorDataPacket>(
+        "SetActorData",
+        "070200070740040404064b6f6469616b000032");
+    verifyGophertunnelRoundtrip<SetTimePacket>("SetTime", "e05d");
+    verifyGophertunnelRoundtrip<SetHealthPacket>("SetHealth", "28");
+    verifyGophertunnelRoundtrip<SetDifficultyPacket>("SetDifficulty", "02");
+    verifyGophertunnelRoundtrip<SetPlayerGameTypePacket>("SetPlayerGameType", "02");
+    verifyGophertunnelRoundtrip<RequestChunkRadiusPacket>("RequestChunkRadius", "2020");
+    verifyGophertunnelRoundtrip<ChunkRadiusUpdatedPacket>("ChunkRadiusUpdated", "20");
+    verifyGophertunnelRoundtrip<ContainerOpenPacket>("ContainerOpen", "01001480010901");
+    verifyGophertunnelRoundtrip<ContainerClosePacket>("ContainerClose", "010001");
+    verifyGophertunnelRoundtrip<AnimatePacket>("Animate", "01050000000001046e6f6e6500");
+    verifyGophertunnelRoundtrip<PlaySoundPacket>("PlaySound", "0a72616e646f6d2e6f72621020300000803f0000803f00000000");
+    verifyGophertunnelRoundtrip<StopSoundPacket>("StopSound", "0a72616e646f6d2e6f72620000");
+    verifyGophertunnelRoundtrip<TransferPacket>("Transfer", "10706c61792e6578616d706c652e636f6dbc4a0000");
+    verifyGophertunnelRoundtrip<PlayerActionPacket>("PlayerAction", "0100148001141480011402");
+    verifyGophertunnelRoundtrip<LevelEventPacket>("LevelEvent", "a21f00002041000080420000204102");
+    verifyGophertunnelRoundtrip<BlockEventPacket>("BlockEvent", "148001140204");
+    verifyGophertunnelRoundtrip<ActorEventPacket>("ActorEvent", "01020000");
+
+    EntityMetadataCollection meta;
+    meta.setFlag(EntityMetadataFlags::Sprinting, true);
+    expect(meta.getFlag(EntityMetadataFlags::Sprinting), "EntityMetadataCollection::getFlag(Sprinting) failed");
+    meta.set<std::string>(EntityMetadataProperties::Nametag, "Test");
+    const auto* name = meta.get<std::string>(EntityMetadataProperties::Nametag);
+    expect(name && *name == "Test", "EntityMetadataCollection::get<std::string>(Nametag) failed");
+}
+
 } // namespace
 
 int main() {
@@ -438,6 +532,7 @@ int main() {
         testMalformedBuffers();
         testMalformedCollectionBounds();
         testPacketPool();
+        testGophertunnelParity();
     } catch (const std::exception& exception) {
         std::cerr << "protocol tests failed: " << exception.what() << '\n';
         return 1;

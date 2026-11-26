@@ -15,7 +15,7 @@ class SubChunkPacketHeightMapInfo {
 public:
     static constexpr int64_t ROW_LENGTH = 16;
 
-    static constexpr auto TOTAL_LENGTH = (ROW_LENGTH + 2);
+    static constexpr auto TOTAL_LENGTH = (ROW_LENGTH * ROW_LENGTH);
 
     std::vector<int8_t> heights;
 

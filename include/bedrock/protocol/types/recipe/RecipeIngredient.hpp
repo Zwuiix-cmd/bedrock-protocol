@@ -109,7 +109,7 @@ private:
             case ItemDescriptorType::Tag:
                 if (tagOnly) {
                     descriptor = std::make_shared<TagItemDescriptor>(
-                        stream.readString().value_or(""), TagItemDescriptor::DEFAULT_META);
+                        stream.readString().value_or(""), static_cast<int32_t>(TagItemDescriptor::DEFAULT_META));
                 } else {
                     descriptor = stream.readObject<TagItemDescriptor>();
                 }

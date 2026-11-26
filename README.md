@@ -1,7 +1,6 @@
 # bedrock-protocol
 
-A C++20 library for the Minecraft Bedrock network protocol, generated from
-the PHP definitions in [axolotl-pm/BedrockProtocol](https://github.com/axolotl-pm/BedrockProtocol).
+A C++20 library for the Minecraft Bedrock network protocol.
 
 ## Build
 
@@ -69,19 +68,6 @@ After `setup()`, use `PacketPool::unregisterPacket(PacketIds::CraftingData)` to
 disable a packet. Both ID and type lookups then return `nullptr` for that
 packet. Unregistering an absent packet is safe and leaves other packets enabled.
 
-## Regenerating the protocol
-
-Generated C++ files are already included in `include/`.
-
-```powershell
-composer install
-composer generate
-composer clean
-```
-
-The source version is configured in [`generator.json`](generator.json). The
-generator produces packets, types, enums, `PacketIds`, and `PacketPool`.
-
 ## License
 
 The original code in this repository is covered by [`LICENSE`](LICENSE). It
@@ -90,3 +76,7 @@ redistribute the original source as their own.
 
 Protocol files derived from upstream remain subject to the upstream LGPL-3.0
 license: [`LICENSE-UPSTREAM-LGPL-3.0.txt`](LICENSE-UPSTREAM-LGPL-3.0.txt).
+
+## Protocol References
+
+Protocol definitions are based on [axolotl-pm/BedrockProtocol](https://github.com/axolotl-pm/BedrockProtocol), [CloudburstMC/Protocol](https://github.com/CloudburstMC/Protocol), and [Sandertv/gophertunnel](https://github.com/Sandertv/gophertunnel).

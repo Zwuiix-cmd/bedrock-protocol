@@ -18,7 +18,7 @@ def main() -> int:
         os.system("")  # enable ANSI escapes on Windows
 
     here = os.path.dirname(os.path.abspath(__file__))
-    cpp_exe = sys.argv[1] if len(sys.argv) > 1 else os.path.join(here, "..", "..", "build", "Release", "bedrock-protocol-cross-verify.exe")
+    cpp_exe = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(here, "..", "..", "build", "Release", "bedrock-protocol-cross-verify.exe")
 
     proc = subprocess.run(
         ["go", "-C", here, "run", ".", cpp_exe],
